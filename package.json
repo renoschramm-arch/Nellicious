@@ -4,7 +4,10 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "fetch-fonts": "node scripts/fetch-fonts.mjs",
+    "predev": "npm run fetch-fonts",
     "dev": "vite",
+    "prebuild": "npm run fetch-fonts",
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview"
