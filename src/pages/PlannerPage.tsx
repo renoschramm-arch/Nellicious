@@ -25,6 +25,7 @@ export function PlannerPage() {
 
   const [openPicker, setOpenPicker] = useState<{ date: string; slot: MealSlot } | null>(null)
   const [checked, setChecked] = useState<Set<string>>(new Set())
+  const [dismissed, setDismissed] = useState<Set<string>>(new Set())
   const [shoppingView, setShoppingView] = useState<'grouped' | 'flat'>('grouped')
 
   function entryFor(date: string, slot: MealSlot) {
@@ -62,6 +63,31 @@ export function PlannerPage() {
     return Array.from(counts.entries()).map(([item, count]) => scaleIngredient(item, count))
   }, [shoppingGroups])
 
+  const visibleGroups = useMemo(
+    () =>
+      shoppingGroups
+        .map((group, gi) => ({
+          ...group,
+          items: group.items
+            .map((item, ii) => ({ item, key: `grouped-${gi}-${ii}` }))
+            .filter(({ key }) => !dismissed.has(key)),
+        }))
+        .filter((group) => group.items.length > 0),
+    [shoppingGroups, dismissed],
+  )
+
+  const visibleFlatItems = useMemo(
+    () =>
+      flatItems
+        .map((item, ii) => ({ item, key: `flat-${ii}-${item}` }))
+        .filter(({ key }) => !dismissed.has(key)),
+    [flatItems, dismissed],
+  )
+
+  const hasPlannedRecipes = shoppingGroups.length > 0
+  const hasVisibleItems =
+    shoppingView === 'grouped' ? visibleGroups.length > 0 : visibleFlatItems.length > 0
+
   function toggleChecked(key: string) {
     setChecked((prev) => {
       const next = new Set(prev)
@@ -69,6 +95,18 @@ export function PlannerPage() {
       else next.add(key)
       return next
     })
+  }
+
+  function dismissItem(key: string) {
+    setDismissed((prev) => new Set(prev).add(key))
+  }
+
+  function clearShoppingList() {
+    const keys =
+      shoppingView === 'grouped'
+        ? shoppingGroups.flatMap((group, gi) => group.items.map((_, ii) => `grouped-${gi}-${ii}`))
+        : flatItems.map((item, ii) => `flat-${ii}-${item}`)
+    setDismissed((prev) => new Set([...prev, ...keys]))
   }
 
   return (
@@ -175,23 +213,24 @@ export function PlannerPage() {
           )}
         </div>
 
-        {shoppingGroups.length === 0 ? (
+        {!hasPlannedRecipes ? (
           <p className="text-text-muted text-sm">Noch keine Rezepte für diese Woche geplant.</p>
+        ) : !hasVisibleItems ? (
+          <p className="text-text-muted text-sm">Einkauf erledigt — nichts mehr auf der Liste. 🎉</p>
         ) : shoppingView === 'grouped' ? (
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-4">
-            {shoppingGroups.map((group, gi) => (
+            {visibleGroups.map((group, gi) => (
               <div key={gi}>
                 <div className="text-xs font-mono uppercase tracking-wide text-text-muted mb-1.5">
                   {group.recipeTitle}
                   {group.count > 1 && ` · ${group.count}×`}
                 </div>
                 <ul className="flex flex-col gap-1">
-                  {group.items.map((item, ii) => {
-                    const key = `grouped-${gi}-${ii}`
+                  {group.items.map(({ item, key }) => {
                     const isChecked = checked.has(key)
                     return (
-                      <li key={ii}>
-                        <label className="flex items-center gap-2 text-sm cursor-pointer">
+                      <li key={key} className="flex items-center gap-2">
+                        <label className="flex items-center gap-2 text-sm cursor-pointer flex-1">
                           <input
                             type="checkbox"
                             checked={isChecked}
@@ -200,6 +239,13 @@ export function PlannerPage() {
                           />
                           <span className={isChecked ? 'line-through text-text-muted' : ''}>{item}</span>
                         </label>
+                        <button
+                          onClick={() => dismissItem(key)}
+                          className="text-text-muted hover:text-danger text-xs px-1"
+                          aria-label={`${item} aus Einkaufsliste entfernen`}
+                        >
+                          ✕
+                        </button>
                       </li>
                     )
                   })}
@@ -210,12 +256,11 @@ export function PlannerPage() {
         ) : (
           <div className="bg-surface border border-border rounded-2xl p-4">
             <ul className="flex flex-col gap-1">
-              {flatItems.map((item, ii) => {
-                const key = `flat-${ii}-${item}`
+              {visibleFlatItems.map(({ item, key }) => {
                 const isChecked = checked.has(key)
                 return (
-                  <li key={ii}>
-                    <label className="flex items-center gap-2 text-sm cursor-pointer">
+                  <li key={key} className="flex items-center gap-2">
+                    <label className="flex items-center gap-2 text-sm cursor-pointer flex-1">
                       <input
                         type="checkbox"
                         checked={isChecked}
@@ -224,11 +269,27 @@ export function PlannerPage() {
                       />
                       <span className={isChecked ? 'line-through text-text-muted' : ''}>{item}</span>
                     </label>
+                    <button
+                      onClick={() => dismissItem(key)}
+                      className="text-text-muted hover:text-danger text-xs px-1"
+                      aria-label={`${item} aus Einkaufsliste entfernen`}
+                    >
+                      ✕
+                    </button>
                   </li>
                 )
               })}
             </ul>
           </div>
+        )}
+
+        {hasVisibleItems && (
+          <button
+            onClick={clearShoppingList}
+            className="w-full mt-3 border border-border rounded-xl py-2.5 text-sm text-text-muted hover:text-text"
+          >
+            Einkauf erledigt
+          </button>
         )}
       </div>
     </div>
