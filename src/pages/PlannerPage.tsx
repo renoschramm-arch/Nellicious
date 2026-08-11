@@ -3,6 +3,7 @@ import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
 import { useRecipes } from '../lib/useRecipes'
 import { RecipePicker } from '../components/RecipePicker'
 import { addDays, formatDayLabel, formatWeekRange, getMonday, toISODate } from '../lib/week'
+import { scaleIngredient } from '../lib/scaleIngredient'
 
 const SLOTS: { key: MealSlot; label: string }[] = [
   { key: 'fruehstueck', label: 'Frühstück' },
@@ -30,13 +31,24 @@ export function PlannerPage() {
   }
 
   const shoppingGroups = useMemo(() => {
-    const byRecipeId = new Map<string, { recipeTitle: string; items: string[] }>()
+    const counts = new Map<string, number>()
+    for (const entry of entries) {
+      counts.set(entry.recipe_id, (counts.get(entry.recipe_id) ?? 0) + 1)
+    }
+    const seen = new Set<string>()
+    const groups: { recipeTitle: string; count: number; items: string[] }[] = []
     for (const entry of entries) {
       const recipe = recipeById.get(entry.recipe_id)
-      if (!recipe || recipe.ingredients.length === 0 || byRecipeId.has(recipe.id)) continue
-      byRecipeId.set(recipe.id, { recipeTitle: recipe.title, items: recipe.ingredients })
+      if (!recipe || recipe.ingredients.length === 0 || seen.has(recipe.id)) continue
+      seen.add(recipe.id)
+      const count = counts.get(recipe.id) ?? 1
+      groups.push({
+        recipeTitle: recipe.title,
+        count,
+        items: recipe.ingredients.map((ing) => scaleIngredient(ing, count)),
+      })
     }
-    return Array.from(byRecipeId.values())
+    return groups
   }, [entries, recipeById])
 
   function toggleChecked(key: string) {
@@ -137,6 +149,7 @@ export function PlannerPage() {
               <div key={gi}>
                 <div className="text-xs font-mono uppercase tracking-wide text-text-muted mb-1.5">
                   {group.recipeTitle}
+                  {group.count > 1 && ` · ${group.count}×`}
                 </div>
                 <ul className="flex flex-col gap-1">
                   {group.items.map((item, ii) => {
