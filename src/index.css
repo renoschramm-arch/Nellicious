@@ -1,0 +1,131 @@
+@import 'tailwindcss';
+
+@font-face {
+  font-family: 'Domine';
+  font-weight: 500 700;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/domine-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Work Sans';
+  font-weight: 400 600;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/worksans-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/plexmono-400-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  src: url('/fonts/plexmono-500-latin.woff2') format('woff2');
+}
+
+/*
+  Nellicious-Farbkonzept ("Paprika & Basilikum") — abgestimmt mit dem Nutzer.
+  Primär: Paprika (Marke) / Ziegelrot (interaktiv). Sekundär: Basilikum. Akzent: Honig.
+*/
+:root {
+  --bg: #faf6f1;
+  --surface: #ffffff;
+  --surface-2: #f3eae0;
+  --border: #e7dacc;
+  --text: #2a1b16;
+  --text-muted: #79695f;
+  --brand: #e85a32;
+  --primary: #b63420;
+  --primary-hover: #9a2a19;
+  --on-primary: #ffffff;
+  --basil: #3e6b4a;
+  --honey: #e2a030;
+  --on-honey: #2a1b16;
+  --danger: #b3261e;
+  --shadow: 0 1px 2px rgba(42, 27, 22, 0.06), 0 8px 24px -12px rgba(42, 27, 22, 0.18);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #2f241b;
+    --surface: #3f3025;
+    --surface-2: #4b3a2d;
+    --border: #5f493a;
+    --text: #f5eae1;
+    --text-muted: #b9a79a;
+    --brand: #ff7a52;
+    --primary: #f05c4c;
+    --primary-hover: #f4826f;
+    --on-primary: #1c1310;
+    --basil: #6fae82;
+    --honey: #f0b84d;
+    --on-honey: #1c1310;
+    --danger: #ff8a80;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 28px -14px rgba(0, 0, 0, 0.55);
+  }
+}
+:root[data-theme='dark'] {
+  --bg: #2f241b;
+  --surface: #3f3025;
+  --surface-2: #4b3a2d;
+  --border: #5f493a;
+  --text: #f5eae1;
+  --text-muted: #b9a79a;
+  --brand: #ff7a52;
+  --primary: #f05c4c;
+  --primary-hover: #f4826f;
+  --on-primary: #1c1310;
+  --basil: #6fae82;
+  --honey: #f0b84d;
+  --on-honey: #1c1310;
+  --danger: #ff8a80;
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 28px -14px rgba(0, 0, 0, 0.55);
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-brand: var(--brand);
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-on-primary: var(--on-primary);
+  --color-basil: var(--basil);
+  --color-honey: var(--honey);
+  --color-on-honey: var(--on-honey);
+  --color-danger: var(--danger);
+
+  --font-display: 'Domine', Georgia, serif;
+  --font-sans: 'Work Sans', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+::selection {
+  background: var(--brand);
+  color: var(--on-primary);
+}
