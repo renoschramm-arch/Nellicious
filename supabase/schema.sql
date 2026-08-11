@@ -91,6 +91,35 @@ create policy "Nutzer löschen eigene Einträge"
   using (auth.uid() = user_id);
 
 
+create table if not exists public.meal_plan_entries (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  plan_date date not null,
+  meal_slot text not null check (meal_slot in ('fruehstueck', 'mittag', 'abend', 'snack')),
+  recipe_id uuid not null references public.recipes (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  unique (user_id, plan_date, meal_slot)
+);
+
+alter table public.meal_plan_entries enable row level security;
+
+create policy "Nutzer sehen ihre eigenen Planeinträge"
+  on public.meal_plan_entries for select
+  using (auth.uid() = user_id);
+
+create policy "Nutzer legen eigene Planeinträge an"
+  on public.meal_plan_entries for insert
+  with check (auth.uid() = user_id);
+
+create policy "Nutzer bearbeiten eigene Planeinträge"
+  on public.meal_plan_entries for update
+  using (auth.uid() = user_id);
+
+create policy "Nutzer löschen eigene Planeinträge"
+  on public.meal_plan_entries for delete
+  using (auth.uid() = user_id);
+
+
 -- Ein paar Beispielrezepte zum Start (owner_id NULL = global sichtbar).
 insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions)
 values

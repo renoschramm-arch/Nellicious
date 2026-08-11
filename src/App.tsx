@@ -6,6 +6,7 @@ import { AuthPage } from './pages/AuthPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { RecipesPage } from './pages/RecipesPage'
 import { RecipeDetailPage } from './pages/RecipeDetailPage'
+import { PlannerPage } from './pages/PlannerPage'
 import { ProfilePage } from './pages/ProfilePage'
 
 export default function App() {
@@ -19,6 +20,7 @@ export default function App() {
               <Route path="/" element={<DashboardPage />} />
               <Route path="/rezepte" element={<RecipesPage />} />
               <Route path="/rezepte/:id" element={<RecipeDetailPage />} />
+              <Route path="/plan" element={<PlannerPage />} />
               <Route path="/profil" element={<ProfilePage />} />
             </Route>
           </Route>

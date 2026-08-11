@@ -98,6 +98,29 @@ export interface Database {
         }>
         Relationships: []
       }
+      meal_plan_entries: {
+        Row: {
+          id: string
+          user_id: string
+          plan_date: string
+          meal_slot: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
+          recipe_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          plan_date: string
+          meal_slot: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
+          recipe_id: string
+        }
+        Update: Partial<{
+          plan_date: string
+          meal_slot: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
+          recipe_id: string
+        }>
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
