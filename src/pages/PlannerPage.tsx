@@ -30,10 +30,13 @@ export function PlannerPage() {
   }
 
   const shoppingGroups = useMemo(() => {
-    return entries
-      .map((entry) => recipeById.get(entry.recipe_id))
-      .filter((recipe): recipe is NonNullable<typeof recipe> => !!recipe && recipe.ingredients.length > 0)
-      .map((recipe) => ({ recipeTitle: recipe.title, items: recipe.ingredients }))
+    const byRecipeId = new Map<string, { recipeTitle: string; items: string[] }>()
+    for (const entry of entries) {
+      const recipe = recipeById.get(entry.recipe_id)
+      if (!recipe || recipe.ingredients.length === 0 || byRecipeId.has(recipe.id)) continue
+      byRecipeId.set(recipe.id, { recipeTitle: recipe.title, items: recipe.ingredients })
+    }
+    return Array.from(byRecipeId.values())
   }, [entries, recipeById])
 
   function toggleChecked(key: string) {
