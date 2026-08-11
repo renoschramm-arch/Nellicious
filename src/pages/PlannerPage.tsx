@@ -25,6 +25,7 @@ export function PlannerPage() {
 
   const [openPicker, setOpenPicker] = useState<{ date: string; slot: MealSlot } | null>(null)
   const [checked, setChecked] = useState<Set<string>>(new Set())
+  const [shoppingView, setShoppingView] = useState<'grouped' | 'flat'>('grouped')
 
   function entryFor(date: string, slot: MealSlot) {
     return entries.find((e) => e.plan_date === date && e.meal_slot === slot)
@@ -50,6 +51,16 @@ export function PlannerPage() {
     }
     return groups
   }, [entries, recipeById])
+
+  const flatItems = useMemo(() => {
+    const counts = new Map<string, number>()
+    for (const group of shoppingGroups) {
+      for (const item of group.items) {
+        counts.set(item, (counts.get(item) ?? 0) + 1)
+      }
+    }
+    return Array.from(counts.entries()).map(([item, count]) => scaleIngredient(item, count))
+  }, [shoppingGroups])
 
   function toggleChecked(key: string) {
     setChecked((prev) => {
@@ -140,10 +151,33 @@ export function PlannerPage() {
       </div>
 
       <div>
-        <h2 className="font-display font-semibold text-lg mb-3">Einkaufsliste</h2>
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-display font-semibold text-lg">Einkaufsliste</h2>
+          {shoppingGroups.length > 0 && (
+            <div className="flex items-center gap-1 bg-surface-2 rounded-full p-1">
+              <button
+                onClick={() => setShoppingView('grouped')}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                  shoppingView === 'grouped' ? 'bg-primary text-on-primary' : 'text-text-muted'
+                }`}
+              >
+                Nach Rezept
+              </button>
+              <button
+                onClick={() => setShoppingView('flat')}
+                className={`px-3 py-1 rounded-full text-xs font-medium transition-colors ${
+                  shoppingView === 'flat' ? 'bg-primary text-on-primary' : 'text-text-muted'
+                }`}
+              >
+                Als Liste
+              </button>
+            </div>
+          )}
+        </div>
+
         {shoppingGroups.length === 0 ? (
           <p className="text-text-muted text-sm">Noch keine Rezepte für diese Woche geplant.</p>
-        ) : (
+        ) : shoppingView === 'grouped' ? (
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-4">
             {shoppingGroups.map((group, gi) => (
               <div key={gi}>
@@ -153,7 +187,7 @@ export function PlannerPage() {
                 </div>
                 <ul className="flex flex-col gap-1">
                   {group.items.map((item, ii) => {
-                    const key = `${gi}-${ii}`
+                    const key = `grouped-${gi}-${ii}`
                     const isChecked = checked.has(key)
                     return (
                       <li key={ii}>
@@ -172,6 +206,28 @@ export function PlannerPage() {
                 </ul>
               </div>
             ))}
+          </div>
+        ) : (
+          <div className="bg-surface border border-border rounded-2xl p-4">
+            <ul className="flex flex-col gap-1">
+              {flatItems.map((item, ii) => {
+                const key = `flat-${ii}-${item}`
+                const isChecked = checked.has(key)
+                return (
+                  <li key={ii}>
+                    <label className="flex items-center gap-2 text-sm cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={isChecked}
+                        onChange={() => toggleChecked(key)}
+                        className="accent-[var(--primary)]"
+                      />
+                      <span className={isChecked ? 'line-through text-text-muted' : ''}>{item}</span>
+                    </label>
+                  </li>
+                )
+              })}
+            </ul>
           </div>
         )}
       </div>
