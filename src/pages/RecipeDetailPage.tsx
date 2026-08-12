@@ -52,24 +52,27 @@ export function RecipeDetailPage() {
 
   return (
     <div className="flex flex-col gap-5">
-      <Link to="/rezepte" className="text-sm text-text-muted hover:text-text w-fit">
-        ← Zurück zu Rezepten
-      </Link>
-
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-1 mb-2">
-            {MEAL_TYPE_LABELS[recipe.meal_type]}
-          </span>
-          <h1 className="font-display font-bold text-2xl">{recipe.title}</h1>
-          <p className="text-text-muted mt-1">{recipe.description}</p>
-        </div>
+      <div className="flex items-center gap-2">
+        <Link
+          to="/rezepte"
+          className="border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
+        >
+          ← Zurück zu Rezepten
+        </Link>
         <button
           onClick={() => setEditing(true)}
           className="shrink-0 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
           Bearbeiten
         </button>
+      </div>
+
+      <div>
+        <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-1 mb-2">
+          {MEAL_TYPE_LABELS[recipe.meal_type]}
+        </span>
+        <h1 className="font-display font-bold text-2xl">{recipe.title}</h1>
+        <p className="text-text-muted mt-1">{recipe.description}</p>
       </div>
 
       <div className="grid grid-cols-4 gap-2 font-mono text-sm">
