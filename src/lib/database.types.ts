@@ -40,6 +40,7 @@ export interface Database {
           fat_g: number
           ingredients: string[]
           instructions: string
+          meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
           created_at: string
         }
         Insert: {
@@ -53,6 +54,7 @@ export interface Database {
           fat_g?: number
           ingredients?: string[]
           instructions?: string
+          meal_type?: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
         }
         Update: Partial<{
           title: string
@@ -63,6 +65,7 @@ export interface Database {
           fat_g: number
           ingredients: string[]
           instructions: string
+          meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
         }>
         Relationships: []
       }

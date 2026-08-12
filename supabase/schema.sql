@@ -37,6 +37,7 @@ create table if not exists public.recipes (
   fat_g integer not null default 0,
   ingredients text[] not null default '{}',
   instructions text not null default '',
+  meal_type text not null default 'mittag' check (meal_type in ('fruehstueck', 'mittag', 'abend', 'snack')),
   created_at timestamptz not null default now()
 );
 
@@ -51,9 +52,12 @@ create policy "Nutzer legen eigene Rezepte an"
   on public.recipes for insert
   with check (auth.uid() = owner_id);
 
-create policy "Nutzer bearbeiten eigene Rezepte"
+-- Rezepte sind app-weit geteilt, daher dürfen alle angemeldeten Nutzer sie
+-- bearbeiten (nicht nur eigene) — siehe "Weitere Migrationen" unten für den
+-- Nachtrag in bereits bestehenden Projekten.
+create policy "Nutzer bearbeiten Rezepte"
   on public.recipes for update
-  using (auth.uid() = owner_id);
+  using (auth.role() = 'authenticated');
 
 create policy "Nutzer löschen eigene Rezepte"
   on public.recipes for delete
@@ -406,4 +410,73 @@ from (
 ) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions)
 where not exists (
   select 1 from public.recipes r where r.title = v.title
+);
+
+
+-- Weitere Migrationen für bereits bestehende Supabase-Projekte -------------
+-- (bei einem frischen Projekt bereits durch die create table/policy oben
+-- abgedeckt; hier idempotent nachgeführt, damit dieser Block gefahrlos
+-- erneut ausgeführt werden kann.)
+
+-- Mahlzeitenart pro Rezept, für die Filterfunktion in der App.
+alter table public.recipes
+  add column if not exists meal_type text not null default 'mittag';
+
+alter table public.recipes
+  drop constraint if exists recipes_meal_type_check;
+alter table public.recipes
+  add constraint recipes_meal_type_check check (meal_type in ('fruehstueck', 'mittag', 'abend', 'snack'));
+
+-- Rezepte sind app-weit geteilt (kein Multi-Tenant-Betrieb) — daher dürfen
+-- alle angemeldeten Nutzer Rezepte bearbeiten, nicht nur ihre eigenen.
+-- Ohne diese Freigabe könnte niemand die global sichtbaren Beispielrezepte
+-- (owner_id ist NULL) über die "Bearbeiten"-Funktion in der App ändern.
+drop policy if exists "Nutzer bearbeiten eigene Rezepte" on public.recipes;
+drop policy if exists "Nutzer bearbeiten Rezepte" on public.recipes;
+create policy "Nutzer bearbeiten Rezepte"
+  on public.recipes for update
+  using (auth.role() = 'authenticated');
+
+update public.recipes set meal_type = 'fruehstueck' where title in (
+  'Haferflocken mit Beeren',
+  'Gemüse-Omelett mit Spinat und Tomaten',
+  'Overnight Oats mit Chiasamen und Mango',
+  'Shakshuka mit Paprika und Feta',
+  'Vollkorn-Pfannkuchen mit Beeren',
+  'Avocado-Toast mit pochiertem Ei',
+  'Rührei mit Vollkornbrot und Avocado'
+);
+
+update public.recipes set meal_type = 'snack' where title in (
+  'Apfel mit Mandelmus',
+  'Griechischer Joghurt mit Nüssen und Honig',
+  'Protein-Smoothie mit Spinat und Banane',
+  'Miso-Suppe mit Tofu und Wakame'
+);
+
+update public.recipes set meal_type = 'mittag' where title in (
+  'Linsen-Bowl mit Ofengemüse',
+  'Quinoa-Salat mit Feta und Granatapfel',
+  'Buddha Bowl mit Süßkartoffel und Tahini-Dressing',
+  'Thunfisch-Salat mit weißen Bohnen',
+  'Kürbissuppe mit Ingwer',
+  'Falafel-Wrap mit Joghurt-Dip',
+  'Rote-Bete-Salat mit Ziegenkäse und Walnüssen',
+  'Caprese-Salat mit Vollkornbaguette',
+  'Couscous-Salat mit Kichererbsen und Minze'
+);
+
+update public.recipes set meal_type = 'abend' where title in (
+  'Kichererbsen-Curry',
+  'Gebackener Lachs mit Brokkoli',
+  'Vollkornnudeln mit Pesto und Kirschtomaten',
+  'Gebratenes Hähnchen mit Ofengemüse',
+  'Gemüse-Wok mit Tofu und Cashewkernen',
+  'Gebackene Süßkartoffel mit Hüttenkäse',
+  'Gemüsecurry mit Tofu und Jasminreis',
+  'Putengeschnetzeltes mit Champignons',
+  'Gebackene Forelle mit Zitrone und Kräutern',
+  'Bohnen-Chili sin Carne',
+  'Gemüsespieße vom Grill mit Tzatziki',
+  'Zucchini-Nudeln mit Garnelen'
 );
