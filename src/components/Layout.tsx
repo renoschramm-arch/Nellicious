@@ -49,10 +49,10 @@ export function Layout() {
           </div>
         </div>
       </header>
-      <main className="flex-1 w-full max-w-3xl mx-auto px-5 pt-8 pb-[calc(7rem+env(safe-area-inset-bottom))] sm:pb-8">
+      <main className="flex-1 w-full max-w-3xl mx-auto px-5 pt-8 pb-24 sm:pb-8">
         <Outlet />
       </main>
-      <nav className="sm:hidden fixed inset-x-0 bottom-0 z-10 border-t border-border bg-surface/95 backdrop-blur pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
+      <nav className="sm:hidden fixed inset-x-0 bottom-0 z-10 border-t border-border bg-surface/95 backdrop-blur pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
         <div className="max-w-3xl mx-auto flex items-center justify-center gap-1 px-2.5 py-1">
           {navItems.map((item) => (
             <NavLink
