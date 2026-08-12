@@ -1,4 +1,5 @@
 import { useState, type FormEvent } from 'react'
+import { Link } from 'react-router-dom'
 import { useProfile } from '../lib/useProfile'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan } from '../lib/useMealPlan'
@@ -86,7 +87,13 @@ export function DashboardPage() {
             className="flex items-center gap-3 py-2.5 border-b border-border last:border-none"
           >
             <span className="w-2 h-2 rounded-full bg-honey shrink-0" />
-            <span className="flex-1 text-sm">{log.name}</span>
+            {log.recipe_id ? (
+              <Link to={`/rezepte/${log.recipe_id}`} className="flex-1 text-sm hover:text-primary hover:underline">
+                {log.name}
+              </Link>
+            ) : (
+              <span className="flex-1 text-sm">{log.name}</span>
+            )}
             <span className="font-mono text-xs text-text-muted">{log.kcal} kcal</span>
             <button
               onClick={() => handleRemoveLog(log.id, log.recipe_id)}
