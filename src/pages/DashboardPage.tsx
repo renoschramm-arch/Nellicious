@@ -60,7 +60,7 @@ export function DashboardPage() {
         </div>
       </div>
 
-      <div className="flex flex-col gap-2">
+      <div className="flex flex-col gap-2 bg-surface/85 backdrop-blur-sm border border-border rounded-2xl px-4">
         {logs.length === 0 && (
           <p className="text-text-muted text-sm py-4 text-center">
             Noch keine Mahlzeit heute erfasst.
