@@ -18,7 +18,15 @@ export function RecipesPage() {
     <div className="flex flex-col gap-6">
       <PageFlatlay file="recipes.jpg" />
       <div className="flex flex-col gap-3">
-        <h1 className="font-display font-bold text-2xl">Rezepte</h1>
+        <div className="flex items-center justify-between gap-3">
+          <h1 className="font-display font-bold text-2xl">Rezepte</h1>
+          <Link
+            to="/rezepte/neu"
+            className="shrink-0 bg-primary text-on-primary font-semibold rounded-xl px-3 py-2 text-sm"
+          >
+            + Neu
+          </Link>
+        </div>
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
