@@ -53,14 +53,14 @@ export function Layout() {
         <Outlet />
       </main>
       <nav className="sm:hidden fixed inset-x-0 bottom-0 z-10 border-t border-border bg-surface/95 backdrop-blur pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
-        <div className="max-w-3xl mx-auto flex items-center justify-center gap-1 px-2.5 py-2.5">
+        <div className="max-w-3xl mx-auto flex items-center justify-center gap-1 px-2.5 py-3">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.end}
               className={({ isActive }) =>
-                `flex items-center justify-center px-3.5 py-3 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
+                `flex items-center justify-center px-3.5 py-3.5 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
                   isActive
                     ? 'bg-primary text-on-primary'
                     : 'text-text-muted hover:text-text'
