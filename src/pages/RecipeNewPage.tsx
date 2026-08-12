@@ -11,10 +11,10 @@ export function RecipeNewPage() {
       <h1 className="font-display font-bold text-2xl">Neues Rezept</h1>
       <RecipeForm
         submitLabel="Rezept anlegen"
+        savedLabel="Angelegt ✓"
         onCancel={() => navigate('/rezepte')}
         onSave={async (values) => {
-          const recipe = await createRecipe(values)
-          navigate(recipe ? `/rezepte/${recipe.id}` : '/rezepte')
+          await createRecipe(values)
         }}
       />
     </div>
