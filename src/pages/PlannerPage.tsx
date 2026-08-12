@@ -255,9 +255,13 @@ export function PlannerPage() {
         </div>
 
         {!hasPlannedRecipes ? (
-          <p className="text-text-muted text-sm">Noch keine Rezepte für diese Woche geplant.</p>
+          <p className="text-text-muted text-sm bg-surface/80 backdrop-blur-sm border border-border rounded-2xl p-4">
+            Noch keine Rezepte für diese Woche geplant.
+          </p>
         ) : !hasVisibleItems ? (
-          <p className="text-text-muted text-sm">Einkauf erledigt — nichts mehr auf der Liste. 🎉</p>
+          <p className="text-text-muted text-sm bg-surface/80 backdrop-blur-sm border border-border rounded-2xl p-4">
+            Einkauf erledigt — nichts mehr auf der Liste. 🎉
+          </p>
         ) : shoppingView === 'grouped' ? (
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-4">
             {groupedByRecipe.map((group) => (
@@ -278,7 +282,7 @@ export function PlannerPage() {
         {hasVisibleItems && (
           <button
             onClick={clearShoppingList}
-            className="w-full mt-3 border border-border rounded-xl py-2.5 text-sm text-text-muted hover:text-text"
+            className="w-full mt-3 border border-border bg-surface/80 backdrop-blur-sm rounded-xl py-2.5 text-sm text-text-muted hover:text-text"
           >
             Einkauf erledigt
           </button>
