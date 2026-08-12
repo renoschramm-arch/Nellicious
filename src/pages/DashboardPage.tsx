@@ -1,6 +1,8 @@
 import { useState, type FormEvent } from 'react'
 import { useProfile } from '../lib/useProfile'
 import { useMealLogs } from '../lib/useMealLogs'
+import { useMealPlan } from '../lib/useMealPlan'
+import { toISODate } from '../lib/week'
 import { PageFlatlay } from '../components/PageFlatlay'
 
 const dateLabel = new Intl.DateTimeFormat('de-DE', {
@@ -12,7 +14,19 @@ const dateLabel = new Intl.DateTimeFormat('de-DE', {
 export function DashboardPage() {
   const { profile } = useProfile()
   const { logs, totals, addLog, removeLog } = useMealLogs()
+  const todayISO = toISODate(new Date())
+  const { entries: planEntries, removeEntry: removePlanEntry } = useMealPlan(todayISO, todayISO)
   const [showForm, setShowForm] = useState(false)
+
+  async function handleRemoveLog(logId: string, recipeId: string | null) {
+    await removeLog(logId)
+    // Ein geloggtes Rezept legt automatisch einen Planeintrag für heute an
+    // (siehe RecipeDetailPage) — beim Entfernen des Logs auch den passenden
+    // Planeintrag mit entfernen, damit die Einkaufsliste konsistent bleibt.
+    if (!recipeId) return
+    const planEntry = planEntries.find((e) => e.recipe_id === recipeId)
+    if (planEntry) await removePlanEntry(planEntry.id)
+  }
 
   const goal = profile?.daily_kcal_goal ?? 2000
   const pct = Math.min(100, Math.round((totals.kcal / goal) * 100))
@@ -75,7 +89,7 @@ export function DashboardPage() {
             <span className="flex-1 text-sm">{log.name}</span>
             <span className="font-mono text-xs text-text-muted">{log.kcal} kcal</span>
             <button
-              onClick={() => removeLog(log.id)}
+              onClick={() => handleRemoveLog(log.id, log.recipe_id)}
               className="text-text-muted hover:text-danger text-xs px-1"
               aria-label={`${log.name} entfernen`}
             >
