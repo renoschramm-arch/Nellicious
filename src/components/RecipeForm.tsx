@@ -18,11 +18,13 @@ export function RecipeForm({
   onCancel,
   onSave,
   submitLabel = 'Speichern',
+  savedLabel = 'Gespeichert ✓',
 }: {
   initial?: Recipe
   onCancel: () => void
   onSave: (values: RecipeFormValues) => Promise<void>
   submitLabel?: string
+  savedLabel?: string
 }) {
   const [title, setTitle] = useState(initial?.title ?? '')
   const [description, setDescription] = useState(initial?.description ?? '')
@@ -34,6 +36,7 @@ export function RecipeForm({
   const [instructions, setInstructions] = useState(initial?.instructions ?? '')
   const [mealType, setMealType] = useState<MealType>(initial?.meal_type ?? 'mittag')
   const [saving, setSaving] = useState(false)
+  const [justSaved, setJustSaved] = useState(false)
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -53,6 +56,8 @@ export function RecipeForm({
       meal_type: mealType,
     })
     setSaving(false)
+    setJustSaved(true)
+    setTimeout(() => setJustSaved(false), 2000)
   }
 
   return (
@@ -173,7 +178,7 @@ export function RecipeForm({
           disabled={saving}
           className="flex-1 bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm disabled:opacity-60"
         >
-          {saving ? 'Wird gespeichert …' : submitLabel}
+          {saving ? 'Wird gespeichert …' : justSaved ? savedLabel : submitLabel}
         </button>
       </div>
     </form>
