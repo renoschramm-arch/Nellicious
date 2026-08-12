@@ -1,11 +1,19 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useAuth } from '../lib/AuthContext'
 import { useProfile } from '../lib/useProfile'
+import { useTheme, type ThemePreference } from '../lib/theme'
 import { PageFlatlay } from '../components/PageFlatlay'
+
+const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
+  { value: 'system', label: 'System' },
+  { value: 'light', label: 'Hell' },
+  { value: 'dark', label: 'Dunkel' },
+]
 
 export function ProfilePage() {
   const { user, signOut } = useAuth()
   const { profile, updateGoals } = useProfile()
+  const { theme, setTheme } = useTheme()
   const [kcal, setKcal] = useState('')
   const [protein, setProtein] = useState('')
   const [carbs, setCarbs] = useState('')
@@ -94,6 +102,26 @@ export function ProfilePage() {
           {saved ? 'Gespeichert ✓' : 'Speichern'}
         </button>
       </form>
+
+      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+        <h2 className="font-display font-semibold text-lg">Darstellung</h2>
+        <div className="flex items-center gap-1 bg-surface-2 rounded-full p-1 w-fit">
+          {THEME_OPTIONS.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              onClick={() => setTheme(option.value)}
+              className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                theme === option.value
+                  ? 'bg-primary text-on-primary'
+                  : 'text-text-muted hover:text-text'
+              }`}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <button
         onClick={() => signOut()}
