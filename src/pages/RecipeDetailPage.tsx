@@ -55,13 +55,13 @@ export function RecipeDetailPage() {
       <div className="flex items-center gap-2">
         <Link
           to="/rezepte"
-          className="bg-surface border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
+          className="bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
           ← Zurück zu Rezepten
         </Link>
         <button
           onClick={() => setEditing(true)}
-          className="shrink-0 bg-surface border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
+          className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
           Bearbeiten
         </button>
