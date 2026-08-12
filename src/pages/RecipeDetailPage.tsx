@@ -2,12 +2,16 @@ import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { MEAL_TYPE_LABELS, useRecipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
+import { useMealPlan } from '../lib/useMealPlan'
+import { toISODate } from '../lib/week'
 import { RecipeForm } from '../components/RecipeForm'
 
 export function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { recipe, loading, updateRecipe } = useRecipe(id)
   const { addLog } = useMealLogs()
+  const todayISO = toISODate(new Date())
+  const { setEntry } = useMealPlan(todayISO, todayISO)
   const navigate = useNavigate()
   const [logging, setLogging] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -26,6 +30,9 @@ export function RecipeDetailPage() {
       fat_g: recipe.fat_g,
       recipe_id: recipe.id,
     })
+    // Loggen heißt: heute gegessen — also auch in den Wochenplan für heute
+    // übernehmen, damit die Einkaufsliste die Zutaten mitzählt.
+    await setEntry(todayISO, recipe.meal_type, recipe.id)
     setLogging(false)
     navigate('/')
   }
