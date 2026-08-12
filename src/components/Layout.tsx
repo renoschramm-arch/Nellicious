@@ -13,7 +13,7 @@ export function Layout() {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <header className="border-b border-border">
+      <header className="sticky top-0 z-10 border-b border-border bg-bg/95 backdrop-blur">
         <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between">
           <div className="flex flex-col leading-tight">
             <span className="font-display font-bold text-xl">
