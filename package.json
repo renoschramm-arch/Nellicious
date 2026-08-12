@@ -9,6 +9,7 @@
     "dev": "vite",
     "prebuild": "npm run fetch-fonts",
     "build": "tsc -b && vite build",
+    "postbuild": "node scripts/copy-spa-fallback.mjs",
     "lint": "oxlint",
     "preview": "vite preview"
   },
