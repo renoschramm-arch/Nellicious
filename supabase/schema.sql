@@ -120,6 +120,40 @@ create policy "Nutzer löschen eigene Planeinträge"
   using (auth.uid() = user_id);
 
 
+-- Abgehakt-/Erledigt-Status einzelner Einkaufslisten-Zutaten. An den konkreten
+-- Planeintrag gebunden (nicht an eine Kalenderwoche) — ein Rezept, das erneut
+-- für einen weiteren Tag eingeplant wird, erzeugt einen neuen meal_plan_entries-
+-- Eintrag und taucht damit automatisch wieder unerledigt in der Liste auf.
+create table if not exists public.shopping_list_status (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  entry_id uuid not null references public.meal_plan_entries (id) on delete cascade,
+  ingredient_index integer not null,
+  checked boolean not null default false,
+  dismissed boolean not null default false,
+  updated_at timestamptz not null default now(),
+  unique (user_id, entry_id, ingredient_index)
+);
+
+alter table public.shopping_list_status enable row level security;
+
+create policy "Nutzer sehen ihren eigenen Einkaufslisten-Status"
+  on public.shopping_list_status for select
+  using (auth.uid() = user_id);
+
+create policy "Nutzer legen eigenen Einkaufslisten-Status an"
+  on public.shopping_list_status for insert
+  with check (auth.uid() = user_id);
+
+create policy "Nutzer bearbeiten eigenen Einkaufslisten-Status"
+  on public.shopping_list_status for update
+  using (auth.uid() = user_id);
+
+create policy "Nutzer löschen eigenen Einkaufslisten-Status"
+  on public.shopping_list_status for delete
+  using (auth.uid() = user_id);
+
+
 -- Ein paar Beispielrezepte zum Start (owner_id NULL = global sichtbar).
 insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions)
 values

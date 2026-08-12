@@ -121,6 +121,30 @@ export interface Database {
         }>
         Relationships: []
       }
+      shopping_list_status: {
+        Row: {
+          id: string
+          user_id: string
+          entry_id: string
+          ingredient_index: number
+          checked: boolean
+          dismissed: boolean
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          entry_id: string
+          ingredient_index: number
+          checked?: boolean
+          dismissed?: boolean
+        }
+        Update: Partial<{
+          checked: boolean
+          dismissed: boolean
+        }>
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>
