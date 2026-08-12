@@ -97,7 +97,7 @@ export function ProfilePage() {
 
       <button
         onClick={() => signOut()}
-        className="border border-border rounded-xl py-2.5 text-sm text-text-muted"
+        className="border border-border bg-surface/80 backdrop-blur-sm rounded-xl py-2.5 text-sm text-text-muted"
       >
         Abmelden
       </button>
