@@ -3,6 +3,13 @@ import { Link } from 'react-router-dom'
 import { MEAL_TYPE_LABELS, MEAL_TYPES, useRecipes, type MealType } from '../lib/useRecipes'
 import { PageFlatlay } from '../components/PageFlatlay'
 
+// Kürzeres Label nur für die Filter-Pills hier, damit alle 5 Buttons in einer
+// Zeile passen — Badges auf Karten/Detailseite behalten "Frühstück".
+const FILTER_LABELS: Record<MealType, string> = {
+  ...MEAL_TYPE_LABELS,
+  fruehstueck: 'Früh',
+}
+
 export function RecipesPage() {
   const { recipes, loading } = useRecipes()
   const [query, setQuery] = useState('')
@@ -33,10 +40,10 @@ export function RecipesPage() {
           placeholder="Rezepte durchsuchen …"
           className="w-full rounded-lg border border-border bg-surface px-3 py-2 outline-none focus:border-primary"
         />
-        <div className="flex items-center gap-1.5 flex-wrap">
+        <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto">
           <button
             onClick={() => setMealType('alle')}
-            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+            className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
               mealType === 'alle' ? 'bg-primary text-on-primary' : 'bg-surface border border-border text-text-muted hover:text-text'
             }`}
           >
@@ -46,11 +53,11 @@ export function RecipesPage() {
             <button
               key={type}
               onClick={() => setMealType(type)}
-              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
                 mealType === type ? 'bg-primary text-on-primary' : 'bg-surface border border-border text-text-muted hover:text-text'
               }`}
             >
-              {MEAL_TYPE_LABELS[type]}
+              {FILTER_LABELS[type]}
             </button>
           ))}
         </div>
