@@ -1,0 +1,22 @@
+{
+  "name": "Nellicious",
+  "short_name": "Nellicious",
+  "description": "Nellicious — gesunde Ernährung, Rezepte und Tracking.",
+  "start_url": "/Nellicious/",
+  "scope": "/Nellicious/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#e85a32",
+  "icons": [
+    {
+      "src": "/Nellicious/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/Nellicious/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
