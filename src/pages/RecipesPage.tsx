@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useRecipes } from '../lib/useRecipes'
+import { PageFlatlay } from '../components/PageFlatlay'
 
 export function RecipesPage() {
   const { recipes, loading } = useRecipes()
@@ -10,6 +11,7 @@ export function RecipesPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <PageFlatlay file="recipes.jpg" />
       <div>
         <h1 className="font-display font-bold text-2xl mb-3">Rezepte</h1>
         <input

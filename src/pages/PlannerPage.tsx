@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { PageFlatlay } from '../components/PageFlatlay'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
 import { useRecipes } from '../lib/useRecipes'
 import { useShoppingListStatus, type IngredientRef } from '../lib/useShoppingListStatus'
@@ -150,6 +151,7 @@ export function PlannerPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <PageFlatlay file="planner.png" />
       <div className="flex items-center justify-between">
         <h1 className="font-display font-bold text-2xl">Wochenplan</h1>
         <div className="flex items-center gap-2">

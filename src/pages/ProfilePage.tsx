@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { useAuth } from '../lib/AuthContext'
 import { useProfile } from '../lib/useProfile'
+import { PageFlatlay } from '../components/PageFlatlay'
 
 export function ProfilePage() {
   const { user, signOut } = useAuth()
@@ -33,6 +34,7 @@ export function ProfilePage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <PageFlatlay file="profile.jpg" />
       <div>
         <h1 className="font-display font-bold text-2xl">Profil</h1>
         <p className="text-text-muted text-sm mt-1">{user?.email}</p>

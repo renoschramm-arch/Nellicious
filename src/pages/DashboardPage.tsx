@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { useProfile } from '../lib/useProfile'
 import { useMealLogs } from '../lib/useMealLogs'
+import { PageFlatlay } from '../components/PageFlatlay'
 
 const dateLabel = new Intl.DateTimeFormat('de-DE', {
   weekday: 'short',
@@ -19,6 +20,7 @@ export function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <PageFlatlay file="dashboard.jpg" />
       <div className="flex items-baseline justify-between">
         <h1 className="font-display font-bold text-2xl">Heute</h1>
         <span className="font-mono text-xs text-text-muted uppercase tracking-wide">
