@@ -255,3 +255,155 @@ from (
 where not exists (
   select 1 from public.recipes r where r.title = v.title
 );
+
+
+-- Noch mehr Beispielrezepte (owner_id NULL = global sichtbar).
+-- Wie oben: idempotent per Titel-Check, kann separat im SQL-Editor nachgeführt werden.
+insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions)
+select v.title, v.description, v.kcal, v.protein_g, v.carbs_g, v.fat_g, v.ingredients, v.instructions
+from (
+  values
+    (
+      'Shakshuka mit Paprika und Feta',
+      'Pochierte Eier in würziger Tomatensauce, direkt aus der Pfanne.',
+      380, 20, 22, 24,
+      array['2 Eier', '1 rote Paprika', '200 g gehackte Tomaten', '1 Zwiebel', '30 g Feta', '1 TL Paprikapulver', '1 EL Olivenöl']::text[],
+      'Zwiebel und Paprika in Öl andünsten, gehackte Tomaten und Paprikapulver zugeben, 10 Minuten köcheln. Mulden formen, Eier hineingeben und stocken lassen, mit Feta bestreuen.'
+    ),
+    (
+      'Thunfisch-Salat mit weißen Bohnen',
+      'Proteinreicher Salat ohne Kochen, in 10 Minuten fertig.',
+      420, 32, 30, 16,
+      array['1 Dose Thunfisch (im eigenen Saft)', '1 Dose weiße Bohnen', '1/2 rote Zwiebel', 'Kirschtomaten', '1 EL Olivenöl', 'Zitronensaft']::text[],
+      'Bohnen abspülen, mit abgetropftem Thunfisch, gewürfelter Zwiebel und halbierten Kirschtomaten vermengen. Mit Öl und Zitronensaft abschmecken.'
+    ),
+    (
+      'Gemüse-Wok mit Tofu und Cashewkernen',
+      'Schnelles, knackiges Wok-Gericht mit asiatischen Aromen.',
+      460, 22, 38, 24,
+      array['150 g Tofu', '200 g gemischtes Wokgemüse', '20 g Cashewkerne', '2 EL Sojasauce', '1 EL Sesamöl', 'Ingwer']::text[],
+      'Tofu würfeln und in Sesamöl anbraten, Gemüse und Ingwer zugeben, kurz mitbraten. Mit Sojasauce ablöschen, Cashewkerne unterheben.'
+    ),
+    (
+      'Vollkorn-Pfannkuchen mit Beeren',
+      'Ballaststoffreiches Frühstück, das auch Kindern schmeckt.',
+      360, 14, 50, 10,
+      array['80 g Vollkornmehl', '1 Ei', '150 ml Milch', '100 g gemischte Beeren', '1 TL Honig']::text[],
+      'Aus Mehl, Ei und Milch einen Teig rühren, in einer Pfanne kleine Pfannkuchen backen. Mit Beeren und Honig servieren.'
+    ),
+    (
+      'Kürbissuppe mit Ingwer',
+      'Cremige, wärmende Suppe mit feiner Schärfe.',
+      260, 6, 32, 10,
+      array['400 g Hokkaido-Kürbis', '1 Zwiebel', '1 Stück Ingwer', '400 ml Gemüsebrühe', '100 ml Kokosmilch']::text[],
+      'Zwiebel und Ingwer andünsten, Kürbiswürfel zugeben, mit Brühe ablöschen und 15 Minuten köcheln. Pürieren, Kokosmilch unterrühren.'
+    ),
+    (
+      'Falafel-Wrap mit Joghurt-Dip',
+      'Handlicher, pflanzlicher Wrap für unterwegs.',
+      480, 18, 56, 20,
+      array['6 Falafel (Kichererbsen)', '1 Vollkorn-Wrap', 'Salat', 'Tomate', 'Gurke', '3 EL Joghurt', 'Zitronensaft']::text[],
+      'Falafel braten oder backen. Wrap mit Salat, Tomate, Gurke und Falafel füllen. Joghurt mit Zitronensaft verrühren und darüber geben, einrollen.'
+    ),
+    (
+      'Gebackene Süßkartoffel mit Hüttenkäse',
+      'Einfaches, sättigendes Gericht mit viel Protein.',
+      340, 18, 46, 8,
+      array['1 große Süßkartoffel', '100 g Hüttenkäse', 'Frühlingszwiebel', 'Paprikapulver']::text[],
+      'Süßkartoffel 45 Minuten bei 200°C backen, halbieren, mit Hüttenkäse füllen und mit Frühlingszwiebel und Paprikapulver toppen.'
+    ),
+    (
+      'Protein-Smoothie mit Spinat und Banane',
+      'Schneller Smoothie für vor oder nach dem Sport.',
+      300, 20, 40, 6,
+      array['1 Banane', '50 g Spinat', '200 ml Pflanzendrink', '1 Scoop Proteinpulver', 'Eiswürfel']::text[],
+      'Alle Zutaten im Mixer glatt pürieren.'
+    ),
+    (
+      'Rote-Bete-Salat mit Ziegenkäse und Walnüssen',
+      'Erdig-süßer Salat mit cremigem Käse und Crunch.',
+      380, 12, 26, 26,
+      array['200 g gekochte Rote Bete', '60 g Ziegenkäse', '20 g Walnüsse', 'Rucola', '1 EL Olivenöl', 'Balsamico']::text[],
+      'Rote Bete würfeln, mit Rucola auf einem Teller anrichten, Ziegenkäse und Walnüsse darüber bröseln, mit Öl und Balsamico beträufeln.'
+    ),
+    (
+      'Gemüsecurry mit Tofu und Jasminreis',
+      'Mildes, sättigendes Curry mit Kokosmilch.',
+      520, 20, 64, 20,
+      array['150 g Tofu', '200 g gemischtes Gemüse', '200 ml Kokosmilch', '2 TL Currypaste', '60 g Jasminreis']::text[],
+      'Reis kochen. Tofu anbraten, Currypaste kurz mitrösten, Gemüse und Kokosmilch zugeben, 10 Minuten köcheln. Mit Reis servieren.'
+    ),
+    (
+      'Putengeschnetzeltes mit Champignons',
+      'Klassiker mit magerem Fleisch und cremiger Sauce.',
+      420, 40, 14, 20,
+      array['200 g Putenbrust', '150 g Champignons', '1 Zwiebel', '100 ml Sahne', '1 EL Öl']::text[],
+      'Pute in Streifen anbraten, herausnehmen. Zwiebel und Champignons anbraten, mit Sahne ablöschen, Pute wieder zugeben und kurz köcheln.'
+    ),
+    (
+      'Caprese-Salat mit Vollkornbaguette',
+      'Italienischer Klassiker, in 5 Minuten angerichtet.',
+      400, 16, 34, 22,
+      array['150 g Tomaten', '125 g Mozzarella', 'Basilikum', '1 EL Olivenöl', '1 Scheibe Vollkornbaguette']::text[],
+      'Tomaten und Mozzarella in Scheiben schneiden, abwechselnd anrichten, mit Basilikum und Öl beträufeln. Mit Baguette servieren.'
+    ),
+    (
+      'Miso-Suppe mit Tofu und Wakame',
+      'Leichte, umamireiche Suppe als Beilage oder Snack.',
+      180, 10, 12, 8,
+      array['2 EL Miso-Paste', '100 g Tofu', '1 EL getrocknete Wakame-Algen', 'Frühlingszwiebel', '500 ml Wasser']::text[],
+      'Wasser erhitzen (nicht kochen), Miso-Paste einrühren. Tofuwürfel und Wakame zugeben, mit Frühlingszwiebel servieren.'
+    ),
+    (
+      'Gebackene Forelle mit Zitrone und Kräutern',
+      'Leichtes Fischgericht mit wenig Aufwand.',
+      400, 36, 4, 24,
+      array['1 Forelle (ausgenommen)', '1 Zitrone', 'Dill', 'Petersilie', '1 EL Olivenöl', 'Salz, Pfeffer']::text[],
+      'Forelle mit Kräutern und Zitronenscheiben füllen, würzen, mit Öl beträufeln, 20 Minuten bei 200°C backen.'
+    ),
+    (
+      'Bohnen-Chili sin Carne',
+      'Herzhaftes, vegetarisches Chili zum Vorkochen.',
+      440, 20, 60, 12,
+      array['1 Dose Kidneybohnen', '1 Dose Mais', '400 g gehackte Tomaten', '1 Paprika', '1 Zwiebel', 'Chilipulver', 'Kreuzkümmel']::text[],
+      'Zwiebel und Paprika andünsten, Gewürze mitrösten, Tomaten, Bohnen und Mais zugeben, 20 Minuten köcheln lassen.'
+    ),
+    (
+      'Couscous-Salat mit Kichererbsen und Minze',
+      'Frischer Salat für Meal-Prep, hält sich gut im Kühlschrank.',
+      400, 14, 60, 12,
+      array['120 g Couscous', '1 Dose Kichererbsen', '1 Gurke', 'Minze', 'Petersilie', 'Zitronensaft', '2 EL Olivenöl']::text[],
+      'Couscous mit heißem Wasser übergießen, quellen lassen. Mit Kichererbsen, gewürfelter Gurke und Kräutern vermengen, mit Zitronensaft und Öl abschmecken.'
+    ),
+    (
+      'Avocado-Toast mit pochiertem Ei',
+      'Beliebter Frühstücks-Klassiker mit gesunden Fetten.',
+      380, 16, 30, 22,
+      array['2 Scheiben Vollkornbrot', '1 Avocado', '1 Ei', 'Chiliflocken', 'Zitronensaft', 'Salz']::text[],
+      'Brot toasten, Avocado zerdrücken und mit Zitronensaft und Salz würzen, auf dem Toast verteilen. Ei pochieren und daraufsetzen, mit Chiliflocken bestreuen.'
+    ),
+    (
+      'Gemüsespieße vom Grill mit Tzatziki',
+      'Leichtes Grillgericht, auch in der Pfanne möglich.',
+      320, 10, 24, 20,
+      array['Zucchini', 'Paprika', 'rote Zwiebel', 'Champignons', '100 g Tzatziki', '1 EL Olivenöl']::text[],
+      'Gemüse würfeln, auf Spieße stecken, mit Öl bestreichen und grillen oder braten. Mit Tzatziki servieren.'
+    ),
+    (
+      'Rührei mit Vollkornbrot und Avocado',
+      'Proteinreiches Frühstück mit gesunden Fetten.',
+      420, 22, 26, 26,
+      array['3 Eier', '1 Scheibe Vollkornbrot', '1/2 Avocado', '1 EL Butter', 'Schnittlauch']::text[],
+      'Eier verquirlen, in Butter unter Rühren stocken lassen. Mit Vollkornbrot und Avocadoscheiben servieren, mit Schnittlauch bestreuen.'
+    ),
+    (
+      'Zucchini-Nudeln mit Garnelen',
+      'Leichtes Low-Carb-Gericht mit viel Protein.',
+      340, 32, 12, 18,
+      array['2 Zucchini', '150 g Garnelen', '1 Knoblauchzehe', 'Kirschtomaten', '1 EL Olivenöl', 'Chiliflocken']::text[],
+      'Zucchini spiralisieren. Garnelen und Knoblauch in Öl anbraten, Kirschtomaten zugeben, Zucchininudeln kurz mitschwenken, mit Chiliflocken servieren.'
+    )
+) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions)
+where not exists (
+  select 1 from public.recipes r where r.title = v.title
+);
