@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { MEAL_TYPE_LABELS, useRecipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan } from '../lib/useMealPlan'
@@ -12,8 +12,8 @@ export function RecipeDetailPage() {
   const { addLog } = useMealLogs()
   const todayISO = toISODate(new Date())
   const { setEntry } = useMealPlan(todayISO, todayISO)
+  const navigate = useNavigate()
   const [logging, setLogging] = useState(false)
-  const [logged, setLogged] = useState(false)
   const [editing, setEditing] = useState(false)
 
   if (loading) return <p className="text-text-muted text-sm">Lädt …</p>
@@ -34,8 +34,7 @@ export function RecipeDetailPage() {
     // übernehmen, damit die Einkaufsliste die Zutaten mitzählt.
     await setEntry(todayISO, recipe.meal_type, recipe.id)
     setLogging(false)
-    setLogged(true)
-    setTimeout(() => setLogged(false), 2000)
+    navigate('/rezepte')
   }
 
   if (editing) {
@@ -118,7 +117,7 @@ export function RecipeDetailPage() {
         disabled={logging}
         className="bg-primary text-on-primary font-semibold rounded-xl py-3 disabled:opacity-60"
       >
-        {logging ? 'Wird gespeichert …' : logged ? 'Geloggt ✓' : 'Als heutige Mahlzeit loggen'}
+        {logging ? 'Wird gespeichert …' : 'Als heutige Mahlzeit loggen'}
       </button>
     </div>
   )
