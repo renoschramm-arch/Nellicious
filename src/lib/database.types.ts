@@ -40,6 +40,7 @@ export interface Database {
           fat_g: number
           ingredients: string[]
           instructions: string
+          meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
           created_at: string
         }
         Insert: {
@@ -53,6 +54,7 @@ export interface Database {
           fat_g?: number
           ingredients?: string[]
           instructions?: string
+          meal_type?: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
         }
         Update: Partial<{
           title: string
@@ -63,6 +65,7 @@ export interface Database {
           fat_g: number
           ingredients: string[]
           instructions: string
+          meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
         }>
         Relationships: []
       }
@@ -95,6 +98,53 @@ export interface Database {
           protein_g: number
           carbs_g: number
           fat_g: number
+        }>
+        Relationships: []
+      }
+      meal_plan_entries: {
+        Row: {
+          id: string
+          user_id: string
+          plan_date: string
+          meal_slot: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
+          recipe_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          plan_date: string
+          meal_slot: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
+          recipe_id: string
+        }
+        Update: Partial<{
+          plan_date: string
+          meal_slot: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
+          recipe_id: string
+        }>
+        Relationships: []
+      }
+      shopping_list_status: {
+        Row: {
+          id: string
+          user_id: string
+          entry_id: string
+          ingredient_index: number
+          checked: boolean
+          dismissed: boolean
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          entry_id: string
+          ingredient_index: number
+          checked?: boolean
+          dismissed?: boolean
+        }
+        Update: Partial<{
+          checked: boolean
+          dismissed: boolean
         }>
         Relationships: []
       }

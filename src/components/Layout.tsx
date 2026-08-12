@@ -4,6 +4,7 @@ import { useAuth } from '../lib/AuthContext'
 const navItems = [
   { to: '/', label: 'Heute', end: true },
   { to: '/rezepte', label: 'Rezepte' },
+  { to: '/plan', label: 'Plan' },
   { to: '/profil', label: 'Profil' },
 ]
 
@@ -14,38 +15,61 @@ export function Layout() {
     <div className="min-h-screen flex flex-col">
       <header className="border-b border-border">
         <div className="max-w-3xl mx-auto px-5 py-4 flex items-center justify-between">
-          <span className="font-display font-bold text-xl">
-            Nelli<span className="text-primary">cious</span>
-          </span>
-          <nav className="flex items-center gap-1">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.end}
-                className={({ isActive }) =>
-                  `px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                    isActive
-                      ? 'bg-primary text-on-primary'
-                      : 'text-text-muted hover:text-text'
-                  }`
-                }
-              >
-                {item.label}
-              </NavLink>
-            ))}
+          <div className="flex flex-col leading-tight">
+            <span className="font-display font-bold text-xl">
+              Nelli<span className="text-primary">cious</span>
+            </span>
+            <span className="text-xs text-text-muted">Gesund ernähren</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <nav className="hidden sm:flex items-center gap-1">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  end={item.end}
+                  className={({ isActive }) =>
+                    `px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                      isActive
+                        ? 'bg-primary text-on-primary'
+                        : 'text-text-muted hover:text-text'
+                    }`
+                  }
+                >
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
             <button
               onClick={() => signOut()}
               className="px-3 py-1.5 rounded-full text-sm font-medium text-text-muted hover:text-text"
             >
               Abmelden
             </button>
-          </nav>
+          </div>
         </div>
       </header>
-      <main className="flex-1 w-full max-w-3xl mx-auto px-5 py-8">
+      <main className="flex-1 w-full max-w-3xl mx-auto px-5 pt-8 pb-24 sm:pb-8">
         <Outlet />
       </main>
+      <nav className="sm:hidden fixed inset-x-0 bottom-0 z-10 border-t border-border bg-surface/95 backdrop-blur">
+        <div className="max-w-3xl mx-auto flex items-stretch justify-around">
+          {navItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              end={item.end}
+              className={({ isActive }) =>
+                `flex-1 flex flex-col items-center gap-0.5 py-2.5 text-xs font-medium transition-colors ${
+                  isActive ? 'text-primary' : 'text-text-muted'
+                }`
+              }
+            >
+              {item.label}
+            </NavLink>
+          ))}
+        </div>
+      </nav>
     </div>
   )
 }

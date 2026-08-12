@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Navigate } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
+import { PageFlatlay } from '../components/PageFlatlay'
 
 export function AuthPage() {
   const { session, signInWithPassword, signUp } = useAuth()
@@ -33,6 +34,7 @@ export function AuthPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center px-5">
+      <PageFlatlay file="auth.png" />
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <span className="font-display font-bold text-2xl">

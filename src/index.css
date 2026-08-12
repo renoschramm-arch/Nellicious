@@ -129,3 +129,23 @@ body {
   background: var(--brand);
   color: var(--on-primary);
 }
+
+.page-flatlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-repeat: no-repeat;
+  background-position: bottom center;
+  background-size: cover;
+  -webkit-mask-image: linear-gradient(to top, #000 0%, #000 32%, transparent 76%);
+  mask-image: linear-gradient(to top, #000 0%, #000 32%, transparent 76%);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .page-flatlay {
+    filter: brightness(0.55) saturate(0.85);
+  }
+}
+:root[data-theme='dark'] .page-flatlay {
+  filter: brightness(0.55) saturate(0.85);
+}

@@ -3,6 +3,17 @@ import { supabase } from './supabaseClient'
 import type { Database } from './database.types'
 
 export type Recipe = Database['public']['Tables']['recipes']['Row']
+export type RecipeUpdate = Database['public']['Tables']['recipes']['Update']
+export type MealType = Recipe['meal_type']
+
+export const MEAL_TYPES: MealType[] = ['fruehstueck', 'mittag', 'abend', 'snack']
+
+export const MEAL_TYPE_LABELS: Record<MealType, string> = {
+  fruehstueck: 'Frühstück',
+  mittag: 'Mittag',
+  abend: 'Abend',
+  snack: 'Snack',
+}
 
 export function useRecipes() {
   const [recipes, setRecipes] = useState<Recipe[]>([])
@@ -39,5 +50,11 @@ export function useRecipe(id: string | undefined) {
       })
   }, [id])
 
-  return { recipe, loading }
+  async function updateRecipe(patch: RecipeUpdate) {
+    if (!id) return
+    const { data } = await supabase.from('recipes').update(patch).eq('id', id).select('*').single()
+    if (data) setRecipe(data)
+  }
+
+  return { recipe, loading, updateRecipe }
 }
