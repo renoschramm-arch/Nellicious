@@ -186,3 +186,72 @@ values
     'Zwiebel andünsten, Currypulver kurz mitrösten, Kichererbsen und Kokosmilch zugeben, 10 Minuten köcheln, Spinat unterrühren.'
   )
 on conflict do nothing;
+
+
+-- Weitere Beispielrezepte (owner_id NULL = global sichtbar).
+-- Dieser Block ist idempotent (per Titel-Check) und kann im bestehenden
+-- Supabase-Projekt einmalig separat im SQL-Editor nachgeführt werden.
+insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions)
+select v.title, v.description, v.kcal, v.protein_g, v.carbs_g, v.fat_g, v.ingredients, v.instructions
+from (
+  values
+    (
+      'Quinoa-Salat mit Feta und Granatapfel',
+      'Frischer, proteinreicher Salat mit fruchtiger Säure und Kräutern.',
+      420, 14, 48, 18,
+      array['150 g Quinoa', '100 g Feta', '1 Granatapfel', '1 Salatgurke', '2 EL Olivenöl', 'Saft 1 Zitrone', 'Minze']::text[],
+      'Quinoa nach Packungsangabe kochen und abkühlen lassen. Gurke würfeln, Granatapfelkerne auslösen, Feta zerbröseln. Alles vermengen, mit Olivenöl, Zitronensaft und Minze abschmecken.'
+    ),
+    (
+      'Gebackener Lachs mit Brokkoli',
+      'Omega-3-reiches Ofengericht, in 20 Minuten fertig.',
+      460, 38, 12, 28,
+      array['150 g Lachsfilet', '200 g Brokkoli', '1 EL Olivenöl', '1 Knoblauchzehe', 'Zitrone', 'Salz, Pfeffer']::text[],
+      'Ofen auf 200°C vorheizen. Lachs und Brokkoliröschen mit Öl, gehacktem Knoblauch, Salz und Pfeffer würzen, 15–18 Minuten backen. Mit Zitrone servieren.'
+    ),
+    (
+      'Griechischer Joghurt mit Nüssen und Honig',
+      'Proteinreicher Snack oder Frühstück, in 2 Minuten fertig.',
+      280, 18, 24, 12,
+      array['200 g griechischer Joghurt', '20 g gemischte Nüsse', '1 TL Honig', 'Zimt']::text[],
+      'Joghurt in eine Schale geben, mit gehackten Nüssen, Honig und einer Prise Zimt toppen.'
+    ),
+    (
+      'Gemüse-Omelett mit Spinat und Tomaten',
+      'Herzhaftes Low-Carb-Frühstück mit viel Protein.',
+      340, 24, 8, 22,
+      array['3 Eier', '50 g Spinat', '1 Tomate', '30 g Feta', '1 TL Olivenöl', 'Salz, Pfeffer']::text[],
+      'Eier verquirlen und würzen. Spinat und Tomatenwürfel in Öl kurz andünsten, Eier dazugeben, stocken lassen, mit Feta bestreuen und zusammenklappen.'
+    ),
+    (
+      'Buddha Bowl mit Süßkartoffel und Tahini-Dressing',
+      'Bunte, ballaststoffreiche Bowl mit cremigem Sesam-Dressing.',
+      520, 16, 64, 22,
+      array['1 Süßkartoffel', '100 g Kichererbsen (Dose)', '60 g Grünkohl', '1 EL Tahini', 'Saft 1/2 Zitrone', '1 EL Olivenöl']::text[],
+      'Süßkartoffel würfeln und mit Kichererbsen 20 Minuten bei 200°C rösten. Grünkohl kurz massieren. Alles in einer Bowl anrichten, Tahini mit Zitronensaft und etwas Wasser glattrühren und darüber geben.'
+    ),
+    (
+      'Vollkornnudeln mit Pesto und Kirschtomaten',
+      'Schnelle Vollkorn-Pasta mit frischen Tomaten und Parmesan.',
+      490, 16, 68, 16,
+      array['100 g Vollkornnudeln', '3 EL Pesto', '150 g Kirschtomaten', '20 g Parmesan', 'Basilikum']::text[],
+      'Nudeln nach Packungsangabe kochen. Kirschtomaten halbieren, mit den abgetropften Nudeln und Pesto vermengen, mit Parmesan und Basilikum servieren.'
+    ),
+    (
+      'Overnight Oats mit Chiasamen und Mango',
+      'Vorbereitbares Frühstück mit Ballaststoffen und Omega-3.',
+      350, 12, 58, 8,
+      array['50 g Haferflocken', '1 EL Chiasamen', '200 ml Pflanzendrink', '1/2 Mango', '1 TL Ahornsirup']::text[],
+      'Haferflocken, Chiasamen, Pflanzendrink und Ahornsirup vermischen, über Nacht im Kühlschrank quellen lassen. Am Morgen mit Mangowürfeln toppen.'
+    ),
+    (
+      'Gebratenes Hähnchen mit Ofengemüse',
+      'Klassisches proteinreiches Abendessen mit buntem Gemüse.',
+      510, 42, 30, 22,
+      array['150 g Hähnchenbrust', '1 Zucchini', '1 Paprika', '1 rote Zwiebel', '1 EL Olivenöl', 'Kräuter der Provence']::text[],
+      'Gemüse würfeln, mit Öl und Kräutern vermengen, 20 Minuten bei 200°C rösten. Hähnchenbrust würzen und in der Pfanne rundherum goldbraun braten, in Streifen zum Gemüse servieren.'
+    )
+) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions)
+where not exists (
+  select 1 from public.recipes r where r.title = v.title
+);
