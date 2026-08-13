@@ -1,6 +1,16 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { MEAL_TYPE_LABELS, MEAL_TYPES, useRecipes, type MealType } from '../lib/useRecipes'
+import {
+  DIET_TAGS,
+  DIET_TAG_LABELS,
+  FREE_OF_OPTIONS,
+  FREE_OF_LABELS,
+  MEAL_TYPE_LABELS,
+  MEAL_TYPES,
+  useRecipes,
+  type MealType,
+} from '../lib/useRecipes'
+import type { NutritionType } from '../lib/useProfile'
 import { PageFlatlay } from '../components/PageFlatlay'
 
 // Kürzeres Label nur für die Filter-Pills hier, damit alle 5 Buttons in einer
@@ -14,12 +24,21 @@ export function RecipesPage() {
   const { recipes, loading } = useRecipes()
   const [query, setQuery] = useState('')
   const [mealType, setMealType] = useState<MealType | 'alle'>('alle')
+  const [dietFilter, setDietFilter] = useState<NutritionType | 'alle'>('alle')
+  const [freeOfFilter, setFreeOfFilter] = useState<string[]>([])
+
+  function toggleFreeOfFilter(value: string) {
+    setFreeOfFilter((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
+  }
 
   const filtered = recipes.filter(
     (r) =>
       r.title.toLowerCase().includes(query.toLowerCase()) &&
-      (mealType === 'alle' || r.meal_type === mealType),
+      (mealType === 'alle' || r.meal_type === mealType) &&
+      (dietFilter === 'alle' || r.diet_tags.includes(dietFilter)) &&
+      freeOfFilter.every((f) => r.free_of.includes(f)),
   )
+  const activeFilterCount = (dietFilter !== 'alle' ? 1 : 0) + freeOfFilter.length
 
   return (
     <div className="flex flex-col gap-6">
@@ -61,6 +80,57 @@ export function RecipesPage() {
             </button>
           ))}
         </div>
+
+        <details className="bg-surface border border-border rounded-2xl p-4 group">
+          <summary className="flex items-center justify-between gap-2 cursor-pointer text-sm font-semibold list-none">
+            <span>
+              Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+            </span>
+            <span className="text-text-muted transition-transform group-open:rotate-180">▾</span>
+          </summary>
+          <div className="flex flex-col gap-3 mt-3">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs text-text-muted">Ernährungstyp</span>
+              <div className="flex flex-wrap gap-1.5">
+                <button
+                  onClick={() => setDietFilter('alle')}
+                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                    dietFilter === 'alle' ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+                  }`}
+                >
+                  Alle
+                </button>
+                {DIET_TAGS.map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => setDietFilter(tag)}
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                      dietFilter === tag ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+                    }`}
+                  >
+                    {DIET_TAG_LABELS[tag]}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs text-text-muted">Frei von</span>
+              <div className="flex flex-wrap gap-1.5">
+                {FREE_OF_OPTIONS.map((value) => (
+                  <button
+                    key={value}
+                    onClick={() => toggleFreeOfFilter(value)}
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                      freeOfFilter.includes(value) ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+                    }`}
+                  >
+                    {FREE_OF_LABELS[value]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </details>
       </div>
 
       {loading && <p className="text-text-muted text-sm">Lädt …</p>}
@@ -75,9 +145,18 @@ export function RecipesPage() {
             to={`/rezepte/${recipe.id}`}
             className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2 hover:border-primary transition-colors"
           >
-            <span className="inline-block w-fit text-xs font-medium text-primary bg-primary/10 rounded-full px-2 py-0.5">
-              {MEAL_TYPE_LABELS[recipe.meal_type]}
-            </span>
+            <div className="flex flex-wrap gap-1">
+              <span className="inline-block w-fit text-xs font-medium text-primary bg-primary/10 rounded-full px-2 py-0.5">
+                {MEAL_TYPE_LABELS[recipe.meal_type]}
+              </span>
+              {recipe.diet_tags
+                .filter((tag): tag is NutritionType => tag === 'vegan' || tag === 'vegetarisch' || tag === 'keto' || tag === 'low_carb')
+                .map((tag) => (
+                  <span key={tag} className="inline-block w-fit text-xs font-medium text-basil bg-basil/10 rounded-full px-2 py-0.5">
+                    {DIET_TAG_LABELS[tag]}
+                  </span>
+                ))}
+            </div>
             <span className="font-display font-semibold text-lg">{recipe.title}</span>
             <span className="text-text-muted text-sm line-clamp-2">{recipe.description}</span>
             <span className="font-mono text-xs text-text-muted mt-1">{recipe.kcal} kcal</span>
