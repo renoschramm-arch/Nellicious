@@ -4,8 +4,10 @@ import { useAuth } from './AuthContext'
 import {
   NUTRITION_TYPES,
   NUTRITION_TYPE_LABELS,
+  NUTRITION_TYPE_DESCRIPTIONS,
   INTOLERANCES,
   INTOLERANCE_LABELS,
+  INTOLERANCE_DESCRIPTIONS,
 } from './useProfile'
 import type { Database } from './database.types'
 
@@ -27,8 +29,10 @@ export const MEAL_TYPE_LABELS: Record<MealType, string> = {
 // gekennzeichnet, die auch im Profil verwendet werden.
 export const DIET_TAGS = NUTRITION_TYPES
 export const DIET_TAG_LABELS = NUTRITION_TYPE_LABELS
+export const DIET_TAG_DESCRIPTIONS = NUTRITION_TYPE_DESCRIPTIONS
 export const FREE_OF_OPTIONS = INTOLERANCES
 export const FREE_OF_LABELS = INTOLERANCE_LABELS
+export const FREE_OF_DESCRIPTIONS = INTOLERANCE_DESCRIPTIONS
 
 export function useRecipes() {
   const { user } = useAuth()

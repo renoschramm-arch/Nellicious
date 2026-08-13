@@ -2,13 +2,16 @@ import { useState, type FormEvent } from 'react'
 import {
   DIET_TAGS,
   DIET_TAG_LABELS,
+  DIET_TAG_DESCRIPTIONS,
   FREE_OF_OPTIONS,
   FREE_OF_LABELS,
+  FREE_OF_DESCRIPTIONS,
   MEAL_TYPE_LABELS,
   MEAL_TYPES,
   type MealType,
   type Recipe,
 } from '../lib/useRecipes'
+import { TagLegend } from './TagLegend'
 
 export interface RecipeFormValues {
   title: string
@@ -186,6 +189,9 @@ export function RecipeForm({
             </button>
           ))}
         </div>
+        <TagLegend
+          items={DIET_TAGS.map((tag) => ({ label: DIET_TAG_LABELS[tag], description: DIET_TAG_DESCRIPTIONS[tag] }))}
+        />
       </div>
 
       <div className="flex flex-col gap-2">
@@ -206,6 +212,9 @@ export function RecipeForm({
             </button>
           ))}
         </div>
+        <TagLegend
+          items={FREE_OF_OPTIONS.map((value) => ({ label: FREE_OF_LABELS[value], description: FREE_OF_DESCRIPTIONS[value] }))}
+        />
       </div>
 
       <label className="flex flex-col gap-1.5 text-sm">

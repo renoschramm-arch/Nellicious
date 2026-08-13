@@ -3,8 +3,10 @@ import { Link } from 'react-router-dom'
 import {
   DIET_TAGS,
   DIET_TAG_LABELS,
+  DIET_TAG_DESCRIPTIONS,
   FREE_OF_OPTIONS,
   FREE_OF_LABELS,
+  FREE_OF_DESCRIPTIONS,
   MEAL_TYPE_LABELS,
   MEAL_TYPES,
   useRecipes,
@@ -12,6 +14,7 @@ import {
 } from '../lib/useRecipes'
 import type { NutritionType } from '../lib/useProfile'
 import { PageFlatlay } from '../components/PageFlatlay'
+import { TagLegend } from '../components/TagLegend'
 
 // Kürzeres Label nur für die Filter-Pills hier, damit alle 5 Buttons in einer
 // Zeile passen — Badges auf Karten/Detailseite behalten "Frühstück".
@@ -112,6 +115,9 @@ export function RecipesPage() {
                   </button>
                 ))}
               </div>
+              <TagLegend
+                items={DIET_TAGS.map((tag) => ({ label: DIET_TAG_LABELS[tag], description: DIET_TAG_DESCRIPTIONS[tag] }))}
+              />
             </div>
             <div className="flex flex-col gap-1.5">
               <span className="text-xs text-text-muted">Frei von</span>
@@ -128,6 +134,9 @@ export function RecipesPage() {
                   </button>
                 ))}
               </div>
+              <TagLegend
+                items={FREE_OF_OPTIONS.map((value) => ({ label: FREE_OF_LABELS[value], description: FREE_OF_DESCRIPTIONS[value] }))}
+              />
             </div>
           </div>
         </details>
