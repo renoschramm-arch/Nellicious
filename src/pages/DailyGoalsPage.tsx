@@ -21,6 +21,7 @@ export function DailyGoalsPage() {
   const [carbs, setCarbs] = useState('')
   const [fat, setFat] = useState('')
   const [saved, setSaved] = useState(false)
+  const [showFormula, setShowFormula] = useState(false)
 
   useEffect(() => {
     if (!profile) return
@@ -175,6 +176,73 @@ export function DailyGoalsPage() {
           {saved ? 'Gespeichert ✓' : 'Speichern'}
         </button>
       </form>
+
+      <button
+        type="button"
+        onClick={() => setShowFormula((v) => !v)}
+        className="bg-surface-2 border border-border rounded-xl py-2.5 text-sm font-medium text-text-muted hover:text-text transition-colors"
+      >
+        {showFormula ? 'Berechnungsgrundlage ausblenden' : '📐 Wie wird das berechnet?'}
+      </button>
+
+      {showFormula && (
+        <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-4 text-sm text-text-muted">
+          <div>
+            <p className="font-medium text-text">1. Grundumsatz — Mifflin-St-Jeor-Formel</p>
+            <p className="mt-1">
+              Der Grundumsatz (BMR) ist die Energiemenge, die dein Körper in völliger Ruhe
+              verbraucht, um lebenswichtige Funktionen aufrechtzuerhalten. Die Mifflin-St-Jeor-
+              Formel gilt als eine der genauesten Schätzformeln dafür und wird in
+              Ernährungsberatung und Fitness-Apps breit eingesetzt:
+            </p>
+            <ul className="font-mono text-xs mt-2 flex flex-col gap-1">
+              <li>Männlich: 10 × Gewicht(kg) + 6,25 × Größe(cm) − 5 × Alter + 5</li>
+              <li>Weiblich: 10 × Gewicht(kg) + 6,25 × Größe(cm) − 5 × Alter − 161</li>
+              <li>Divers: Mittelwert der beiden Offsets (kein eigener Standardwert definiert)</li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="font-medium text-text">2. Gesamtumsatz (TDEE)</p>
+            <p className="mt-1">
+              Der Grundumsatz wird mit deinem Aktivitätslevel aus dem Profil multipliziert, um
+              den tatsächlichen Tagesbedarf zu schätzen:
+            </p>
+            <ul className="text-xs mt-2 flex flex-col gap-1">
+              <li>Sitzend: × 1,2</li>
+              <li>Leicht aktiv: × 1,375</li>
+              <li>Mäßig aktiv: × 1,55</li>
+              <li>Sehr aktiv: × 1,725</li>
+              <li>Extrem aktiv: × 1,9</li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="font-medium text-text">3. Anpassung nach Ziel</p>
+            <p className="mt-1">Je nach gewähltem Ziel wird der Gesamtumsatz angepasst:</p>
+            <ul className="text-xs mt-2 flex flex-col gap-1">
+              <li>Abnehmen: −500 kcal/Tag (≈ 0,5 kg Gewichtsabnahme/Woche)</li>
+              <li>Gewicht halten: ±0 kcal</li>
+              <li>Zunehmen: +300 kcal/Tag</li>
+              <li>Muskelaufbau: +250 kcal/Tag</li>
+            </ul>
+          </div>
+
+          <div>
+            <p className="font-medium text-text">4. Makroverteilung</p>
+            <ul className="text-xs mt-2 flex flex-col gap-1">
+              <li>Protein: 2,0 g je kg Körpergewicht (Abnehmen, Muskelaufbau) bzw. 1,6 g/kg (Halten, Zunehmen)</li>
+              <li>Fett: 30 % der berechneten Gesamt-kcal</li>
+              <li>Kohlenhydrate: der verbleibende Rest der kcal</li>
+            </ul>
+          </div>
+
+          <p className="text-xs">
+            Diese Werte sind ein rechnerischer Anhaltspunkt und ersetzen keine individuelle
+            ärztliche oder ernährungswissenschaftliche Beratung.
+          </p>
+        </div>
+      )}
     </div>
   )
 }
