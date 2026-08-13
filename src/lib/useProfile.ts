@@ -8,6 +8,15 @@ type ProfileUpdate = Database['public']['Tables']['profiles']['Update']
 export type NutritionType = NonNullable<Profile['nutrition_type']>
 export type ActivityLevel = NonNullable<Profile['activity_level']>
 export type Goal = NonNullable<Profile['goal']>
+export type Gender = NonNullable<Profile['gender']>
+
+export const GENDERS: Gender[] = ['maennlich', 'weiblich', 'divers']
+
+export const GENDER_LABELS: Record<Gender, string> = {
+  maennlich: 'Männlich',
+  weiblich: 'Weiblich',
+  divers: 'Divers',
+}
 
 export const NUTRITION_TYPES: NutritionType[] = [
   'omnivore',

@@ -8,6 +8,7 @@ import { RecipesPage } from './pages/RecipesPage'
 import { RecipeNewPage } from './pages/RecipeNewPage'
 import { RecipeDetailPage } from './pages/RecipeDetailPage'
 import { PlannerPage } from './pages/PlannerPage'
+import { VerlaufPage } from './pages/VerlaufPage'
 import { MorePage } from './pages/MorePage'
 import { ProfileEditPage } from './pages/ProfileEditPage'
 import { GoalsPage } from './pages/GoalsPage'
@@ -28,6 +29,7 @@ export default function App() {
               <Route path="/rezepte/neu" element={<RecipeNewPage />} />
               <Route path="/rezepte/:id" element={<RecipeDetailPage />} />
               <Route path="/plan" element={<PlannerPage />} />
+              <Route path="/verlauf" element={<VerlaufPage />} />
               <Route path="/mehr" element={<MorePage />} />
               <Route path="/mehr/profil" element={<ProfileEditPage />} />
               <Route path="/mehr/ziele" element={<GoalsPage />} />

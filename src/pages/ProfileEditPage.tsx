@@ -4,17 +4,23 @@ import { useProfile } from '../lib/useProfile'
 import {
   ACTIVITY_LEVELS,
   ACTIVITY_LEVEL_LABELS,
+  GENDERS,
+  GENDER_LABELS,
   INTOLERANCES,
   INTOLERANCE_LABELS,
   NUTRITION_TYPES,
   NUTRITION_TYPE_LABELS,
   type ActivityLevel,
+  type Gender,
   type NutritionType,
 } from '../lib/useProfile'
 
 export function ProfileEditPage() {
   const { profile, updateProfile } = useProfile()
   const [displayName, setDisplayName] = useState('')
+  const [age, setAge] = useState('')
+  const [heightCm, setHeightCm] = useState('')
+  const [gender, setGender] = useState<Gender | null>(null)
   const [nutritionType, setNutritionType] = useState<NutritionType | null>(null)
   const [intolerances, setIntolerances] = useState<string[]>([])
   const [activityLevel, setActivityLevel] = useState<ActivityLevel | null>(null)
@@ -23,6 +29,9 @@ export function ProfileEditPage() {
   useEffect(() => {
     if (!profile) return
     setDisplayName(profile.display_name ?? '')
+    setAge(profile.age != null ? String(profile.age) : '')
+    setHeightCm(profile.height_cm != null ? String(profile.height_cm) : '')
+    setGender(profile.gender)
     setNutritionType(profile.nutrition_type)
     setIntolerances(profile.intolerances)
     setActivityLevel(profile.activity_level)
@@ -38,6 +47,9 @@ export function ProfileEditPage() {
     e.preventDefault()
     await updateProfile({
       display_name: displayName || null,
+      age: age ? Number(age) : null,
+      height_cm: heightCm ? Number(heightCm) : null,
+      gender,
       nutrition_type: nutritionType,
       intolerances,
       activity_level: activityLevel,
@@ -72,6 +84,51 @@ export function ProfileEditPage() {
             className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary"
           />
         </label>
+
+        <div className="grid grid-cols-2 gap-3">
+          <label className="flex flex-col gap-1 text-sm">
+            Alter
+            <input
+              type="number"
+              min={0}
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+              placeholder="Jahre"
+              className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary"
+            />
+          </label>
+          <label className="flex flex-col gap-1 text-sm">
+            Größe
+            <input
+              type="number"
+              min={0}
+              value={heightCm}
+              onChange={(e) => setHeightCm(e.target.value)}
+              placeholder="cm"
+              className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary"
+            />
+          </label>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <span className="text-sm font-medium">Geschlecht</span>
+          <div className="flex flex-wrap gap-1.5">
+            {GENDERS.map((value) => (
+              <button
+                key={value}
+                type="button"
+                onClick={() => setGender(gender === value ? null : value)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  gender === value
+                    ? 'bg-primary text-on-primary'
+                    : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+                }`}
+              >
+                {GENDER_LABELS[value]}
+              </button>
+            ))}
+          </div>
+        </div>
 
         <div className="flex flex-col gap-2">
           <span className="text-sm font-medium">Ernährungstyp</span>

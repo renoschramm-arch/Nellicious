@@ -35,3 +35,9 @@ const rangeFormat = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2
 export function formatWeekRange(monday: Date, sunday: Date): string {
   return `${rangeFormat.format(monday)} – ${rangeFormat.format(sunday)}`
 }
+
+const weekdayShortFormat = new Intl.DateTimeFormat('de-DE', { weekday: 'short' })
+
+export function formatWeekdayShort(date: Date): string {
+  return weekdayShortFormat.format(date).replace('.', '')
+}
