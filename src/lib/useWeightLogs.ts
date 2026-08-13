@@ -5,6 +5,18 @@ import type { Database } from './database.types'
 
 export type WeightLog = Database['public']['Tables']['weight_logs']['Row']
 
+export function formatWeightKg(kg: number): string {
+  return kg.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+}
+
+// Erlaubt sowohl "75,5" als auch "75.5" als Eingabe.
+export function parseWeightKg(input: string): number | null {
+  const normalized = input.trim().replace(',', '.')
+  if (!normalized) return null
+  const value = Number(normalized)
+  return Number.isFinite(value) ? value : null
+}
+
 export function useWeightLogs() {
   const { user } = useAuth()
   const [logs, setLogs] = useState<WeightLog[]>([])

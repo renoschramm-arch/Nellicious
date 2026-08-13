@@ -1,6 +1,6 @@
 import { useState, type FormEvent } from 'react'
 import { useProfile } from '../lib/useProfile'
-import { useWeightLogs } from '../lib/useWeightLogs'
+import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
 import { useWaterLog } from '../lib/useWaterLog'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
@@ -31,7 +31,8 @@ export function VerlaufPage() {
   const weightChartData = days.map((d) => {
     const iso = toISODate(d)
     const entry = weightLogs.find((log) => log.log_date === iso)
-    return { label: formatWeekdayShort(d), value: entry ? Number(entry.weight_kg) : null }
+    const value = entry ? Number(entry.weight_kg) : null
+    return { label: formatWeekdayShort(d), value, display: value != null ? formatWeightKg(value) : undefined }
   })
   const waterChartData = days.map((d) => {
     const iso = toISODate(d)
@@ -41,8 +42,9 @@ export function VerlaufPage() {
 
   async function handleWeightSubmit(e: FormEvent) {
     e.preventDefault()
-    if (!weightValue) return
-    await upsertWeight(weightDate, Number(weightValue))
+    const parsed = parseWeightKg(weightValue)
+    if (parsed == null) return
+    await upsertWeight(weightDate, parsed)
     setWeightValue('')
   }
 
@@ -131,7 +133,7 @@ export function VerlaufPage() {
         <h2 className="font-display font-semibold text-lg">⚖️ Gewicht</h2>
         {latestWeight && (
           <span className="font-mono text-2xl">
-            {Number(latestWeight.weight_kg)} <span className="text-text-muted text-base">kg</span>
+            {formatWeightKg(Number(latestWeight.weight_kg))} <span className="text-text-muted text-base">kg</span>
           </span>
         )}
         <form onSubmit={handleWeightSubmit} className="flex flex-col gap-3">
@@ -149,12 +151,11 @@ export function VerlaufPage() {
             <label className="flex flex-col gap-1 text-xs text-text-muted">
               Gewicht (kg)
               <input
-                type="number"
-                min={0}
-                step={0.1}
+                type="text"
+                inputMode="decimal"
                 value={weightValue}
                 onChange={(e) => setWeightValue(e.target.value)}
-                placeholder="z. B. 75.5"
+                placeholder="z. B. 75,5"
                 className="rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono outline-none focus:border-primary"
               />
             </label>
@@ -188,7 +189,7 @@ export function VerlaufPage() {
                 className="flex items-center justify-between gap-2 bg-surface-2 rounded-lg px-3 py-2 text-sm"
               >
                 <span className="text-text-muted">{log.log_date}</span>
-                <span className="font-mono">{Number(log.weight_kg)} kg</span>
+                <span className="font-mono">{formatWeightKg(Number(log.weight_kg))} kg</span>
                 <button
                   type="button"
                   onClick={() => deleteWeight(log.id)}

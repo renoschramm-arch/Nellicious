@@ -1,4 +1,4 @@
-type BarDatum = { label: string; value: number | null }
+type BarDatum = { label: string; value: number | null; display?: string }
 
 export function WeekBarChart({ data, color }: { data: BarDatum[]; color: string }) {
   const max = Math.max(...data.map((d) => d.value ?? 0), 1)
@@ -8,7 +8,7 @@ export function WeekBarChart({ data, color }: { data: BarDatum[]; color: string 
       {data.map((d, i) => (
         <div key={i} className="flex-1 flex flex-col items-center gap-1 min-w-0">
           <span className="text-[10px] text-text-muted font-mono truncate w-full text-center">
-            {d.value != null ? d.value : '–'}
+            {d.value != null ? (d.display ?? d.value) : '–'}
           </span>
           <div className="w-full flex items-end justify-center h-16">
             <div
