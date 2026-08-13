@@ -9,6 +9,11 @@ export interface Database {
           daily_protein_goal: number
           daily_carbs_goal: number
           daily_fat_goal: number
+          nutrition_type: 'omnivore' | 'vegetarisch' | 'vegan' | 'pescetarisch' | 'keto' | 'low_carb' | null
+          intolerances: string[]
+          activity_level: 'sitzend' | 'leicht_aktiv' | 'maessig_aktiv' | 'sehr_aktiv' | 'extrem_aktiv' | null
+          goal: 'abnehmen' | 'halten' | 'zunehmen' | 'muskelaufbau' | null
+          goal_note: string
           created_at: string
         }
         Insert: {
@@ -18,6 +23,11 @@ export interface Database {
           daily_protein_goal?: number
           daily_carbs_goal?: number
           daily_fat_goal?: number
+          nutrition_type?: 'omnivore' | 'vegetarisch' | 'vegan' | 'pescetarisch' | 'keto' | 'low_carb' | null
+          intolerances?: string[]
+          activity_level?: 'sitzend' | 'leicht_aktiv' | 'maessig_aktiv' | 'sehr_aktiv' | 'extrem_aktiv' | null
+          goal?: 'abnehmen' | 'halten' | 'zunehmen' | 'muskelaufbau' | null
+          goal_note?: string
         }
         Update: Partial<{
           display_name: string | null
@@ -25,6 +35,11 @@ export interface Database {
           daily_protein_goal: number
           daily_carbs_goal: number
           daily_fat_goal: number
+          nutrition_type: 'omnivore' | 'vegetarisch' | 'vegan' | 'pescetarisch' | 'keto' | 'low_carb' | null
+          intolerances: string[]
+          activity_level: 'sitzend' | 'leicht_aktiv' | 'maessig_aktiv' | 'sehr_aktiv' | 'extrem_aktiv' | null
+          goal: 'abnehmen' | 'halten' | 'zunehmen' | 'muskelaufbau' | null
+          goal_note: string
         }>
         Relationships: []
       }

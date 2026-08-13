@@ -480,3 +480,38 @@ update public.recipes set meal_type = 'abend' where title in (
   'Gemüsespieße vom Grill mit Tzatziki',
   'Zucchini-Nudeln mit Garnelen'
 );
+
+-- "Mehr"-Menü: erweitertes Profil (Ernährungstyp, Unverträglichkeiten,
+-- Aktivitätslevel) und Ziel-Angaben.
+alter table public.profiles
+  add column if not exists nutrition_type text;
+alter table public.profiles
+  drop constraint if exists profiles_nutrition_type_check;
+alter table public.profiles
+  add constraint profiles_nutrition_type_check check (
+    nutrition_type is null or nutrition_type in ('omnivore', 'vegetarisch', 'vegan', 'pescetarisch', 'keto', 'low_carb')
+  );
+
+alter table public.profiles
+  add column if not exists intolerances text[] not null default '{}';
+
+alter table public.profiles
+  add column if not exists activity_level text;
+alter table public.profiles
+  drop constraint if exists profiles_activity_level_check;
+alter table public.profiles
+  add constraint profiles_activity_level_check check (
+    activity_level is null or activity_level in ('sitzend', 'leicht_aktiv', 'maessig_aktiv', 'sehr_aktiv', 'extrem_aktiv')
+  );
+
+alter table public.profiles
+  add column if not exists goal text;
+alter table public.profiles
+  drop constraint if exists profiles_goal_check;
+alter table public.profiles
+  add constraint profiles_goal_check check (
+    goal is null or goal in ('abnehmen', 'halten', 'zunehmen', 'muskelaufbau')
+  );
+
+alter table public.profiles
+  add column if not exists goal_note text not null default '';
