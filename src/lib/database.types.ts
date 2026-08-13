@@ -9,6 +9,15 @@ export interface Database {
           daily_protein_goal: number
           daily_carbs_goal: number
           daily_fat_goal: number
+          nutrition_type: 'omnivore' | 'vegetarisch' | 'vegan' | 'pescetarisch' | 'keto' | 'low_carb' | null
+          intolerances: string[]
+          activity_level: 'sitzend' | 'leicht_aktiv' | 'maessig_aktiv' | 'sehr_aktiv' | 'extrem_aktiv' | null
+          goal: 'abnehmen' | 'halten' | 'zunehmen' | 'muskelaufbau' | null
+          goal_note: string
+          age: number | null
+          height_cm: number | null
+          gender: 'maennlich' | 'weiblich' | 'divers' | null
+          daily_water_goal_ml: number
           created_at: string
         }
         Insert: {
@@ -18,6 +27,15 @@ export interface Database {
           daily_protein_goal?: number
           daily_carbs_goal?: number
           daily_fat_goal?: number
+          nutrition_type?: 'omnivore' | 'vegetarisch' | 'vegan' | 'pescetarisch' | 'keto' | 'low_carb' | null
+          intolerances?: string[]
+          activity_level?: 'sitzend' | 'leicht_aktiv' | 'maessig_aktiv' | 'sehr_aktiv' | 'extrem_aktiv' | null
+          goal?: 'abnehmen' | 'halten' | 'zunehmen' | 'muskelaufbau' | null
+          goal_note?: string
+          age?: number | null
+          height_cm?: number | null
+          gender?: 'maennlich' | 'weiblich' | 'divers' | null
+          daily_water_goal_ml?: number
         }
         Update: Partial<{
           display_name: string | null
@@ -25,6 +43,15 @@ export interface Database {
           daily_protein_goal: number
           daily_carbs_goal: number
           daily_fat_goal: number
+          nutrition_type: 'omnivore' | 'vegetarisch' | 'vegan' | 'pescetarisch' | 'keto' | 'low_carb' | null
+          intolerances: string[]
+          activity_level: 'sitzend' | 'leicht_aktiv' | 'maessig_aktiv' | 'sehr_aktiv' | 'extrem_aktiv' | null
+          goal: 'abnehmen' | 'halten' | 'zunehmen' | 'muskelaufbau' | null
+          goal_note: string
+          age: number | null
+          height_cm: number | null
+          gender: 'maennlich' | 'weiblich' | 'divers' | null
+          daily_water_goal_ml: number
         }>
         Relationships: []
       }
@@ -145,6 +172,46 @@ export interface Database {
         Update: Partial<{
           checked: boolean
           dismissed: boolean
+        }>
+        Relationships: []
+      }
+      weight_logs: {
+        Row: {
+          id: string
+          user_id: string
+          log_date: string
+          weight_kg: number
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          log_date: string
+          weight_kg: number
+        }
+        Update: Partial<{
+          log_date: string
+          weight_kg: number
+        }>
+        Relationships: []
+      }
+      water_logs: {
+        Row: {
+          id: string
+          user_id: string
+          log_date: string
+          amount_ml: number
+          updated_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          log_date: string
+          amount_ml?: number
+        }
+        Update: Partial<{
+          log_date: string
+          amount_ml: number
         }>
         Relationships: []
       }

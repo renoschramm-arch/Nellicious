@@ -480,3 +480,115 @@ update public.recipes set meal_type = 'abend' where title in (
   'Gemüsespieße vom Grill mit Tzatziki',
   'Zucchini-Nudeln mit Garnelen'
 );
+
+-- "Mehr"-Menü: erweitertes Profil (Ernährungstyp, Unverträglichkeiten,
+-- Aktivitätslevel) und Ziel-Angaben.
+alter table public.profiles
+  add column if not exists nutrition_type text;
+alter table public.profiles
+  drop constraint if exists profiles_nutrition_type_check;
+alter table public.profiles
+  add constraint profiles_nutrition_type_check check (
+    nutrition_type is null or nutrition_type in ('omnivore', 'vegetarisch', 'vegan', 'pescetarisch', 'keto', 'low_carb')
+  );
+
+alter table public.profiles
+  add column if not exists intolerances text[] not null default '{}';
+
+alter table public.profiles
+  add column if not exists activity_level text;
+alter table public.profiles
+  drop constraint if exists profiles_activity_level_check;
+alter table public.profiles
+  add constraint profiles_activity_level_check check (
+    activity_level is null or activity_level in ('sitzend', 'leicht_aktiv', 'maessig_aktiv', 'sehr_aktiv', 'extrem_aktiv')
+  );
+
+alter table public.profiles
+  add column if not exists goal text;
+alter table public.profiles
+  drop constraint if exists profiles_goal_check;
+alter table public.profiles
+  add constraint profiles_goal_check check (
+    goal is null or goal in ('abnehmen', 'halten', 'zunehmen', 'muskelaufbau')
+  );
+
+alter table public.profiles
+  add column if not exists goal_note text not null default '';
+
+
+-- "Verlauf"-Tab: Alter/Größe/Geschlecht im Profil sowie Gewichts- und
+-- Wasser-Tracking.
+alter table public.profiles
+  add column if not exists age integer;
+
+alter table public.profiles
+  add column if not exists height_cm integer;
+
+alter table public.profiles
+  add column if not exists gender text;
+alter table public.profiles
+  drop constraint if exists profiles_gender_check;
+alter table public.profiles
+  add constraint profiles_gender_check check (
+    gender is null or gender in ('maennlich', 'weiblich', 'divers')
+  );
+
+alter table public.profiles
+  add column if not exists daily_water_goal_ml integer not null default 2500;
+
+create table if not exists public.weight_logs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  log_date date not null,
+  weight_kg numeric(5,1) not null,
+  created_at timestamptz not null default now(),
+  unique (user_id, log_date)
+);
+
+alter table public.weight_logs enable row level security;
+
+create policy "Nutzer sehen ihre eigenen Gewichtseinträge"
+  on public.weight_logs for select
+  using (auth.uid() = user_id);
+
+create policy "Nutzer legen eigene Gewichtseinträge an"
+  on public.weight_logs for insert
+  with check (auth.uid() = user_id);
+
+create policy "Nutzer bearbeiten eigene Gewichtseinträge"
+  on public.weight_logs for update
+  using (auth.uid() = user_id);
+
+create policy "Nutzer löschen eigene Gewichtseinträge"
+  on public.weight_logs for delete
+  using (auth.uid() = user_id);
+
+
+-- Ein Eintrag pro Nutzer und Tag mit der kumulierten Trinkmenge.
+create table if not exists public.water_logs (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  log_date date not null,
+  amount_ml integer not null default 0,
+  updated_at timestamptz not null default now(),
+  unique (user_id, log_date)
+);
+
+alter table public.water_logs enable row level security;
+
+create policy "Nutzer sehen ihre eigenen Wassereinträge"
+  on public.water_logs for select
+  using (auth.uid() = user_id);
+
+create policy "Nutzer legen eigene Wassereinträge an"
+  on public.water_logs for insert
+  with check (auth.uid() = user_id);
+
+create policy "Nutzer bearbeiten eigene Wassereinträge"
+  on public.water_logs for update
+  using (auth.uid() = user_id);
+
+create policy "Nutzer löschen eigene Wassereinträge"
+  on public.water_logs for delete
+  using (auth.uid() = user_id);

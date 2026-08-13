@@ -5,7 +5,8 @@ const navItems = [
   { to: '/', label: 'Heute', end: true },
   { to: '/rezepte', label: 'Rezepte' },
   { to: '/plan', label: 'Plan' },
-  { to: '/profil', label: 'Profil' },
+  { to: '/verlauf', label: 'Verlauf' },
+  { to: '/mehr', label: 'Mehr' },
 ]
 
 export function Layout() {
