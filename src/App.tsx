@@ -12,6 +12,8 @@ import { MorePage } from './pages/MorePage'
 import { ProfileEditPage } from './pages/ProfileEditPage'
 import { GoalsPage } from './pages/GoalsPage'
 import { DailyGoalsPage } from './pages/DailyGoalsPage'
+import { DarstellungPage } from './pages/DarstellungPage'
+import { InfoPage } from './pages/InfoPage'
 
 export default function App() {
   return (
@@ -30,6 +32,8 @@ export default function App() {
               <Route path="/mehr/profil" element={<ProfileEditPage />} />
               <Route path="/mehr/ziele" element={<GoalsPage />} />
               <Route path="/mehr/tagesziele" element={<DailyGoalsPage />} />
+              <Route path="/mehr/darstellung" element={<DarstellungPage />} />
+              <Route path="/mehr/info" element={<InfoPage />} />
             </Route>
           </Route>
         </Routes>

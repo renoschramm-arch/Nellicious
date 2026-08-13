@@ -1,23 +1,17 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
-import { useTheme, type ThemePreference } from '../lib/theme'
 import { PageFlatlay } from '../components/PageFlatlay'
-
-const THEME_OPTIONS: { value: ThemePreference; label: string }[] = [
-  { value: 'system', label: 'System' },
-  { value: 'light', label: 'Hell' },
-  { value: 'dark', label: 'Dunkel' },
-]
 
 const MENU_ITEMS = [
   { to: '/mehr/profil', label: 'Mein Profil', description: 'Name, Ernährungstyp, Aktivitätslevel' },
   { to: '/mehr/ziele', label: 'Ziele', description: 'Was du erreichen möchtest' },
   { to: '/mehr/tagesziele', label: 'Tagesziele', description: 'kcal, Protein, Kohlenhydrate, Fett' },
+  { to: '/mehr/darstellung', label: 'Darstellung', description: 'System, Hell oder Dunkel' },
+  { to: '/mehr/info', label: 'Info', description: 'Über Nellicious' },
 ]
 
 export function MorePage() {
   const { user, signOut } = useAuth()
-  const { theme, setTheme } = useTheme()
 
   return (
     <div className="flex flex-col gap-6">
@@ -42,26 +36,6 @@ export function MorePage() {
           </Link>
         ))}
       </nav>
-
-      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-        <h2 className="font-display font-semibold text-lg">Darstellung</h2>
-        <div className="flex items-center gap-1 bg-surface-2 rounded-full p-1 w-fit">
-          {THEME_OPTIONS.map((option) => (
-            <button
-              key={option.value}
-              type="button"
-              onClick={() => setTheme(option.value)}
-              className={`px-3.5 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                theme === option.value
-                  ? 'bg-primary text-on-primary'
-                  : 'text-text-muted hover:text-text'
-              }`}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
       <button
         onClick={() => signOut()}
