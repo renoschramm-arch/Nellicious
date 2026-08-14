@@ -8,12 +8,15 @@ import {
   GENDER_LABELS,
   INTOLERANCES,
   INTOLERANCE_LABELS,
+  INTOLERANCE_DESCRIPTIONS,
   NUTRITION_TYPES,
   NUTRITION_TYPE_LABELS,
+  NUTRITION_TYPE_DESCRIPTIONS,
   type ActivityLevel,
   type Gender,
   type NutritionType,
 } from '../lib/useProfile'
+import { TagLegend } from '../components/TagLegend'
 
 export function ProfileEditPage() {
   const { profile, updateProfile } = useProfile()
@@ -148,6 +151,12 @@ export function ProfileEditPage() {
               </button>
             ))}
           </div>
+          <TagLegend
+            items={NUTRITION_TYPES.map((type) => ({
+              label: NUTRITION_TYPE_LABELS[type],
+              description: NUTRITION_TYPE_DESCRIPTIONS[type],
+            }))}
+          />
         </div>
 
         <div className="flex flex-col gap-2">
@@ -168,6 +177,12 @@ export function ProfileEditPage() {
               </button>
             ))}
           </div>
+          <TagLegend
+            items={INTOLERANCES.map((value) => ({
+              label: INTOLERANCE_LABELS[value],
+              description: INTOLERANCE_DESCRIPTIONS[value],
+            }))}
+          />
         </div>
 
         <div className="flex flex-col gap-2">

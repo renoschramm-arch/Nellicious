@@ -4,6 +4,7 @@ import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLo
 import { useWaterLog } from '../lib/useWaterLog'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
+import { PageFlatlay } from '../components/PageFlatlay'
 
 const WATER_STEPS = [150, 250, 500]
 
@@ -57,6 +58,7 @@ export function VerlaufPage() {
 
   return (
     <div className="flex flex-col gap-6">
+      <PageFlatlay file="auth.png" />
       <h1 className="font-display font-bold text-2xl">Verlauf</h1>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">

@@ -68,6 +68,8 @@ export interface Database {
           ingredients: string[]
           instructions: string
           meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
+          diet_tags: string[]
+          free_of: string[]
           created_at: string
         }
         Insert: {
@@ -82,6 +84,8 @@ export interface Database {
           ingredients?: string[]
           instructions?: string
           meal_type?: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
+          diet_tags?: string[]
+          free_of?: string[]
         }
         Update: Partial<{
           title: string
@@ -93,6 +97,8 @@ export interface Database {
           ingredients: string[]
           instructions: string
           meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
+          diet_tags: string[]
+          free_of: string[]
         }>
         Relationships: []
       }

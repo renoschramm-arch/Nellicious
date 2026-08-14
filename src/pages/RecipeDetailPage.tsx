@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { MEAL_TYPE_LABELS, useRecipe } from '../lib/useRecipes'
+import { DIET_TAG_LABELS, FREE_OF_LABELS, MEAL_TYPE_LABELS, useRecipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan } from '../lib/useMealPlan'
 import { toISODate } from '../lib/week'
@@ -68,9 +68,23 @@ export function RecipeDetailPage() {
       </div>
 
       <div>
-        <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-1 mb-2">
-          {MEAL_TYPE_LABELS[recipe.meal_type]}
-        </span>
+        <div className="flex flex-wrap gap-1.5 mb-2">
+          <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-1">
+            {MEAL_TYPE_LABELS[recipe.meal_type]}
+          </span>
+          {recipe.diet_tags
+            .filter((tag) => tag !== 'omnivore')
+            .map((tag) => (
+              <span key={tag} className="inline-block text-xs font-medium text-basil bg-basil/10 rounded-full px-2.5 py-1">
+                {DIET_TAG_LABELS[tag as keyof typeof DIET_TAG_LABELS]}
+              </span>
+            ))}
+          {recipe.free_of.map((value) => (
+            <span key={value} className="inline-block text-xs font-medium text-honey bg-honey/10 rounded-full px-2.5 py-1">
+              {FREE_OF_LABELS[value as keyof typeof FREE_OF_LABELS]}
+            </span>
+          ))}
+        </div>
         <h1 className="font-display font-bold text-2xl">{recipe.title}</h1>
         <p className="text-text-muted mt-1">{recipe.description}</p>
       </div>

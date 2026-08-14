@@ -36,6 +36,15 @@ export const NUTRITION_TYPE_LABELS: Record<NutritionType, string> = {
   low_carb: 'Low-Carb',
 }
 
+export const NUTRITION_TYPE_DESCRIPTIONS: Record<NutritionType, string> = {
+  omnivore: 'Isst alles – Fleisch, Fisch, Milchprodukte und Pflanzliches.',
+  vegetarisch: 'Kein Fleisch und kein Fisch, aber Eier und Milchprodukte erlaubt.',
+  vegan: 'Komplett pflanzlich – keine tierischen Produkte.',
+  pescetarisch: 'Kein Fleisch, aber Fisch und Meeresfrüchte erlaubt.',
+  keto: 'Sehr wenig Kohlenhydrate, viel Fett.',
+  low_carb: 'Wenig Kohlenhydrate.',
+}
+
 export const INTOLERANCES = [
   'laktosefrei',
   'glutenfrei',
@@ -52,6 +61,15 @@ export const INTOLERANCE_LABELS: Record<(typeof INTOLERANCES)[number], string> =
   eifrei: 'Eifrei',
   sojafrei: 'Sojafrei',
   histaminarm: 'Histaminarm',
+}
+
+export const INTOLERANCE_DESCRIPTIONS: Record<(typeof INTOLERANCES)[number], string> = {
+  laktosefrei: 'Ohne Milchzucker – kein Milchprodukt mit Laktose (z. B. Milch, Käse, Sahne).',
+  glutenfrei: 'Ohne Gluten – kein Weizen, Gerste, Roggen oder herkömmlicher Hafer.',
+  nussfrei: 'Ohne Nüsse (z. B. Mandeln, Walnüsse, Cashewkerne).',
+  eifrei: 'Ohne Ei.',
+  sojafrei: 'Ohne Soja (z. B. Tofu, Sojasauce, Sojadrink).',
+  histaminarm: 'Wenig histaminreiche Zutaten – z. B. kein gereifter Käse, Tomaten, Fermentiertes oder Geräuchertes.',
 }
 
 export const ACTIVITY_LEVELS: ActivityLevel[] = [

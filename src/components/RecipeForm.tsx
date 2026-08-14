@@ -1,5 +1,17 @@
 import { useState, type FormEvent } from 'react'
-import { MEAL_TYPE_LABELS, MEAL_TYPES, type MealType, type Recipe } from '../lib/useRecipes'
+import {
+  DIET_TAGS,
+  DIET_TAG_LABELS,
+  DIET_TAG_DESCRIPTIONS,
+  FREE_OF_OPTIONS,
+  FREE_OF_LABELS,
+  FREE_OF_DESCRIPTIONS,
+  MEAL_TYPE_LABELS,
+  MEAL_TYPES,
+  type MealType,
+  type Recipe,
+} from '../lib/useRecipes'
+import { TagLegend } from './TagLegend'
 
 export interface RecipeFormValues {
   title: string
@@ -11,6 +23,8 @@ export interface RecipeFormValues {
   ingredients: string[]
   instructions: string
   meal_type: MealType
+  diet_tags: string[]
+  free_of: string[]
 }
 
 export function RecipeForm({
@@ -35,8 +49,18 @@ export function RecipeForm({
   const [ingredients, setIngredients] = useState(initial?.ingredients.join('\n') ?? '')
   const [instructions, setInstructions] = useState(initial?.instructions ?? '')
   const [mealType, setMealType] = useState<MealType>(initial?.meal_type ?? 'mittag')
+  const [dietTags, setDietTags] = useState<string[]>(initial?.diet_tags ?? [])
+  const [freeOf, setFreeOf] = useState<string[]>(initial?.free_of ?? [])
   const [saving, setSaving] = useState(false)
   const [justSaved, setJustSaved] = useState(false)
+
+  function toggleDietTag(value: string) {
+    setDietTags((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
+  }
+
+  function toggleFreeOf(value: string) {
+    setFreeOf((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
+  }
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -54,6 +78,8 @@ export function RecipeForm({
         .filter(Boolean),
       instructions,
       meal_type: mealType,
+      diet_tags: dietTags,
+      free_of: freeOf,
     })
     setSaving(false)
     setJustSaved(true)
@@ -143,6 +169,52 @@ export function RecipeForm({
             className="rounded-lg border border-border bg-surface px-2 py-1.5 font-mono outline-none focus:border-primary"
           />
         </label>
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium">Geeignet für</span>
+        <div className="flex flex-wrap gap-1.5">
+          {DIET_TAGS.map((tag) => (
+            <button
+              key={tag}
+              type="button"
+              onClick={() => toggleDietTag(tag)}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                dietTags.includes(tag)
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+              }`}
+            >
+              {DIET_TAG_LABELS[tag]}
+            </button>
+          ))}
+        </div>
+        <TagLegend
+          items={DIET_TAGS.map((tag) => ({ label: DIET_TAG_LABELS[tag], description: DIET_TAG_DESCRIPTIONS[tag] }))}
+        />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium">Frei von</span>
+        <div className="flex flex-wrap gap-1.5">
+          {FREE_OF_OPTIONS.map((value) => (
+            <button
+              key={value}
+              type="button"
+              onClick={() => toggleFreeOf(value)}
+              className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                freeOf.includes(value)
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+              }`}
+            >
+              {FREE_OF_LABELS[value]}
+            </button>
+          ))}
+        </div>
+        <TagLegend
+          items={FREE_OF_OPTIONS.map((value) => ({ label: FREE_OF_LABELS[value], description: FREE_OF_DESCRIPTIONS[value] }))}
+        />
       </div>
 
       <label className="flex flex-col gap-1.5 text-sm">
