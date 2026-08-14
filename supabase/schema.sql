@@ -989,3 +989,31 @@ from (
 where not exists (
   select 1 from public.recipes r where r.title = v.title
 );
+
+
+-- Favoriten: Rezepte sind app-weit geteilt, die Favoriten-Markierung ist
+-- aber pro Nutzer — daher eine eigene Zuordnungstabelle statt eines Feldes
+-- direkt an recipes.
+create table if not exists public.recipe_favorites (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  recipe_id uuid not null references public.recipes (id) on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (user_id, recipe_id)
+);
+
+alter table public.recipe_favorites enable row level security;
+
+drop policy if exists "Nutzer sehen ihre eigenen Favoriten" on public.recipe_favorites;
+create policy "Nutzer sehen ihre eigenen Favoriten"
+  on public.recipe_favorites for select
+  using (auth.uid() = user_id);
+
+drop policy if exists "Nutzer legen eigene Favoriten an" on public.recipe_favorites;
+create policy "Nutzer legen eigene Favoriten an"
+  on public.recipe_favorites for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Nutzer entfernen eigene Favoriten" on public.recipe_favorites;
+create policy "Nutzer entfernen eigene Favoriten"
+  on public.recipe_favorites for delete
+  using (auth.uid() = user_id);

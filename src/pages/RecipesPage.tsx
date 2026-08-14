@@ -15,6 +15,7 @@ import {
 import type { NutritionType } from '../lib/useProfile'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { TagLegend } from '../components/TagLegend'
+import { useFavorites } from '../lib/useFavorites'
 
 // Kürzeres Label nur für die Filter-Pills hier, damit alle 5 Buttons in einer
 // Zeile passen — Badges auf Karten/Detailseite behalten "Frühstück".
@@ -25,10 +26,12 @@ const FILTER_LABELS: Record<MealType, string> = {
 
 export function RecipesPage() {
   const { recipes, loading } = useRecipes()
+  const { favoriteIds, toggleFavorite } = useFavorites()
   const [query, setQuery] = useState('')
   const [mealType, setMealType] = useState<MealType | 'alle'>('alle')
   const [dietFilter, setDietFilter] = useState<NutritionType | 'alle'>('alle')
   const [freeOfFilter, setFreeOfFilter] = useState<string[]>([])
+  const [onlyFavorites, setOnlyFavorites] = useState(false)
 
   function toggleFreeOfFilter(value: string) {
     setFreeOfFilter((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
@@ -39,7 +42,8 @@ export function RecipesPage() {
       r.title.toLowerCase().includes(query.toLowerCase()) &&
       (mealType === 'alle' || r.meal_type === mealType) &&
       (dietFilter === 'alle' || r.diet_tags.includes(dietFilter)) &&
-      freeOfFilter.every((f) => r.free_of.includes(f)),
+      freeOfFilter.every((f) => r.free_of.includes(f)) &&
+      (!onlyFavorites || favoriteIds.has(r.id)),
   )
   const activeFilterCount = (dietFilter !== 'alle' ? 1 : 0) + freeOfFilter.length
 
@@ -82,6 +86,14 @@ export function RecipesPage() {
               {FILTER_LABELS[type]}
             </button>
           ))}
+          <button
+            onClick={() => setOnlyFavorites((v) => !v)}
+            className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              onlyFavorites ? 'bg-primary text-on-primary' : 'bg-surface border border-border text-text-muted hover:text-text'
+            }`}
+          >
+            ♥ Favoriten
+          </button>
         </div>
 
         <details className="bg-surface border border-border rounded-2xl p-4 group">
@@ -152,9 +164,23 @@ export function RecipesPage() {
           <Link
             key={recipe.id}
             to={`/rezepte/${recipe.id}`}
-            className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2 hover:border-primary transition-colors"
+            className="relative bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2 hover:border-primary transition-colors"
           >
-            <div className="flex flex-wrap gap-1">
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
+                toggleFavorite(recipe.id)
+              }}
+              aria-label={favoriteIds.has(recipe.id) ? 'Favorit entfernen' : 'Als Favorit markieren'}
+              className={`absolute top-3 right-3 text-lg leading-none ${
+                favoriteIds.has(recipe.id) ? 'text-danger' : 'text-text-muted hover:text-danger'
+              }`}
+            >
+              {favoriteIds.has(recipe.id) ? '♥' : '♡'}
+            </button>
+            <div className="flex flex-wrap gap-1 pr-6">
               <span className="inline-block w-fit text-xs font-medium text-primary bg-primary/10 rounded-full px-2 py-0.5">
                 {MEAL_TYPE_LABELS[recipe.meal_type]}
               </span>
@@ -166,7 +192,7 @@ export function RecipesPage() {
                   </span>
                 ))}
             </div>
-            <span className="font-display font-semibold text-lg">{recipe.title}</span>
+            <span className="font-display font-semibold text-lg pr-6">{recipe.title}</span>
             <span className="text-text-muted text-sm line-clamp-2">{recipe.description}</span>
             <span className="font-mono text-xs text-text-muted mt-1">{recipe.kcal} kcal</span>
           </Link>

@@ -221,6 +221,19 @@ export interface Database {
         }>
         Relationships: []
       }
+      recipe_favorites: {
+        Row: {
+          user_id: string
+          recipe_id: string
+          created_at: string
+        }
+        Insert: {
+          user_id: string
+          recipe_id: string
+        }
+        Update: Partial<Record<string, never>>
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>

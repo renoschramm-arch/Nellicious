@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { DIET_TAG_LABELS, FREE_OF_LABELS, MEAL_TYPE_LABELS, useRecipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan } from '../lib/useMealPlan'
+import { useFavorites } from '../lib/useFavorites'
 import { toISODate } from '../lib/week'
 import { RecipeForm } from '../components/RecipeForm'
 
@@ -12,6 +13,7 @@ export function RecipeDetailPage() {
   const { addLog } = useMealLogs()
   const todayISO = toISODate(new Date())
   const { setEntry } = useMealPlan(todayISO, todayISO)
+  const { favoriteIds, toggleFavorite } = useFavorites()
   const navigate = useNavigate()
   const [logging, setLogging] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -64,6 +66,15 @@ export function RecipeDetailPage() {
           className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
           Bearbeiten
+        </button>
+        <button
+          onClick={() => toggleFavorite(recipe.id)}
+          aria-label={favoriteIds.has(recipe.id) ? 'Favorit entfernen' : 'Als Favorit markieren'}
+          className={`shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm ${
+            favoriteIds.has(recipe.id) ? 'text-danger' : 'text-text-muted hover:text-danger'
+          }`}
+        >
+          {favoriteIds.has(recipe.id) ? '♥' : '♡'}
         </button>
       </div>
 
