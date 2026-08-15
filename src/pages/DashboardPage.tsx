@@ -1,9 +1,9 @@
-import { useState, type FormEvent } from 'react'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useProfile } from '../lib/useProfile'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
-import { MEAL_TYPE_LABELS, type Recipe } from '../lib/useRecipes'
+import { useRecipes, MEAL_TYPE_LABELS, type Recipe } from '../lib/useRecipes'
 import { RecipePickerModal } from '../components/RecipePickerModal'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { PageFlatlay } from '../components/PageFlatlay'
@@ -37,8 +37,33 @@ export function DashboardPage() {
   const todayISO = toISODate(new Date())
   const weekAheadISO = toISODate(addDays(new Date(), 6))
   const { entries: planEntries, setEntry, removeEntry: removePlanEntry } = useMealPlan(todayISO, weekAheadISO)
+  const { recipes } = useRecipes()
   const [showForm, setShowForm] = useState(false)
   const [addMode, setAddMode] = useState<'rezept' | 'manuell'>('rezept')
+  const catchUpInFlight = useRef(new Set<string>())
+
+  // Rezepte, die an einem früheren Tag im Wochenplan für heute eingeplant
+  // wurden (z. B. gestern für "morgen" gewählt), sind zu diesem Zeitpunkt
+  // noch nicht geloggt. Beim Öffnen der Heute-Ansicht holen wir das nach,
+  // damit die Bilanz auch ohne erneutes manuelles Loggen stimmt.
+  useEffect(() => {
+    const todaysEntries = planEntries.filter((e) => e.plan_date === todayISO)
+    for (const entry of todaysEntries) {
+      const alreadyLogged = logs.some((l) => l.recipe_id === entry.recipe_id)
+      if (alreadyLogged || catchUpInFlight.current.has(entry.recipe_id)) continue
+      const recipe = recipes.find((r) => r.id === entry.recipe_id)
+      if (!recipe) continue
+      catchUpInFlight.current.add(entry.recipe_id)
+      addLog({
+        name: recipe.title,
+        kcal: recipe.kcal,
+        protein_g: recipe.protein_g,
+        carbs_g: recipe.carbs_g,
+        fat_g: recipe.fat_g,
+        recipe_id: recipe.id,
+      })
+    }
+  }, [planEntries, logs, recipes, todayISO, addLog])
 
   async function handleRemoveLog(logId: string, recipeId: string | null) {
     await removeLog(logId)
