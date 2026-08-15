@@ -9,6 +9,14 @@ import { useFoodSearch, type FoodSearchResult } from '../lib/useFoodSearch'
 import { lookupFoodByBarcode } from '../lib/lookupFoodByBarcode'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { PageFlatlay } from '../components/PageFlatlay'
+import { pickRandomQuote } from '../lib/motivationalQuotes'
+
+const GREETED_SESSION_KEY = 'nellicious-greeted'
+
+function firstNameFrom(displayName: string | null | undefined): string | null {
+  const trimmed = displayName?.trim()
+  return trimmed ? trimmed.split(/\s+/)[0] : null
+}
 
 const BarcodeScannerModal = lazy(() =>
   import('../components/BarcodeScannerModal').then((m) => ({ default: m.BarcodeScannerModal })),
@@ -47,6 +55,14 @@ export function DashboardPage() {
   const [showForm, setShowForm] = useState(false)
   const [addMode, setAddMode] = useState<'rezept' | 'manuell'>('rezept')
   const catchUpInFlight = useRef(new Set<string>())
+
+  // Begrüßung inkl. Motivationsspruch nur einmal pro App-Start zeigen, nicht
+  // bei jeder Rückkehr zur "Heute"-Ansicht innerhalb derselben Sitzung.
+  const [greetingQuote, setGreetingQuote] = useState<string | null>(() => {
+    if (sessionStorage.getItem(GREETED_SESSION_KEY)) return null
+    sessionStorage.setItem(GREETED_SESSION_KEY, '1')
+    return pickRandomQuote()
+  })
 
   // Rezepte, die an einem früheren Tag im Wochenplan für heute eingeplant
   // wurden (z. B. gestern für "morgen" gewählt), sind zu diesem Zeitpunkt
@@ -103,6 +119,25 @@ export function DashboardPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageFlatlay file="dashboard.jpg" />
+
+      {greetingQuote && (
+        <div className="bg-basil/10 border border-basil/30 rounded-2xl p-4 flex items-start justify-between gap-3">
+          <div>
+            <p className="font-display font-semibold text-lg text-basil">
+              Hallo{firstNameFrom(profile?.display_name) ? `, ${firstNameFrom(profile?.display_name)}` : ''}! 👋
+            </p>
+            <p className="text-sm text-text-muted mt-1">{greetingQuote}</p>
+          </div>
+          <button
+            onClick={() => setGreetingQuote(null)}
+            aria-label="Begrüßung schließen"
+            className="shrink-0 text-text-muted hover:text-text text-sm"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       <div className="flex items-baseline justify-between">
         <h1 className="font-display font-bold text-2xl">Heute</h1>
         <span className="font-mono text-xs text-text-muted uppercase tracking-wide">
