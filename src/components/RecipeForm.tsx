@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { lazy, Suspense, useState, type FormEvent } from 'react'
 import {
   DIET_TAGS,
   DIET_TAG_LABELS,
@@ -12,7 +12,12 @@ import {
   type Recipe,
 } from '../lib/useRecipes'
 import { useFoodSearch, type FoodSearchResult } from '../lib/useFoodSearch'
+import { lookupFoodByBarcode } from '../lib/lookupFoodByBarcode'
 import { TagLegend } from './TagLegend'
+
+const BarcodeScannerModal = lazy(() =>
+  import('./BarcodeScannerModal').then((m) => ({ default: m.BarcodeScannerModal })),
+)
 
 export interface RecipeFormValues {
   title: string
@@ -59,10 +64,23 @@ export function RecipeForm({
   const [selectedFood, setSelectedFood] = useState<FoodSearchResult | null>(null)
   const [ingredientGrams, setIngredientGrams] = useState('100')
   const { results: foodResults, loading: foodLoading, error: foodError } = useFoodSearch(foodQuery)
+  const [scannerOpen, setScannerOpen] = useState(false)
+  const [scanError, setScanError] = useState<string | null>(null)
 
   function selectIngredientFood(food: FoodSearchResult) {
     setSelectedFood(food)
     setFoodQuery(food.name)
+  }
+
+  async function handleBarcodeDetected(barcode: string) {
+    setScannerOpen(false)
+    const food = await lookupFoodByBarcode(barcode)
+    if (food) {
+      setScanError(null)
+      selectIngredientFood(food)
+    } else {
+      setScanError('Kein Treffer für diesen Barcode gefunden. Bitte manuell suchen oder eintragen.')
+    }
   }
 
   function addIngredientFromSearch() {
@@ -244,7 +262,19 @@ export function RecipeForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium">Zutat aus Lebensmitteldatenbank hinzufügen (optional)</span>
+        <div className="flex items-center justify-between">
+          <span className="text-sm font-medium">Zutat aus Lebensmitteldatenbank hinzufügen (optional)</span>
+          <button
+            type="button"
+            onClick={() => {
+              setScanError(null)
+              setScannerOpen(true)
+            }}
+            className="text-xs text-primary font-medium shrink-0"
+          >
+            📷 Scannen
+          </button>
+        </div>
         <div className="relative">
           <input
             value={foodQuery}
@@ -297,7 +327,14 @@ export function RecipeForm({
             </button>
           </div>
         )}
+        {scanError && <p className="text-xs text-danger">{scanError}</p>}
       </div>
+
+      {scannerOpen && (
+        <Suspense fallback={null}>
+          <BarcodeScannerModal onDetected={handleBarcodeDetected} onClose={() => setScannerOpen(false)} />
+        </Suspense>
+      )}
 
       <label className="flex flex-col gap-1.5 text-sm">
         Zutaten (eine pro Zeile)
