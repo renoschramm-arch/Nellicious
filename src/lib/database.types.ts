@@ -16,7 +16,7 @@ export interface Database {
           goal_note: string
           age: number | null
           height_cm: number | null
-          gender: 'maennlich' | 'weiblich' | 'divers' | null
+          gender: 'maennlich' | 'weiblich' | null
           daily_water_goal_ml: number
           created_at: string
         }
@@ -34,7 +34,7 @@ export interface Database {
           goal_note?: string
           age?: number | null
           height_cm?: number | null
-          gender?: 'maennlich' | 'weiblich' | 'divers' | null
+          gender?: 'maennlich' | 'weiblich' | null
           daily_water_goal_ml?: number
         }
         Update: Partial<{
@@ -50,7 +50,7 @@ export interface Database {
           goal_note: string
           age: number | null
           height_cm: number | null
-          gender: 'maennlich' | 'weiblich' | 'divers' | null
+          gender: 'maennlich' | 'weiblich' | null
           daily_water_goal_ml: number
         }>
         Relationships: []
