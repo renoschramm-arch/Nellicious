@@ -24,7 +24,7 @@ export function InfoPage() {
           Nelli<span className="text-primary">cious</span>
         </span>
         <span className="text-text-muted text-sm">Gesund ernähren</span>
-        <span className="text-text-muted text-xs mt-1">Version 1.30</span>
+        <span className="text-text-muted text-xs mt-1">Version 1.31</span>
       </div>
 
       <div className="flex flex-col gap-3">
