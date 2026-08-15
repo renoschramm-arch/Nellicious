@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
-import { useRecipes } from '../lib/useRecipes'
+import { useRecipes, type Recipe } from '../lib/useRecipes'
+import { useMealLogs } from '../lib/useMealLogs'
 import { useShoppingListStatus, type IngredientRef } from '../lib/useShoppingListStatus'
 import { RecipePickerModal } from '../components/RecipePickerModal'
 import { addDays, formatDayLabel, formatWeekRange, getMonday, toISODate } from '../lib/week'
@@ -39,6 +40,7 @@ export function PlannerPage() {
 
   const { entries, setEntry, removeEntry } = useMealPlan(weekStartISO, weekEndISO)
   const { recipes } = useRecipes()
+  const { logs: todayLogs, addLog, removeLog } = useMealLogs()
   const recipeById = useMemo(() => new Map(recipes.map((r) => [r.id, r])), [recipes])
 
   const entryIds = useMemo(() => entries.map((e) => e.id), [entries])
@@ -46,6 +48,33 @@ export function PlannerPage() {
 
   const [openPicker, setOpenPicker] = useState<{ date: string; slot: MealSlot } | null>(null)
   const [shoppingView, setShoppingView] = useState<'grouped' | 'flat'>('grouped')
+  const todayISO = toISODate(new Date())
+
+  // Ein Rezept, das für heute eingeplant wird, zählt sofort als gegessen —
+  // ohne diese Synchronisierung würde die "Heute"-Ansicht auf dem Dashboard
+  // Rezepte ignorieren, die hier statt über "Mahlzeit hinzufügen" eingetragen
+  // wurden.
+  async function selectRecipe(dateISO: string, slot: MealSlot, recipe: Recipe) {
+    await setEntry(dateISO, slot, recipe.id)
+    if (dateISO === todayISO) {
+      await addLog({
+        name: recipe.title,
+        kcal: recipe.kcal,
+        protein_g: recipe.protein_g,
+        carbs_g: recipe.carbs_g,
+        fat_g: recipe.fat_g,
+        recipe_id: recipe.id,
+      })
+    }
+  }
+
+  async function removePlanEntry(dateISO: string, entryId: string, recipeId: string) {
+    await removeEntry(entryId)
+    if (dateISO === todayISO) {
+      const log = todayLogs.find((l) => l.recipe_id === recipeId)
+      if (log) await removeLog(log.id)
+    }
+  }
 
   function entryFor(date: string, slot: MealSlot) {
     return entries.find((e) => e.plan_date === date && e.meal_slot === slot)
@@ -196,7 +225,7 @@ export function PlannerPage() {
                           <span className="flex-1">{recipe.title}</span>
                           <span className="font-mono text-xs text-text-muted">{recipe.kcal} kcal</span>
                           <button
-                            onClick={() => entry && removeEntry(entry.id)}
+                            onClick={() => entry && removePlanEntry(dateISO, entry.id, entry.recipe_id)}
                             className="text-text-muted hover:text-danger text-xs px-1"
                             aria-label={`${recipe.title} aus Plan entfernen`}
                           >
@@ -215,7 +244,7 @@ export function PlannerPage() {
                         <RecipePickerModal
                           defaultMealType={slot.key}
                           onSelect={(recipe) => {
-                            setEntry(dateISO, slot.key, recipe.id)
+                            selectRecipe(dateISO, slot.key, recipe)
                             setOpenPicker(null)
                           }}
                           onClose={() => setOpenPicker(null)}
