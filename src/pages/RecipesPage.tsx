@@ -1,51 +1,15 @@
-import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import {
-  DIET_TAGS,
-  DIET_TAG_LABELS,
-  DIET_TAG_DESCRIPTIONS,
-  FREE_OF_OPTIONS,
-  FREE_OF_LABELS,
-  FREE_OF_DESCRIPTIONS,
-  MEAL_TYPE_LABELS,
-  MEAL_TYPES,
-  useRecipes,
-  type MealType,
-} from '../lib/useRecipes'
+import { DIET_TAG_LABELS, MEAL_TYPE_LABELS, useRecipes } from '../lib/useRecipes'
 import type { NutritionType } from '../lib/useProfile'
 import { PageFlatlay } from '../components/PageFlatlay'
-import { TagLegend } from '../components/TagLegend'
+import { RecipeFilterBar } from '../components/RecipeFilterBar'
 import { useFavorites } from '../lib/useFavorites'
-
-// Kürzeres Label nur für die Filter-Pills hier, damit alle 5 Buttons in einer
-// Zeile passen — Badges auf Karten/Detailseite behalten "Frühstück".
-const FILTER_LABELS: Record<MealType, string> = {
-  ...MEAL_TYPE_LABELS,
-  fruehstueck: 'Früh',
-}
+import { useRecipeFilters } from '../lib/useRecipeFilters'
 
 export function RecipesPage() {
   const { recipes, loading } = useRecipes()
   const { favoriteIds, toggleFavorite } = useFavorites()
-  const [query, setQuery] = useState('')
-  const [mealType, setMealType] = useState<MealType | 'alle'>('alle')
-  const [dietFilter, setDietFilter] = useState<NutritionType | 'alle'>('alle')
-  const [freeOfFilter, setFreeOfFilter] = useState<string[]>([])
-  const [onlyFavorites, setOnlyFavorites] = useState(false)
-
-  function toggleFreeOfFilter(value: string) {
-    setFreeOfFilter((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
-  }
-
-  const filtered = recipes.filter(
-    (r) =>
-      r.title.toLowerCase().includes(query.toLowerCase()) &&
-      (mealType === 'alle' || r.meal_type === mealType) &&
-      (dietFilter === 'alle' || r.diet_tags.includes(dietFilter)) &&
-      freeOfFilter.every((f) => r.free_of.includes(f)) &&
-      (!onlyFavorites || favoriteIds.has(r.id)),
-  )
-  const activeFilterCount = (dietFilter !== 'alle' ? 1 : 0) + freeOfFilter.length
+  const filters = useRecipeFilters(recipes, favoriteIds)
 
   return (
     <div className="flex flex-col gap-6">
@@ -60,107 +24,16 @@ export function RecipesPage() {
             + Neu
           </Link>
         </div>
-        <input
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rezepte durchsuchen …"
-          className="w-full rounded-lg border border-border bg-surface px-3 py-2 outline-none focus:border-primary"
-        />
-        <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto">
-          <button
-            onClick={() => setMealType('alle')}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              mealType === 'alle' ? 'bg-primary text-on-primary' : 'bg-surface border border-border text-text-muted hover:text-text'
-            }`}
-          >
-            Alle
-          </button>
-          {MEAL_TYPES.map((type) => (
-            <button
-              key={type}
-              onClick={() => setMealType(type)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                mealType === type ? 'bg-primary text-on-primary' : 'bg-surface border border-border text-text-muted hover:text-text'
-              }`}
-            >
-              {FILTER_LABELS[type]}
-            </button>
-          ))}
-          <button
-            onClick={() => setOnlyFavorites((v) => !v)}
-            className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              onlyFavorites ? 'bg-primary text-on-primary' : 'bg-surface border border-border text-text-muted hover:text-text'
-            }`}
-          >
-            ♥ Favoriten
-          </button>
-        </div>
-
-        <details className="bg-surface border border-border rounded-2xl p-4 group">
-          <summary className="flex items-center justify-between gap-2 cursor-pointer text-sm font-semibold list-none">
-            <span>
-              Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
-            </span>
-            <span className="text-text-muted transition-transform group-open:rotate-180">▾</span>
-          </summary>
-          <div className="flex flex-col gap-3 mt-3">
-            <div className="flex flex-col gap-1.5">
-              <span className="text-xs text-text-muted">Ernährungstyp</span>
-              <div className="flex flex-wrap gap-1.5">
-                <button
-                  onClick={() => setDietFilter('alle')}
-                  className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                    dietFilter === 'alle' ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
-                  }`}
-                >
-                  Alle
-                </button>
-                {DIET_TAGS.map((tag) => (
-                  <button
-                    key={tag}
-                    onClick={() => setDietFilter(tag)}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                      dietFilter === tag ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
-                    }`}
-                  >
-                    {DIET_TAG_LABELS[tag]}
-                  </button>
-                ))}
-              </div>
-              <TagLegend
-                items={DIET_TAGS.map((tag) => ({ label: DIET_TAG_LABELS[tag], description: DIET_TAG_DESCRIPTIONS[tag] }))}
-              />
-            </div>
-            <div className="flex flex-col gap-1.5">
-              <span className="text-xs text-text-muted">Frei von</span>
-              <div className="flex flex-wrap gap-1.5">
-                {FREE_OF_OPTIONS.map((value) => (
-                  <button
-                    key={value}
-                    onClick={() => toggleFreeOfFilter(value)}
-                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                      freeOfFilter.includes(value) ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
-                    }`}
-                  >
-                    {FREE_OF_LABELS[value]}
-                  </button>
-                ))}
-              </div>
-              <TagLegend
-                items={FREE_OF_OPTIONS.map((value) => ({ label: FREE_OF_LABELS[value], description: FREE_OF_DESCRIPTIONS[value] }))}
-              />
-            </div>
-          </div>
-        </details>
+        <RecipeFilterBar filters={filters} />
       </div>
 
       {loading && <p className="text-text-muted text-sm">Lädt …</p>}
-      {!loading && filtered.length === 0 && (
+      {!loading && filters.filtered.length === 0 && (
         <p className="text-text-muted text-sm">Keine Rezepte gefunden.</p>
       )}
 
       <div className="grid sm:grid-cols-2 gap-3">
-        {filtered.map((recipe) => (
+        {filters.filtered.map((recipe) => (
           <Link
             key={recipe.id}
             to={`/rezepte/${recipe.id}`}

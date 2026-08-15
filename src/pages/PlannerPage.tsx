@@ -3,7 +3,7 @@ import { PageFlatlay } from '../components/PageFlatlay'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
 import { useRecipes } from '../lib/useRecipes'
 import { useShoppingListStatus, type IngredientRef } from '../lib/useShoppingListStatus'
-import { RecipePicker } from '../components/RecipePicker'
+import { RecipePickerModal } from '../components/RecipePickerModal'
 import { addDays, formatDayLabel, formatWeekRange, getMonday, toISODate } from '../lib/week'
 import { scaleIngredient } from '../lib/scaleIngredient'
 
@@ -212,9 +212,10 @@ export function PlannerPage() {
                         </button>
                       )}
                       {isPickerOpen && (
-                        <RecipePicker
-                          onSelect={(recipeId) => {
-                            setEntry(dateISO, slot.key, recipeId)
+                        <RecipePickerModal
+                          defaultMealType={slot.key}
+                          onSelect={(recipe) => {
+                            setEntry(dateISO, slot.key, recipe.id)
                             setOpenPicker(null)
                           }}
                           onClose={() => setOpenPicker(null)}
