@@ -198,7 +198,6 @@ export function DailyGoalsPage() {
             <ul className="font-mono text-xs mt-2 flex flex-col gap-1">
               <li>Männlich: 10 × Gewicht(kg) + 6,25 × Größe(cm) − 5 × Alter + 5</li>
               <li>Weiblich: 10 × Gewicht(kg) + 6,25 × Größe(cm) − 5 × Alter − 161</li>
-              <li>Divers: Mittelwert der beiden Offsets (kein eigener Standardwert definiert)</li>
             </ul>
           </div>
 

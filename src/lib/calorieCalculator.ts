@@ -38,13 +38,10 @@ export type CalorieTargets = {
   fatG: number
 }
 
-// Mifflin-St-Jeor-Formel. Für "divers" gibt es keine etablierte dritte
-// Variante, daher der Mittelwert der beiden Offsets als neutraler Kompromiss.
+// Mifflin-St-Jeor-Formel.
 function calculateBmr({ gender, age, heightCm, weightKg }: Pick<CalorieInputs, 'gender' | 'age' | 'heightCm' | 'weightKg'>): number {
   const base = 10 * weightKg + 6.25 * heightCm - 5 * age
-  if (gender === 'maennlich') return base + 5
-  if (gender === 'weiblich') return base - 161
-  return base + (5 + -161) / 2
+  return gender === 'maennlich' ? base + 5 : base - 161
 }
 
 export function calculateTargets(inputs: CalorieInputs): CalorieTargets {

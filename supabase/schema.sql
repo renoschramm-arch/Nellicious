@@ -534,6 +534,16 @@ alter table public.profiles
     gender is null or gender in ('maennlich', 'weiblich', 'divers')
   );
 
+-- "Divers" wurde als Option entfernt; bestehende Profile mit diesem Wert
+-- werden zurückgesetzt, damit die neue, strengere Constraint greifen kann.
+update public.profiles set gender = null where gender = 'divers';
+alter table public.profiles
+  drop constraint if exists profiles_gender_check;
+alter table public.profiles
+  add constraint profiles_gender_check check (
+    gender is null or gender in ('maennlich', 'weiblich')
+  );
+
 alter table public.profiles
   add column if not exists daily_water_goal_ml integer not null default 2500;
 
