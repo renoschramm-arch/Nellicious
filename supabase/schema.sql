@@ -52,12 +52,10 @@ create policy "Nutzer legen eigene Rezepte an"
   on public.recipes for insert
   with check (auth.uid() = owner_id);
 
--- Rezepte sind app-weit geteilt, daher dürfen alle angemeldeten Nutzer sie
--- bearbeiten (nicht nur eigene) — siehe "Weitere Migrationen" unten für den
--- Nachtrag in bereits bestehenden Projekten.
-create policy "Nutzer bearbeiten Rezepte"
+create policy "Nutzer bearbeiten eigene Rezepte"
   on public.recipes for update
-  using (auth.role() = 'authenticated');
+  using (auth.uid() = owner_id)
+  with check (auth.uid() = owner_id);
 
 create policy "Nutzer löschen eigene Rezepte"
   on public.recipes for delete
@@ -427,15 +425,16 @@ alter table public.recipes
 alter table public.recipes
   add constraint recipes_meal_type_check check (meal_type in ('fruehstueck', 'mittag', 'abend', 'snack'));
 
--- Rezepte sind app-weit geteilt (kein Multi-Tenant-Betrieb) — daher dürfen
--- alle angemeldeten Nutzer Rezepte bearbeiten, nicht nur ihre eigenen.
--- Ohne diese Freigabe könnte niemand die global sichtbaren Beispielrezepte
--- (owner_id ist NULL) über die "Bearbeiten"-Funktion in der App ändern.
-drop policy if exists "Nutzer bearbeiten eigene Rezepte" on public.recipes;
+-- Nur der Eigentümer darf ein Rezept bearbeiten (verhindert, dass andere
+-- Nutzer fremde oder gemeinsam sichtbare Rezepte verändern/zuspammen).
+-- Die global sichtbaren Beispielrezepte (owner_id ist NULL) sind damit für
+-- niemanden über die App bearbeitbar — das ist beabsichtigt.
 drop policy if exists "Nutzer bearbeiten Rezepte" on public.recipes;
-create policy "Nutzer bearbeiten Rezepte"
+drop policy if exists "Nutzer bearbeiten eigene Rezepte" on public.recipes;
+create policy "Nutzer bearbeiten eigene Rezepte"
   on public.recipes for update
-  using (auth.role() = 'authenticated');
+  using (auth.uid() = owner_id)
+  with check (auth.uid() = owner_id);
 
 update public.recipes set meal_type = 'fruehstueck' where title in (
   'Haferflocken mit Beeren',
