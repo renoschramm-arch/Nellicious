@@ -89,5 +89,10 @@ export function useRecipe(id: string | undefined) {
     if (data) setRecipe(data)
   }
 
-  return { recipe, loading, updateRecipe }
+  async function deleteRecipe() {
+    if (!id) return
+    await supabase.from('recipes').delete().eq('id', id)
+  }
+
+  return { recipe, loading, updateRecipe, deleteRecipe }
 }

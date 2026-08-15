@@ -10,7 +10,7 @@ import { RecipeForm } from '../components/RecipeForm'
 
 export function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const { recipe, loading, updateRecipe } = useRecipe(id)
+  const { recipe, loading, updateRecipe, deleteRecipe } = useRecipe(id)
   const { addLog } = useMealLogs()
   const todayISO = toISODate(new Date())
   const { setEntry } = useMealPlan(todayISO, todayISO)
@@ -19,6 +19,7 @@ export function RecipeDetailPage() {
   const navigate = useNavigate()
   const [logging, setLogging] = useState(false)
   const [editing, setEditing] = useState(false)
+  const [deleting, setDeleting] = useState(false)
 
   if (loading) return <p className="text-text-muted text-sm">Lädt …</p>
   if (!recipe) return <p className="text-text-muted text-sm">Rezept nicht gefunden.</p>
@@ -40,6 +41,14 @@ export function RecipeDetailPage() {
     // übernehmen, damit die Einkaufsliste die Zutaten mitzählt.
     await setEntry(todayISO, recipe.meal_type, recipe.id)
     setLogging(false)
+    navigate('/rezepte')
+  }
+
+  async function handleDelete() {
+    if (!recipe) return
+    if (!window.confirm(`"${recipe.title}" wirklich löschen?`)) return
+    setDeleting(true)
+    await deleteRecipe()
     navigate('/rezepte')
   }
 
@@ -71,6 +80,15 @@ export function RecipeDetailPage() {
             className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
           >
             Bearbeiten
+          </button>
+        )}
+        {isOwner && (
+          <button
+            onClick={handleDelete}
+            disabled={deleting}
+            className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-danger hover:bg-danger/10 disabled:opacity-60"
+          >
+            {deleting ? 'Wird gelöscht …' : 'Löschen'}
           </button>
         )}
         <button
