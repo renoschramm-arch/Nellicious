@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { GERMAN_FOODS } from './germanFoodDatabase'
 
 export type FoodSearchResult = {
   id: string
@@ -10,6 +11,7 @@ export type FoodSearchResult = {
 }
 
 const OFF_SEARCH_URL = 'https://world.openfoodfacts.org/cgi/search.pl'
+const MAX_LOCAL_RESULTS = 8
 
 type OffProduct = {
   code: string
@@ -18,14 +20,25 @@ type OffProduct = {
 }
 
 export function useFoodSearch(query: string) {
-  const [results, setResults] = useState<FoodSearchResult[]>([])
+  const [remoteResults, setRemoteResults] = useState<FoodSearchResult[]>([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
 
+  const trimmed = query.trim()
+
+  // Kuratierte Liste gängiger deutscher Lebensmittel — Open Food Facts ist
+  // primär eine Barcode-Datenbank für Markenprodukte und bei generischen
+  // Lebensmitteln (Reis, Gemüse, Fleisch roh, ...) für den deutschen Markt
+  // oft lückenhaft. Lokale Treffer werden bevorzugt angezeigt.
+  const localResults = useMemo(() => {
+    if (trimmed.length < 2) return []
+    const q = trimmed.toLowerCase()
+    return GERMAN_FOODS.filter((f) => f.name.toLowerCase().includes(q)).slice(0, MAX_LOCAL_RESULTS)
+  }, [trimmed])
+
   useEffect(() => {
-    const trimmed = query.trim()
     if (trimmed.length < 2) {
-      setResults([])
+      setRemoteResults([])
       setLoading(false)
       setError(false)
       return
@@ -49,7 +62,7 @@ export function useFoodSearch(query: string) {
             carbs100g: Math.round(p.nutriments!['carbohydrates_100g'] ?? 0),
             fat100g: Math.round(p.nutriments!['fat_100g'] ?? 0),
           }))
-        setResults(products)
+        setRemoteResults(products)
       } catch (e) {
         if ((e as Error).name !== 'AbortError') setError(true)
       } finally {
@@ -61,7 +74,10 @@ export function useFoodSearch(query: string) {
       clearTimeout(timeout)
       controller.abort()
     }
-  }, [query])
+  }, [trimmed])
+
+  const localNames = new Set(localResults.map((r) => r.name.toLowerCase()))
+  const results = [...localResults, ...remoteResults.filter((r) => !localNames.has(r.name.toLowerCase()))]
 
   return { results, loading, error }
 }
