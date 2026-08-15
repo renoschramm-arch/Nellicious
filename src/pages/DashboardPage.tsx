@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useProfile } from '../lib/useProfile'
 import { useMealLogs } from '../lib/useMealLogs'
@@ -6,8 +6,13 @@ import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
 import { useRecipes, MEAL_TYPE_LABELS, type Recipe } from '../lib/useRecipes'
 import { RecipePickerModal } from '../components/RecipePickerModal'
 import { useFoodSearch, type FoodSearchResult } from '../lib/useFoodSearch'
+import { lookupFoodByBarcode } from '../lib/lookupFoodByBarcode'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { PageFlatlay } from '../components/PageFlatlay'
+
+const BarcodeScannerModal = lazy(() =>
+  import('../components/BarcodeScannerModal').then((m) => ({ default: m.BarcodeScannerModal })),
+)
 
 const dateLabel = new Intl.DateTimeFormat('de-DE', {
   weekday: 'short',
@@ -328,11 +333,24 @@ function MealForm({
   const [selectedFood, setSelectedFood] = useState<FoodSearchResult | null>(null)
   const [grams, setGrams] = useState('100')
   const { results, loading, error } = useFoodSearch(foodQuery)
+  const [scannerOpen, setScannerOpen] = useState(false)
+  const [scanError, setScanError] = useState<string | null>(null)
 
   function selectFood(food: FoodSearchResult) {
     setSelectedFood(food)
     setFoodQuery(food.name)
     setName(food.name)
+  }
+
+  async function handleBarcodeDetected(barcode: string) {
+    setScannerOpen(false)
+    const food = await lookupFoodByBarcode(barcode)
+    if (food) {
+      setScanError(null)
+      selectFood(food)
+    } else {
+      setScanError('Kein Treffer für diesen Barcode gefunden. Bitte manuell suchen oder eintragen.')
+    }
   }
 
   useEffect(() => {
@@ -362,7 +380,19 @@ function MealForm({
       className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3"
     >
       <div className="flex flex-col gap-1 text-sm relative">
-        Lebensmittel suchen (optional)
+        <div className="flex items-center justify-between">
+          <span>Lebensmittel suchen (optional)</span>
+          <button
+            type="button"
+            onClick={() => {
+              setScanError(null)
+              setScannerOpen(true)
+            }}
+            className="text-xs text-primary font-medium shrink-0"
+          >
+            📷 Scannen
+          </button>
+        </div>
         <input
           value={foodQuery}
           onChange={(e) => {
@@ -394,7 +424,14 @@ function MealForm({
             ))}
           </div>
         )}
+        {scanError && <p className="text-xs text-danger">{scanError}</p>}
       </div>
+
+      {scannerOpen && (
+        <Suspense fallback={null}>
+          <BarcodeScannerModal onDetected={handleBarcodeDetected} onClose={() => setScannerOpen(false)} />
+        </Suspense>
+      )}
 
       {selectedFood && (
         <label className="flex flex-col gap-1 text-sm">
