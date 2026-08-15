@@ -5,6 +5,7 @@ import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
 import { useRecipes, MEAL_TYPE_LABELS, type Recipe } from '../lib/useRecipes'
 import { RecipePickerModal } from '../components/RecipePickerModal'
+import { useFoodSearch, type FoodSearchResult } from '../lib/useFoodSearch'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { PageFlatlay } from '../components/PageFlatlay'
 
@@ -323,6 +324,26 @@ function MealForm({
   const [carbs, setCarbs] = useState('')
   const [fat, setFat] = useState('')
 
+  const [foodQuery, setFoodQuery] = useState('')
+  const [selectedFood, setSelectedFood] = useState<FoodSearchResult | null>(null)
+  const [grams, setGrams] = useState('100')
+  const { results, loading, error } = useFoodSearch(foodQuery)
+
+  function selectFood(food: FoodSearchResult) {
+    setSelectedFood(food)
+    setFoodQuery(food.name)
+    setName(food.name)
+  }
+
+  useEffect(() => {
+    if (!selectedFood) return
+    const factor = (Number(grams) || 0) / 100
+    setKcal(String(Math.round(selectedFood.kcal100g * factor)))
+    setProtein(String(Math.round(selectedFood.protein100g * factor)))
+    setCarbs(String(Math.round(selectedFood.carbs100g * factor)))
+    setFat(String(Math.round(selectedFood.fat100g * factor)))
+  }, [selectedFood, grams])
+
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
     if (!name || !kcal) return
@@ -340,6 +361,54 @@ function MealForm({
       onSubmit={handleSubmit}
       className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3"
     >
+      <div className="flex flex-col gap-1 text-sm relative">
+        Lebensmittel suchen (optional)
+        <input
+          value={foodQuery}
+          onChange={(e) => {
+            setFoodQuery(e.target.value)
+            setSelectedFood(null)
+          }}
+          placeholder="z. B. Basmati Reis"
+          className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary"
+        />
+        {foodQuery.trim().length >= 2 && !selectedFood && (
+          <div className="absolute top-full left-0 right-0 mt-1 z-10 bg-surface border border-border rounded-xl max-h-56 overflow-y-auto shadow-lg">
+            {loading && <p className="text-xs text-text-muted px-3 py-2">Suche …</p>}
+            {!loading && error && (
+              <p className="text-xs text-danger px-3 py-2">Suche fehlgeschlagen. Bitte manuell eintragen.</p>
+            )}
+            {!loading && !error && results.length === 0 && (
+              <p className="text-xs text-text-muted px-3 py-2">Keine Treffer.</p>
+            )}
+            {results.map((r) => (
+              <button
+                key={r.id}
+                type="button"
+                onClick={() => selectFood(r)}
+                className="w-full text-left px-3 py-2 text-sm hover:bg-surface-2 border-b border-border last:border-none"
+              >
+                <span className="block">{r.name}</span>
+                <span className="block text-xs text-text-muted font-mono">{r.kcal100g} kcal / 100 g</span>
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {selectedFood && (
+        <label className="flex flex-col gap-1 text-sm">
+          Menge (g)
+          <input
+            type="number"
+            min={1}
+            value={grams}
+            onChange={(e) => setGrams(e.target.value)}
+            className="rounded-lg border border-border bg-bg px-3 py-2 font-mono outline-none focus:border-primary"
+          />
+        </label>
+      )}
+
       <label className="flex flex-col gap-1 text-sm">
         Bezeichnung
         <input
