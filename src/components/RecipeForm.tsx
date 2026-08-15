@@ -11,6 +11,7 @@ import {
   type MealType,
   type Recipe,
 } from '../lib/useRecipes'
+import { useFoodSearch, type FoodSearchResult } from '../lib/useFoodSearch'
 import { TagLegend } from './TagLegend'
 
 export interface RecipeFormValues {
@@ -53,6 +54,31 @@ export function RecipeForm({
   const [freeOf, setFreeOf] = useState<string[]>(initial?.free_of ?? [])
   const [saving, setSaving] = useState(false)
   const [justSaved, setJustSaved] = useState(false)
+
+  const [foodQuery, setFoodQuery] = useState('')
+  const [selectedFood, setSelectedFood] = useState<FoodSearchResult | null>(null)
+  const [ingredientGrams, setIngredientGrams] = useState('100')
+  const { results: foodResults, loading: foodLoading, error: foodError } = useFoodSearch(foodQuery)
+
+  function selectIngredientFood(food: FoodSearchResult) {
+    setSelectedFood(food)
+    setFoodQuery(food.name)
+  }
+
+  function addIngredientFromSearch() {
+    if (!selectedFood) return
+    const grams = Number(ingredientGrams) || 0
+    const factor = grams / 100
+    const line = `${ingredientGrams} g ${selectedFood.name}`
+    setIngredients((prev) => (prev.trim() ? `${prev}\n${line}` : line))
+    setKcal((prev) => String(Math.round((Number(prev) || 0) + selectedFood.kcal100g * factor)))
+    setProtein((prev) => String(Math.round((Number(prev) || 0) + selectedFood.protein100g * factor)))
+    setCarbs((prev) => String(Math.round((Number(prev) || 0) + selectedFood.carbs100g * factor)))
+    setFat((prev) => String(Math.round((Number(prev) || 0) + selectedFood.fat100g * factor)))
+    setSelectedFood(null)
+    setFoodQuery('')
+    setIngredientGrams('100')
+  }
 
   function toggleDietTag(value: string) {
     setDietTags((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
@@ -215,6 +241,62 @@ export function RecipeForm({
         <TagLegend
           items={FREE_OF_OPTIONS.map((value) => ({ label: FREE_OF_LABELS[value], description: FREE_OF_DESCRIPTIONS[value] }))}
         />
+      </div>
+
+      <div className="flex flex-col gap-2">
+        <span className="text-sm font-medium">Zutat aus Lebensmitteldatenbank hinzufügen (optional)</span>
+        <div className="relative">
+          <input
+            value={foodQuery}
+            onChange={(e) => {
+              setFoodQuery(e.target.value)
+              setSelectedFood(null)
+            }}
+            placeholder="z. B. Basmati Reis"
+            className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
+          />
+          {foodQuery.trim().length >= 2 && !selectedFood && (
+            <div className="absolute top-full left-0 right-0 mt-1 z-10 bg-surface border border-border rounded-xl max-h-56 overflow-y-auto shadow-lg">
+              {foodLoading && <p className="text-xs text-text-muted px-3 py-2">Suche …</p>}
+              {!foodLoading && foodError && (
+                <p className="text-xs text-danger px-3 py-2">Suche fehlgeschlagen.</p>
+              )}
+              {!foodLoading && !foodError && foodResults.length === 0 && (
+                <p className="text-xs text-text-muted px-3 py-2">Keine Treffer.</p>
+              )}
+              {foodResults.map((r) => (
+                <button
+                  key={r.id}
+                  type="button"
+                  onClick={() => selectIngredientFood(r)}
+                  className="w-full text-left px-3 py-2 text-sm hover:bg-surface-2 border-b border-border last:border-none"
+                >
+                  <span className="block">{r.name}</span>
+                  <span className="block text-xs text-text-muted font-mono">{r.kcal100g} kcal / 100 g</span>
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+        {selectedFood && (
+          <div className="flex items-center gap-2">
+            <input
+              type="number"
+              min={1}
+              value={ingredientGrams}
+              onChange={(e) => setIngredientGrams(e.target.value)}
+              className="w-24 rounded-lg border border-border bg-surface px-2 py-1.5 font-mono text-sm outline-none focus:border-primary"
+            />
+            <span className="text-xs text-text-muted">g {selectedFood.name}</span>
+            <button
+              type="button"
+              onClick={addIngredientFromSearch}
+              className="ml-auto bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium hover:border-primary"
+            >
+              + Hinzufügen
+            </button>
+          </div>
+        )}
       </div>
 
       <label className="flex flex-col gap-1.5 text-sm">
