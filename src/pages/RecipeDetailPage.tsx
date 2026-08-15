@@ -4,6 +4,7 @@ import { DIET_TAG_LABELS, FREE_OF_LABELS, MEAL_TYPE_LABELS, useRecipe } from '..
 import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan } from '../lib/useMealPlan'
 import { useFavorites } from '../lib/useFavorites'
+import { useAuth } from '../lib/AuthContext'
 import { toISODate } from '../lib/week'
 import { RecipeForm } from '../components/RecipeForm'
 
@@ -14,12 +15,15 @@ export function RecipeDetailPage() {
   const todayISO = toISODate(new Date())
   const { setEntry } = useMealPlan(todayISO, todayISO)
   const { favoriteIds, toggleFavorite } = useFavorites()
+  const { user } = useAuth()
   const navigate = useNavigate()
   const [logging, setLogging] = useState(false)
   const [editing, setEditing] = useState(false)
 
   if (loading) return <p className="text-text-muted text-sm">Lädt …</p>
   if (!recipe) return <p className="text-text-muted text-sm">Rezept nicht gefunden.</p>
+
+  const isOwner = !!user && recipe.owner_id === user.id
 
   async function handleLog() {
     if (!recipe) return
@@ -61,12 +65,14 @@ export function RecipeDetailPage() {
         >
           ← Zurück zu Rezepten
         </Link>
-        <button
-          onClick={() => setEditing(true)}
-          className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
-        >
-          Bearbeiten
-        </button>
+        {isOwner && (
+          <button
+            onClick={() => setEditing(true)}
+            className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
+          >
+            Bearbeiten
+          </button>
+        )}
         <button
           onClick={() => toggleFavorite(recipe.id)}
           aria-label={favoriteIds.has(recipe.id) ? 'Favorit entfernen' : 'Als Favorit markieren'}
