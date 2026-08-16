@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { APP_VERSION } from '../lib/whatsNew'
 
 const PAYPAL_URL = 'https://paypal.me/renoschramm'
 
@@ -24,7 +25,7 @@ export function InfoPage() {
           Nelli<span className="text-primary">cious</span>
         </span>
         <span className="text-text-muted text-sm">Gesund ernähren</span>
-        <span className="text-text-muted text-xs mt-1">Version 1.31</span>
+        <span className="text-text-muted text-xs mt-1">Version {APP_VERSION}</span>
       </div>
 
       <div className="flex flex-col gap-3">
