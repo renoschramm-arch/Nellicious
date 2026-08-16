@@ -24,8 +24,8 @@ export function SupportModal({ onClose }: { onClose: () => void }) {
             oft ein monatliches Abo, und Nellicious bleibt dabei komplett werbefrei.
           </p>
           <p className="text-sm text-text-muted leading-relaxed">
-            Mit einer kleinen Unterstützung hilfst du direkt, dass die Entwicklung weitergeht — und
-            falls gerade nicht: Danke, dass du Nellicious nutzt! ❤️
+            Mit einer kleinen Unterstützung hilfst du direkt, dass die Entwicklung weitergeht.
+            Danke, dass du Nellicious nutzt! ❤️
           </p>
 
           <a
