@@ -96,7 +96,8 @@ export function RecipeNewPage() {
           savedLabel="Angelegt ✓"
           onCancel={() => (imported ? setImported(null) : navigate('/rezepte'))}
           onSave={async (values) => {
-            await createRecipe(values)
+            const created = await createRecipe(values)
+            if (created) navigate(`/rezepte/${created.id}`)
           }}
         />
       )}
