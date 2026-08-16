@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { APP_VERSION } from '../lib/whatsNew'
-
-const PAYPAL_URL = 'https://paypal.me/renoschramm'
+import { SupportModal } from '../components/SupportModal'
 
 export function InfoPage() {
+  const [showSupportModal, setShowSupportModal] = useState(false)
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2">
@@ -60,20 +62,20 @@ export function InfoPage() {
         </ol>
       </details>
 
-      <a
-        href={PAYPAL_URL}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        onClick={() => setShowSupportModal(true)}
         className="text-center bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
       >
         🧡 Unterstütze mich
-      </a>
+      </button>
 
       <p className="text-center text-xs text-text-muted">
         © 2026 Nellicious. Alle Rechte vorbehalten.
         <br />
         Nur zur privaten Nutzung.
       </p>
+
+      {showSupportModal && <SupportModal onClose={() => setShowSupportModal(false)} />}
     </div>
   )
 }
