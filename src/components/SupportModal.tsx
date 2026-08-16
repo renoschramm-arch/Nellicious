@@ -21,7 +21,7 @@ export function SupportModal({ onClose }: { onClose: () => void }) {
           <p className="text-sm text-text-muted leading-relaxed">
             Nellicious entsteht in unzähligen Abendstunden voller Herzblut — jede Funktion wird
             gebaut, getestet und stetig verbessert. Apps mit diesem Funktionsumfang kosten anderswo
-            oft ein monatliches Abo.
+            oft ein monatliches Abo, und Nellicious bleibt dabei komplett werbefrei.
           </p>
           <p className="text-sm text-text-muted leading-relaxed">
             Mit einer kleinen Unterstützung hilfst du direkt, dass die Entwicklung weitergeht — und
