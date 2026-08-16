@@ -1000,6 +1000,217 @@ where not exists (
 );
 
 
+-- 20 weitere gesunde Abendessen, auf Nutzerwunsch ergänzt.
+insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+select v.title, v.description, v.kcal, v.protein_g, v.carbs_g, v.fat_g, v.ingredients, v.instructions, v.meal_type, v.diet_tags, v.free_of
+from (
+  values
+    (
+      'Ofengemüse mit Feta und Kräutern',
+      'Buntes Ofengemüse, überbacken mit cremigem Feta.',
+      420, 15, 32, 24,
+      array['2 Zucchini', '1 rote Paprika', '1 rote Zwiebel', '100 g Feta', '2 EL Olivenöl', 'Thymian']::text[],
+      'Gemüse in Stücke schneiden, mit Öl und Thymian vermengen und 25 Minuten bei 200°C rösten. Feta darüberbröckeln und weitere 5 Minuten überbacken.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch']::text[],
+      array['glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Garnelen-Curry mit Kokosmilch und Spinat',
+      'Würziges Curry mit zarten Garnelen und frischem Spinat.',
+      420, 30, 18, 26,
+      array['250 g Garnelen', '200 ml Kokosmilch', '100 g Spinat', '1 EL Currypaste', '1 Zwiebel']::text[],
+      'Zwiebel andünsten, Currypaste kurz mitrösten. Kokosmilch zugeben, aufkochen, Garnelen und Spinat unterrühren und 5 Minuten garen.',
+      'abend',
+      array['omnivore','pescetarisch']::text[],
+      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Hähnchen-Gemüse-Pfanne mit Erdnusssauce',
+      'Asiatisch inspirierte Pfanne mit cremiger Erdnusssauce.',
+      480, 35, 28, 22,
+      array['250 g Hähnchenbrust', '200 g Brokkoli', '1 rote Paprika', '2 EL Erdnussbutter', '1 EL Sojasauce']::text[],
+      'Hähnchen in Streifen schneiden und anbraten. Gemüse zugeben und mitbraten. Erdnussbutter mit Sojasauce und etwas Wasser verrühren, unterheben und kurz köcheln.',
+      'abend',
+      array['omnivore']::text[],
+      array['laktosefrei','eifrei']::text[]
+    ),
+    (
+      'Vegane Linsenbolognese mit Zucchininudeln',
+      'Herzhafte Bolognese aus roten Linsen auf Zucchininudeln.',
+      380, 22, 32, 14,
+      array['150 g rote Linsen', '3 Zucchini', '400 g stückige Tomaten', '1 Zwiebel', 'Knoblauch', 'Kräuter']::text[],
+      'Zwiebel und Knoblauch andünsten, Linsen und Tomaten zugeben, 15 Minuten köcheln. Zucchini spiralisieren, kurz erwärmen und mit der Sauce servieren.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch','vegan','low_carb']::text[],
+      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Gebackener Kabeljau mit Ofenkartoffeln und Rosmarin',
+      'Milder Fisch mit knusprigen Kartoffelspalten.',
+      460, 32, 45, 14,
+      array['200 g Kabeljaufilet', '400 g Kartoffeln', '2 EL Olivenöl', 'Rosmarin', 'Zitrone']::text[],
+      'Kartoffeln in Spalten schneiden, mit Öl und Rosmarin 25 Minuten bei 200°C backen. Kabeljau salzen, die letzten 12 Minuten mit in den Ofen geben, mit Zitrone servieren.',
+      'abend',
+      array['omnivore','pescetarisch']::text[],
+      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+    ),
+    (
+      'Falafel-Bowl mit Hummus und Rotkohlsalat',
+      'Knusprige Falafel, cremiger Hummus, frischer Krautsalat.',
+      520, 18, 58, 20,
+      array['150 g Falafel (Kichererbsen)', '150 g Hummus', '150 g Rotkohl', '1 EL Olivenöl', 'Zitrone']::text[],
+      'Falafel in der Pfanne oder im Ofen erhitzen. Rotkohl fein hobeln, mit Öl und Zitrone marinieren. Alles mit Hummus in einer Bowl anrichten.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch','vegan']::text[],
+      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Rindergeschnetzeltes mit Paprika und Reis',
+      'Zartes Rindfleisch in würziger Paprikasauce, dazu Reis.',
+      540, 32, 55, 16,
+      array['250 g Rindergeschnetzeltes', '2 Paprika', '1 Zwiebel', '150 g Reis', '1 EL Olivenöl']::text[],
+      'Rindfleisch scharf anbraten, herausnehmen. Zwiebel und Paprika anbraten, Fleisch zurückgeben, kurz durchschwenken. Mit gekochtem Reis servieren.',
+      'abend',
+      array['omnivore']::text[],
+      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+    ),
+    (
+      'Gebratener Räuchertofu mit Pak Choi und Sesam',
+      'Asiatisch angehauchtes Low-Carb-Gericht mit Räuchertofu.',
+      380, 24, 16, 24,
+      array['200 g Räuchertofu', '2 Pak Choi', '1 EL Sesamöl', '1 EL Sesam', 'Ingwer']::text[],
+      'Tofu würfeln und in Sesamöl knusprig braten. Pak Choi und Ingwer zugeben, kurz mitbraten und mit Sesam bestreuen.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch','vegan','low_carb']::text[],
+      array['laktosefrei','glutenfrei','nussfrei','eifrei']::text[]
+    ),
+    (
+      'Zucchini-Lasagne mit Ricotta',
+      'Lasagne mit Zucchinischeiben statt Nudelplatten.',
+      460, 22, 32, 26,
+      array['3 Zucchini', '250 g Ricotta', '400 g stückige Tomaten', '50 g Parmesan', 'Basilikum']::text[],
+      'Zucchini in dünne Scheiben schneiden. Abwechselnd mit Tomatensauce und Ricotta in einer Form schichten, mit Parmesan bestreuen und 30 Minuten bei 200°C backen.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch']::text[],
+      array['glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Miso-Lachs mit Brokkoli und Reis',
+      'Lachs in Miso-Marinade gebacken, dazu gedünsteter Brokkoli.',
+      540, 34, 48, 22,
+      array['200 g Lachsfilet', '1 EL Misopaste', '200 g Brokkoli', '150 g Reis', '1 TL Honig']::text[],
+      'Lachs mit Miso und Honig bestreichen und 15 Minuten bei 200°C backen. Brokkoli dämpfen und mit Reis und Lachs servieren.',
+      'abend',
+      array['omnivore','pescetarisch']::text[],
+      array['laktosefrei','nussfrei','eifrei']::text[]
+    ),
+    (
+      'Kichererbsen-Spinat-Curry mit Naturjoghurt',
+      'Mildes Curry, verfeinert mit einem Klecks Joghurt.',
+      420, 18, 42, 16,
+      array['400 g Kichererbsen (Dose)', '150 g Spinat', '1 Zwiebel', '2 TL Currypulver', '2 EL Naturjoghurt']::text[],
+      'Zwiebel andünsten, Currypulver kurz mitrösten, Kichererbsen mit etwas Wasser zugeben und 10 Minuten köcheln. Spinat unterrühren, mit einem Klecks Joghurt servieren.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch']::text[],
+      array['glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Putenschnitzel mit grünem Spargel und Zitronenbutter',
+      'Mageres Putenfleisch, dazu saisonaler Spargel.',
+      400, 38, 10, 22,
+      array['200 g Putenschnitzel', '250 g grüner Spargel', '1 EL Butter', 'Zitrone', 'Petersilie']::text[],
+      'Putenschnitzel braten. Spargel in wenig Wasser dünsten, mit Zitronenbutter und Petersilie beträufeln, mit dem Schnitzel servieren.',
+      'abend',
+      array['omnivore','low_carb']::text[],
+      array['glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+    ),
+    (
+      'Auberginen-Curry mit Kokosmilch und Koriander',
+      'Cremiges, veganes Curry mit intensivem Aroma.',
+      400, 10, 34, 24,
+      array['2 Auberginen', '200 ml Kokosmilch', '1 Zwiebel', '2 TL Currypaste', 'Koriander']::text[],
+      'Auberginen würfeln und anbraten. Zwiebel und Currypaste zugeben, mit Kokosmilch ablöschen und 15 Minuten köcheln. Mit Koriander garnieren.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch','vegan']::text[],
+      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Gebratene Jakobsmuscheln mit Erbsenpüree',
+      'Elegantes, leichtes Fischgericht mit cremigem Erbsenpüree.',
+      380, 28, 24, 18,
+      array['200 g Jakobsmuscheln', '200 g TK-Erbsen', '1 EL Butter', 'Minze', 'Zitrone']::text[],
+      'Erbsen kochen, mit Butter und Minze pürieren. Jakobsmuscheln kurz scharf anbraten und auf dem Püree mit Zitrone servieren.',
+      'abend',
+      array['omnivore','pescetarisch']::text[],
+      array['glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Bohnen-Eintopf mit Chorizo',
+      'Herzhafter Eintopf mit weißen Bohnen und würziger Chorizo.',
+      480, 28, 40, 22,
+      array['400 g weiße Bohnen (Dose)', '100 g Chorizo', '1 Zwiebel', '1 Paprika', 'Paprikapulver']::text[],
+      'Chorizo anbraten, Zwiebel und Paprika zugeben und mitdünsten. Bohnen mit etwas Wasser zugeben, mit Paprikapulver würzen und 15 Minuten köcheln.',
+      'abend',
+      array['omnivore']::text[],
+      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Gebackener Feta mit Cherrytomaten und Vollkornbrot',
+      'Ofenfeta in Olivenöl mit geplatzten Cherrytomaten.',
+      460, 18, 38, 26,
+      array['200 g Feta', '250 g Cherrytomaten', '2 EL Olivenöl', 'Oregano', '2 Scheiben Vollkornbrot']::text[],
+      'Feta mit Tomaten in eine Auflaufform geben, mit Öl und Oregano beträufeln und 20 Minuten bei 200°C backen. Mit geröstetem Vollkornbrot servieren.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch']::text[],
+      array['nussfrei','eifrei','sojafrei']::text[]
+    ),
+    (
+      'Teriyaki-Tofu mit Brokkoli und Jasminreis',
+      'Süß-würziger Tofu, asiatisch inspiriert.',
+      480, 22, 58, 14,
+      array['200 g Tofu', '200 g Brokkoli', '150 g Jasminreis', '3 EL Teriyaki-Sauce']::text[],
+      'Tofu würfeln und knusprig braten, mit Teriyaki-Sauce ablöschen. Brokkoli dämpfen und mit Jasminreis und Tofu servieren.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch','vegan']::text[],
+      array['laktosefrei','nussfrei','eifrei']::text[]
+    ),
+    (
+      'Hähnchen-Curry mit Süßkartoffel',
+      'Mildes Curry mit zartem Hähnchen und süßer Kartoffel.',
+      500, 34, 42, 20,
+      array['250 g Hähnchenbrust', '1 Süßkartoffel', '200 ml Kokosmilch', '2 TL Currypulver', '1 Zwiebel']::text[],
+      'Hähnchen und Zwiebel anbraten, Currypulver kurz mitrösten. Süßkartoffel würfeln, mit Kokosmilch zugeben und 15 Minuten köcheln.',
+      'abend',
+      array['omnivore']::text[],
+      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+    ),
+    (
+      'Gedämpfter Seelachs mit Fenchel und Dillsauce',
+      'Leichtes, proteinreiches Fischgericht mit cremiger Dillsauce.',
+      360, 30, 12, 20,
+      array['200 g Seelachsfilet', '1 Fenchelknolle', '2 EL Naturjoghurt', 'Dill', 'Zitrone']::text[],
+      'Fenchel in Streifen schneiden und dämpfen. Seelachs darüber legen und mitdämpfen. Joghurt mit Dill und Zitrone verrühren und dazu servieren.',
+      'abend',
+      array['omnivore','pescetarisch','low_carb']::text[],
+      array['glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+    ),
+    (
+      'Rote-Linsen-Dal mit Naan',
+      'Sämiges indisches Linsengericht mit warmem Fladenbrot.',
+      460, 20, 62, 12,
+      array['200 g rote Linsen', '400 ml Kokosmilch', '1 Zwiebel', '2 TL Currypulver', '2 Naan-Brote']::text[],
+      'Zwiebel andünsten, Currypulver kurz mitrösten. Linsen und Kokosmilch zugeben und 15 Minuten köcheln, bis das Dal sämig ist. Mit warmem Naan servieren.',
+      'abend',
+      array['omnivore','pescetarisch','vegetarisch','vegan']::text[],
+      array['laktosefrei','nussfrei','eifrei','sojafrei']::text[]
+    )
+) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+where not exists (
+  select 1 from public.recipes r where r.title = v.title
+);
+
+
 -- Favoriten: Rezepte sind app-weit geteilt, die Favoriten-Markierung ist
 -- aber pro Nutzer — daher eine eigene Zuordnungstabelle statt eines Feldes
 -- direkt an recipes.
