@@ -5,6 +5,7 @@ import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan } from '../lib/useMealPlan'
 import { useFavorites } from '../lib/useFavorites'
 import { useAuth } from '../lib/AuthContext'
+import { useWakeLock } from '../lib/useWakeLock'
 import { toISODate } from '../lib/week'
 import { RecipeForm } from '../components/RecipeForm'
 
@@ -16,6 +17,7 @@ export function RecipeDetailPage() {
   const { setEntry } = useMealPlan(todayISO, todayISO)
   const { favoriteIds, toggleFavorite } = useFavorites()
   const { user } = useAuth()
+  const { active: wakeLockActive, supported: wakeLockSupported, toggle: toggleWakeLock } = useWakeLock()
   const navigate = useNavigate()
   const [logging, setLogging] = useState(false)
   const [editing, setEditing] = useState(false)
@@ -142,6 +144,37 @@ export function RecipeDetailPage() {
           {recipe.fat_g}g
         </div>
       </div>
+
+      {wakeLockSupported && (
+        <button
+          type="button"
+          role="switch"
+          aria-checked={wakeLockActive}
+          onClick={toggleWakeLock}
+          className={`flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-left transition-colors ${
+            wakeLockActive ? 'bg-basil/10 border-basil/30' : 'bg-surface border-border'
+          }`}
+        >
+          <span className="flex flex-col">
+            <span className="text-sm font-medium">🍳 Kochmodus</span>
+            <span className="text-xs text-text-muted">
+              {wakeLockActive ? 'Bildschirm bleibt an' : 'Bildschirm für dieses Rezept wach halten'}
+            </span>
+          </span>
+          <span
+            aria-hidden
+            className={`relative shrink-0 w-11 h-6 rounded-full transition-colors ${
+              wakeLockActive ? 'bg-basil' : 'bg-border'
+            }`}
+          >
+            <span
+              className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                wakeLockActive ? 'translate-x-5' : 'translate-x-0'
+              }`}
+            />
+          </span>
+        </button>
+      )}
 
       {recipe.ingredients.length > 0 && (
         <div>

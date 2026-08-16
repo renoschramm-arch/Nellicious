@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.32'
+export const APP_VERSION = '1.33'
 
 interface ChangelogEntry {
   seq: number
@@ -16,6 +16,12 @@ const CHANGELOG: ChangelogEntry[] = [
       '20 neue, gesunde Abendessen-Rezepte in der Datenbank',
       'Eigene Rezepte lassen sich jetzt löschen',
       'Neu angelegte Rezepte öffnen direkt die Detailseite',
+    ],
+  },
+  {
+    seq: 2,
+    items: [
+      '🍳 Kochmodus in der Rezeptansicht: hält den Bildschirm wach, solange du kochst',
     ],
   },
 ]
