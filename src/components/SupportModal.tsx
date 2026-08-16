@@ -19,16 +19,13 @@ export function SupportModal({ onClose }: { onClose: () => void }) {
 
         <div className="p-4 overflow-y-auto flex flex-col gap-3">
           <p className="text-sm text-text-muted leading-relaxed">
-            Nellicious entsteht in unzähligen Abendstunden — jede neue Funktion, jedes kleine Detail
-            wird mit echtem Herzblut gebaut, getestet und immer weiter verfeinert. Kalorien-Tracking,
-            Rezeptsuche mit Barcode-Scanner, Wochenplaner, Kochmodus und mehr: Vergleichbare Apps mit
-            diesem Funktionsumfang verlangen meist ein Abo von mehreren Euro im Monat.
+            Nellicious entsteht in unzähligen Abendstunden voller Herzblut — jede Funktion wird
+            gebaut, getestet und stetig verbessert. Apps mit diesem Funktionsumfang kosten anderswo
+            oft ein monatliches Abo.
           </p>
           <p className="text-sm text-text-muted leading-relaxed">
-            Nellicious ist komplett kostenlos — und das soll auch so bleiben. Wenn dir die App etwas
-            wert ist, freue ich mich riesig über eine kleine Unterstützung. Sie fließt direkt in Zeit
-            für neue Funktionen. Und falls gerade nicht: Auch dann danke ich dir von Herzen, dass du
-            Nellicious nutzt. ❤️
+            Mit einer kleinen Unterstützung hilfst du direkt, dass die Entwicklung weitergeht — und
+            falls gerade nicht: Danke, dass du Nellicious nutzt! ❤️
           </p>
 
           <a
