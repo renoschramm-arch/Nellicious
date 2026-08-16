@@ -10,6 +10,7 @@ import { lookupFoodByBarcode } from '../lib/lookupFoodByBarcode'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { pickRandomQuote } from '../lib/motivationalQuotes'
+import { takeUnseenChangelogItems } from '../lib/whatsNew'
 
 const GREETED_SESSION_KEY = 'nellicious-greeted'
 
@@ -63,6 +64,11 @@ export function DashboardPage() {
     sessionStorage.setItem(GREETED_SESSION_KEY, '1')
     return pickRandomQuote()
   })
+
+  // Neuigkeiten seit dem letzten Besuch (z. B. neue Rezepte, neue Funktionen)
+  // einmalig anzeigen, bis der Nutzer sie gesehen hat — unabhängig von der
+  // Begrüßung oben, die pro App-Start erscheint.
+  const [newsItems, setNewsItems] = useState<string[]>(() => takeUnseenChangelogItems())
 
   // Rezepte, die an einem früheren Tag im Wochenplan für heute eingeplant
   // wurden (z. B. gestern für "morgen" gewählt), sind zu diesem Zeitpunkt
@@ -131,6 +137,29 @@ export function DashboardPage() {
           <button
             onClick={() => setGreetingQuote(null)}
             aria-label="Begrüßung schließen"
+            className="shrink-0 text-text-muted hover:text-text text-sm"
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
+      {newsItems.length > 0 && (
+        <div className="bg-honey/10 border border-honey/30 rounded-2xl p-4 flex items-start justify-between gap-3">
+          <div>
+            <p className="font-display font-semibold text-lg text-honey">🆕 Neu in Nellicious</p>
+            <ul className="text-sm text-text-muted mt-1.5 flex flex-col gap-1">
+              {newsItems.map((item) => (
+                <li key={item} className="flex items-start gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-honey shrink-0 mt-1.5" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+          <button
+            onClick={() => setNewsItems([])}
+            aria-label="Neuigkeiten schließen"
             className="shrink-0 text-text-muted hover:text-text text-sm"
           >
             ✕
