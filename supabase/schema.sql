@@ -1009,206 +1009,291 @@ from (
       'Ofengemüse mit Feta und Kräutern',
       'Buntes Ofengemüse, überbacken mit cremigem Feta.',
       420, 15, 32, 24,
-      array['2 Zucchini', '1 rote Paprika', '1 rote Zwiebel', '100 g Feta', '2 EL Olivenöl', 'Thymian']::text[],
-      'Gemüse in Stücke schneiden, mit Öl und Thymian vermengen und 25 Minuten bei 200°C rösten. Feta darüberbröckeln und weitere 5 Minuten überbacken.',
+      array['2 Zucchini', '1 rote Paprika', '1 rote Zwiebel', '150 g Kirschtomaten', '2 Knoblauchzehen', '100 g Feta', '3 EL Olivenöl', '1 TL getrockneter Thymian', 'Salz, Pfeffer, 1 EL Balsamico-Essig']::text[],
+      'Backofen auf 200°C Ober-/Unterhitze vorheizen. Zucchini, Paprika und Zwiebel in mundgerechte Stücke schneiden, Knoblauch fein hacken. Gemüse mit Kirschtomaten, 2 EL Olivenöl, Thymian, Salz und Pfeffer in einer großen Auflaufform vermengen und gleichmäßig verteilen. 20 Minuten im Ofen rösten, dann den Feta grob darüberbröckeln und weitere 10 Minuten backen, bis der Käse leicht Farbe annimmt. Zum Schluss mit Balsamico-Essig und dem restlichen Olivenöl beträufeln und warm servieren.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch']::text[],
-      array['glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Garnelen-Curry mit Kokosmilch und Spinat',
       'Würziges Curry mit zarten Garnelen und frischem Spinat.',
       420, 30, 18, 26,
-      array['250 g Garnelen', '200 ml Kokosmilch', '100 g Spinat', '1 EL Currypaste', '1 Zwiebel']::text[],
-      'Zwiebel andünsten, Currypaste kurz mitrösten. Kokosmilch zugeben, aufkochen, Garnelen und Spinat unterrühren und 5 Minuten garen.',
+      array['250 g Garnelen', '200 ml Kokosmilch', '150 g Spinat', '1 EL rote Currypaste', '1 Zwiebel', '2 Knoblauchzehen', '1 daumengroßes Stück Ingwer', '1 EL Fischsauce', 'Saft einer Limette, Koriander zum Garnieren']::text[],
+      'Zwiebel, Knoblauch und Ingwer fein hacken. In einem Topf mit etwas Öl andünsten, bis die Zwiebel glasig ist. Currypaste zugeben und eine Minute mitrösten, bis sie aromatisch duftet. Mit Kokosmilch ablöschen, aufkochen lassen und mit Fischsauce abschmecken. Garnelen zugeben und 3–4 Minuten gar ziehen lassen, dann den Spinat unterrühren, bis er zusammenfällt. Mit Limettensaft abschmecken und mit frischem Koriander bestreut zu Reis servieren.',
       'abend',
-      array['omnivore','pescetarisch']::text[],
-      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Hähnchen-Gemüse-Pfanne mit Erdnusssauce',
       'Asiatisch inspirierte Pfanne mit cremiger Erdnusssauce.',
       480, 35, 28, 22,
-      array['250 g Hähnchenbrust', '200 g Brokkoli', '1 rote Paprika', '2 EL Erdnussbutter', '1 EL Sojasauce']::text[],
-      'Hähnchen in Streifen schneiden und anbraten. Gemüse zugeben und mitbraten. Erdnussbutter mit Sojasauce und etwas Wasser verrühren, unterheben und kurz köcheln.',
+      array['250 g Hähnchenbrust', '200 g Brokkoli', '1 rote Paprika', '1 Karotte', '2 Knoblauchzehen', '1 Stück Ingwer', '2 EL Erdnussbutter', '2 EL Sojasauce', 'Saft einer Limette, 1 EL Sesam']::text[],
+      'Hähnchenbrust in mundgerechte Streifen schneiden, Gemüse waschen und in ähnlich große Stücke schneiden, Knoblauch und Ingwer fein hacken. Öl in einer großen Pfanne oder einem Wok stark erhitzen und das Hähnchen darin rundum anbraten, bis es Farbe annimmt. Knoblauch und Ingwer zugeben, kurz mitbraten, dann Brokkoli, Paprika und Karotte dazugeben und unter Wenden 5–6 Minuten braten, bis das Gemüse bissfest ist. Erdnussbutter mit Sojasauce und etwas Wasser glattrühren und in die Pfanne geben, alles gut vermengen und kurz köcheln lassen, bis die Sauce leicht andickt. Mit Limettensaft abschmecken und mit Sesam bestreut servieren.',
       'abend',
       array['omnivore']::text[],
-      array['laktosefrei','eifrei']::text[]
+      array['laktosefrei', 'eifrei']::text[]
     ),
     (
       'Vegane Linsenbolognese mit Zucchininudeln',
       'Herzhafte Bolognese aus roten Linsen auf Zucchininudeln.',
       380, 22, 32, 14,
-      array['150 g rote Linsen', '3 Zucchini', '400 g stückige Tomaten', '1 Zwiebel', 'Knoblauch', 'Kräuter']::text[],
-      'Zwiebel und Knoblauch andünsten, Linsen und Tomaten zugeben, 15 Minuten köcheln. Zucchini spiralisieren, kurz erwärmen und mit der Sauce servieren.',
+      array['150 g rote Linsen', '3 Zucchini', '400 g stückige Tomaten', '1 Zwiebel', '1 Karotte', '1 Stange Staudensellerie', '2 Knoblauchzehen', '2 EL Tomatenmark', 'Oregano, Basilikum, Salz, Pfeffer']::text[],
+      'Zwiebel, Karotte, Sellerie und Knoblauch fein würfeln. In einem Topf mit etwas Olivenöl andünsten, bis das Gemüse weich ist. Tomatenmark einrühren und kurz mitrösten, dann mit den stückigen Tomaten und den roten Linsen ablöschen. Mit etwas Wasser auffüllen, Oregano und Basilikum zugeben und die Sauce 15–18 Minuten köcheln lassen, bis die Linsen weich sind, dabei gelegentlich umrühren. Zucchini in der Zwischenzeit mit dem Spiralschneider zu Nudeln verarbeiten. Zucchininudeln kurz in der heißen Sauce erwärmen oder separat kurz andünsten und mit der Bolognese anrichten.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch','vegan','low_carb']::text[],
-      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Gebackener Kabeljau mit Ofenkartoffeln und Rosmarin',
       'Milder Fisch mit knusprigen Kartoffelspalten.',
       460, 32, 45, 14,
-      array['200 g Kabeljaufilet', '400 g Kartoffeln', '2 EL Olivenöl', 'Rosmarin', 'Zitrone']::text[],
-      'Kartoffeln in Spalten schneiden, mit Öl und Rosmarin 25 Minuten bei 200°C backen. Kabeljau salzen, die letzten 12 Minuten mit in den Ofen geben, mit Zitrone servieren.',
+      array['200 g Kabeljaufilet', '500 g Kartoffeln', '3 EL Olivenöl', '2 Zweige Rosmarin', '2 Knoblauchzehen', 'Zitrone (Saft und Schale)', 'Salz, Pfeffer', 'Petersilie zum Garnieren']::text[],
+      'Backofen auf 200°C vorheizen. Kartoffeln waschen, in Spalten schneiden und mit Olivenöl, Rosmarin, zerdrückten Knoblauchzehen, Salz und Pfeffer vermengen. Auf einem Backblech verteilen und 20 Minuten vorbacken. Kabeljau mit Salz, Pfeffer und etwas Zitronensaft würzen, auf das Blech zu den Kartoffeln legen und weitere 12–15 Minuten backen, bis der Fisch gar ist und sich leicht mit der Gabel zerteilen lässt. Mit Zitronenschale und gehackter Petersilie bestreut servieren.',
       'abend',
-      array['omnivore','pescetarisch']::text[],
-      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei', 'histaminarm']::text[]
     ),
     (
       'Falafel-Bowl mit Hummus und Rotkohlsalat',
       'Knusprige Falafel, cremiger Hummus, frischer Krautsalat.',
       520, 18, 58, 20,
-      array['150 g Falafel (Kichererbsen)', '150 g Hummus', '150 g Rotkohl', '1 EL Olivenöl', 'Zitrone']::text[],
-      'Falafel in der Pfanne oder im Ofen erhitzen. Rotkohl fein hobeln, mit Öl und Zitrone marinieren. Alles mit Hummus in einer Bowl anrichten.',
+      array['150 g Falafel (Kichererbsen)', '150 g Hummus', '200 g Rotkohl', '1 Karotte', '2 EL Olivenöl', 'Saft einer Zitrone', '1 EL Tahini', 'Kreuzkümmel, Salz, Pfeffer', '1 EL Sesam, Petersilie']::text[],
+      'Rotkohl fein hobeln und Karotte raspeln. Beides mit Olivenöl, Zitronensaft, Kreuzkümmel, Salz und Pfeffer vermengen und kurz durchziehen lassen. Tahini mit etwas Wasser und Zitronensaft zu einem cremigen Dressing verrühren. Falafel nach Packungsanweisung in der Pfanne oder im Ofen erhitzen, bis sie knusprig sind. Hummus als Basis in eine Schale streichen, Falafel und Rotkohlsalat darauf anrichten, mit dem Tahini-Dressing beträufeln und mit Sesam und gehackter Petersilie bestreuen.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch','vegan']::text[],
-      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Rindergeschnetzeltes mit Paprika und Reis',
       'Zartes Rindfleisch in würziger Paprikasauce, dazu Reis.',
       540, 32, 55, 16,
-      array['250 g Rindergeschnetzeltes', '2 Paprika', '1 Zwiebel', '150 g Reis', '1 EL Olivenöl']::text[],
-      'Rindfleisch scharf anbraten, herausnehmen. Zwiebel und Paprika anbraten, Fleisch zurückgeben, kurz durchschwenken. Mit gekochtem Reis servieren.',
+      array['250 g Rindergeschnetzeltes', '2 Paprika', '1 Zwiebel', '2 Knoblauchzehen', '150 g Reis', '2 EL Olivenöl', '1 TL Paprikapulver', '100 ml Gemüsebrühe', 'Petersilie, Salz, Pfeffer']::text[],
+      'Reis nach Packungsanweisung kochen. Zwiebel und Knoblauch fein würfeln, Paprika in Streifen schneiden. Öl in einer Pfanne stark erhitzen und das Rindfleisch portionsweise scharf anbraten, damit es Farbe bekommt, dann herausnehmen. Zwiebel, Knoblauch und Paprika in derselben Pfanne andünsten, mit Paprikapulver bestäuben und mit der Gemüsebrühe ablöschen. Das Fleisch zurück in die Pfanne geben, kurz durchschwenken und mit Salz und Pfeffer abschmecken. Mit gekochtem Reis und frischer Petersilie servieren.',
       'abend',
       array['omnivore']::text[],
-      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei', 'histaminarm']::text[]
     ),
     (
       'Gebratener Räuchertofu mit Pak Choi und Sesam',
       'Asiatisch angehauchtes Low-Carb-Gericht mit Räuchertofu.',
       380, 24, 16, 24,
-      array['200 g Räuchertofu', '2 Pak Choi', '1 EL Sesamöl', '1 EL Sesam', 'Ingwer']::text[],
-      'Tofu würfeln und in Sesamöl knusprig braten. Pak Choi und Ingwer zugeben, kurz mitbraten und mit Sesam bestreuen.',
+      array['200 g Räuchertofu', '2 Pak Choi', '2 Knoblauchzehen', '1 Stück Ingwer', '1 EL Sesamöl', '1 EL Sojasauce', '1 TL Reisessig', '1 EL Sesam', '1 rote Chili (optional)']::text[],
+      'Tofu in Würfel schneiden, Pak Choi waschen und der Länge nach halbieren, Knoblauch und Ingwer fein hacken. Sesamöl in einer Pfanne oder einem Wok stark erhitzen und den Tofu darin rundum knusprig anbraten. Knoblauch, Ingwer und die in Ringe geschnittene Chili zugeben und kurz mitbraten, bis es aromatisch duftet. Pak Choi dazugeben und unter Wenden 3–4 Minuten braten, bis er leicht zusammenfällt. Mit Sojasauce und Reisessig ablöschen, kurz durchschwenken und mit Sesam bestreut servieren.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch','vegan','low_carb']::text[],
-      array['laktosefrei','glutenfrei','nussfrei','eifrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei']::text[]
     ),
     (
       'Zucchini-Lasagne mit Ricotta',
       'Lasagne mit Zucchinischeiben statt Nudelplatten.',
       460, 22, 32, 26,
-      array['3 Zucchini', '250 g Ricotta', '400 g stückige Tomaten', '50 g Parmesan', 'Basilikum']::text[],
-      'Zucchini in dünne Scheiben schneiden. Abwechselnd mit Tomatensauce und Ricotta in einer Form schichten, mit Parmesan bestreuen und 30 Minuten bei 200°C backen.',
+      array['3 Zucchini', '250 g Ricotta', '400 g stückige Tomaten', '2 Knoblauchzehen', '1 Zwiebel', '80 g Mozzarella', '50 g Parmesan', 'Muskatnuss, Salz, Pfeffer', 'Basilikum zum Garnieren']::text[],
+      'Backofen auf 200°C vorheizen. Zwiebel und Knoblauch fein würfeln und in etwas Olivenöl andünsten, mit den stückigen Tomaten ablöschen und 10 Minuten zu einer Sauce einkochen, mit Salz und Pfeffer abschmecken. Zucchini in dünne Längsscheiben schneiden. Ricotta mit einer Prise Muskatnuss verrühren. In einer Auflaufform abwechselnd Tomatensauce, Zucchinischeiben und Ricotta schichten, bis alle Zutaten aufgebraucht sind. Mit gerissenem Mozzarella und Parmesan bestreuen und 30 Minuten backen, bis die Oberfläche goldbraun ist. Mit frischem Basilikum garniert servieren.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch']::text[],
-      array['glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Miso-Lachs mit Brokkoli und Reis',
       'Lachs in Miso-Marinade gebacken, dazu gedünsteter Brokkoli.',
       540, 34, 48, 22,
-      array['200 g Lachsfilet', '1 EL Misopaste', '200 g Brokkoli', '150 g Reis', '1 TL Honig']::text[],
-      'Lachs mit Miso und Honig bestreichen und 15 Minuten bei 200°C backen. Brokkoli dämpfen und mit Reis und Lachs servieren.',
+      array['200 g Lachsfilet', '1 EL Misopaste', '1 TL Honig', '1 TL Sojasauce', '200 g Brokkoli', '150 g Reis', '1 Stück Ingwer, gerieben', '1 EL Sesam, Frühlingszwiebel']::text[],
+      'Backofen auf 200°C vorheizen. Misopaste mit Honig, Sojasauce und geriebenem Ingwer zu einer Marinade verrühren und den Lachs damit bestreichen, kurz ziehen lassen. Reis nach Packungsanweisung kochen. Lachs auf ein mit Backpapier ausgelegtes Blech legen und 12–15 Minuten backen, bis er gar ist und die Marinade leicht karamellisiert. Brokkoli in Röschen teilen und in der Zwischenzeit 5 Minuten dämpfen, bis er bissfest ist. Alles zusammen mit dem Reis anrichten, mit Sesam und Frühlingszwiebelringen bestreuen.',
       'abend',
-      array['omnivore','pescetarisch']::text[],
-      array['laktosefrei','nussfrei','eifrei']::text[]
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei']::text[]
     ),
     (
       'Kichererbsen-Spinat-Curry mit Naturjoghurt',
       'Mildes Curry, verfeinert mit einem Klecks Joghurt.',
       420, 18, 42, 16,
-      array['400 g Kichererbsen (Dose)', '150 g Spinat', '1 Zwiebel', '2 TL Currypulver', '2 EL Naturjoghurt']::text[],
-      'Zwiebel andünsten, Currypulver kurz mitrösten, Kichererbsen mit etwas Wasser zugeben und 10 Minuten köcheln. Spinat unterrühren, mit einem Klecks Joghurt servieren.',
+      array['400 g Kichererbsen (Dose)', '200 g Spinat', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypulver', '1 TL Kreuzkümmel', '400 g stückige Tomaten', '2 EL Naturjoghurt']::text[],
+      'Zwiebel, Knoblauch und Ingwer fein hacken. In einem Topf mit etwas Öl andünsten, bis die Zwiebel glasig ist. Currypulver und Kreuzkümmel zugeben und kurz mitrösten, bis die Gewürze aromatisch duften. Mit den stückigen Tomaten ablöschen, die abgetropften Kichererbsen zugeben und alles 10 Minuten köcheln lassen, damit sich die Aromen verbinden. Spinat unterrühren und zusammenfallen lassen, mit Salz und Pfeffer abschmecken. Mit einem Klecks Naturjoghurt servieren.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch']::text[],
-      array['glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Putenschnitzel mit grünem Spargel und Zitronenbutter',
       'Mageres Putenfleisch, dazu saisonaler Spargel.',
       400, 38, 10, 22,
-      array['200 g Putenschnitzel', '250 g grüner Spargel', '1 EL Butter', 'Zitrone', 'Petersilie']::text[],
-      'Putenschnitzel braten. Spargel in wenig Wasser dünsten, mit Zitronenbutter und Petersilie beträufeln, mit dem Schnitzel servieren.',
+      array['200 g Putenschnitzel', '250 g grüner Spargel', '2 EL Mehl', '2 EL Butter', '1 Knoblauchzehe', 'Zitrone (Saft und Schale)', 'Petersilie', 'Salz, Pfeffer']::text[],
+      'Spargel waschen und die holzigen Enden abschneiden. Putenschnitzel salzen, pfeffern und leicht in Mehl wenden. In einer Pfanne mit etwas Butter von beiden Seiten goldbraun und durchgebraten braten, dann warm stellen. Spargel in derselben Pfanne mit etwas Wasser und einer zerdrückten Knoblauchzehe 6–8 Minuten dünsten, bis er bissfest ist. Restliche Butter mit Zitronensaft und -schale in einem kleinen Topf schmelzen. Schnitzel und Spargel auf Tellern anrichten, mit der Zitronenbutter beträufeln und mit gehackter Petersilie bestreuen.',
       'abend',
-      array['omnivore','low_carb']::text[],
-      array['glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+      array['omnivore', 'low_carb']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei', 'histaminarm']::text[]
     ),
     (
       'Auberginen-Curry mit Kokosmilch und Koriander',
       'Cremiges, veganes Curry mit intensivem Aroma.',
       400, 10, 34, 24,
-      array['2 Auberginen', '200 ml Kokosmilch', '1 Zwiebel', '2 TL Currypaste', 'Koriander']::text[],
-      'Auberginen würfeln und anbraten. Zwiebel und Currypaste zugeben, mit Kokosmilch ablöschen und 15 Minuten köcheln. Mit Koriander garnieren.',
+      array['2 Auberginen', '200 ml Kokosmilch', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypaste', '1 TL Kurkuma', '200 g stückige Tomaten', 'Koriander zum Garnieren']::text[],
+      'Auberginen in Würfel schneiden, Zwiebel, Knoblauch und Ingwer fein hacken. Öl in einem Topf erhitzen und die Auberginenwürfel darin rundum anbraten, bis sie leicht Farbe annehmen, dann herausnehmen. Zwiebel, Knoblauch und Ingwer im selben Topf andünsten, Currypaste und Kurkuma zugeben und kurz mitrösten. Mit Kokosmilch und stückigen Tomaten ablöschen, die Auberginen zurückgeben und alles 15 Minuten köcheln lassen, bis die Auberginen weich sind. Mit Salz abschmecken und mit frischem Koriander garniert servieren.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch','vegan']::text[],
-      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Gebratene Jakobsmuscheln mit Erbsenpüree',
       'Elegantes, leichtes Fischgericht mit cremigem Erbsenpüree.',
       380, 28, 24, 18,
-      array['200 g Jakobsmuscheln', '200 g TK-Erbsen', '1 EL Butter', 'Minze', 'Zitrone']::text[],
-      'Erbsen kochen, mit Butter und Minze pürieren. Jakobsmuscheln kurz scharf anbraten und auf dem Püree mit Zitrone servieren.',
+      array['200 g Jakobsmuscheln', '250 g TK-Erbsen', '1 Schalotte', '2 EL Butter', '2 EL Sahne', 'Minze', 'Zitrone', 'Salz, Pfeffer']::text[],
+      'Schalotte fein würfeln und in etwas Butter glasig dünsten. Erbsen zugeben und 3–4 Minuten mitdünsten, dann mit etwas Wasser auffüllen und weich kochen. Erbsen mit Sahne, Minze, Salz und Pfeffer fein pürieren, bei Bedarf durch ein Sieb streichen für eine besonders cremige Konsistenz. Jakobsmuscheln trocken tupfen, salzen und pfeffern. In einer sehr heißen Pfanne mit etwas Butter je Seite 1–2 Minuten scharf anbraten, bis sie goldbraun sind, aber innen noch glasig bleiben. Erbsenpüree auf Tellern verteilen, Jakobsmuscheln daraufsetzen und mit Zitronensaft beträufeln.',
       'abend',
-      array['omnivore','pescetarisch']::text[],
-      array['glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Bohnen-Eintopf mit Chorizo',
       'Herzhafter Eintopf mit weißen Bohnen und würziger Chorizo.',
       480, 28, 40, 22,
-      array['400 g weiße Bohnen (Dose)', '100 g Chorizo', '1 Zwiebel', '1 Paprika', 'Paprikapulver']::text[],
-      'Chorizo anbraten, Zwiebel und Paprika zugeben und mitdünsten. Bohnen mit etwas Wasser zugeben, mit Paprikapulver würzen und 15 Minuten köcheln.',
+      array['400 g weiße Bohnen (Dose)', '100 g Chorizo', '1 Zwiebel', '2 Knoblauchzehen', '1 Karotte', '1 Paprika', '1 TL Paprikapulver', '300 ml Gemüsebrühe', '1 Lorbeerblatt']::text[],
+      'Zwiebel, Knoblauch, Karotte und Paprika klein schneiden. Chorizo in Scheiben schneiden und in einem Topf ohne zusätzliches Fett anbraten, bis sie ihr Öl abgibt. Zwiebel, Knoblauch, Karotte und Paprika zugeben und mitdünsten, bis das Gemüse weich wird. Mit Paprikapulver bestäuben, kurz mitrösten und mit der Gemüsebrühe ablöschen. Bohnen und Lorbeerblatt zugeben und alles 15–20 Minuten köcheln lassen, bis der Eintopf sämig ist. Lorbeerblatt entfernen und mit Salz und Pfeffer abschmecken.',
       'abend',
       array['omnivore']::text[],
-      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei']::text[]
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Gebackener Feta mit Cherrytomaten und Vollkornbrot',
       'Ofenfeta in Olivenöl mit geplatzten Cherrytomaten.',
       460, 18, 38, 26,
-      array['200 g Feta', '250 g Cherrytomaten', '2 EL Olivenöl', 'Oregano', '2 Scheiben Vollkornbrot']::text[],
-      'Feta mit Tomaten in eine Auflaufform geben, mit Öl und Oregano beträufeln und 20 Minuten bei 200°C backen. Mit geröstetem Vollkornbrot servieren.',
+      array['200 g Feta', '300 g Cherrytomaten', '2 Knoblauchzehen', '3 EL Olivenöl', '1 TL Oregano', 'Chiliflocken (optional)', '4 Scheiben Vollkornbrot', 'Basilikum']::text[],
+      'Backofen auf 200°C vorheizen. Feta in die Mitte einer Auflaufform legen und die Cherrytomaten sowie die halbierten Knoblauchzehen drum herum verteilen. Mit Olivenöl beträufeln, mit Oregano und nach Belieben Chiliflocken bestreuen. 20–25 Minuten backen, bis die Tomaten geplatzt sind und der Feta leicht Farbe angenommen hat. In der Zwischenzeit die Vollkornbrotscheiben rösten. Feta und Tomaten mit einer Gabel leicht zerdrücken und vermengen, mit frischem Basilikum bestreuen und zusammen mit dem gerösteten Brot servieren.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch']::text[],
-      array['nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
       'Teriyaki-Tofu mit Brokkoli und Jasminreis',
       'Süß-würziger Tofu, asiatisch inspiriert.',
       480, 22, 58, 14,
-      array['200 g Tofu', '200 g Brokkoli', '150 g Jasminreis', '3 EL Teriyaki-Sauce']::text[],
-      'Tofu würfeln und knusprig braten, mit Teriyaki-Sauce ablöschen. Brokkoli dämpfen und mit Jasminreis und Tofu servieren.',
+      array['200 g Tofu', '200 g Brokkoli', '150 g Jasminreis', '2 Knoblauchzehen', '1 Stück Ingwer', '3 EL Teriyaki-Sauce', '1 EL Sesamöl', '1 EL Sesam', 'Frühlingszwiebel']::text[],
+      'Jasminreis nach Packungsanweisung kochen. Tofu trocken tupfen und in Würfel schneiden, Knoblauch und Ingwer fein hacken. Sesamöl in einer Pfanne erhitzen und den Tofu darin von allen Seiten knusprig braten, dann herausnehmen. Knoblauch und Ingwer kurz in derselben Pfanne andünsten, Brokkoliröschen zugeben und 5 Minuten braten, bis sie bissfest sind. Tofu zurück in die Pfanne geben, mit der Teriyaki-Sauce ablöschen und alles gut vermengen, bis die Sauce leicht andickt. Mit Jasminreis anrichten und mit Sesam und Frühlingszwiebelringen bestreuen.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch','vegan']::text[],
-      array['laktosefrei','nussfrei','eifrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei']::text[]
     ),
     (
       'Hähnchen-Curry mit Süßkartoffel',
       'Mildes Curry mit zartem Hähnchen und süßer Kartoffel.',
       500, 34, 42, 20,
-      array['250 g Hähnchenbrust', '1 Süßkartoffel', '200 ml Kokosmilch', '2 TL Currypulver', '1 Zwiebel']::text[],
-      'Hähnchen und Zwiebel anbraten, Currypulver kurz mitrösten. Süßkartoffel würfeln, mit Kokosmilch zugeben und 15 Minuten köcheln.',
+      array['250 g Hähnchenbrust', '1 Süßkartoffel', '200 ml Kokosmilch', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypulver', '1 TL Kreuzkümmel', 'Koriander zum Garnieren']::text[],
+      'Hähnchenbrust in mundgerechte Stücke schneiden, Zwiebel, Knoblauch und Ingwer fein hacken, Süßkartoffel schälen und würfeln. Öl in einem Topf erhitzen und das Hähnchen darin anbraten, bis es Farbe annimmt, dann herausnehmen. Zwiebel, Knoblauch und Ingwer im selben Topf andünsten, Currypulver und Kreuzkümmel zugeben und kurz mitrösten. Süßkartoffelwürfel und Kokosmilch zugeben, Hähnchen zurück in den Topf geben und alles 15–18 Minuten köcheln lassen, bis die Süßkartoffel weich und das Hähnchen durchgegart ist. Mit Salz abschmecken und mit frischem Koriander bestreut servieren.',
       'abend',
       array['omnivore']::text[],
-      array['laktosefrei','glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei', 'histaminarm']::text[]
     ),
     (
       'Gedämpfter Seelachs mit Fenchel und Dillsauce',
       'Leichtes, proteinreiches Fischgericht mit cremiger Dillsauce.',
       360, 30, 12, 20,
-      array['200 g Seelachsfilet', '1 Fenchelknolle', '2 EL Naturjoghurt', 'Dill', 'Zitrone']::text[],
-      'Fenchel in Streifen schneiden und dämpfen. Seelachs darüber legen und mitdämpfen. Joghurt mit Dill und Zitrone verrühren und dazu servieren.',
+      array['200 g Seelachsfilet', '1 Fenchelknolle', '1 Schalotte', '2 EL Naturjoghurt', 'Dill', 'Zitrone (Saft und Schale)', 'Petersilie', 'Salz, Pfeffer']::text[],
+      'Fenchel putzen und in dünne Streifen schneiden, Schalotte fein würfeln. Beides in einem Topf mit etwas Wasser oder Gemüsebrühe bei mittlerer Hitze 8–10 Minuten dünsten, bis der Fenchel weich ist. Seelachsfilet mit Salz und Pfeffer würzen und auf den Fenchel legen, Deckel schließen und weitere 6–8 Minuten mitdämpfen, bis der Fisch gar ist. Naturjoghurt mit gehacktem Dill, Zitronensaft und -schale zu einer cremigen Sauce verrühren. Fisch und Fenchel auf Tellern anrichten, mit der Dillsauce beträufeln und mit frischer Petersilie garnieren.',
       'abend',
-      array['omnivore','pescetarisch','low_carb']::text[],
-      array['glutenfrei','nussfrei','eifrei','sojafrei','histaminarm']::text[]
+      array['omnivore', 'pescetarisch', 'low_carb']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei', 'histaminarm']::text[]
     ),
     (
       'Rote-Linsen-Dal mit Naan',
       'Sämiges indisches Linsengericht mit warmem Fladenbrot.',
       460, 20, 62, 12,
-      array['200 g rote Linsen', '400 ml Kokosmilch', '1 Zwiebel', '2 TL Currypulver', '2 Naan-Brote']::text[],
-      'Zwiebel andünsten, Currypulver kurz mitrösten. Linsen und Kokosmilch zugeben und 15 Minuten köcheln, bis das Dal sämig ist. Mit warmem Naan servieren.',
+      array['200 g rote Linsen', '400 ml Kokosmilch', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypulver', '1 TL Kurkuma', '2 Naan-Brote', 'Koriander zum Garnieren']::text[],
+      'Linsen unter kaltem Wasser abspülen, bis das Wasser klar bleibt. Zwiebel, Knoblauch und Ingwer fein hacken und in einem Topf mit etwas Öl andünsten, bis die Zwiebel glasig ist. Currypulver und Kurkuma zugeben und kurz mitrösten, bis die Gewürze aromatisch duften. Linsen und Kokosmilch zugeben, mit etwas Wasser auffüllen und bei mittlerer Hitze 15–18 Minuten köcheln lassen, dabei gelegentlich umrühren, bis das Dal sämig ist. Mit Salz abschmecken und mit frischem Koriander bestreut zusammen mit warmem Naan servieren.',
       'abend',
-      array['omnivore','pescetarisch','vegetarisch','vegan']::text[],
-      array['laktosefrei','nussfrei','eifrei','sojafrei']::text[]
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     )
 ) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
 where not exists (
   select 1 from public.recipes r where r.title = v.title
 );
+
+-- Die 20 Abendessen oben wurden nachträglich um mehr Zutaten und eine
+-- ausführlichere Zubereitung ergänzt. Als reines Update (statt erneutem
+-- Insert) angehängt, damit auch bereits befüllte Projekte die
+-- ausführlichere Fassung erhalten, sobald dieser Block ausgeführt wird.
+update public.recipes set
+  ingredients = array['2 Zucchini', '1 rote Paprika', '1 rote Zwiebel', '150 g Kirschtomaten', '2 Knoblauchzehen', '100 g Feta', '3 EL Olivenöl', '1 TL getrockneter Thymian', 'Salz, Pfeffer, 1 EL Balsamico-Essig']::text[],
+  instructions = 'Backofen auf 200°C Ober-/Unterhitze vorheizen. Zucchini, Paprika und Zwiebel in mundgerechte Stücke schneiden, Knoblauch fein hacken. Gemüse mit Kirschtomaten, 2 EL Olivenöl, Thymian, Salz und Pfeffer in einer großen Auflaufform vermengen und gleichmäßig verteilen. 20 Minuten im Ofen rösten, dann den Feta grob darüberbröckeln und weitere 10 Minuten backen, bis der Käse leicht Farbe annimmt. Zum Schluss mit Balsamico-Essig und dem restlichen Olivenöl beträufeln und warm servieren.'
+where title = 'Ofengemüse mit Feta und Kräutern';
+update public.recipes set
+  ingredients = array['250 g Garnelen', '200 ml Kokosmilch', '150 g Spinat', '1 EL rote Currypaste', '1 Zwiebel', '2 Knoblauchzehen', '1 daumengroßes Stück Ingwer', '1 EL Fischsauce', 'Saft einer Limette, Koriander zum Garnieren']::text[],
+  instructions = 'Zwiebel, Knoblauch und Ingwer fein hacken. In einem Topf mit etwas Öl andünsten, bis die Zwiebel glasig ist. Currypaste zugeben und eine Minute mitrösten, bis sie aromatisch duftet. Mit Kokosmilch ablöschen, aufkochen lassen und mit Fischsauce abschmecken. Garnelen zugeben und 3–4 Minuten gar ziehen lassen, dann den Spinat unterrühren, bis er zusammenfällt. Mit Limettensaft abschmecken und mit frischem Koriander bestreut zu Reis servieren.'
+where title = 'Garnelen-Curry mit Kokosmilch und Spinat';
+update public.recipes set
+  ingredients = array['250 g Hähnchenbrust', '200 g Brokkoli', '1 rote Paprika', '1 Karotte', '2 Knoblauchzehen', '1 Stück Ingwer', '2 EL Erdnussbutter', '2 EL Sojasauce', 'Saft einer Limette, 1 EL Sesam']::text[],
+  instructions = 'Hähnchenbrust in mundgerechte Streifen schneiden, Gemüse waschen und in ähnlich große Stücke schneiden, Knoblauch und Ingwer fein hacken. Öl in einer großen Pfanne oder einem Wok stark erhitzen und das Hähnchen darin rundum anbraten, bis es Farbe annimmt. Knoblauch und Ingwer zugeben, kurz mitbraten, dann Brokkoli, Paprika und Karotte dazugeben und unter Wenden 5–6 Minuten braten, bis das Gemüse bissfest ist. Erdnussbutter mit Sojasauce und etwas Wasser glattrühren und in die Pfanne geben, alles gut vermengen und kurz köcheln lassen, bis die Sauce leicht andickt. Mit Limettensaft abschmecken und mit Sesam bestreut servieren.'
+where title = 'Hähnchen-Gemüse-Pfanne mit Erdnusssauce';
+update public.recipes set
+  ingredients = array['150 g rote Linsen', '3 Zucchini', '400 g stückige Tomaten', '1 Zwiebel', '1 Karotte', '1 Stange Staudensellerie', '2 Knoblauchzehen', '2 EL Tomatenmark', 'Oregano, Basilikum, Salz, Pfeffer']::text[],
+  instructions = 'Zwiebel, Karotte, Sellerie und Knoblauch fein würfeln. In einem Topf mit etwas Olivenöl andünsten, bis das Gemüse weich ist. Tomatenmark einrühren und kurz mitrösten, dann mit den stückigen Tomaten und den roten Linsen ablöschen. Mit etwas Wasser auffüllen, Oregano und Basilikum zugeben und die Sauce 15–18 Minuten köcheln lassen, bis die Linsen weich sind, dabei gelegentlich umrühren. Zucchini in der Zwischenzeit mit dem Spiralschneider zu Nudeln verarbeiten. Zucchininudeln kurz in der heißen Sauce erwärmen oder separat kurz andünsten und mit der Bolognese anrichten.'
+where title = 'Vegane Linsenbolognese mit Zucchininudeln';
+update public.recipes set
+  ingredients = array['200 g Kabeljaufilet', '500 g Kartoffeln', '3 EL Olivenöl', '2 Zweige Rosmarin', '2 Knoblauchzehen', 'Zitrone (Saft und Schale)', 'Salz, Pfeffer', 'Petersilie zum Garnieren']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Kartoffeln waschen, in Spalten schneiden und mit Olivenöl, Rosmarin, zerdrückten Knoblauchzehen, Salz und Pfeffer vermengen. Auf einem Backblech verteilen und 20 Minuten vorbacken. Kabeljau mit Salz, Pfeffer und etwas Zitronensaft würzen, auf das Blech zu den Kartoffeln legen und weitere 12–15 Minuten backen, bis der Fisch gar ist und sich leicht mit der Gabel zerteilen lässt. Mit Zitronenschale und gehackter Petersilie bestreut servieren.'
+where title = 'Gebackener Kabeljau mit Ofenkartoffeln und Rosmarin';
+update public.recipes set
+  ingredients = array['150 g Falafel (Kichererbsen)', '150 g Hummus', '200 g Rotkohl', '1 Karotte', '2 EL Olivenöl', 'Saft einer Zitrone', '1 EL Tahini', 'Kreuzkümmel, Salz, Pfeffer', '1 EL Sesam, Petersilie']::text[],
+  instructions = 'Rotkohl fein hobeln und Karotte raspeln. Beides mit Olivenöl, Zitronensaft, Kreuzkümmel, Salz und Pfeffer vermengen und kurz durchziehen lassen. Tahini mit etwas Wasser und Zitronensaft zu einem cremigen Dressing verrühren. Falafel nach Packungsanweisung in der Pfanne oder im Ofen erhitzen, bis sie knusprig sind. Hummus als Basis in eine Schale streichen, Falafel und Rotkohlsalat darauf anrichten, mit dem Tahini-Dressing beträufeln und mit Sesam und gehackter Petersilie bestreuen.'
+where title = 'Falafel-Bowl mit Hummus und Rotkohlsalat';
+update public.recipes set
+  ingredients = array['250 g Rindergeschnetzeltes', '2 Paprika', '1 Zwiebel', '2 Knoblauchzehen', '150 g Reis', '2 EL Olivenöl', '1 TL Paprikapulver', '100 ml Gemüsebrühe', 'Petersilie, Salz, Pfeffer']::text[],
+  instructions = 'Reis nach Packungsanweisung kochen. Zwiebel und Knoblauch fein würfeln, Paprika in Streifen schneiden. Öl in einer Pfanne stark erhitzen und das Rindfleisch portionsweise scharf anbraten, damit es Farbe bekommt, dann herausnehmen. Zwiebel, Knoblauch und Paprika in derselben Pfanne andünsten, mit Paprikapulver bestäuben und mit der Gemüsebrühe ablöschen. Das Fleisch zurück in die Pfanne geben, kurz durchschwenken und mit Salz und Pfeffer abschmecken. Mit gekochtem Reis und frischer Petersilie servieren.'
+where title = 'Rindergeschnetzeltes mit Paprika und Reis';
+update public.recipes set
+  ingredients = array['200 g Räuchertofu', '2 Pak Choi', '2 Knoblauchzehen', '1 Stück Ingwer', '1 EL Sesamöl', '1 EL Sojasauce', '1 TL Reisessig', '1 EL Sesam', '1 rote Chili (optional)']::text[],
+  instructions = 'Tofu in Würfel schneiden, Pak Choi waschen und der Länge nach halbieren, Knoblauch und Ingwer fein hacken. Sesamöl in einer Pfanne oder einem Wok stark erhitzen und den Tofu darin rundum knusprig anbraten. Knoblauch, Ingwer und die in Ringe geschnittene Chili zugeben und kurz mitbraten, bis es aromatisch duftet. Pak Choi dazugeben und unter Wenden 3–4 Minuten braten, bis er leicht zusammenfällt. Mit Sojasauce und Reisessig ablöschen, kurz durchschwenken und mit Sesam bestreut servieren.'
+where title = 'Gebratener Räuchertofu mit Pak Choi und Sesam';
+update public.recipes set
+  ingredients = array['3 Zucchini', '250 g Ricotta', '400 g stückige Tomaten', '2 Knoblauchzehen', '1 Zwiebel', '80 g Mozzarella', '50 g Parmesan', 'Muskatnuss, Salz, Pfeffer', 'Basilikum zum Garnieren']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Zwiebel und Knoblauch fein würfeln und in etwas Olivenöl andünsten, mit den stückigen Tomaten ablöschen und 10 Minuten zu einer Sauce einkochen, mit Salz und Pfeffer abschmecken. Zucchini in dünne Längsscheiben schneiden. Ricotta mit einer Prise Muskatnuss verrühren. In einer Auflaufform abwechselnd Tomatensauce, Zucchinischeiben und Ricotta schichten, bis alle Zutaten aufgebraucht sind. Mit gerissenem Mozzarella und Parmesan bestreuen und 30 Minuten backen, bis die Oberfläche goldbraun ist. Mit frischem Basilikum garniert servieren.'
+where title = 'Zucchini-Lasagne mit Ricotta';
+update public.recipes set
+  ingredients = array['200 g Lachsfilet', '1 EL Misopaste', '1 TL Honig', '1 TL Sojasauce', '200 g Brokkoli', '150 g Reis', '1 Stück Ingwer, gerieben', '1 EL Sesam, Frühlingszwiebel']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Misopaste mit Honig, Sojasauce und geriebenem Ingwer zu einer Marinade verrühren und den Lachs damit bestreichen, kurz ziehen lassen. Reis nach Packungsanweisung kochen. Lachs auf ein mit Backpapier ausgelegtes Blech legen und 12–15 Minuten backen, bis er gar ist und die Marinade leicht karamellisiert. Brokkoli in Röschen teilen und in der Zwischenzeit 5 Minuten dämpfen, bis er bissfest ist. Alles zusammen mit dem Reis anrichten, mit Sesam und Frühlingszwiebelringen bestreuen.'
+where title = 'Miso-Lachs mit Brokkoli und Reis';
+update public.recipes set
+  ingredients = array['400 g Kichererbsen (Dose)', '200 g Spinat', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypulver', '1 TL Kreuzkümmel', '400 g stückige Tomaten', '2 EL Naturjoghurt']::text[],
+  instructions = 'Zwiebel, Knoblauch und Ingwer fein hacken. In einem Topf mit etwas Öl andünsten, bis die Zwiebel glasig ist. Currypulver und Kreuzkümmel zugeben und kurz mitrösten, bis die Gewürze aromatisch duften. Mit den stückigen Tomaten ablöschen, die abgetropften Kichererbsen zugeben und alles 10 Minuten köcheln lassen, damit sich die Aromen verbinden. Spinat unterrühren und zusammenfallen lassen, mit Salz und Pfeffer abschmecken. Mit einem Klecks Naturjoghurt servieren.'
+where title = 'Kichererbsen-Spinat-Curry mit Naturjoghurt';
+update public.recipes set
+  ingredients = array['200 g Putenschnitzel', '250 g grüner Spargel', '2 EL Mehl', '2 EL Butter', '1 Knoblauchzehe', 'Zitrone (Saft und Schale)', 'Petersilie', 'Salz, Pfeffer']::text[],
+  instructions = 'Spargel waschen und die holzigen Enden abschneiden. Putenschnitzel salzen, pfeffern und leicht in Mehl wenden. In einer Pfanne mit etwas Butter von beiden Seiten goldbraun und durchgebraten braten, dann warm stellen. Spargel in derselben Pfanne mit etwas Wasser und einer zerdrückten Knoblauchzehe 6–8 Minuten dünsten, bis er bissfest ist. Restliche Butter mit Zitronensaft und -schale in einem kleinen Topf schmelzen. Schnitzel und Spargel auf Tellern anrichten, mit der Zitronenbutter beträufeln und mit gehackter Petersilie bestreuen.'
+where title = 'Putenschnitzel mit grünem Spargel und Zitronenbutter';
+update public.recipes set
+  ingredients = array['2 Auberginen', '200 ml Kokosmilch', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypaste', '1 TL Kurkuma', '200 g stückige Tomaten', 'Koriander zum Garnieren']::text[],
+  instructions = 'Auberginen in Würfel schneiden, Zwiebel, Knoblauch und Ingwer fein hacken. Öl in einem Topf erhitzen und die Auberginenwürfel darin rundum anbraten, bis sie leicht Farbe annehmen, dann herausnehmen. Zwiebel, Knoblauch und Ingwer im selben Topf andünsten, Currypaste und Kurkuma zugeben und kurz mitrösten. Mit Kokosmilch und stückigen Tomaten ablöschen, die Auberginen zurückgeben und alles 15 Minuten köcheln lassen, bis die Auberginen weich sind. Mit Salz abschmecken und mit frischem Koriander garniert servieren.'
+where title = 'Auberginen-Curry mit Kokosmilch und Koriander';
+update public.recipes set
+  ingredients = array['200 g Jakobsmuscheln', '250 g TK-Erbsen', '1 Schalotte', '2 EL Butter', '2 EL Sahne', 'Minze', 'Zitrone', 'Salz, Pfeffer']::text[],
+  instructions = 'Schalotte fein würfeln und in etwas Butter glasig dünsten. Erbsen zugeben und 3–4 Minuten mitdünsten, dann mit etwas Wasser auffüllen und weich kochen. Erbsen mit Sahne, Minze, Salz und Pfeffer fein pürieren, bei Bedarf durch ein Sieb streichen für eine besonders cremige Konsistenz. Jakobsmuscheln trocken tupfen, salzen und pfeffern. In einer sehr heißen Pfanne mit etwas Butter je Seite 1–2 Minuten scharf anbraten, bis sie goldbraun sind, aber innen noch glasig bleiben. Erbsenpüree auf Tellern verteilen, Jakobsmuscheln daraufsetzen und mit Zitronensaft beträufeln.'
+where title = 'Gebratene Jakobsmuscheln mit Erbsenpüree';
+update public.recipes set
+  ingredients = array['400 g weiße Bohnen (Dose)', '100 g Chorizo', '1 Zwiebel', '2 Knoblauchzehen', '1 Karotte', '1 Paprika', '1 TL Paprikapulver', '300 ml Gemüsebrühe', '1 Lorbeerblatt']::text[],
+  instructions = 'Zwiebel, Knoblauch, Karotte und Paprika klein schneiden. Chorizo in Scheiben schneiden und in einem Topf ohne zusätzliches Fett anbraten, bis sie ihr Öl abgibt. Zwiebel, Knoblauch, Karotte und Paprika zugeben und mitdünsten, bis das Gemüse weich wird. Mit Paprikapulver bestäuben, kurz mitrösten und mit der Gemüsebrühe ablöschen. Bohnen und Lorbeerblatt zugeben und alles 15–20 Minuten köcheln lassen, bis der Eintopf sämig ist. Lorbeerblatt entfernen und mit Salz und Pfeffer abschmecken.'
+where title = 'Bohnen-Eintopf mit Chorizo';
+update public.recipes set
+  ingredients = array['200 g Feta', '300 g Cherrytomaten', '2 Knoblauchzehen', '3 EL Olivenöl', '1 TL Oregano', 'Chiliflocken (optional)', '4 Scheiben Vollkornbrot', 'Basilikum']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Feta in die Mitte einer Auflaufform legen und die Cherrytomaten sowie die halbierten Knoblauchzehen drum herum verteilen. Mit Olivenöl beträufeln, mit Oregano und nach Belieben Chiliflocken bestreuen. 20–25 Minuten backen, bis die Tomaten geplatzt sind und der Feta leicht Farbe angenommen hat. In der Zwischenzeit die Vollkornbrotscheiben rösten. Feta und Tomaten mit einer Gabel leicht zerdrücken und vermengen, mit frischem Basilikum bestreuen und zusammen mit dem gerösteten Brot servieren.'
+where title = 'Gebackener Feta mit Cherrytomaten und Vollkornbrot';
+update public.recipes set
+  ingredients = array['200 g Tofu', '200 g Brokkoli', '150 g Jasminreis', '2 Knoblauchzehen', '1 Stück Ingwer', '3 EL Teriyaki-Sauce', '1 EL Sesamöl', '1 EL Sesam', 'Frühlingszwiebel']::text[],
+  instructions = 'Jasminreis nach Packungsanweisung kochen. Tofu trocken tupfen und in Würfel schneiden, Knoblauch und Ingwer fein hacken. Sesamöl in einer Pfanne erhitzen und den Tofu darin von allen Seiten knusprig braten, dann herausnehmen. Knoblauch und Ingwer kurz in derselben Pfanne andünsten, Brokkoliröschen zugeben und 5 Minuten braten, bis sie bissfest sind. Tofu zurück in die Pfanne geben, mit der Teriyaki-Sauce ablöschen und alles gut vermengen, bis die Sauce leicht andickt. Mit Jasminreis anrichten und mit Sesam und Frühlingszwiebelringen bestreuen.'
+where title = 'Teriyaki-Tofu mit Brokkoli und Jasminreis';
+update public.recipes set
+  ingredients = array['250 g Hähnchenbrust', '1 Süßkartoffel', '200 ml Kokosmilch', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypulver', '1 TL Kreuzkümmel', 'Koriander zum Garnieren']::text[],
+  instructions = 'Hähnchenbrust in mundgerechte Stücke schneiden, Zwiebel, Knoblauch und Ingwer fein hacken, Süßkartoffel schälen und würfeln. Öl in einem Topf erhitzen und das Hähnchen darin anbraten, bis es Farbe annimmt, dann herausnehmen. Zwiebel, Knoblauch und Ingwer im selben Topf andünsten, Currypulver und Kreuzkümmel zugeben und kurz mitrösten. Süßkartoffelwürfel und Kokosmilch zugeben, Hähnchen zurück in den Topf geben und alles 15–18 Minuten köcheln lassen, bis die Süßkartoffel weich und das Hähnchen durchgegart ist. Mit Salz abschmecken und mit frischem Koriander bestreut servieren.'
+where title = 'Hähnchen-Curry mit Süßkartoffel';
+update public.recipes set
+  ingredients = array['200 g Seelachsfilet', '1 Fenchelknolle', '1 Schalotte', '2 EL Naturjoghurt', 'Dill', 'Zitrone (Saft und Schale)', 'Petersilie', 'Salz, Pfeffer']::text[],
+  instructions = 'Fenchel putzen und in dünne Streifen schneiden, Schalotte fein würfeln. Beides in einem Topf mit etwas Wasser oder Gemüsebrühe bei mittlerer Hitze 8–10 Minuten dünsten, bis der Fenchel weich ist. Seelachsfilet mit Salz und Pfeffer würzen und auf den Fenchel legen, Deckel schließen und weitere 6–8 Minuten mitdämpfen, bis der Fisch gar ist. Naturjoghurt mit gehacktem Dill, Zitronensaft und -schale zu einer cremigen Sauce verrühren. Fisch und Fenchel auf Tellern anrichten, mit der Dillsauce beträufeln und mit frischer Petersilie garnieren.'
+where title = 'Gedämpfter Seelachs mit Fenchel und Dillsauce';
+update public.recipes set
+  ingredients = array['200 g rote Linsen', '400 ml Kokosmilch', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypulver', '1 TL Kurkuma', '2 Naan-Brote', 'Koriander zum Garnieren']::text[],
+  instructions = 'Linsen unter kaltem Wasser abspülen, bis das Wasser klar bleibt. Zwiebel, Knoblauch und Ingwer fein hacken und in einem Topf mit etwas Öl andünsten, bis die Zwiebel glasig ist. Currypulver und Kurkuma zugeben und kurz mitrösten, bis die Gewürze aromatisch duften. Linsen und Kokosmilch zugeben, mit etwas Wasser auffüllen und bei mittlerer Hitze 15–18 Minuten köcheln lassen, dabei gelegentlich umrühren, bis das Dal sämig ist. Mit Salz abschmecken und mit frischem Koriander bestreut zusammen mit warmem Naan servieren.'
+where title = 'Rote-Linsen-Dal mit Naan';
 
 
 -- Favoriten: Rezepte sind app-weit geteilt, die Favoriten-Markierung ist
