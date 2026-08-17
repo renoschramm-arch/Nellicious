@@ -31,6 +31,10 @@ export function VerlaufPage() {
   const waterGoal = profile?.daily_water_goal_ml ?? 2500
   const waterPct = Math.min(100, Math.round((todayMl / waterGoal) * 100))
   const waterSteps = profile?.water_quick_amounts_ml ?? DEFAULT_WATER_STEPS
+  const targetWeightKg = profile?.target_weight_kg ?? null
+  const weightDiffKg = targetWeightKg != null && latestWeight
+    ? Math.abs(Number(latestWeight.weight_kg) - targetWeightKg)
+    : 0
 
   const days = lastSevenDays()
   const weightChartData = days.map((d) => {
@@ -230,6 +234,13 @@ export function VerlaufPage() {
         {latestWeight && (
           <span className="font-mono text-2xl">
             {formatWeightKg(Number(latestWeight.weight_kg))} <span className="text-text-muted text-base">kg</span>
+          </span>
+        )}
+        {latestWeight && targetWeightKg != null && (
+          <span className="text-xs text-text-muted -mt-2">
+            {weightDiffKg <= 0.05
+              ? 'Wunschgewicht erreicht 🎉'
+              : `Noch ${formatWeightKg(weightDiffKg)} kg bis ${formatWeightKg(targetWeightKg)} kg Wunschgewicht`}
           </span>
         )}
         <form onSubmit={handleWeightSubmit} className="flex flex-col gap-3">
