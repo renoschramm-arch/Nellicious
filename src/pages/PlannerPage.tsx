@@ -171,19 +171,21 @@ export function PlannerPage() {
 
   function renderLine(line: ShoppingLine) {
     return (
-      <li key={line.key} className="flex items-center gap-2">
-        <label className="flex items-center gap-2 text-sm cursor-pointer flex-1">
+      <li key={line.key} className="flex items-center gap-2 py-1 border-b border-border last:border-none">
+        <label className="flex items-center gap-3 py-1.5 cursor-pointer flex-1 min-w-0">
           <input
             type="checkbox"
             checked={line.checked}
             onChange={() => setChecked(line.refs, !line.checked)}
-            className="accent-[var(--primary)]"
+            className="w-5 h-5 shrink-0 accent-[var(--primary)]"
           />
-          <span className={line.checked ? 'line-through text-text-muted' : ''}>{line.text}</span>
+          <span className={`text-sm truncate ${line.checked ? 'line-through text-text-muted' : ''}`}>
+            {line.text}
+          </span>
         </label>
         <button
           onClick={() => dismissLine(line.refs)}
-          className="text-text-muted hover:text-danger text-xs px-1"
+          className="shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-text-muted hover:border-primary hover:text-danger text-xs transition-colors"
           aria-label={`${line.text} aus Einkaufsliste entfernen`}
         >
           ✕
@@ -200,17 +202,17 @@ export function PlannerPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => goToWeek(weekOffset - 1)}
-            className="px-2 py-1 rounded-lg border border-border text-sm text-text-muted hover:text-text"
+            className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
             aria-label="Vorherige Woche"
           >
             ←
           </button>
-          <span className="font-mono text-xs text-text-muted">
+          <span className="font-mono text-xs text-text-muted min-w-[74px] text-center">
             {formatWeekRange(days[0], days[6])}
           </span>
           <button
             onClick={() => goToWeek(weekOffset + 1)}
-            className="px-2 py-1 rounded-lg border border-border text-sm text-text-muted hover:text-text"
+            className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
             aria-label="Nächste Woche"
           >
             →
@@ -221,37 +223,60 @@ export function PlannerPage() {
       <div className="flex flex-col gap-3">
         {days.map((day) => {
           const dateISO = toISODate(day)
+          const isToday = dateISO === todayISO
           return (
-            <div key={dateISO} className="bg-surface border border-border rounded-2xl p-4">
-              <div className="font-display font-semibold mb-3">{formatDayLabel(day)}</div>
+            <div
+              key={dateISO}
+              className={`bg-surface border rounded-2xl p-4 ${
+                isToday ? 'border-primary/45 shadow-[0_0_0_1px_rgba(182,52,32,0.2)]' : 'border-border'
+              }`}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <span className="font-display font-semibold">{formatDayLabel(day)}</span>
+                {isToday && (
+                  <span className="font-mono text-[10px] uppercase tracking-wide bg-primary text-on-primary rounded-full px-2 py-0.5">
+                    Heute
+                  </span>
+                )}
+              </div>
               <div className="flex flex-col gap-2">
                 {SLOTS.map((slot) => {
                   const entry = entryFor(dateISO, slot.key)
                   const recipe = entry ? recipeById.get(entry.recipe_id) : undefined
                   const isPickerOpen = openPicker?.date === dateISO && openPicker?.slot === slot.key
                   return (
-                    <div key={slot.key} className="relative flex items-center gap-3 text-sm">
-                      <span className="w-20 shrink-0 text-text-muted text-xs uppercase tracking-wide">
-                        {slot.label}
-                      </span>
+                    <div key={slot.key}>
                       {recipe ? (
-                        <>
-                          <span className="flex-1">{recipe.title}</span>
-                          <span className="font-mono text-xs text-text-muted">{recipe.kcal} kcal</span>
+                        <div className="flex items-center gap-3 min-h-[52px] bg-surface-2 border border-border rounded-2xl px-3.5 py-2.5">
+                          <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                            <span className="font-mono text-[10px] uppercase tracking-wide text-basil">
+                              {slot.label}
+                            </span>
+                            <span className="text-[15px] font-medium truncate">{recipe.title}</span>
+                          </div>
+                          <span className="font-mono text-xs text-text-muted shrink-0">{recipe.kcal} kcal</span>
                           <button
                             onClick={() => entry && removePlanEntry(dateISO, entry.id, entry.recipe_id)}
-                            className="text-text-muted hover:text-danger text-xs px-1"
+                            className="shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface border border-border text-text-muted hover:border-primary hover:text-danger text-xs transition-colors"
                             aria-label={`${recipe.title} aus Plan entfernen`}
                           >
                             ✕
                           </button>
-                        </>
+                        </div>
                       ) : (
                         <button
                           onClick={() => setOpenPicker(isPickerOpen ? null : { date: dateISO, slot: slot.key })}
-                          className="flex-1 text-left text-text-muted hover:text-primary"
+                          className="w-full min-h-[52px] flex items-center gap-3 bg-bg border border-dashed border-border rounded-2xl px-3.5 py-2.5 text-left hover:border-primary transition-colors"
                         >
-                          + Rezept wählen
+                          <span className="w-7 h-7 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 text-text-muted text-sm">
+                            +
+                          </span>
+                          <span className="flex flex-col gap-0.5">
+                            <span className="font-mono text-[10px] uppercase tracking-wide text-text-muted">
+                              {slot.label}
+                            </span>
+                            <span className="text-[14.5px] font-medium">Rezept wählen</span>
+                          </span>
                         </button>
                       )}
                       {isPickerOpen && (
