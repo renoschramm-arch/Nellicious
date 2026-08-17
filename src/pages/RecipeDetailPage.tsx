@@ -6,8 +6,10 @@ import { useMealPlan } from '../lib/useMealPlan'
 import { useFavorites } from '../lib/useFavorites'
 import { useAuth } from '../lib/AuthContext'
 import { useWakeLock } from '../lib/useWakeLock'
+import { usePremium } from '../lib/usePremium'
 import { toISODate } from '../lib/week'
 import { RecipeForm } from '../components/RecipeForm'
+import { PremiumModal } from '../components/PremiumModal'
 
 export function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>()
@@ -18,10 +20,12 @@ export function RecipeDetailPage() {
   const { favoriteIds, toggleFavorite } = useFavorites()
   const { user } = useAuth()
   const { active: wakeLockActive, supported: wakeLockSupported, toggle: toggleWakeLock } = useWakeLock()
+  const { hasPremium } = usePremium()
   const navigate = useNavigate()
   const [logging, setLogging] = useState(false)
   const [editing, setEditing] = useState(false)
   const [deleting, setDeleting] = useState(false)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
 
   if (loading) return <p className="text-text-muted text-sm">Lädt …</p>
   if (!recipe) return <p className="text-text-muted text-sm">Rezept nicht gefunden.</p>
@@ -44,6 +48,14 @@ export function RecipeDetailPage() {
     await setEntry(todayISO, recipe.meal_type, recipe.id)
     setLogging(false)
     navigate('/rezepte')
+  }
+
+  function handleKochmodusToggle() {
+    if (!hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    toggleWakeLock()
   }
 
   async function handleDelete() {
@@ -150,15 +162,21 @@ export function RecipeDetailPage() {
           type="button"
           role="switch"
           aria-checked={wakeLockActive}
-          onClick={toggleWakeLock}
+          onClick={handleKochmodusToggle}
           className={`flex items-center justify-between gap-3 rounded-2xl border px-4 py-3 text-left transition-colors ${
             wakeLockActive ? 'bg-basil/10 border-basil/30' : 'bg-surface border-border'
           }`}
         >
           <span className="flex flex-col">
-            <span className="text-sm font-medium">🍳 Kochmodus</span>
+            <span className="text-sm font-medium">
+              🍳 Kochmodus{!hasPremium && ' 🔒'}
+            </span>
             <span className="text-xs text-text-muted">
-              {wakeLockActive ? 'Bildschirm bleibt an' : 'Bildschirm für dieses Rezept wach halten'}
+              {wakeLockActive
+                ? 'Bildschirm bleibt an'
+                : hasPremium
+                  ? 'Bildschirm für dieses Rezept wach halten'
+                  : 'Premium-Funktion'}
             </span>
           </span>
           <span
@@ -204,6 +222,8 @@ export function RecipeDetailPage() {
       >
         {logging ? 'Wird gespeichert …' : 'Als heutige Mahlzeit loggen'}
       </button>
+
+      {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
     </div>
   )
 }
