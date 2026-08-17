@@ -23,6 +23,7 @@ export function VerlaufPage() {
   const [weightValue, setWeightValue] = useState('')
   const [editingGoal, setEditingGoal] = useState(false)
   const [goalInput, setGoalInput] = useState('')
+  const [customWater, setCustomWater] = useState('')
 
   const latestWeight = weightLogs[0]
   const waterGoal = profile?.daily_water_goal_ml ?? 2500
@@ -47,6 +48,14 @@ export function VerlaufPage() {
     if (parsed == null) return
     await upsertWeight(weightDate, parsed)
     setWeightValue('')
+  }
+
+  async function handleCustomWaterSubmit(e: FormEvent) {
+    e.preventDefault()
+    const amount = Number(customWater)
+    if (!amount || amount <= 0) return
+    await addWater(Math.round(amount))
+    setCustomWater('')
   }
 
   async function handleGoalSubmit(e: FormEvent) {
@@ -121,6 +130,24 @@ export function VerlaufPage() {
             </button>
           ))}
         </div>
+
+        <form onSubmit={handleCustomWaterSubmit} className="flex items-center gap-2">
+          <input
+            type="number"
+            min={1}
+            inputMode="numeric"
+            value={customWater}
+            onChange={(e) => setCustomWater(e.target.value)}
+            placeholder="Eigene Menge in ml"
+            className="flex-1 min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-sm font-mono outline-none focus:border-primary"
+          />
+          <button
+            type="submit"
+            className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm font-medium hover:border-primary transition-colors"
+          >
+            + Hinzufügen
+          </button>
+        </form>
 
         <button
           type="button"
