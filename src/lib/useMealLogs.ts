@@ -65,3 +65,37 @@ export function useMealLogs() {
 
   return { logs, totals, loading, addLog, removeLog }
 }
+
+// Für Trend-Charts (z. B. Kalorien-Verlauf) — im Unterschied zu useMealLogs
+// oben nicht auf "heute" beschränkt, sondern über einen frei wählbaren
+// Zeitraum von Tagen zurück.
+export function useMealLogHistory(days: number) {
+  const { user } = useAuth()
+  const [logs, setLogs] = useState<MealLog[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const reload = useCallback(async () => {
+    if (!user) return
+    setLoading(true)
+    const end = new Date()
+    end.setHours(23, 59, 59, 999)
+    const start = new Date()
+    start.setDate(start.getDate() - (days - 1))
+    start.setHours(0, 0, 0, 0)
+    const { data } = await supabase
+      .from('meal_logs')
+      .select('*')
+      .eq('user_id', user.id)
+      .gte('logged_at', start.toISOString())
+      .lte('logged_at', end.toISOString())
+      .order('logged_at', { ascending: true })
+    setLogs(data ?? [])
+    setLoading(false)
+  }, [user, days])
+
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  return { logs, loading, reload }
+}
