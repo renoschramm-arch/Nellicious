@@ -1296,6 +1296,275 @@ update public.recipes set
 where title = 'Rote-Linsen-Dal mit Naan';
 
 
+-- 66 weitere bestehende Rezepte (Grundgerüst + frühere Ergänzungen) wurden
+-- ebenfalls um mehr Zutaten und eine ausführlichere Zubereitung erweitert.
+-- Als Update statt erneutem Insert, unabhängig vom bisherigen Befüllungsstand.
+update public.recipes set
+  ingredients = array['150 g rote Linsen', '1 Süßkartoffel', '1 rote Paprika', '1 Zwiebel', '1 Knoblauchzehe', '2 EL Olivenöl', '1 TL Kreuzkümmel', 'Saft einer halben Zitrone', 'Salz, Pfeffer, Petersilie']::text[],
+  instructions = 'Linsen nach Packungsangabe in reichlich Wasser 15–20 Minuten weich kochen und abgießen. Süßkartoffel und Paprika würfeln, mit 1 EL Olivenöl, Kreuzkümmel, Salz und Pfeffer vermengen und 20 Minuten bei 200°C rösten, bis sie weich sind. Zwiebel und Knoblauch fein hacken und in der Zwischenzeit in etwas Öl glasig dünsten. Linsen, Ofengemüse und Zwiebelmischung in einer Bowl vermengen, mit Zitronensaft und restlichem Olivenöl abschmecken. Mit frischer Petersilie bestreut servieren.'
+where title = 'Linsen-Bowl mit Ofengemüse';
+update public.recipes set
+  ingredients = array['60 g Haferflocken', '200 ml Milch oder Pflanzendrink', '1 TL Chiasamen', '100 g gemischte Beeren', '1 TL Honig', '1 Prise Zimt', '1 EL Mandelblättchen']::text[],
+  instructions = 'Haferflocken mit der Milch und den Chiasamen in einem Topf aufkochen. Bei mittlerer Hitze 3–4 Minuten köcheln lassen, dabei gelegentlich umrühren, bis die Masse sämig ist. Vom Herd nehmen und kurz quellen lassen. In eine Schale füllen, mit den Beeren, einer Prise Zimt und Honig toppen. Mit gerösteten Mandelblättchen bestreuen und warm servieren.'
+where title = 'Haferflocken mit Beeren';
+update public.recipes set
+  ingredients = array['1 Apfel', '1 EL Mandelmus', '1 Prise Zimt', '1 TL Kokosflocken']::text[],
+  instructions = 'Apfel waschen, vierteln, entkernen und in dünne Spalten schneiden. Auf einem Teller fächerförmig anrichten. Mandelmus leicht erwärmen, bis es cremig-flüssig wird, und über die Apfelspalten träufeln. Mit einer Prise Zimt und Kokosflocken bestreuen.'
+where title = 'Apfel mit Mandelmus';
+update public.recipes set
+  ingredients = array['400 g Kichererbsen (Dose)', '200 ml Kokosmilch', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypulver', '1 EL Tomatenmark', '1 Handvoll Spinat', 'Koriander zum Garnieren']::text[],
+  instructions = 'Zwiebel, Knoblauch und Ingwer fein hacken und in etwas Öl andünsten, bis die Zwiebel glasig ist. Currypulver und Tomatenmark zugeben und kurz mitrösten, bis es aromatisch duftet. Mit Kokosmilch ablöschen, die abgetropften Kichererbsen zugeben und 10 Minuten köcheln lassen. Spinat unterrühren und zusammenfallen lassen, mit Salz abschmecken. Mit frischem Koriander bestreut servieren.'
+where title = 'Kichererbsen-Curry';
+update public.recipes set
+  ingredients = array['150 g Quinoa', '100 g Feta', '1 Granatapfel', '1 Salatgurke', '1/2 rote Zwiebel', '2 EL Olivenöl', 'Saft 1 Zitrone', 'Minze', '1 EL Kürbiskerne']::text[],
+  instructions = 'Quinoa nach Packungsangabe in Salzwasser kochen, abgießen und vollständig abkühlen lassen. Gurke würfeln, rote Zwiebel fein hacken und Granatapfelkerne aus der Frucht lösen. Feta grob zerbröseln. Alle Zutaten mit dem abgekühlten Quinoa in einer großen Schüssel vermengen. Mit Olivenöl, Zitronensaft und gehackter Minze abschmecken, mit Kürbiskernen bestreut servieren.'
+where title = 'Quinoa-Salat mit Feta und Granatapfel';
+update public.recipes set
+  ingredients = array['150 g Lachsfilet', '200 g Brokkoli', '2 EL Olivenöl', '2 Knoblauchzehen', 'Zitrone (Saft und Scheiben)', 'Dill', 'Chiliflocken (optional)', 'Salz, Pfeffer']::text[],
+  instructions = 'Backofen auf 200°C vorheizen und ein Blech mit Backpapier auslegen. Brokkoli in Röschen teilen, Knoblauch fein hacken. Lachs und Brokkoli auf dem Blech verteilen, mit Öl beträufeln, mit Knoblauch, Salz, Pfeffer und nach Belieben Chiliflocken würzen. Mit Zitronenscheiben belegen und 15–18 Minuten backen, bis der Lachs gar ist und der Brokkoli bissfest bleibt. Mit frischem Dill und Zitronensaft servieren.'
+where title = 'Gebackener Lachs mit Brokkoli';
+update public.recipes set
+  ingredients = array['200 g griechischer Joghurt', '20 g gemischte Nüsse', '1 TL Kürbiskerne', '1 TL Honig', '1 Prise Zimt', '50 g Beeren']::text[],
+  instructions = 'Joghurt in eine Schale füllen und glattstreichen. Nüsse grob hacken. Joghurt mit Nüssen, Kürbiskernen und Beeren toppen. Mit Honig beträufeln und mit einer Prise Zimt bestreuen.'
+where title = 'Griechischer Joghurt mit Nüssen und Honig';
+update public.recipes set
+  ingredients = array['3 Eier', '1 EL Milch', '50 g Spinat', '1 Tomate', '1/2 Zwiebel', '30 g Feta', '1 EL Olivenöl', 'Salz, Pfeffer, Basilikum']::text[],
+  instructions = 'Eier mit Milch, Salz und Pfeffer in einer Schüssel verquirlen. Zwiebel fein würfeln, Tomate in Scheiben schneiden. Zwiebel in Öl glasig dünsten, Spinat und Tomate zugeben und kurz zusammenfallen lassen. Eimasse dazugießen und bei mittlerer Hitze stocken lassen, dabei den Rand gelegentlich zur Mitte ziehen. Mit Feta bestreuen, zusammenklappen und mit frischem Basilikum servieren.'
+where title = 'Gemüse-Omelett mit Spinat und Tomaten';
+update public.recipes set
+  ingredients = array['1 Süßkartoffel', '100 g Kichererbsen (Dose)', '60 g Grünkohl', '1/4 rote Zwiebel', '1 TL Kreuzkümmel', '1 EL Tahini', 'Saft 1/2 Zitrone', '1 EL Olivenöl', '1 TL Sesam']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Süßkartoffel würfeln, mit den abgetropften Kichererbsen, Kreuzkümmel und etwas Öl vermengen und 20 Minuten rösten, bis alles weich und leicht geröstet ist. Grünkohl von den Stielen zupfen, in Streifen schneiden und mit etwas Öl kurz mit den Händen massieren, bis er weicher wird. Rote Zwiebel in dünne Ringe schneiden. Tahini mit Zitronensaft und etwas Wasser zu einem cremigen Dressing verrühren. Alle Komponenten in einer Bowl anrichten, mit dem Dressing beträufeln und mit Sesam bestreuen.'
+where title = 'Buddha Bowl mit Süßkartoffel und Tahini-Dressing';
+update public.recipes set
+  ingredients = array['100 g Vollkornnudeln', '3 EL Pesto', '150 g Kirschtomaten', '1 Knoblauchzehe', '1 EL Olivenöl', '20 g Parmesan', '1 EL Pinienkerne', 'Basilikum']::text[],
+  instructions = 'Nudeln nach Packungsangabe in Salzwasser bissfest kochen und abgießen, dabei etwas Nudelwasser auffangen. Kirschtomaten halbieren, Knoblauch fein hacken. Olivenöl in einer Pfanne erhitzen, Knoblauch und Tomaten kurz andünsten. Nudeln zugeben, Pesto unterrühren und bei Bedarf mit etwas Nudelwasser verlängern. Mit geriebenem Parmesan, gerösteten Pinienkernen und frischem Basilikum servieren.'
+where title = 'Vollkornnudeln mit Pesto und Kirschtomaten';
+update public.recipes set
+  ingredients = array['50 g Haferflocken', '1 EL Chiasamen', '200 ml Pflanzendrink', '1 TL Ahornsirup', '1 Prise Zimt', '1/2 Mango', '1 TL Kokosraspeln']::text[],
+  instructions = 'Haferflocken, Chiasamen, Pflanzendrink, Ahornsirup und eine Prise Zimt in einem Glas oder einer Schüssel gut verrühren. Abgedeckt über Nacht (mindestens 4 Stunden) im Kühlschrank quellen lassen. Am nächsten Morgen die Konsistenz prüfen und bei Bedarf mit etwas Pflanzendrink verdünnen. Mango schälen und würfeln. Overnight Oats mit den Mangowürfeln toppen und mit Kokosraspeln bestreuen.'
+where title = 'Overnight Oats mit Chiasamen und Mango';
+update public.recipes set
+  ingredients = array['150 g Hähnchenbrust', '1 Zucchini', '1 Paprika', '1 rote Zwiebel', '1 Knoblauchzehe', '2 EL Olivenöl', '1 TL Kräuter der Provence', 'Zitrone, Salz, Pfeffer']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Zucchini, Paprika und Zwiebel in mundgerechte Stücke schneiden, Knoblauch fein hacken. Gemüse mit 1 EL Olivenöl, Kräutern der Provence, Salz und Pfeffer vermengen und auf einem Blech 20 Minuten rösten. Hähnchenbrust salzen, pfeffern und in einer Pfanne mit restlichem Öl von beiden Seiten goldbraun braten, bis sie durchgegart ist. In Streifen schneiden und mit dem Ofengemüse und etwas Zitronensaft servieren.'
+where title = 'Gebratenes Hähnchen mit Ofengemüse';
+update public.recipes set
+  ingredients = array['2 Eier', '1 rote Paprika', '200 g gehackte Tomaten', '1 Zwiebel', '2 Knoblauchzehen', '30 g Feta', '1 TL Paprikapulver', '1/2 TL Kreuzkümmel', '1 EL Olivenöl, Petersilie']::text[],
+  instructions = 'Zwiebel, Paprika und Knoblauch fein würfeln. In Olivenöl bei mittlerer Hitze andünsten, bis das Gemüse weich ist. Paprikapulver und Kreuzkümmel zugeben und kurz mitrösten, bis sie aromatisch duften. Gehackte Tomaten zugeben und 10 Minuten köcheln lassen, bis die Sauce eindickt. Mit einem Löffel zwei Mulden in die Sauce drücken, die Eier hineingleiten lassen und bei geschlossenem Deckel 5–6 Minuten stocken lassen. Mit Feta bestreuen und mit frischer Petersilie servieren.'
+where title = 'Shakshuka mit Paprika und Feta';
+update public.recipes set
+  ingredients = array['1 Dose Thunfisch (im eigenen Saft)', '1 Dose weiße Bohnen', '1/2 rote Zwiebel', '150 g Kirschtomaten', '1 Stange Staudensellerie', '2 EL Olivenöl', 'Saft einer Zitrone', 'Petersilie, Salz, Pfeffer']::text[],
+  instructions = 'Bohnen in einem Sieb abspülen und gut abtropfen lassen. Rote Zwiebel fein würfeln, Sellerie in kleine Stücke schneiden, Kirschtomaten halbieren. Thunfisch abtropfen lassen und mit einer Gabel grob zerpflücken. Alle Zutaten in einer Schüssel vermengen. Mit Olivenöl und Zitronensaft abschmecken, mit Salz und Pfeffer würzen und mit frischer Petersilie bestreuen.'
+where title = 'Thunfisch-Salat mit weißen Bohnen';
+update public.recipes set
+  ingredients = array['150 g Tofu', '200 g gemischtes Wokgemüse', '2 Knoblauchzehen', '1 Stück Ingwer', '20 g Cashewkerne', '2 EL Sojasauce', '1 EL Sesamöl', 'Frühlingszwiebel', '150 g Reis']::text[],
+  instructions = 'Reis nach Packungsanweisung kochen. Tofu trocken tupfen und würfeln, Knoblauch und Ingwer fein hacken. Sesamöl in einem Wok oder einer großen Pfanne stark erhitzen und den Tofu darin rundum knusprig braten, dann herausnehmen. Knoblauch und Ingwer kurz anbraten, Wokgemüse zugeben und unter Wenden 4–5 Minuten braten, bis es bissfest ist. Tofu zurückgeben, mit Sojasauce ablöschen, Cashewkerne unterheben. Mit Reis und Frühlingszwiebelringen servieren.'
+where title = 'Gemüse-Wok mit Tofu und Cashewkernen';
+update public.recipes set
+  ingredients = array['80 g Vollkornmehl', '1 TL Backpulver', '1 Ei', '150 ml Milch', '1/2 TL Vanilleextrakt', '1 TL Butter zum Braten', '100 g gemischte Beeren', '1 TL Honig']::text[],
+  instructions = 'Mehl und Backpulver in einer Schüssel vermengen. Ei, Milch und Vanilleextrakt in einer zweiten Schüssel verquirlen und zur Mehlmischung geben, glattrühren. Butter in einer Pfanne bei mittlerer Hitze zerlassen und kleine Pfannkuchen darin von jeder Seite 2–3 Minuten goldbraun backen. Fertige Pfannkuchen warmstellen, bis der ganze Teig verbraucht ist. Mit frischen Beeren und Honig servieren.'
+where title = 'Vollkorn-Pfannkuchen mit Beeren';
+update public.recipes set
+  ingredients = array['400 g Hokkaido-Kürbis', '1 Zwiebel', '1 Knoblauchzehe', '1 Stück Ingwer', '1 EL Öl', '400 ml Gemüsebrühe', '100 ml Kokosmilch', '1 EL Kürbiskerne']::text[],
+  instructions = 'Kürbis waschen, entkernen und würfeln (Hokkaido kann mit Schale verwendet werden). Zwiebel, Knoblauch und Ingwer fein hacken und in Öl andünsten, bis die Zwiebel glasig ist. Kürbiswürfel zugeben und kurz mitdünsten. Mit Gemüsebrühe ablöschen und 15–18 Minuten köcheln lassen, bis der Kürbis weich ist. Suppe fein pürieren, Kokosmilch unterrühren und nochmals kurz erwärmen. Mit gerösteten Kürbiskernen bestreut servieren.'
+where title = 'Kürbissuppe mit Ingwer';
+update public.recipes set
+  ingredients = array['6 Falafel (Kichererbsen)', '1 Vollkorn-Wrap', 'Salatblätter', '1 Tomate', '1/2 Gurke', '1/4 rote Zwiebel', '3 EL Joghurt', '1/2 Knoblauchzehe, Zitronensaft']::text[],
+  instructions = 'Falafel nach Packungsanweisung in der Pfanne oder im Ofen erhitzen, bis sie außen knusprig sind. Tomate und Gurke in Scheiben, rote Zwiebel in dünne Ringe schneiden. Joghurt mit fein gepresstem Knoblauch und Zitronensaft zu einem Dip verrühren. Wrap kurz in der Pfanne erwärmen, damit er sich besser rollen lässt. Mit Salat, Tomate, Gurke, Zwiebel und Falafel belegen, den Joghurt-Dip darüberträufeln und fest einrollen.'
+where title = 'Falafel-Wrap mit Joghurt-Dip';
+update public.recipes set
+  ingredients = array['1 große Süßkartoffel', '100 g Hüttenkäse', 'Frühlingszwiebel', '1 TL Paprikapulver', '1 EL Kürbiskerne', 'etwas Olivenöl, Salz, Pfeffer']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Süßkartoffel waschen, mehrfach mit einer Gabel einstechen und mit etwas Öl einreiben. 45–50 Minuten backen, bis sie weich ist. Süßkartoffel längs halbieren und das Fruchtfleisch leicht auflockern. Mit Hüttenkäse füllen, mit Salz und Pfeffer würzen. Mit Frühlingszwiebelringen, Paprikapulver und Kürbiskernen bestreuen.'
+where title = 'Gebackene Süßkartoffel mit Hüttenkäse';
+update public.recipes set
+  ingredients = array['1 Banane', '50 g Spinat', '200 ml Pflanzendrink', '1 Scoop Proteinpulver', '1 TL Chiasamen', '1 Prise Zimt', 'Eiswürfel']::text[],
+  instructions = 'Banane schälen und grob in Stücke brechen. Spinat, Pflanzendrink, Proteinpulver, Chiasamen und Zimt zusammen mit der Banane in einen Mixer geben. Eiswürfel zugeben und alles auf höchster Stufe 30–60 Sekunden fein pürieren, bis eine cremige Konsistenz entsteht. Bei Bedarf mit etwas mehr Pflanzendrink verdünnen und sofort servieren.'
+where title = 'Protein-Smoothie mit Spinat und Banane';
+update public.recipes set
+  ingredients = array['200 g gekochte Rote Bete', '60 g Ziegenkäse', '20 g Walnüsse', '60 g Rucola', '2 EL Olivenöl', '1 EL Balsamico-Essig', '1 TL Honig', 'Thymian']::text[],
+  instructions = 'Rote Bete in mundgerechte Würfel oder Scheiben schneiden. Rucola auf einem Teller oder einer Platte verteilen, die Rote Bete darauf anrichten. Ziegenkäse in Scheiben schneiden oder grob bröckeln und über den Salat verteilen. Walnüsse grob hacken und in einer trockenen Pfanne kurz anrösten, bis sie duften. Olivenöl, Balsamico-Essig und Honig zu einem Dressing verrühren, über den Salat träufeln. Mit gerösteten Walnüssen und Thymian bestreut servieren.'
+where title = 'Rote-Bete-Salat mit Ziegenkäse und Walnüssen';
+update public.recipes set
+  ingredients = array['150 g Tofu', '200 g gemischtes Gemüse', '1 Zwiebel', '2 Knoblauchzehen', '2 TL Currypaste', '200 ml Kokosmilch', '60 g Jasminreis', 'Koriander zum Garnieren']::text[],
+  instructions = 'Jasminreis nach Packungsanweisung kochen. Tofu würfeln, Zwiebel und Knoblauch fein hacken. Tofu in etwas Öl von allen Seiten anbraten und herausnehmen. Zwiebel und Knoblauch im selben Topf andünsten, Currypaste zugeben und kurz mitrösten. Gemüse und Kokosmilch zugeben, 10 Minuten köcheln lassen, bis das Gemüse gar ist, den Tofu zurückgeben und kurz erwärmen. Mit Reis und frischem Koriander servieren.'
+where title = 'Gemüsecurry mit Tofu und Jasminreis';
+update public.recipes set
+  ingredients = array['200 g Putenbrust', '150 g Champignons', '1 Zwiebel', '1 Knoblauchzehe', '1 EL Öl', '50 ml Gemüsebrühe', '100 ml Sahne', 'Petersilie, Salz, Pfeffer']::text[],
+  instructions = 'Putenbrust in dünne Streifen schneiden, salzen und pfeffern. In heißem Öl portionsweise scharf anbraten und herausnehmen. Zwiebel und Knoblauch fein würfeln, Champignons in Scheiben schneiden. Beides im selben Topf andünsten, bis die Pilze Farbe annehmen. Mit Brühe ablöschen, Sahne zugeben und kurz einkochen lassen. Pute zurückgeben, kurz durchschwenken und mit Salz, Pfeffer und Petersilie abschmecken.'
+where title = 'Putengeschnetzeltes mit Champignons';
+update public.recipes set
+  ingredients = array['150 g Tomaten', '125 g Mozzarella', 'Basilikum', '2 EL Olivenöl', '1 EL Balsamico-Creme', '1 Scheibe Vollkornbaguette', '1 Knoblauchzehe', 'Salz, Pfeffer']::text[],
+  instructions = 'Tomaten und Mozzarella in gleichmäßige Scheiben schneiden. Abwechselnd fächerförmig auf einem Teller anrichten. Mit Salz, Pfeffer und Olivenöl beträufeln, mit Balsamico-Creme verzieren. Vollkornbaguette toasten und mit einer angeschnittenen Knoblauchzehe einreiben. Salat mit frischen Basilikumblättern garnieren und mit dem Knoblauch-Baguette servieren.'
+where title = 'Caprese-Salat mit Vollkornbaguette';
+update public.recipes set
+  ingredients = array['2 EL Miso-Paste', '100 g Tofu', '1 EL getrocknete Wakame-Algen', '500 ml Wasser oder Gemüsebrühe', 'Frühlingszwiebel', '1 TL Sesam']::text[],
+  instructions = 'Wakame-Algen in kaltem Wasser 5 Minuten einweichen, bis sie sich entfalten, dann abtropfen lassen. Wasser oder Brühe in einem Topf erhitzen, aber nicht kochen lassen. Etwas von der heißen Flüssigkeit abnehmen, Miso-Paste darin glattrühren und zurück in den Topf geben. Tofu würfeln und zusammen mit den Wakame-Algen in die Suppe geben, kurz erwärmen. Mit Frühlingszwiebelringen und Sesam bestreut servieren.'
+where title = 'Miso-Suppe mit Tofu und Wakame';
+update public.recipes set
+  ingredients = array['1 Forelle (ausgenommen)', '1 Zitrone', 'Dill', 'Petersilie', '1 Knoblauchzehe', '2 EL Olivenöl', 'Salz, Pfeffer']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Forelle innen und außen salzen und pfeffern. Zitrone in Scheiben schneiden, Knoblauch in dünne Scheiben schneiden. Forelle mit Zitronenscheiben, Knoblauch, Dill und Petersilie füllen. Mit Olivenöl beträufeln, in Alufolie oder eine Auflaufform legen und 20–25 Minuten backen, bis das Fleisch sich leicht von den Gräten löst. Mit zusätzlichem Zitronensaft beträufelt servieren.'
+where title = 'Gebackene Forelle mit Zitrone und Kräutern';
+update public.recipes set
+  ingredients = array['1 Dose Kidneybohnen', '1 Dose Mais', '400 g gehackte Tomaten', '1 Paprika', '1 Zwiebel', '2 Knoblauchzehen', '1 EL Tomatenmark', '1 TL Chilipulver', '1 TL Kreuzkümmel']::text[],
+  instructions = 'Zwiebel, Knoblauch und Paprika fein würfeln. In etwas Öl andünsten, bis das Gemüse weich ist. Tomatenmark, Chilipulver und Kreuzkümmel zugeben und kurz mitrösten. Gehackte Tomaten zugeben und aufkochen lassen. Abgetropfte Bohnen und Mais unterrühren und alles 20 Minuten bei niedriger Hitze köcheln lassen, bis die Sauce eindickt. Mit Salz und Pfeffer abschmecken.'
+where title = 'Bohnen-Chili sin Carne';
+update public.recipes set
+  ingredients = array['120 g Couscous', '150 ml heißes Wasser', '1 Dose Kichererbsen', '1 Gurke', '100 g Kirschtomaten', '1/4 rote Zwiebel', 'Minze, Petersilie', 'Saft einer Zitrone', '2 EL Olivenöl']::text[],
+  instructions = 'Couscous in eine Schüssel geben, mit heißem Wasser übergießen, abdecken und 10 Minuten quellen lassen, dann mit einer Gabel auflockern. Gurke und Kirschtomaten würfeln, rote Zwiebel fein hacken, Kräuter grob zupfen. Abgetropfte Kichererbsen zum Couscous geben. Gemüse und Kräuter untermischen. Mit Zitronensaft und Olivenöl abschmecken, mit Salz und Pfeffer würzen und kalt oder lauwarm servieren.'
+where title = 'Couscous-Salat mit Kichererbsen und Minze';
+update public.recipes set
+  ingredients = array['2 Scheiben Vollkornbrot', '1 Avocado', '1 Ei', '1 EL Essig (für Pochierwasser)', 'Saft einer halben Zitrone', 'Chiliflocken', 'Salz, Sesam']::text[],
+  instructions = 'Wasser mit einem Schuss Essig in einem Topf zum leichten Sieden bringen. Ei in eine Tasse aufschlagen und vorsichtig in einen kleinen Strudel im Wasser gleiten lassen, 3 Minuten pochieren. Brot in der Zwischenzeit toasten. Avocado mit einer Gabel zerdrücken, mit Zitronensaft und Salz abschmecken und auf dem Toast verteilen. Pochiertes Ei mit einer Schaumkelle herausheben, kurz abtropfen lassen und auf den Toast setzen. Mit Chiliflocken und Sesam bestreuen.'
+where title = 'Avocado-Toast mit pochiertem Ei';
+update public.recipes set
+  ingredients = array['Zucchini', 'Paprika', 'rote Zwiebel', 'Champignons', '2 EL Olivenöl', 'Kräuter der Provence', 'Zitrone', '100 g Tzatziki']::text[],
+  instructions = 'Gemüse waschen und in gleich große Stücke schneiden. Abwechselnd auf Holz- oder Metallspieße stecken. Mit Olivenöl bestreichen und mit Kräutern der Provence, Salz und Pfeffer würzen. Auf dem Grill oder in einer Grillpfanne von allen Seiten 8–10 Minuten grillen, bis das Gemüse gar und leicht gebräunt ist. Mit etwas Zitronensaft beträufeln und mit Tzatziki servieren.'
+where title = 'Gemüsespieße vom Grill mit Tzatziki';
+update public.recipes set
+  ingredients = array['3 Eier', '1 EL Milch', '1 EL Butter', '1 Scheibe Vollkornbrot', '1/2 Avocado', 'Schnittlauch', 'Salz, Pfeffer']::text[],
+  instructions = 'Eier mit Milch, Salz und Pfeffer verquirlen. Butter in einer Pfanne bei mittlerer Hitze zerlassen, Eimasse hineingeben. Unter ständigem Rühren mit einem Pfannenwender stocken lassen, bis das Rührei cremig, aber nicht trocken ist. Brot toasten, Avocado in Scheiben schneiden oder zerdrücken und auf dem Toast verteilen. Rührei daneben anrichten und mit frisch geschnittenem Schnittlauch bestreuen.'
+where title = 'Rührei mit Vollkornbrot und Avocado';
+update public.recipes set
+  ingredients = array['2 Zucchini', '150 g Garnelen', '2 Knoblauchzehen', '150 g Kirschtomaten', '2 EL Olivenöl', 'Chiliflocken', 'Zitrone', 'Petersilie']::text[],
+  instructions = 'Zucchini mit einem Spiralschneider oder Sparschäler zu Nudeln verarbeiten. Knoblauch fein hacken, Kirschtomaten halbieren. Olivenöl in einer Pfanne erhitzen, Garnelen mit Knoblauch und Chiliflocken 2–3 Minuten anbraten, bis sie rosa und gar sind, dann herausnehmen. Kirschtomaten in derselben Pfanne kurz anschwitzen, Zucchininudeln zugeben und 1–2 Minuten mitschwenken, bis sie warm, aber noch bissfest sind. Garnelen zurückgeben, mit Zitronensaft beträufeln und mit Petersilie bestreut servieren.'
+where title = 'Zucchini-Nudeln mit Garnelen';
+update public.recipes set
+  ingredients = array['30 g Chiasamen', '200 ml Kokosmilch', '1/2 TL Vanilleextrakt', '1 TL Ahornsirup', '80 g gemischte Beeren', '1 EL Kokosraspeln']::text[],
+  instructions = 'Chiasamen, Kokosmilch, Vanilleextrakt und Ahornsirup in einem Glas oder einer Schüssel gründlich verrühren. Nach 10 Minuten noch einmal umrühren, damit sich die Chiasamen nicht am Boden absetzen. Abgedeckt mindestens 3 Stunden oder über Nacht im Kühlschrank quellen lassen, bis eine puddingartige Konsistenz entsteht. Vor dem Servieren nochmals umrühren. Mit frischen Beeren und Kokosraspeln toppen.'
+where title = 'Chia-Kokos-Pudding mit Beeren';
+update public.recipes set
+  ingredients = array['60 g Kichererbsenmehl', '100 ml Wasser', '1/4 TL Backpulver', '1/2 Zwiebel', '1/2 Paprika', '1/2 TL Kurkuma', '1/4 TL Kreuzkümmel', '1 EL Olivenöl', 'Petersilie, Salz']::text[],
+  instructions = 'Kichererbsenmehl mit Wasser, Backpulver, Kurkuma, Kreuzkümmel und Salz in einer Schüssel zu einem glatten, dickflüssigen Teig verrühren, kurz ruhen lassen. Zwiebel und Paprika fein würfeln und unter den Teig heben. Öl in einer Pfanne erhitzen, den Teig hineingeben und gleichmäßig verteilen. Bei mittlerer Hitze 4–5 Minuten braten, bis die Unterseite goldbraun ist, dann vorsichtig wenden und weitere 3–4 Minuten fertig braten. Mit frischer Petersilie bestreut servieren.'
+where title = 'Kichererbsen-Omelett mit Gemüse';
+update public.recipes set
+  ingredients = array['60 g Buchweizenflocken', '200 ml Kokosmilch', '1 Apfel', '1 TL Zimt', '1 TL Honig', '1 EL gehackte Walnüsse']::text[],
+  instructions = 'Buchweizenflocken mit der Kokosmilch in einem Topf aufkochen. Bei niedriger Hitze 5 Minuten köcheln lassen, dabei häufig umrühren, bis das Porridge cremig ist. Apfel waschen, entkernen und würfeln. Die Hälfte des Apfels unter das Porridge heben und kurz miterwärmen. Porridge in eine Schale füllen, mit dem restlichen Apfel, Zimt und Honig toppen und mit gehackten Walnüssen bestreuen.'
+where title = 'Buchweizen-Porridge mit Apfel und Zimt';
+update public.recipes set
+  ingredients = array['150 ml Kokosmilch', '1 EL Chiasamen', '1/2 Mango', '1/2 Banane', '1 EL Kokosraspeln', '1 EL Granola']::text[],
+  instructions = 'Kokosmilch, Chiasamen und die Hälfte der Mango zusammen mit der Banane in einen Mixer geben. Alles fein pürieren, bis eine dickflüssige, cremige Masse entsteht. In eine Schale füllen. Restliche Mango würfeln und zusammen mit Kokosraspeln und Granola auf der Bowl verteilen. Sofort servieren, solange die Bowl noch kühl ist.'
+where title = 'Kokos-Chia-Smoothie-Bowl mit Mango';
+update public.recipes set
+  ingredients = array['60 g Reisflocken', '200 ml Kokosmilch', '1/2 TL Vanilleextrakt', '1 Birne', '1 TL Zimt', '1 TL Honig']::text[],
+  instructions = 'Reisflocken mit Kokosmilch und Vanilleextrakt in einem Topf aufkochen. Bei niedriger Hitze 5 Minuten köcheln lassen und quellen lassen, dabei gelegentlich umrühren. Birne waschen, entkernen und würfeln. Die Hälfte der Birnenwürfel unter das Porridge heben. In eine Schale füllen, mit den restlichen Birnenwürfeln, Zimt und Honig toppen.'
+where title = 'Reisflocken-Porridge mit Birne';
+update public.recipes set
+  ingredients = array['150 g Lachsfilet', '1/2 Gurke', '1 Lorbeerblatt', 'einige Pfefferkörner', 'Dill', 'Zitrone', '1 EL Olivenöl']::text[],
+  instructions = 'Wasser mit Lorbeerblatt und Pfefferkörnern in einem flachen Topf zum leichten Sieden bringen. Lachs vorsichtig hineinlegen und bei niedriger Hitze 8–10 Minuten gar ziehen lassen, bis er sich mit der Gabel leicht zerteilen lässt. Gurke in dünne Scheiben schneiden. Lachs aus dem Wasser heben und kurz abtropfen lassen. Mit Gurkenscheiben, frischem Dill und Zitronenspalten anrichten und mit Olivenöl beträufeln.'
+where title = 'Pochierter Lachs mit Gurke und Dill';
+update public.recipes set
+  ingredients = array['200 g Kokosjoghurt', '1/2 Granatapfel', '1 EL Kürbiskerne', '1 TL Honig', '1 Prise Zimt']::text[],
+  instructions = 'Kokosjoghurt in eine Schale füllen und glattstreichen. Granatapfel halbieren und die Kerne vorsichtig herauslösen. Joghurt mit den Granatapfelkernen und Kürbiskernen toppen. Mit Honig beträufeln und mit einer Prise Zimt bestreuen.'
+where title = 'Kokosjoghurt-Bowl mit Granatapfel und Kürbiskernen';
+update public.recipes set
+  ingredients = array['3 Eier', '2 Scheiben Speck', '1/2 Avocado', '1 EL Butter', 'Salz, Pfeffer, Schnittlauch']::text[],
+  instructions = 'Speck in einer Pfanne ohne zusätzliches Fett knusprig braten und auf Küchenpapier abtropfen lassen. Eier mit Salz und Pfeffer verquirlen. Butter in derselben Pfanne zerlassen, Eier hineingeben und unter Rühren stocken lassen, bis sie cremig sind. Avocado in Scheiben schneiden. Rührei mit Speck und Avocado auf einem Teller anrichten und mit Schnittlauch bestreuen.'
+where title = 'Rührei mit Speck und Avocado';
+update public.recipes set
+  ingredients = array['100 g Frischkäse', '4 Scheiben Kochschinken', 'Schnittlauch', 'Pfeffer', '2 Radieschen']::text[],
+  instructions = 'Frischkäse mit Pfeffer und fein geschnittenem Schnittlauch verrühren. Radieschen in dünne Scheiben schneiden. Kochschinkenscheiben auf einem Brett auslegen und dünn mit der Frischkäsemischung bestreichen. Radieschenscheiben darauf verteilen. Scheiben straff aufrollen und quer halbieren, mit der Schnittfläche nach oben anrichten.'
+where title = 'Frischkäse-Röllchen mit Kochschinken';
+update public.recipes set
+  ingredients = array['1/2 Gurke', '1/2 Paprika', '1 Tomate', '1/4 rote Zwiebel', '60 g Feta', '8 Oliven', '2 EL Olivenöl', 'Oregano']::text[],
+  instructions = 'Gurke, Paprika und Tomate in mundgerechte Stücke schneiden. Rote Zwiebel in dünne Ringe schneiden. Gemüse zusammen mit den Oliven in einer Schüssel vermengen. Feta in Würfeln darauf verteilen oder grob darüberbröckeln. Mit Olivenöl beträufeln und mit Oregano bestreuen.'
+where title = 'Griechischer Salat mit Feta und Oliven';
+update public.recipes set
+  ingredients = array['150 g Lachsfilet', '1/2 Avocado', '1/2 Gurke', '2 Radieschen', '1 EL Olivenöl', 'Zitrone', '1 TL Sesam']::text[],
+  instructions = 'Lachs in einer Pfanne mit etwas Öl von beiden Seiten 3–4 Minuten braten oder in leicht siedendem Wasser pochieren, bis er gar ist. Avocado und Gurke würfeln, Radieschen in dünne Scheiben schneiden. Gemüse in einer Bowl anrichten. Lachs in Stücke teilen und daraufsetzen. Mit Olivenöl und Zitronensaft beträufeln und mit Sesam bestreuen.'
+where title = 'Lachs-Avocado-Bowl mit Gurke';
+update public.recipes set
+  ingredients = array['150 g Hähnchenbrust', 'Römersalat', '20 g Parmesan', '2 EL Olivenöl', 'Saft einer Zitrone', '1 Knoblauchzehe', '1 TL Senf', 'Salz, Pfeffer']::text[],
+  instructions = 'Hähnchenbrust salzen, pfeffern und in einer Pfanne mit etwas Öl von beiden Seiten braten, bis sie durchgegart ist, dann kurz ruhen lassen. Römersalat waschen, trocken schleudern und in mundgerechte Stücke zupfen. Olivenöl, Zitronensaft, fein gepressten Knoblauch und Senf zu einem Dressing verrühren. Hähnchenbrust in Streifen schneiden. Salat mit dem Dressing vermengen, mit Hähnchenstreifen und gehobeltem Parmesan servieren.'
+where title = 'Hähnchen-Salat mit Parmesan und Römersalat';
+update public.recipes set
+  ingredients = array['150 g Tofu', '250 g Blumenkohlreis', '1 Knoblauchzehe', '1 Stück Ingwer', '1 EL Sesamöl', '1 EL Sojasauce', 'Frühlingszwiebel']::text[],
+  instructions = 'Tofu trocken tupfen und würfeln, Knoblauch und Ingwer fein hacken. Sesamöl in einer Pfanne erhitzen und den Tofu darin rundum knusprig anbraten, dann herausnehmen. Knoblauch und Ingwer kurz im selben Öl andünsten, Blumenkohlreis zugeben und 4–5 Minuten braten, bis er gar, aber noch bissfest ist. Tofu zurückgeben, mit Sojasauce ablöschen und alles gut vermengen. Mit Frühlingszwiebelringen bestreut servieren.'
+where title = 'Gebratener Tofu mit Blumenkohlreis';
+update public.recipes set
+  ingredients = array['2 Zucchini', '1 Ei', '2 EL Mehl', '30 g Parmesan', '1 EL Öl zum Braten', 'Salz, Pfeffer', '100 g Frischkäse', 'Schnittlauch']::text[],
+  instructions = 'Zucchini grob raspeln, mit etwas Salz vermengen und 10 Minuten ziehen lassen, dann überschüssige Flüssigkeit ausdrücken. Mit Ei, Mehl, geriebenem Parmesan, Salz und Pfeffer zu einem Teig vermengen. Öl in einer Pfanne erhitzen und aus dem Teig kleine Puffer formen, von beiden Seiten 3–4 Minuten goldbraun braten. Frischkäse mit fein geschnittenem Schnittlauch verrühren. Puffer mit dem Frischkäse-Dip servieren.'
+where title = 'Zucchini-Puffer mit Frischkäse-Dip';
+update public.recipes set
+  ingredients = array['1 Gurke', '1 Dose weiße Bohnen', '1/2 Zwiebel', 'Dill', '2 EL Olivenöl', 'Saft einer Zitrone', '1 TL Senf', 'Salz, Pfeffer']::text[],
+  instructions = 'Bohnen in einem Sieb abspülen und gut abtropfen lassen. Gurke würfeln, Zwiebel fein hacken. Olivenöl, Zitronensaft und Senf zu einem Dressing verrühren, mit Salz und Pfeffer abschmecken. Bohnen, Gurke und Zwiebel in einer Schüssel vermengen, mit dem Dressing übergießen und gut durchmischen. Mit reichlich frischem Dill bestreut servieren.'
+where title = 'Gurken-Dill-Salat mit weißen Bohnen';
+update public.recipes set
+  ingredients = array['6 Reispapierblätter', '150 g Garnelen (gegart)', '1 Karotte', '1/2 Gurke', 'Salatblätter', 'Minze', 'Limette', 'Sojasauce zum Dippen']::text[],
+  instructions = 'Karotte und Gurke in feine Streifen schneiden. Garnelen längs halbieren, falls groß. Ein Reispapierblatt kurz in warmem Wasser einweichen, bis es weich wird, dann auf ein feuchtes Tuch legen. Mit Salatblatt, Karotten- und Gurkenstreifen, Garnelen und Minze belegen und straff aufrollen, dabei die Seiten nach innen klappen. Mit den restlichen Blättern genauso verfahren. Mit Limettenspalten und Sojasauce zum Dippen servieren.'
+where title = 'Reispapier-Rollen mit Garnelen und Gemüse';
+update public.recipes set
+  ingredients = array['400 g Blumenkohl', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '2 TL Currypaste', '200 ml Kokosmilch', 'Koriander zum Garnieren']::text[],
+  instructions = 'Zwiebel, Knoblauch und Ingwer fein hacken. In etwas Öl andünsten, bis die Zwiebel glasig ist. Currypaste zugeben und kurz mitrösten, bis sie aromatisch duftet. Blumenkohl in kleine Röschen teilen und zugeben, kurz mitschwenken. Mit Kokosmilch ablöschen und 15 Minuten köcheln lassen, bis der Blumenkohl weich ist. Mit Salz abschmecken und mit frischem Koriander bestreut servieren.'
+where title = 'Blumenkohl-Curry mit Kokosmilch';
+update public.recipes set
+  ingredients = array['150 g Halloumi', '1 Zucchini', '2 EL Olivenöl', 'Kräuter der Provence', 'Zitrone', '1 TL Honig']::text[],
+  instructions = 'Halloumi in etwa 1 cm dicke Scheiben schneiden, Zucchini in Scheiben schneiden. Olivenöl in einer Pfanne erhitzen und den Halloumi darin von beiden Seiten 2–3 Minuten goldbraun braten, dann herausnehmen. Zucchini in derselben Pfanne mit Kräutern der Provence 4–5 Minuten braten, bis sie leicht gebräunt ist. Halloumi zurück in die Pfanne geben, mit Honig beträufeln und kurz karamellisieren lassen. Mit Zitronensaft beträufelt servieren.'
+where title = 'Gebratener Halloumi mit Zucchini';
+update public.recipes set
+  ingredients = array['180 g Rindersteak', '200 g grüner Spargel', '1 EL Öl', '1 EL Kräuterbutter', '1 Knoblauchzehe', 'Salz, Pfeffer']::text[],
+  instructions = 'Steak mindestens 20 Minuten vor dem Braten aus dem Kühlschrank nehmen und mit Salz und Pfeffer würzen. Spargel waschen und die holzigen Enden abschneiden. Öl in einer Pfanne stark erhitzen und das Steak je nach gewünschtem Gargrad 2–4 Minuten pro Seite scharf anbraten, dann kurz ruhen lassen. Spargel mit zerdrückter Knoblauchzehe in der gleichen Pfanne 6–8 Minuten braten, bis er bissfest ist. Steak mit Kräuterbutter belegen und zusammen mit dem Spargel servieren.'
+where title = 'Steak mit Kräuterbutter und grünem Spargel';
+update public.recipes set
+  ingredients = array['150 g Tofu', '250 g Brokkoli', '1 Knoblauchzehe', '1 Stück Ingwer', '1 EL Sesamöl', '1 EL Sojasauce', '1 TL Sesam']::text[],
+  instructions = 'Tofu würfeln, Knoblauch und Ingwer fein hacken. Sesamöl in einer Pfanne erhitzen und den Tofu darin rundum goldbraun anbraten. Knoblauch und Ingwer zugeben und kurz mitbraten, bis es aromatisch duftet. Brokkoliröschen zugeben und unter Wenden 5 Minuten braten, bis sie bissfest sind. Mit Sojasauce ablöschen und kurz durchschwenken. Mit Sesam bestreut servieren.'
+where title = 'Gebratener Tofu mit Brokkoli und Sesam';
+update public.recipes set
+  ingredients = array['1 Blumenkohl', '3 EL Olivenöl', 'Kräuter (z. B. Petersilie, Thymian)', '2 Knoblauchzehen', 'Zitrone', 'Salz, Pfeffer']::text[],
+  instructions = 'Blumenkohl vom Strunk befreien und in etwa 2 cm dicke Scheiben schneiden, sodass "Steaks" entstehen. Mit Salz und Pfeffer würzen. Olivenöl in einer großen Pfanne erhitzen und die Blumenkohl-Steaks von jeder Seite 5–6 Minuten braten, bis sie goldbraun und weich sind. Knoblauch fein hacken, mit den Kräutern und etwas Olivenöl vermengen. Blumenkohl-Steaks mit dem Kräuteröl beträufeln und mit Zitronensaft servieren.'
+where title = 'Blumenkohl-Steak mit Kräuteröl';
+update public.recipes set
+  ingredients = array['2 Zucchini', '100 g rote Linsen', '1 Zwiebel', '1 Knoblauchzehe', '2 EL Tomatenmark', '1 TL Paprikapulver', 'Kräuter (z. B. Oregano)', 'Salz, Pfeffer']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Linsen in Wasser 10–12 Minuten weich kochen und abgießen. Zucchini längs halbieren und mit einem Löffel etwas aushöhlen. Zwiebel und Knoblauch fein hacken und in etwas Öl andünsten, Tomatenmark und Paprikapulver zugeben und kurz mitrösten. Gekochte Linsen unterrühren, mit Kräutern, Salz und Pfeffer abschmecken. Zucchinihälften mit der Linsenmischung füllen und 20 Minuten backen, bis die Zucchini weich ist.'
+where title = 'Gebackene Zucchini-Boote mit Linsen-Füllung';
+update public.recipes set
+  ingredients = array['200 g Rinderhackfleisch', '2 Zucchini', '1 Zwiebel', '2 Knoblauchzehen', '100 g Kirschtomaten', '1 EL Olivenöl', 'Kräuter (z. B. Oregano)', 'Salz, Pfeffer']::text[],
+  instructions = 'Zwiebel und Knoblauch fein hacken. Hackfleisch in Olivenöl krümelig anbraten, bis es durchgebraten ist, dann Zwiebel und Knoblauch zugeben und mitdünsten. Kirschtomaten halbieren und zugeben, kurz mitschwenken. Zucchini mit dem Spiralschneider zu Nudeln verarbeiten. Zucchininudeln unter das Hackfleisch heben und 1–2 Minuten mitschwenken, bis sie warm, aber noch bissfest sind. Mit Kräutern, Salz und Pfeffer abschmecken.'
+where title = 'Gebratenes Rinderhack mit Zucchini-Nudeln';
+update public.recipes set
+  ingredients = array['2 Karotten', '100 g Kichererbsen (Dose)', '1 EL Tahini', 'Saft einer halben Zitrone', '1 EL Olivenöl', '1/2 Knoblauchzehe', '1/4 TL Kreuzkümmel']::text[],
+  instructions = 'Kichererbsen abspülen und abtropfen lassen. Zusammen mit Tahini, Zitronensaft, Olivenöl, Knoblauch und Kreuzkümmel in einen Mixer geben. Alles fein pürieren, bei Bedarf etwas Wasser zugeben, bis eine cremige Konsistenz entsteht. Mit Salz abschmecken. Karotten schälen und in Sticks schneiden, zusammen mit dem Hummus servieren.'
+where title = 'Karottensticks mit Hummus';
+update public.recipes set
+  ingredients = array['1 Süßkartoffel', '1 EL Olivenöl', '1 TL Paprikapulver', '1 Knoblauchzehe', 'Rosmarin', 'Salz']::text[],
+  instructions = 'Backofen auf 200°C vorheizen. Süßkartoffel waschen und in gleichmäßige Sticks schneiden. Mit Olivenöl, Paprikapulver, fein gehacktem Knoblauch, Rosmarin und Salz in einer Schüssel vermengen. Auf einem Backblech in einer Schicht verteilen. 20–25 Minuten backen, dabei einmal wenden, bis die Sticks weich und leicht knusprig sind.'
+where title = 'Gedünstete Süßkartoffel-Sticks';
+update public.recipes set
+  ingredients = array['2 Reiswaffeln', '100 g Kokosjoghurt', '50 g Beeren', '1 TL Honig', '1 TL Kokosraspeln']::text[],
+  instructions = 'Kokosjoghurt in eine kleine Schale geben und mit Honig verrühren. Reiswaffeln mit der Joghurtmischung bestreichen. Beeren waschen und darauf verteilen. Mit Kokosraspeln bestreuen und sofort servieren, solange die Waffeln knusprig sind.'
+where title = 'Reiswaffeln mit Kokosjoghurt und Beeren';
+update public.recipes set
+  ingredients = array['1 Bund Radieschen', '1 TL Olivenöl', 'Kräutersalz', 'etwas Butter (optional)', 'Schnittlauch']::text[],
+  instructions = 'Radieschen gründlich waschen und die Blätter entfernen, größere Exemplare halbieren. Auf einem Teller anrichten. Nach Belieben mit etwas weicher Butter bestreichen. Mit einem Schuss Olivenöl beträufeln und mit Kräutersalz bestreuen. Mit frisch geschnittenem Schnittlauch garnieren und sofort servieren.'
+where title = 'Radieschen mit Kräutersalz und Olivenöl';
+update public.recipes set
+  ingredients = array['100 g Datteln (entsteint)', '30 g Kokosraspeln', '20 g Sonnenblumenkerne', '1 EL Kakaopulver', '1/2 TL Vanilleextrakt', '1 EL Wasser (bei Bedarf)']::text[],
+  instructions = 'Datteln in warmem Wasser 10 Minuten einweichen, falls sie sehr fest sind, dann abtropfen lassen. Datteln, Sonnenblumenkerne, Kakaopulver und Vanilleextrakt in einen Mixer oder eine Küchenmaschine geben. Fein zerkleinern, bis eine klebrige, formbare Masse entsteht, bei Bedarf einen Esslöffel Wasser zugeben. Aus der Masse kleine Kugeln formen. In Kokosraspeln wälzen, bis sie rundum bedeckt sind, und im Kühlschrank fest werden lassen.'
+where title = 'Dattel-Kokos-Energiebällchen';
+update public.recipes set
+  ingredients = array['1 Birne', '1 EL Kokosflocken', 'etwas Zitronensaft', '1 Prise Zimt']::text[],
+  instructions = 'Birne waschen, vierteln, entkernen und in dünne Spalten schneiden. Mit etwas Zitronensaft beträufeln, damit sie nicht braun wird. Auf einem Teller fächerförmig anrichten. Mit Kokosflocken und einer Prise Zimt bestreuen.'
+where title = 'Birne mit Kokosflocken';
+update public.recipes set
+  ingredients = array['2 Eier', '1/2 Gurke', '1 TL Olivenöl', 'Salz, Pfeffer', 'Schnittlauch']::text[],
+  instructions = 'Eier in einen Topf mit kaltem Wasser geben, aufkochen lassen und 8 Minuten hart kochen. Anschließend sofort in kaltem Wasser abschrecken, damit sie sich leichter pellen lassen. Eier pellen und halbieren. Gurke in Scheiben schneiden und mit den Eihälften auf einem Teller anrichten. Mit Olivenöl beträufeln, mit Salz, Pfeffer und Schnittlauch bestreuen.'
+where title = 'Hartgekochtes Ei mit Gurke';
+update public.recipes set
+  ingredients = array['150 g Hähnchenbrust', '1 EL Olivenöl', '1 Knoblauchzehe', 'Kräuter der Provence', '1/2 TL Paprikapulver', 'Zitrone, Salz, Pfeffer']::text[],
+  instructions = 'Hähnchenbrust in mundgerechte Würfel schneiden. Mit Olivenöl, fein gehacktem Knoblauch, Kräutern der Provence, Paprikapulver, Salz und Pfeffer vermengen und kurz marinieren. In einer Pfanne bei mittlerer Hitze rundum 8–10 Minuten braten, bis das Fleisch durchgegart ist. Vollständig abkühlen lassen. Auf Spieße stecken und mit etwas Zitronensaft beträufelt kalt servieren.'
+where title = 'Kalte Hähnchenspieße mit Kräutern';
+update public.recipes set
+  ingredients = array['4 Reiscracker', '60 g Frischkäse', 'Schnittlauch', 'Pfeffer', '2 Radieschen (optional)']::text[],
+  instructions = 'Frischkäse mit frisch gemahlenem Pfeffer verrühren, bis er cremig ist. Reiscracker auf einem Teller auslegen. Frischkäse gleichmäßig auf den Crackern verteilen. Radieschen in dünne Scheiben schneiden und darauf verteilen. Mit fein geschnittenem Schnittlauch bestreuen und sofort servieren.'
+where title = 'Reiscracker mit Frischkäse und Schnittlauch';
+update public.recipes set
+  ingredients = array['80 g Gouda', '10 Oliven', '1 EL Olivenöl', 'Kräuter (z. B. Oregano)', '4 Kirschtomaten (optional)']::text[],
+  instructions = 'Käse in gleichmäßige Würfel schneiden. Zusammen mit den Oliven und, falls verwendet, halbierten Kirschtomaten auf einem kleinen Teller anrichten. Mit Olivenöl beträufeln. Mit getrockneten Kräutern bestreuen und sofort servieren.'
+where title = 'Käsewürfel mit Oliven';
+update public.recipes set
+  ingredients = array['100 g gemischte Beeren', '80 g Kokoscreme (ungesüßt)', '1/2 TL Vanilleextrakt', '1 TL Ahornsirup', 'Minze zum Garnieren']::text[],
+  instructions = 'Kokoscreme mit Vanilleextrakt und Ahornsirup glattrühren, bis eine cremige Konsistenz entsteht. In eine kleine Schale füllen. Beeren waschen und trocken tupfen. Über die Kokoscreme verteilen. Mit frischer Minze garniert servieren.'
+where title = 'Frische Beeren mit Kokoscreme';
+
+
 -- Favoriten: Rezepte sind app-weit geteilt, die Favoriten-Markierung ist
 -- aber pro Nutzer — daher eine eigene Zuordnungstabelle statt eines Feldes
 -- direkt an recipes.
