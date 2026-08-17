@@ -24,14 +24,14 @@ export function MorePage() {
       </div>
 
       {(isPaidPremium || isGrandfathered) && (
-        <div className="bg-honey/10 border border-honey/30 rounded-2xl px-4 py-3 text-sm font-medium text-honey">
+        <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl px-4 py-3 text-sm font-medium text-honey">
           {isGrandfathered
             ? '⭐ Premium aktiv — danke, dass du von Anfang an dabei bist!'
             : '⭐ Nellicious Premium aktiv'}
         </div>
       )}
       {trialActive && (
-        <div className="bg-honey/10 border border-honey/30 rounded-2xl px-4 py-3 text-sm text-honey">
+        <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl px-4 py-3 text-sm text-honey">
           🎁 Premium-Testphase: noch {trialDaysLeft} {trialDaysLeft === 1 ? 'Tag' : 'Tage'}
         </div>
       )}

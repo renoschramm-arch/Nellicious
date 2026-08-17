@@ -127,7 +127,7 @@ export function DashboardPage() {
       <PageFlatlay file="dashboard.jpg" />
 
       {greetingQuote && (
-        <div className="bg-basil/10 border border-basil/30 rounded-2xl p-4 flex items-start justify-between gap-3">
+        <div className="bg-basil/15 backdrop-blur-sm border border-basil/30 rounded-2xl p-4 flex items-start justify-between gap-3">
           <div>
             <p className="font-display font-semibold text-lg text-basil">
               Hallo{firstNameFrom(profile?.display_name) ? `, ${firstNameFrom(profile?.display_name)}` : ''}! 👋
@@ -145,7 +145,7 @@ export function DashboardPage() {
       )}
 
       {newsItems.length > 0 && (
-        <div className="bg-honey/10 border border-honey/30 rounded-2xl p-4 flex items-start justify-between gap-3">
+        <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl p-4 flex items-start justify-between gap-3">
           <div>
             <p className="font-display font-semibold text-lg text-honey">🆕 Neu in Nellicious</p>
             <ul className="text-sm text-text-muted mt-1.5 flex flex-col gap-1">
