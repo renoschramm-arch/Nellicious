@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
+import { usePremium } from '../lib/usePremium'
 import { PageFlatlay } from '../components/PageFlatlay'
 
 const MENU_ITEMS = [
@@ -12,6 +13,7 @@ const MENU_ITEMS = [
 
 export function MorePage() {
   const { user, signOut } = useAuth()
+  const { trialActive, trialDaysLeft, isPaidPremium, isGrandfathered } = usePremium()
 
   return (
     <div className="flex flex-col gap-6">
@@ -20,6 +22,19 @@ export function MorePage() {
         <h1 className="font-display font-bold text-2xl">Mehr</h1>
         <p className="text-text-muted text-sm mt-1">{user?.email}</p>
       </div>
+
+      {(isPaidPremium || isGrandfathered) && (
+        <div className="bg-honey/10 border border-honey/30 rounded-2xl px-4 py-3 text-sm font-medium text-honey">
+          {isGrandfathered
+            ? '⭐ Premium aktiv — danke, dass du von Anfang an dabei bist!'
+            : '⭐ Nellicious Premium aktiv'}
+        </div>
+      )}
+      {trialActive && (
+        <div className="bg-honey/10 border border-honey/30 rounded-2xl px-4 py-3 text-sm text-honey">
+          🎁 Premium-Testphase: noch {trialDaysLeft} {trialDaysLeft === 1 ? 'Tag' : 'Tage'}
+        </div>
+      )}
 
       <nav className="bg-surface border border-border rounded-2xl divide-y divide-border overflow-hidden">
         {MENU_ITEMS.map((item) => (

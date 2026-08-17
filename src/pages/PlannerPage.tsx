@@ -5,6 +5,8 @@ import { useRecipes, type Recipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useShoppingListStatus, type IngredientRef } from '../lib/useShoppingListStatus'
 import { RecipePickerModal } from '../components/RecipePickerModal'
+import { PremiumModal } from '../components/PremiumModal'
+import { usePremium } from '../lib/usePremium'
 import { addDays, formatDayLabel, formatWeekRange, getMonday, toISODate } from '../lib/week'
 import { scaleIngredient } from '../lib/scaleIngredient'
 
@@ -32,7 +34,9 @@ interface ShoppingLine {
 }
 
 export function PlannerPage() {
+  const { hasPremium } = usePremium()
   const [weekOffset, setWeekOffset] = useState(0)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
   const monday = useMemo(() => addDays(getMonday(new Date()), weekOffset * 7), [weekOffset])
   const days = useMemo(() => Array.from({ length: 7 }, (_, i) => addDays(monday, i)), [monday])
   const weekStartISO = toISODate(days[0])
@@ -74,6 +78,16 @@ export function PlannerPage() {
       const log = todayLogs.find((l) => l.recipe_id === recipeId)
       if (log) await removeLog(log.id)
     }
+  }
+
+  // Nur die laufende Woche ist ohne Premium einsehbar — vor und zurück
+  // blättern setzt eine aktive Premium-Mitgliedschaft (oder Testphase) voraus.
+  function goToWeek(nextOffset: number) {
+    if (nextOffset !== 0 && !hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    setWeekOffset(nextOffset)
   }
 
   function entryFor(date: string, slot: MealSlot) {
@@ -185,7 +199,7 @@ export function PlannerPage() {
         <h1 className="font-display font-bold text-2xl">Wochenplan</h1>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setWeekOffset((w) => w - 1)}
+            onClick={() => goToWeek(weekOffset - 1)}
             className="px-2 py-1 rounded-lg border border-border text-sm text-text-muted hover:text-text"
             aria-label="Vorherige Woche"
           >
@@ -195,7 +209,7 @@ export function PlannerPage() {
             {formatWeekRange(days[0], days[6])}
           </span>
           <button
-            onClick={() => setWeekOffset((w) => w + 1)}
+            onClick={() => goToWeek(weekOffset + 1)}
             className="px-2 py-1 rounded-lg border border-border text-sm text-text-muted hover:text-text"
             aria-label="Nächste Woche"
           >
@@ -318,6 +332,8 @@ export function PlannerPage() {
           </button>
         )}
       </div>
+
+      {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
     </div>
   )
 }
