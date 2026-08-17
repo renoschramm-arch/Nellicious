@@ -7,7 +7,7 @@ export function WeekBarChart({ data, color }: { data: BarDatum[]; color: string 
     <div className="flex items-end gap-2 h-28">
       {data.map((d, i) => (
         <div key={i} className="flex-1 flex flex-col items-center gap-1 min-w-0">
-          <span className="text-[10px] text-text-muted font-mono truncate w-full text-center">
+          <span className="text-xs font-medium text-text font-mono truncate w-full text-center">
             {d.value != null ? (d.display ?? d.value) : '–'}
           </span>
           <div className="w-full flex items-end justify-center h-16">
@@ -19,7 +19,7 @@ export function WeekBarChart({ data, color }: { data: BarDatum[]; color: string 
               }}
             />
           </div>
-          <span className="text-[10px] text-text-muted">{d.label}</span>
+          <span className="text-xs text-text-muted">{d.label}</span>
         </div>
       ))}
     </div>
