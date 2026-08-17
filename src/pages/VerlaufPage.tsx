@@ -1,7 +1,8 @@
-import { useState, type FormEvent } from 'react'
+import { useMemo, useState, type FormEvent } from 'react'
 import { useProfile } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
 import { useWaterLog } from '../lib/useWaterLog'
+import { useMealLogHistory } from '../lib/useMealLogs'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
 import { PageFlatlay } from '../components/PageFlatlay'
@@ -17,6 +18,7 @@ export function VerlaufPage() {
   const { profile, updateProfile } = useProfile()
   const { logs: weightLogs, upsertWeight, deleteWeight } = useWeightLogs()
   const { logs: waterLogs, todayMl, addWater, resetWater } = useWaterLog()
+  const { logs: nutritionLogs } = useMealLogHistory(7)
 
   const today = toISODate(new Date())
   const [weightDate, setWeightDate] = useState(today)
@@ -47,6 +49,44 @@ export function VerlaufPage() {
     const entry = waterLogs.find((log) => log.log_date === iso)
     return { label: formatWeekdayShort(d), value: entry ? entry.amount_ml : null }
   })
+
+  const nutritionByDay = useMemo(() => {
+    const map = new Map<string, { kcal: number; protein_g: number; carbs_g: number; fat_g: number }>()
+    for (const log of nutritionLogs) {
+      const iso = toISODate(new Date(log.logged_at))
+      const totals = map.get(iso) ?? { kcal: 0, protein_g: 0, carbs_g: 0, fat_g: 0 }
+      totals.kcal += log.kcal
+      totals.protein_g += log.protein_g
+      totals.carbs_g += log.carbs_g
+      totals.fat_g += log.fat_g
+      map.set(iso, totals)
+    }
+    return map
+  }, [nutritionLogs])
+
+  const kcalChartData = days.map((d) => {
+    const iso = toISODate(d)
+    const totals = nutritionByDay.get(iso)
+    return { label: formatWeekdayShort(d), value: totals ? totals.kcal : null }
+  })
+
+  // Ø pro Tag über die volle Woche gerechnet (nicht nur über Tage mit
+  // Einträgen), damit die Zahl den tatsächlichen Wochendurchschnitt zeigt.
+  const weekMacroAvg = useMemo(() => {
+    const sum = nutritionLogs.reduce(
+      (acc, l) => ({
+        protein_g: acc.protein_g + l.protein_g,
+        carbs_g: acc.carbs_g + l.carbs_g,
+        fat_g: acc.fat_g + l.fat_g,
+      }),
+      { protein_g: 0, carbs_g: 0, fat_g: 0 },
+    )
+    return {
+      protein_g: Math.round(sum.protein_g / 7),
+      carbs_g: Math.round(sum.carbs_g / 7),
+      fat_g: Math.round(sum.fat_g / 7),
+    }
+  }, [nutritionLogs])
 
   async function handleWeightSubmit(e: FormEvent) {
     e.preventDefault()
@@ -245,6 +285,25 @@ export function VerlaufPage() {
             Eintragen
           </button>
         </form>
+      </div>
+
+      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+        <span className="text-sm font-medium text-text-muted">Kalorien – letzte 7 Tage</span>
+        <WeekBarChart data={kcalChartData} color="var(--color-primary)" />
+        <div className="grid grid-cols-3 gap-2 font-mono text-xs pt-1 border-t border-border">
+          <div className="text-center pt-2">
+            <div className="text-text-muted uppercase mb-0.5">Ø Protein</div>
+            {weekMacroAvg.protein_g} g
+          </div>
+          <div className="text-center pt-2">
+            <div className="text-text-muted uppercase mb-0.5">Ø Kohlenh.</div>
+            {weekMacroAvg.carbs_g} g
+          </div>
+          <div className="text-center pt-2">
+            <div className="text-text-muted uppercase mb-0.5">Ø Fett</div>
+            {weekMacroAvg.fat_g} g
+          </div>
+        </div>
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
