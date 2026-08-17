@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.34'
+export const APP_VERSION = '1.35'
 
 interface ChangelogEntry {
   seq: number
@@ -34,6 +34,15 @@ const CHANGELOG: ChangelogEntry[] = [
     seq: 4,
     items: [
       'Wassertracker: eigene Menge eintragen und die drei Schnellauswahl-Mengen selbst festlegen',
+    ],
+  },
+  {
+    seq: 5,
+    items: [
+      'Wunschgewicht im Profil eintragen — der Verlauf zeigt den Restweg dorthin',
+      'Wasser-Karte aufgeräumt: ein Einstellungs-Button für Ziel und Schnellauswahl statt mehrerer Zeilen',
+      'Wochenplan: größere, leichter antippbare Kacheln für Mahlzeiten und Einkaufsliste',
+      'Darstellung: Schriftgröße lässt sich jetzt auf "Groß" stellen',
     ],
   },
 ]
