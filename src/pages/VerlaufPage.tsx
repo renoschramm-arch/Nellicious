@@ -21,10 +21,9 @@ export function VerlaufPage() {
   const today = toISODate(new Date())
   const [weightDate, setWeightDate] = useState(today)
   const [weightValue, setWeightValue] = useState('')
-  const [editingGoal, setEditingGoal] = useState(false)
+  const [editingWaterSettings, setEditingWaterSettings] = useState(false)
   const [goalInput, setGoalInput] = useState('')
   const [customWater, setCustomWater] = useState('')
-  const [editingSteps, setEditingSteps] = useState(false)
   const [stepInputs, setStepInputs] = useState<string[]>([])
 
   const latestWeight = weightLogs[0]
@@ -65,24 +64,21 @@ export function VerlaufPage() {
     setCustomWater('')
   }
 
-  async function handleGoalSubmit(e: FormEvent) {
-    e.preventDefault()
-    if (!goalInput) return
-    await updateProfile({ daily_water_goal_ml: Number(goalInput) })
-    setEditingGoal(false)
-  }
-
-  function startEditingSteps() {
+  function startEditingWaterSettings() {
+    setGoalInput(String(waterGoal))
     setStepInputs(waterSteps.map(String))
-    setEditingSteps(true)
+    setEditingWaterSettings(true)
   }
 
-  async function handleStepsSubmit(e: FormEvent) {
+  async function handleWaterSettingsSubmit(e: FormEvent) {
     e.preventDefault()
-    const next = stepInputs.map(Number)
-    if (next.length !== 3 || next.some((n) => !n || n <= 0)) return
-    await updateProfile({ water_quick_amounts_ml: next })
-    setEditingSteps(false)
+    const nextGoal = Number(goalInput)
+    const nextSteps = stepInputs.map(Number)
+    const patch: { daily_water_goal_ml?: number; water_quick_amounts_ml?: number[] } = {}
+    if (nextGoal > 0) patch.daily_water_goal_ml = nextGoal
+    if (nextSteps.length === 3 && nextSteps.every((n) => n > 0)) patch.water_quick_amounts_ml = nextSteps
+    if (Object.keys(patch).length > 0) await updateProfile(patch)
+    setEditingWaterSettings(false)
   }
 
   return (
@@ -92,89 +88,64 @@ export function VerlaufPage() {
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="font-display font-semibold text-lg">💧 Wasser</h2>
+          <h2 className="font-display font-semibold text-lg flex items-center gap-2">
+            💧 Wasser
+            <button
+              type="button"
+              onClick={startEditingWaterSettings}
+              aria-label="Wassereinstellungen anpassen"
+              className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-xs text-text-muted hover:border-primary hover:text-text transition-colors"
+            >
+              ✎
+            </button>
+          </h2>
           <span className="font-mono text-sm">
             {todayMl} <span className="text-text-muted">/ {waterGoal} ml</span>
           </span>
         </div>
 
-        {editingGoal ? (
-          <form onSubmit={handleGoalSubmit} className="flex items-center gap-2">
-            <input
-              type="number"
-              min={0}
-              step={50}
-              autoFocus
-              value={goalInput}
-              onChange={(e) => setGoalInput(e.target.value)}
-              placeholder="Ziel in ml"
-              className="w-28 rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono outline-none focus:border-primary"
-            />
-            <button type="submit" className="text-sm font-medium text-primary">
-              Speichern
-            </button>
-            <button
-              type="button"
-              onClick={() => setEditingGoal(false)}
-              className="text-sm text-text-muted"
-            >
-              Abbrechen
-            </button>
-          </form>
-        ) : (
-          <div className="flex items-center justify-between">
-            <span className="text-xs text-text-muted">Ziel: {waterGoal} ml</span>
-            <button
-              type="button"
-              onClick={() => {
-                setGoalInput(String(waterGoal))
-                setEditingGoal(true)
-              }}
-              className="inline-flex items-center gap-1 bg-surface-2 border border-border rounded-full px-3 py-1.5 text-xs font-medium hover:border-primary transition-colors"
-            >
-              ✎ Anpassen
-            </button>
-          </div>
-        )}
-
         <div className="h-2 rounded-full bg-surface-2 overflow-hidden">
           <div className="h-full bg-honey rounded-full" style={{ width: `${waterPct}%` }} />
         </div>
 
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-mono uppercase tracking-wide text-text-muted">Schnellauswahl</span>
-          {!editingSteps && (
-            <button
-              type="button"
-              onClick={startEditingSteps}
-              className="inline-flex items-center gap-1 bg-surface-2 border border-border rounded-full px-3 py-1.5 text-xs font-medium hover:border-primary transition-colors"
-            >
-              ✎ Anpassen
-            </button>
-          )}
-        </div>
-
-        {editingSteps ? (
-          <form onSubmit={handleStepsSubmit} className="flex flex-col gap-2">
-            <div className="grid grid-cols-3 gap-2">
-              {stepInputs.map((value, i) => (
-                <input
-                  key={i}
-                  type="number"
-                  min={1}
-                  autoFocus={i === 0}
-                  value={value}
-                  onChange={(e) =>
-                    setStepInputs((prev) => prev.map((v, idx) => (idx === i ? e.target.value : v)))
-                  }
-                  className="w-full rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono text-center outline-none focus:border-primary"
-                />
-              ))}
-            </div>
-            <div className="flex items-center justify-end gap-3">
+        {editingWaterSettings ? (
+          <form
+            onSubmit={handleWaterSettingsSubmit}
+            className="bg-surface-2 border border-border rounded-xl p-3 flex flex-col gap-2.5"
+          >
+            <label className="flex flex-col gap-1 text-xs text-text-muted">
+              Ziel (ml)
+              <input
+                type="number"
+                min={0}
+                step={50}
+                autoFocus
+                value={goalInput}
+                onChange={(e) => setGoalInput(e.target.value)}
+                className="rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono outline-none focus:border-primary"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-xs text-text-muted">
+              Schnellauswahl (ml)
+              <div className="grid grid-cols-3 gap-2">
+                {stepInputs.map((value, i) => (
+                  <input
+                    key={i}
+                    type="number"
+                    min={1}
+                    value={value}
+                    onChange={(e) =>
+                      setStepInputs((prev) => prev.map((v, idx) => (idx === i ? e.target.value : v)))
+                    }
+                    className="w-full rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono text-center outline-none focus:border-primary"
+                  />
+                ))}
+              </div>
+            </label>
+            <div className="flex items-center justify-end gap-3 mt-0.5">
               <button
                 type="button"
-                onClick={() => setEditingSteps(false)}
+                onClick={() => setEditingWaterSettings(false)}
                 className="text-sm text-text-muted"
               >
                 Abbrechen
@@ -183,7 +154,7 @@ export function VerlaufPage() {
                 type="submit"
                 className="bg-primary text-on-primary font-semibold rounded-full px-4 py-1.5 text-sm"
               >
-                Fertig
+                Speichern
               </button>
             </div>
           </form>
@@ -218,15 +189,15 @@ export function VerlaufPage() {
           >
             + Hinzufügen
           </button>
+          <button
+            type="button"
+            onClick={() => resetWater()}
+            aria-label="Wasser für heute zurücksetzen"
+            className="shrink-0 w-[38px] h-[38px] inline-flex items-center justify-center rounded-xl bg-surface-2 border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
+          >
+            ↺
+          </button>
         </form>
-
-        <button
-          type="button"
-          onClick={() => resetWater()}
-          className="text-xs text-text-muted w-fit"
-        >
-          ↺ Zurücksetzen
-        </button>
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
