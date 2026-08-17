@@ -30,6 +30,12 @@ const CHANGELOG: ChangelogEntry[] = [
       'Abendessen-Rezepte mit mehr Zutaten und ausführlicherer Zubereitung',
     ],
   },
+  {
+    seq: 4,
+    items: [
+      'Wassertracker: eigene Menge eintragen und die drei Schnellauswahl-Mengen selbst festlegen',
+    ],
+  },
 ]
 
 export const LATEST_CHANGELOG_SEQ = CHANGELOG.at(-1)?.seq ?? 0

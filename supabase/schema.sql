@@ -1646,3 +1646,19 @@ drop trigger if exists protect_premium_fields on public.profiles;
 create trigger protect_premium_fields
   before insert or update on public.profiles
   for each row execute function public.protect_premium_fields();
+
+
+-- Nutzerindividuelle Schnellauswahl-Mengen für den Wassertracker (statt
+-- der bisher fest verdrahteten 150/250/500 ml). Drei Werte, damit sich
+-- das bestehende 3er-Grid im UI nicht ändern muss.
+alter table public.profiles
+  add column if not exists water_quick_amounts_ml integer[] not null default '{150,250,500}';
+alter table public.profiles
+  drop constraint if exists profiles_water_quick_amounts_check;
+alter table public.profiles
+  add constraint profiles_water_quick_amounts_check check (
+    array_length(water_quick_amounts_ml, 1) = 3
+    and water_quick_amounts_ml[1] > 0
+    and water_quick_amounts_ml[2] > 0
+    and water_quick_amounts_ml[3] > 0
+  );
