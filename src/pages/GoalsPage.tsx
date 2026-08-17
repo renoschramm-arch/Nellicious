@@ -1,23 +1,44 @@
-import { useEffect, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useProfile } from '../lib/useProfile'
 import { GOALS, GOAL_LABELS, type Goal } from '../lib/useProfile'
+import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
 
 export function GoalsPage() {
   const { profile, updateProfile } = useProfile()
+  const { logs: weightLogs } = useWeightLogs()
   const [goal, setGoal] = useState<Goal | null>(null)
   const [goalNote, setGoalNote] = useState('')
+  const [targetWeight, setTargetWeight] = useState('')
   const [saved, setSaved] = useState(false)
 
   useEffect(() => {
     if (!profile) return
     setGoal(profile.goal)
     setGoalNote(profile.goal_note)
+    setTargetWeight(profile.target_weight_kg != null ? formatWeightKg(profile.target_weight_kg) : '')
   }, [profile])
+
+  const latestWeight = weightLogs[0] ? Number(weightLogs[0].weight_kg) : null
+  const parsedTarget = parseWeightKg(targetWeight)
+
+  // Sanfte Plausibilitätsprüfung statt harter Validierung: Ziel und
+  // gewählte Richtung können bewusst auseinanderlaufen (z. B. beim
+  // Muskelaufbau ohne Gewichtsziel), deshalb wird nur gewarnt, nie blockiert.
+  const targetWarning = useMemo(() => {
+    if (parsedTarget == null || latestWeight == null) return null
+    if (goal === 'abnehmen' && parsedTarget >= latestWeight) {
+      return 'Dein Wunschgewicht liegt nicht unter deinem aktuellen Gewicht — passt das zu "Abnehmen"?'
+    }
+    if ((goal === 'zunehmen' || goal === 'muskelaufbau') && parsedTarget <= latestWeight) {
+      return `Dein Wunschgewicht liegt nicht über deinem aktuellen Gewicht — passt das zu "${GOAL_LABELS[goal]}"?`
+    }
+    return null
+  }, [goal, parsedTarget, latestWeight])
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
-    await updateProfile({ goal, goal_note: goalNote })
+    await updateProfile({ goal, goal_note: goalNote, target_weight_kg: parsedTarget })
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
@@ -57,6 +78,19 @@ export function GoalsPage() {
             ))}
           </div>
         </div>
+
+        <label className="flex flex-col gap-1 text-sm">
+          Wunschgewicht in kg (optional)
+          <input
+            type="text"
+            inputMode="decimal"
+            value={targetWeight}
+            onChange={(e) => setTargetWeight(e.target.value)}
+            placeholder="z. B. 70,0"
+            className="rounded-lg border border-border bg-bg px-3 py-2 font-mono outline-none focus:border-primary"
+          />
+          {targetWarning && <span className="text-xs text-honey mt-0.5">{targetWarning}</span>}
+        </label>
 
         <label className="flex flex-col gap-1 text-sm">
           Notiz (optional)

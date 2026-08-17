@@ -1662,3 +1662,10 @@ alter table public.profiles
     and water_quick_amounts_ml[2] > 0
     and water_quick_amounts_ml[3] > 0
   );
+
+
+-- Optionales Wunschgewicht, ergänzt die bestehende Gewichtshistorie
+-- (weight_logs) um ein konkretes Ziel statt nur der groben Richtung
+-- aus profiles.goal.
+alter table public.profiles
+  add column if not exists target_weight_kg numeric(5,1);
