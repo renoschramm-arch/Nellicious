@@ -6,7 +6,7 @@ import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
 import { PageFlatlay } from '../components/PageFlatlay'
 
-const WATER_STEPS = [150, 250, 500]
+const DEFAULT_WATER_STEPS = [150, 250, 500]
 
 function lastSevenDays(): Date[] {
   const today = new Date()
@@ -23,10 +23,14 @@ export function VerlaufPage() {
   const [weightValue, setWeightValue] = useState('')
   const [editingGoal, setEditingGoal] = useState(false)
   const [goalInput, setGoalInput] = useState('')
+  const [customWater, setCustomWater] = useState('')
+  const [editingSteps, setEditingSteps] = useState(false)
+  const [stepInputs, setStepInputs] = useState<string[]>([])
 
   const latestWeight = weightLogs[0]
   const waterGoal = profile?.daily_water_goal_ml ?? 2500
   const waterPct = Math.min(100, Math.round((todayMl / waterGoal) * 100))
+  const waterSteps = profile?.water_quick_amounts_ml ?? DEFAULT_WATER_STEPS
 
   const days = lastSevenDays()
   const weightChartData = days.map((d) => {
@@ -49,11 +53,32 @@ export function VerlaufPage() {
     setWeightValue('')
   }
 
+  async function handleCustomWaterSubmit(e: FormEvent) {
+    e.preventDefault()
+    const amount = Number(customWater)
+    if (!amount || amount <= 0) return
+    await addWater(Math.round(amount))
+    setCustomWater('')
+  }
+
   async function handleGoalSubmit(e: FormEvent) {
     e.preventDefault()
     if (!goalInput) return
     await updateProfile({ daily_water_goal_ml: Number(goalInput) })
     setEditingGoal(false)
+  }
+
+  function startEditingSteps() {
+    setStepInputs(waterSteps.map(String))
+    setEditingSteps(true)
+  }
+
+  async function handleStepsSubmit(e: FormEvent) {
+    e.preventDefault()
+    const next = stepInputs.map(Number)
+    if (next.length !== 3 || next.some((n) => !n || n <= 0)) return
+    await updateProfile({ water_quick_amounts_ml: next })
+    setEditingSteps(false)
   }
 
   return (
@@ -93,34 +118,103 @@ export function VerlaufPage() {
             </button>
           </form>
         ) : (
-          <button
-            type="button"
-            onClick={() => {
-              setGoalInput(String(waterGoal))
-              setEditingGoal(true)
-            }}
-            className="text-left text-xs text-text-muted w-fit"
-          >
-            Ziel: {waterGoal} ml ✎
-          </button>
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-text-muted">Ziel: {waterGoal} ml</span>
+            <button
+              type="button"
+              onClick={() => {
+                setGoalInput(String(waterGoal))
+                setEditingGoal(true)
+              }}
+              className="inline-flex items-center gap-1 bg-surface-2 border border-border rounded-full px-3 py-1.5 text-xs font-medium hover:border-primary transition-colors"
+            >
+              ✎ Anpassen
+            </button>
+          </div>
         )}
 
         <div className="h-2 rounded-full bg-surface-2 overflow-hidden">
           <div className="h-full bg-honey rounded-full" style={{ width: `${waterPct}%` }} />
         </div>
 
-        <div className="grid grid-cols-3 gap-2">
-          {WATER_STEPS.map((amount) => (
+        <div className="flex items-center justify-between">
+          <span className="text-xs font-mono uppercase tracking-wide text-text-muted">Schnellauswahl</span>
+          {!editingSteps && (
             <button
-              key={amount}
               type="button"
-              onClick={() => addWater(amount)}
-              className="bg-surface-2 border border-border rounded-xl py-2 text-sm font-medium hover:border-primary transition-colors"
+              onClick={startEditingSteps}
+              className="inline-flex items-center gap-1 bg-surface-2 border border-border rounded-full px-3 py-1.5 text-xs font-medium hover:border-primary transition-colors"
             >
-              +{amount}
+              ✎ Anpassen
             </button>
-          ))}
+          )}
         </div>
+
+        {editingSteps ? (
+          <form onSubmit={handleStepsSubmit} className="flex flex-col gap-2">
+            <div className="grid grid-cols-3 gap-2">
+              {stepInputs.map((value, i) => (
+                <input
+                  key={i}
+                  type="number"
+                  min={1}
+                  autoFocus={i === 0}
+                  value={value}
+                  onChange={(e) =>
+                    setStepInputs((prev) => prev.map((v, idx) => (idx === i ? e.target.value : v)))
+                  }
+                  className="w-full rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono text-center outline-none focus:border-primary"
+                />
+              ))}
+            </div>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={() => setEditingSteps(false)}
+                className="text-sm text-text-muted"
+              >
+                Abbrechen
+              </button>
+              <button
+                type="submit"
+                className="bg-primary text-on-primary font-semibold rounded-full px-4 py-1.5 text-sm"
+              >
+                Fertig
+              </button>
+            </div>
+          </form>
+        ) : (
+          <div className="grid grid-cols-3 gap-2">
+            {waterSteps.map((amount) => (
+              <button
+                key={amount}
+                type="button"
+                onClick={() => addWater(amount)}
+                className="bg-surface-2 border border-border rounded-xl py-2 text-sm font-medium hover:border-primary transition-colors"
+              >
+                +{amount}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <form onSubmit={handleCustomWaterSubmit} className="flex items-center gap-2">
+          <input
+            type="number"
+            min={1}
+            inputMode="numeric"
+            value={customWater}
+            onChange={(e) => setCustomWater(e.target.value)}
+            placeholder="Eigene Menge in ml"
+            className="flex-1 min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-sm font-mono outline-none focus:border-primary"
+          />
+          <button
+            type="submit"
+            className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm font-medium hover:border-primary transition-colors"
+          >
+            + Hinzufügen
+          </button>
+        </form>
 
         <button
           type="button"

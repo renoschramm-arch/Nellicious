@@ -18,6 +18,7 @@ export interface Database {
           height_cm: number | null
           gender: 'maennlich' | 'weiblich' | null
           daily_water_goal_ml: number
+          water_quick_amounts_ml: number[]
           is_premium: boolean
           subscription_source: 'stripe' | 'app_store' | 'play_store' | null
           stripe_customer_id: string | null
@@ -40,6 +41,7 @@ export interface Database {
           height_cm?: number | null
           gender?: 'maennlich' | 'weiblich' | null
           daily_water_goal_ml?: number
+          water_quick_amounts_ml?: number[]
         }
         Update: Partial<{
           display_name: string | null
@@ -56,6 +58,7 @@ export interface Database {
           height_cm: number | null
           gender: 'maennlich' | 'weiblich' | null
           daily_water_goal_ml: number
+          water_quick_amounts_ml: number[]
         }>
         Relationships: []
       }
