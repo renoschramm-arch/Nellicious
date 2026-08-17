@@ -1,7 +1,7 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useProfile } from '../lib/useProfile'
-import { useMealLogs } from '../lib/useMealLogs'
+import { useMealLogs, useLoggingStreak } from '../lib/useMealLogs'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
 import { useRecipes, MEAL_TYPE_LABELS, type Recipe } from '../lib/useRecipes'
 import { RecipePickerModal } from '../components/RecipePickerModal'
@@ -49,6 +49,7 @@ function nextDays(): { iso: string; label: string }[] {
 export function DashboardPage() {
   const { profile } = useProfile()
   const { logs, totals, addLog, removeLog } = useMealLogs()
+  const { streak } = useLoggingStreak()
   const todayISO = toISODate(new Date())
   const weekAheadISO = toISODate(addDays(new Date(), 6))
   const { entries: planEntries, setEntry, removeEntry: removePlanEntry } = useMealPlan(todayISO, weekAheadISO)
@@ -173,6 +174,12 @@ export function DashboardPage() {
           {dateLabel}
         </span>
       </div>
+
+      {streak > 0 && (
+        <span className="inline-flex items-center gap-1.5 w-fit font-mono text-xs text-honey bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-full px-3 py-1.5">
+          🔥 {streak} {streak === 1 ? 'Tag' : 'Tage'} in Folge geloggt
+        </span>
+      )}
 
       <div className="bg-surface-2 border border-border rounded-2xl p-4 flex items-center gap-4">
         <div

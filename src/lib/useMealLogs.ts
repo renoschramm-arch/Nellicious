@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
 import { useAuth } from './AuthContext'
+import { toISODate } from './week'
 import type { Database } from './database.types'
 
 type MealLog = Database['public']['Tables']['meal_logs']['Row']
@@ -98,4 +99,46 @@ export function useMealLogHistory(days: number) {
   }, [reload])
 
   return { logs, loading, reload }
+}
+
+// Zählt aufeinanderfolgende Tage mit mindestens einem Logeintrag, endend
+// bei heute — oder bei gestern, falls heute noch nichts geloggt wurde
+// (der Streak reißt erst, wenn ein ganzer Tag ausgelassen wird, nicht
+// schon während des laufenden Tages).
+export function useLoggingStreak() {
+  const { user } = useAuth()
+  const [streak, setStreak] = useState(0)
+  const [loading, setLoading] = useState(true)
+
+  const reload = useCallback(async () => {
+    if (!user) return
+    setLoading(true)
+    const since = new Date()
+    since.setDate(since.getDate() - 90)
+    since.setHours(0, 0, 0, 0)
+    const { data } = await supabase
+      .from('meal_logs')
+      .select('logged_at')
+      .eq('user_id', user.id)
+      .gte('logged_at', since.toISOString())
+    const loggedDays = new Set((data ?? []).map((l) => toISODate(new Date(l.logged_at))))
+
+    const cursor = new Date()
+    if (!loggedDays.has(toISODate(cursor))) {
+      cursor.setDate(cursor.getDate() - 1)
+    }
+    let count = 0
+    while (loggedDays.has(toISODate(cursor))) {
+      count++
+      cursor.setDate(cursor.getDate() - 1)
+    }
+    setStreak(count)
+    setLoading(false)
+  }, [user])
+
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  return { streak, loading, reload }
 }
