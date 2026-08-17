@@ -18,6 +18,10 @@ export interface Database {
           height_cm: number | null
           gender: 'maennlich' | 'weiblich' | null
           daily_water_goal_ml: number
+          is_premium: boolean
+          subscription_source: 'stripe' | 'app_store' | 'play_store' | null
+          stripe_customer_id: string | null
+          premium_until: string | null
           created_at: string
         }
         Insert: {
