@@ -1591,3 +1591,58 @@ drop policy if exists "Nutzer entfernen eigene Favoriten" on public.recipe_favor
 create policy "Nutzer entfernen eigene Favoriten"
   on public.recipe_favorites for delete
   using (auth.uid() = user_id);
+
+
+-- Grundlage für ein künftiges Freemium-Modell: provider-agnostisches Feld
+-- (subscription_source), damit sich später neben Stripe (Web) auch Apple
+-- In-App-Purchase / Google Play Billing anbinden lassen, ohne das Schema
+-- noch einmal zu ändern. Die eigentliche Zahlungsanbindung (Checkout,
+-- Webhook-Handler) folgt erst, wenn Preise/Feature-Grenzen feststehen.
+alter table public.profiles
+  add column if not exists is_premium boolean not null default false;
+alter table public.profiles
+  add column if not exists subscription_source text;
+alter table public.profiles
+  drop constraint if exists profiles_subscription_source_check;
+alter table public.profiles
+  add constraint profiles_subscription_source_check check (
+    subscription_source is null or subscription_source in ('stripe', 'app_store', 'play_store')
+  );
+alter table public.profiles
+  add column if not exists stripe_customer_id text;
+alter table public.profiles
+  add column if not exists premium_until timestamptz;
+
+-- Sicherheitsnetz: Die bestehenden Insert-/Update-Policies erlauben Nutzern,
+-- jedes Feld ihres eigenen Profils anzulegen bzw. zu ändern (row-level,
+-- nicht spaltenweise). Ohne diesen Trigger könnte sich ein Nutzer über die
+-- Browser-Konsole selbst is_premium = true setzen — sowohl beim ersten
+-- Anlegen des Profils als auch nachträglich per Update. Der Trigger setzt
+-- die Abo-Felder bei jedem Insert/Update durch eine normale Nutzer-Session
+-- auf ihren sicheren Ausgangswert zurück — nur eine Verbindung mit dem
+-- Supabase service_role-Key (z. B. eine Edge Function, die eine echte
+-- Stripe-Webhook-Signatur geprüft hat) darf sie tatsächlich ändern.
+create or replace function public.protect_premium_fields()
+returns trigger as $$
+begin
+  if auth.role() <> 'service_role' then
+    if TG_OP = 'INSERT' then
+      new.is_premium := false;
+      new.subscription_source := null;
+      new.stripe_customer_id := null;
+      new.premium_until := null;
+    else
+      new.is_premium := old.is_premium;
+      new.subscription_source := old.subscription_source;
+      new.stripe_customer_id := old.stripe_customer_id;
+      new.premium_until := old.premium_until;
+    end if;
+  end if;
+  return new;
+end;
+$$ language plpgsql security definer;
+
+drop trigger if exists protect_premium_fields on public.profiles;
+create trigger protect_premium_fields
+  before insert or update on public.profiles
+  for each row execute function public.protect_premium_fields();
