@@ -5,6 +5,14 @@ const PREMIUM_FEATURES = [
   '🍳 Kochmodus: Bildschirm bleibt beim Kochen wach',
 ]
 
+const MONTHLY_PRICE_EUR = 3.99
+const YEARLY_PRICE_EUR = 39.99
+const YEARLY_SAVINGS_PCT = Math.round((1 - YEARLY_PRICE_EUR / (MONTHLY_PRICE_EUR * 12)) * 100)
+
+function formatEUR(value: number): string {
+  return `${value.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} €`
+}
+
 export function PremiumModal({ onClose }: { onClose: () => void }) {
   const { trialActive, trialDaysLeft } = usePremium()
 
@@ -38,6 +46,23 @@ export function PremiumModal({ onClose }: { onClose: () => void }) {
               </li>
             ))}
           </ul>
+
+          <div className="grid grid-cols-2 gap-2 mt-1">
+            <div className="bg-surface border border-border rounded-xl p-3 flex flex-col">
+              <span className="text-xs text-text-muted">Monatlich</span>
+              <span className="font-display font-semibold text-lg">{formatEUR(MONTHLY_PRICE_EUR)}</span>
+              <span className="text-xs text-text-muted">pro Monat</span>
+            </div>
+            <div className="relative bg-primary/10 border border-primary/30 rounded-xl p-3 flex flex-col">
+              <span className="absolute -top-2 right-2 bg-primary text-on-primary text-[10px] font-semibold rounded-full px-2 py-0.5">
+                −{YEARLY_SAVINGS_PCT}%
+              </span>
+              <span className="text-xs text-text-muted">Jährlich</span>
+              <span className="font-display font-semibold text-lg">{formatEUR(YEARLY_PRICE_EUR)}</span>
+              <span className="text-xs text-text-muted">pro Jahr</span>
+            </div>
+          </div>
+
           <p className="text-sm text-text-muted leading-relaxed">
             Der Premium-Kauf ist noch in Arbeit — schau bald wieder vorbei.
           </p>
