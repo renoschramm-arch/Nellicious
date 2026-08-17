@@ -13,7 +13,7 @@ const MENU_ITEMS = [
 
 export function MorePage() {
   const { user, signOut } = useAuth()
-  const { trialActive, trialDaysLeft, isPaidPremium } = usePremium()
+  const { trialActive, trialDaysLeft, isPaidPremium, isGrandfathered } = usePremium()
 
   return (
     <div className="flex flex-col gap-6">
@@ -23,9 +23,11 @@ export function MorePage() {
         <p className="text-text-muted text-sm mt-1">{user?.email}</p>
       </div>
 
-      {isPaidPremium && (
+      {(isPaidPremium || isGrandfathered) && (
         <div className="bg-honey/10 border border-honey/30 rounded-2xl px-4 py-3 text-sm font-medium text-honey">
-          ⭐ Nellicious Premium aktiv
+          {isGrandfathered
+            ? '⭐ Premium aktiv — danke, dass du von Anfang an dabei bist!'
+            : '⭐ Nellicious Premium aktiv'}
         </div>
       )}
       {trialActive && (
