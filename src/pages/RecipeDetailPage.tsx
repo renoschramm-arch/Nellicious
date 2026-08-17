@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { DIET_TAG_LABELS, FREE_OF_LABELS, MEAL_TYPE_LABELS, useRecipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan } from '../lib/useMealPlan'
 import { useFavorites } from '../lib/useFavorites'
+import { useRecipeNote } from '../lib/useRecipeNote'
 import { useAuth } from '../lib/AuthContext'
 import { useWakeLock } from '../lib/useWakeLock'
 import { usePremium } from '../lib/usePremium'
@@ -18,6 +19,7 @@ export function RecipeDetailPage() {
   const todayISO = toISODate(new Date())
   const { setEntry } = useMealPlan(todayISO, todayISO)
   const { favoriteIds, toggleFavorite } = useFavorites()
+  const { note, saveNote } = useRecipeNote(id)
   const { user } = useAuth()
   const { active: wakeLockActive, supported: wakeLockSupported, toggle: toggleWakeLock } = useWakeLock()
   const { hasPremium } = usePremium()
@@ -26,6 +28,12 @@ export function RecipeDetailPage() {
   const [editing, setEditing] = useState(false)
   const [deleting, setDeleting] = useState(false)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [noteInput, setNoteInput] = useState('')
+  const [noteSaved, setNoteSaved] = useState(false)
+
+  useEffect(() => {
+    setNoteInput(note)
+  }, [note])
 
   if (loading) return <p className="text-text-muted text-sm">Lädt …</p>
   if (!recipe) return <p className="text-text-muted text-sm">Rezept nicht gefunden.</p>
@@ -214,6 +222,24 @@ export function RecipeDetailPage() {
           <p className="text-sm whitespace-pre-line">{recipe.instructions}</p>
         </div>
       )}
+
+      <div className="flex flex-col gap-1.5">
+        <h2 className="font-display font-semibold text-lg">Meine Notiz</h2>
+        <textarea
+          value={noteInput}
+          onChange={(e) => setNoteInput(e.target.value)}
+          onBlur={async () => {
+            if (noteInput === note) return
+            await saveNote(noteInput)
+            setNoteSaved(true)
+            setTimeout(() => setNoteSaved(false), 2000)
+          }}
+          rows={3}
+          placeholder="z. B. nächstes Mal mehr Gewürze, weniger Salz …"
+          className="rounded-lg border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-primary resize-none"
+        />
+        {noteSaved && <span className="text-xs text-basil">Gespeichert ✓</span>}
+      </div>
 
       <button
         onClick={handleLog}

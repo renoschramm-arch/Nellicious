@@ -244,6 +244,23 @@ export interface Database {
         Update: Partial<Record<string, never>>
         Relationships: []
       }
+      recipe_notes: {
+        Row: {
+          user_id: string
+          recipe_id: string
+          note: string
+          updated_at: string
+        }
+        Insert: {
+          user_id: string
+          recipe_id: string
+          note?: string
+        }
+        Update: Partial<{
+          note: string
+        }>
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: Record<string, never>

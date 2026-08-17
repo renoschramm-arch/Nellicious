@@ -1669,3 +1669,38 @@ alter table public.profiles
 -- aus profiles.goal.
 alter table public.profiles
   add column if not exists target_weight_kg numeric(5,1);
+
+
+-- Eigene Notizen zu Rezepten — wie bei recipe_favorites sind Rezepte
+-- app-weit geteilt, die Notiz ist aber pro Nutzer (z. B. "nächstes Mal
+-- mehr Gewürze"), daher eine eigene Zuordnungstabelle statt eines Felds
+-- direkt an recipes.
+create table if not exists public.recipe_notes (
+  user_id uuid not null references auth.users (id) on delete cascade,
+  recipe_id uuid not null references public.recipes (id) on delete cascade,
+  note text not null default '',
+  updated_at timestamptz not null default now(),
+  primary key (user_id, recipe_id)
+);
+
+alter table public.recipe_notes enable row level security;
+
+drop policy if exists "Nutzer sehen ihre eigenen Rezeptnotizen" on public.recipe_notes;
+create policy "Nutzer sehen ihre eigenen Rezeptnotizen"
+  on public.recipe_notes for select
+  using (auth.uid() = user_id);
+
+drop policy if exists "Nutzer legen eigene Rezeptnotizen an" on public.recipe_notes;
+create policy "Nutzer legen eigene Rezeptnotizen an"
+  on public.recipe_notes for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Nutzer aktualisieren eigene Rezeptnotizen" on public.recipe_notes;
+create policy "Nutzer aktualisieren eigene Rezeptnotizen"
+  on public.recipe_notes for update
+  using (auth.uid() = user_id);
+
+drop policy if exists "Nutzer löschen eigene Rezeptnotizen" on public.recipe_notes;
+create policy "Nutzer löschen eigene Rezeptnotizen"
+  on public.recipe_notes for delete
+  using (auth.uid() = user_id);
