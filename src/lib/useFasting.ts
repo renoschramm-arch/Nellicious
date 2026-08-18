@@ -17,10 +17,32 @@ export function isOmad(hours: number): boolean {
   return 24 - hours <= 1
 }
 
+export function formatDurationHM(ms: number): string {
+  const totalMinutes = Math.max(0, Math.floor(ms / 60_000))
+  const h = Math.floor(totalMinutes / 60)
+  const m = totalMinutes % 60
+  return `${h}h ${m}m`
+}
+
+// Für <input type="datetime-local">, das lokale Zeit ohne Zeitzone erwartet.
+export function toDatetimeLocalValue(date: Date): string {
+  const pad = (n: number) => String(n).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
 export function useFasting() {
   const { user } = useAuth()
   const [sessions, setSessions] = useState<FastingSession[]>([])
   const [loading, setLoading] = useState(true)
+  // Läuft durchgehend, damit Fasten-Ring und Essensfenster-Timer in jeder
+  // Ansicht (Heute, Verlauf) live weiterlaufen, ohne dass jede Ansicht ihr
+  // eigenes Interval verwalten muss.
+  const [nowTick, setNowTick] = useState(() => Date.now())
+
+  useEffect(() => {
+    const id = setInterval(() => setNowTick(Date.now()), 30_000)
+    return () => clearInterval(id)
+  }, [])
 
   const reload = useCallback(async () => {
     if (!user) return
@@ -44,21 +66,23 @@ export function useFasting() {
 
   const activeSession = sessions.find((s) => s.ended_at === null) ?? null
 
-  async function start(targetHours: number) {
+  // startedAt/endedAt optional, damit ein vergessenes Starten/Beenden auch
+  // rückwirkend nachgetragen werden kann (statt nur "jetzt").
+  async function start(targetHours: number, startedAt?: Date) {
     if (!user || activeSession) return
     const { data } = await supabase
       .from('fasting_sessions')
-      .insert({ user_id: user.id, target_hours: targetHours })
+      .insert({ user_id: user.id, target_hours: targetHours, started_at: (startedAt ?? new Date()).toISOString() })
       .select('*')
       .single()
     if (data) setSessions((prev) => [data, ...prev])
   }
 
-  async function stop() {
+  async function stop(endedAt?: Date) {
     if (!activeSession) return
     const { data } = await supabase
       .from('fasting_sessions')
-      .update({ ended_at: new Date().toISOString() })
+      .update({ ended_at: (endedAt ?? new Date()).toISOString() })
       .eq('id', activeSession.id)
       .select('*')
       .single()
@@ -94,5 +118,28 @@ export function useFasting() {
     return count
   }, [successfulDays])
 
-  return { sessions, activeSession, loading, start, stop, streak, reload }
+  // Die zuletzt beendete Session bestimmt das aktuelle Essensfenster
+  // (Fensterdauer = 24h - Fastenziel dieser Session).
+  const lastEndedSession = useMemo(() => {
+    return (
+      sessions
+        .filter((s): s is FastingSession & { ended_at: string } => s.ended_at !== null)
+        .sort((a, b) => new Date(b.ended_at).getTime() - new Date(a.ended_at).getTime())[0] ?? null
+    )
+  }, [sessions])
+
+  const eatingWindow = useMemo(() => {
+    if (activeSession || !lastEndedSession) return null
+    const endedAtMs = new Date(lastEndedSession.ended_at).getTime()
+    const windowHours = 24 - lastEndedSession.target_hours
+    const windowEndsAtMs = endedAtMs + windowHours * 3_600_000
+    if (nowTick >= windowEndsAtMs) return null
+    return {
+      totalMs: windowHours * 3_600_000,
+      remainingMs: windowEndsAtMs - nowTick,
+      endsAt: new Date(windowEndsAtMs).toISOString(),
+    }
+  }, [activeSession, lastEndedSession, nowTick])
+
+  return { sessions, activeSession, loading, start, stop, streak, reload, now: nowTick, eatingWindow }
 }

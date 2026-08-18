@@ -9,6 +9,7 @@ import { useFoodSearch, type FoodSearchResult } from '../lib/useFoodSearch'
 import { lookupFoodByBarcode } from '../lib/lookupFoodByBarcode'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { PageFlatlay } from '../components/PageFlatlay'
+import { FastingRingCard } from '../components/FastingRingCard'
 import { pickRandomQuote } from '../lib/motivationalQuotes'
 import { takeUnseenChangelogItems } from '../lib/whatsNew'
 
@@ -180,6 +181,8 @@ export function DashboardPage() {
           🔥 {streak} {streak === 1 ? 'Tag' : 'Tage'} in Folge geloggt
         </span>
       )}
+
+      <FastingRingCard />
 
       <div className="bg-surface-2 border border-border rounded-2xl p-4 flex items-center gap-4">
         <div
