@@ -1704,3 +1704,217 @@ drop policy if exists "Nutzer löschen eigene Rezeptnotizen" on public.recipe_no
 create policy "Nutzer löschen eigene Rezeptnotizen"
   on public.recipe_notes for delete
   using (auth.uid() = user_id);
+
+
+-- 20 Salat-Rezepte (owner_id NULL = global sichtbar). Bewusst als
+-- eigenständige Salate gebaut, die sich gut als Beilage zu vielen
+-- Hauptgerichten kombinieren lassen, nicht nur als alleinstehendes
+-- Mittag-/Abendgericht. Idempotent per Titel-Check.
+insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+select v.title, v.description, v.kcal, v.protein_g, v.carbs_g, v.fat_g, v.ingredients, v.instructions, v.meal_type, v.diet_tags, v.free_of
+from (
+  values
+    (
+      'Gemischter Salat mit Himbeerdressing',
+      'Bunter Blattsalat mit fruchtig-süßem Himbeer-Dressing.',
+      280, 6, 18, 21,
+      array['150 g gemischter Blattsalat', '10 Kirschtomaten', '1/2 Salatgurke', '1/2 rote Zwiebel', '80 g frische Himbeeren', '20 g Walnusskerne', 'Für das Dressing: 50 g Himbeeren, 3 EL Olivenöl, 1 EL Balsamico-Essig, 1 TL Honig, 1 TL Senf, Salz, Pfeffer']::text[],
+      'Blattsalat waschen, trocken schleudern und mit halbierten Kirschtomaten, Gurkenscheiben und dünn geschnittener roter Zwiebel in einer großen Schüssel vermengen. Für das Dressing 50 g Himbeeren mit einer Gabel zerdrücken und mit Olivenöl, Balsamico-Essig, Honig, Senf, Salz und Pfeffer glattrühren — für ein feineres Dressing die Kerne durch ein Sieb streichen. Salat mit dem Dressing beträufeln, vorsichtig vermengen und mit den restlichen frischen Himbeeren und gehackten Walnüssen bestreuen.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Rucola-Salat mit Parmesan und Pinienkernen',
+      'Klassischer italienischer Beilagensalat, in 5 Minuten fertig.',
+      230, 9, 4, 20,
+      array['100 g Rucola', '30 g Parmesan (gehobelt)', '2 EL Pinienkerne', '3 EL Olivenöl', '1 EL Zitronensaft', 'Salz, Pfeffer']::text[],
+      'Pinienkerne in einer Pfanne ohne Fett kurz goldbraun rösten. Rucola waschen, trocken schleudern und auf einem Teller verteilen. Mit Olivenöl und Zitronensaft beträufeln, leicht salzen und pfeffern. Mit gehobeltem Parmesan und den gerösteten Pinienkernen bestreuen und sofort servieren.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'keto', 'low_carb']::text[],
+      array['glutenfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Paprika-Halloumi-Salat mit Minze',
+      'Warmer Salat mit gebratenem Halloumi und knackiger Paprika.',
+      370, 18, 10, 28,
+      array['2 rote Paprika', '200 g Halloumi', '50 g Rucola', '2 EL Olivenöl', '1 EL Zitronensaft', 'Minzblätter, Salz, Pfeffer']::text[],
+      'Paprika in Streifen schneiden und in einer Pfanne mit etwas Olivenöl anbraten, bis sie leicht Farbe annehmen. Halloumi in Scheiben schneiden und in derselben Pfanne von beiden Seiten goldbraun anbraten. Rucola auf einem Teller verteilen, Paprika und Halloumi darauf anrichten. Mit Olivenöl und Zitronensaft beträufeln, salzen, pfeffern und mit frischer Minze bestreuen.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'keto', 'low_carb']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Karotten-Apfel-Salat mit Ingwerdressing',
+      'Erfrischender Rohkostsalat mit süß-scharfem Ingwer-Dressing.',
+      210, 3, 26, 11,
+      array['3 Karotten', '1 Apfel', '1 EL Zitronensaft', '1 TL frischer Ingwer (gerieben)', '2 EL Olivenöl', '1 TL Honig', '1 EL Sonnenblumenkerne']::text[],
+      'Karotten schälen und raspeln. Apfel waschen, entkernen und ebenfalls raspeln oder in feine Streifen schneiden, sofort mit etwas Zitronensaft vermengen, damit er nicht braun wird. Geriebenen Ingwer mit Olivenöl, restlichem Zitronensaft und Honig zu einem Dressing verrühren. Karotten und Apfel mit dem Dressing vermengen und mit gerösteten Sonnenblumenkernen bestreuen.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei', 'histaminarm']::text[]
+    ),
+    (
+      'Roter-Linsen-Salat mit Petersilie und Zitrone',
+      'Sättigender, proteinreicher Salat für Meal-Prep.',
+      410, 20, 52, 14,
+      array['200 g rote Linsen', '1 Salatgurke', '1 rote Paprika', '1 Bund Petersilie', 'Saft 1 Zitrone', '3 EL Olivenöl', '1 Knoblauchzehe', 'Salz, Pfeffer, Kreuzkümmel']::text[],
+      'Linsen nach Packungsangabe in Salzwasser kochen, bis sie weich, aber noch bissfest sind, abgießen und abkühlen lassen. Gurke und Paprika fein würfeln, Petersilie grob hacken, Knoblauch fein reiben. Alle Zutaten mit den abgekühlten Linsen vermengen, mit Zitronensaft, Olivenöl, Kreuzkümmel, Salz und Pfeffer abschmecken und vor dem Servieren kurz durchziehen lassen.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei', 'histaminarm']::text[]
+    ),
+    (
+      'Joghurt-Gurken-Salat mit Minze',
+      'Kühler, leichter Salat für warme Tage, in 10 Minuten fertig.',
+      140, 10, 8, 7,
+      array['1 Salatgurke', '150 g griechischer Joghurt', '1 EL frische Minze (gehackt)', '1 Knoblauchzehe', '1 TL Zitronensaft', 'Salz, Pfeffer']::text[],
+      'Gurke in dünne Scheiben hobeln oder würfeln, leicht salzen und 10 Minuten in einem Sieb Wasser ziehen lassen, dann abtropfen. Joghurt mit gehackter Minze, fein geriebenem Knoblauch, Zitronensaft, Salz und Pfeffer glattrühren. Gurke unterheben und den Salat gut gekühlt servieren.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'keto', 'low_carb']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Fenchel-Orangen-Salat mit schwarzen Oliven',
+      'Frischer italienischer Salat mit süß-herber Note.',
+      220, 3, 24, 13,
+      array['1 Fenchelknolle', '2 Orangen', '10 schwarze Oliven', '2 EL Olivenöl', '1 TL Zitronensaft', 'Salz, Pfeffer, Fenchelgrün']::text[],
+      'Fenchel putzen und in sehr dünne Scheiben hobeln, das zarte Fenchelgrün beiseitelegen. Orangen filetieren, dabei den austretenden Saft auffangen. Fenchel und Orangenfilets auf einem Teller anrichten, Oliven darüber verteilen. Aus dem aufgefangenen Orangensaft, Olivenöl, Zitronensaft, Salz und Pfeffer ein Dressing anrühren, über den Salat träufeln und mit Fenchelgrün garnieren.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Rote-Zwiebel-Tomatensalat mit Sumach',
+      'Orientalisch angehauchter Salat, schnell gemacht.',
+      150, 2, 12, 11,
+      array['4 Tomaten', '1 rote Zwiebel', '1 TL Sumach', '2 EL Olivenöl', '1 EL Zitronensaft', 'Petersilie, Salz, Pfeffer']::text[],
+      'Tomaten in Scheiben oder Achtel schneiden, rote Zwiebel in sehr dünne Ringe hobeln und beides auf einem Teller anrichten. Mit Sumach bestäuben, mit Olivenöl und Zitronensaft beträufeln, salzen und pfeffern. Mit gehackter Petersilie bestreuen und kurz durchziehen lassen, bevor serviert wird.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Wurzelgemüse-Salat mit Walnüssen und Ziegenkäse',
+      'Warmer Herbstsalat mit geröstetem Wurzelgemüse.',
+      380, 12, 28, 24,
+      array['2 Karotten', '1 Pastinake', '1 rote Bete (vorgekocht)', '50 g Ziegenkäse', '20 g Walnusskerne', '2 EL Olivenöl', '1 EL Honig', '1 EL Apfelessig']::text[],
+      'Karotten und Pastinake schälen, in dünne Scheiben hobeln, mit 1 EL Olivenöl beträufeln und im Ofen bei 200°C 15 Minuten weich rösten. Rote Bete in Würfel schneiden. Geröstetes Wurzelgemüse mit roter Bete auf einem Teller anrichten, Ziegenkäse darüberbröckeln und mit Walnüssen bestreuen. Restliches Olivenöl mit Honig und Apfelessig verrühren und über den Salat träufeln.',
+      'abend',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['glutenfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Spinat-Erdbeer-Salat mit Balsamico-Dressing',
+      'Süß-herzhafter Salat mit frischen Erdbeeren und Feta.',
+      260, 6, 16, 20,
+      array['100 g Babyspinat', '200 g Erdbeeren', '30 g Feta', '2 EL gehackte Pekannüsse', '2 EL Olivenöl', '1 EL Balsamico-Essig', '1 TL Honig']::text[],
+      'Babyspinat waschen und trocken schleudern, Erdbeeren putzen und vierteln. Spinat und Erdbeeren in einer Schüssel vermengen, Feta darüberbröckeln und mit gehackten Pekannüssen bestreuen. Olivenöl, Balsamico-Essig und Honig zu einem Dressing verrühren, über den Salat träufeln und sofort servieren.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['glutenfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Grünkohlsalat mit Cranberrys und Mandeln',
+      'Kräftiger Wintersalat, wird durch Massieren angenehm mild.',
+      310, 10, 20, 21,
+      array['150 g Grünkohl', '2 EL getrocknete Cranberrys', '2 EL gehobelte Mandeln', '30 g Parmesan', '3 EL Olivenöl', '1 EL Zitronensaft', 'Salz, Pfeffer']::text[],
+      'Grünkohl waschen, von den dicken Stielen befreien und in feine Streifen schneiden. Mit Olivenöl, Zitronensaft, Salz und Pfeffer in einer Schüssel kräftig durchkneten, bis die Blätter weicher werden — das nimmt die Bitterkeit und macht den Salat angenehmer zu kauen. Mandeln in einer Pfanne ohne Fett kurz rösten. Grünkohl mit Cranberrys, gerösteten Mandeln und gehobeltem Parmesan bestreuen.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'low_carb']::text[],
+      array['glutenfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Bunter Krautsalat mit Apfel und Kümmel',
+      'Klassischer Krautsalat, verträglicher durch kurzes Durchziehen.',
+      180, 2, 22, 9,
+      array['300 g Weißkohl', '1 Apfel', '1 Karotte', '2 EL Apfelessig', '2 EL Olivenöl', '1 TL Kümmel', '1 TL Honig', 'Salz, Pfeffer']::text[],
+      'Weißkohl fein hobeln, mit etwas Salz kräftig durchkneten, bis er weicher wird und Wasser zieht. Apfel und Karotte raspeln und untermischen. Apfelessig, Olivenöl, Kümmel und Honig zu einem Dressing verrühren, über den Krautsalat geben und gut vermengen. Mindestens 20 Minuten durchziehen lassen, bevor serviert wird.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Bulgursalat mit Petersilie und Granatapfelkernen',
+      'Frischer Tabouleh-Salat, hält sich gut im Kühlschrank.',
+      410, 10, 60, 14,
+      array['150 g Bulgur', '1 Bund Petersilie', '1 Salatgurke', '2 Tomaten', '1 Granatapfel', 'Saft 1 Zitrone', '3 EL Olivenöl', 'Salz, Pfeffer']::text[],
+      'Bulgur nach Packungsangabe in heißem Wasser quellen lassen und abkühlen lassen. Petersilie fein hacken, Gurke und Tomaten würfeln, Granatapfelkerne auslösen. Alle Zutaten mit dem abgekühlten Bulgur vermengen, mit Zitronensaft und Olivenöl abschmecken, salzen und pfeffern.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Avocado-Mango-Salat mit Limettendressing',
+      'Cremig-fruchtiger Salat mit karibischem Flair.',
+      320, 4, 26, 22,
+      array['1 Avocado', '1 Mango', '50 g Rucola', '1/2 rote Zwiebel', 'Saft 1 Limette', '2 EL Olivenöl', '1 TL Honig', 'Chiliflocken (optional)']::text[],
+      'Avocado und Mango schälen und in Würfel oder Spalten schneiden. Rote Zwiebel in feine Ringe schneiden. Rucola auf einem Teller verteilen, Avocado, Mango und Zwiebel darauf anrichten. Limettensaft, Olivenöl und Honig zu einem Dressing verrühren, über den Salat träufeln und nach Belieben mit Chiliflocken bestreuen.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei', 'histaminarm']::text[]
+    ),
+    (
+      'Sellerie-Walnuss-Salat mit Apfel',
+      'Knackiger Wintersalat mit cremigem Joghurtdressing.',
+      260, 7, 18, 18,
+      array['1/2 Knolle Sellerie', '1 Apfel', '30 g Walnusskerne', '100 g Joghurt', '1 EL Zitronensaft', 'Salz, Pfeffer']::text[],
+      'Sellerie schälen und in feine Streifen oder Raspeln schneiden, sofort mit etwas Zitronensaft vermengen. Apfel waschen, entkernen und ebenfalls in feine Streifen schneiden. Joghurt mit dem restlichen Zitronensaft, Salz und Pfeffer verrühren, unter Sellerie und Apfel heben. Mit gehackten Walnüssen bestreuen und servieren.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'low_carb']::text[],
+      array['glutenfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Rettichsalat mit Radieschen und Sesam',
+      'Knackig-scharfer asiatisch angehauchter Salat.',
+      150, 4, 16, 8,
+      array['1 Rettich', '1 Bund Radieschen', '1 EL Sesam', '2 EL Reisessig', '1 EL Sojasauce', '1 TL Sesamöl', '1 TL Honig']::text[],
+      'Rettich schälen und in sehr dünne Scheiben hobeln, Radieschen ebenfalls in feine Scheiben schneiden. Reisessig, Sojasauce, Sesamöl und Honig zu einem Dressing verrühren. Rettich und Radieschen mit dem Dressing vermengen, kurz durchziehen lassen und mit geröstetem Sesam bestreuen.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'low_carb']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei']::text[]
+    ),
+    (
+      'Endiviensalat mit Speck und Croutons',
+      'Herzhafter warmer Salat mit knusprigem Speck und Croutons.',
+      380, 14, 20, 27,
+      array['1 Endiviensalat', '80 g Speckwürfel', '50 g Weißbrot (für Croutons)', '2 EL Olivenöl', '1 EL Weißweinessig', '1 TL Senf', 'Salz, Pfeffer']::text[],
+      'Weißbrot in Würfel schneiden und in einer Pfanne mit etwas Olivenöl knusprig goldbraun rösten. Speckwürfel in derselben Pfanne knusprig auslassen. Endiviensalat waschen, trocken schleudern und in mundgerechte Stücke zupfen. Olivenöl, Weißweinessig, Senf, Salz und Pfeffer zu einem Dressing verrühren, über den Salat geben, mit Speck und Croutons bestreuen und sofort servieren, solange die Croutons noch knusprig sind.',
+      'abend',
+      array['omnivore']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Wassermelonen-Feta-Salat mit Minze',
+      'Erfrischender Sommersalat, süß-salzig kombiniert.',
+      240, 8, 18, 15,
+      array['400 g Wassermelone', '100 g Feta', '10 Minzblätter', '2 EL Olivenöl', '1 EL Balsamico-Essig', 'Schwarzer Pfeffer']::text[],
+      'Wassermelone entkernen und in mundgerechte Würfel schneiden. Feta ebenfalls würfeln. Wassermelone und Feta auf einem Teller anrichten, mit gezupften Minzblättern bestreuen. Mit Olivenöl und Balsamico-Essig beträufeln und mit frisch gemahlenem Pfeffer servieren.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Pilzsalat mit Petersilie und Zitrone',
+      'Roher Champignonsalat, leicht und schnell gemacht.',
+      210, 6, 8, 17,
+      array['250 g braune Champignons', '1 Schalotte', '1 Bund Petersilie', 'Saft 1 Zitrone', '3 EL Olivenöl', 'Salz, Pfeffer']::text[],
+      'Champignons putzen und in sehr dünne Scheiben hobeln. Schalotte fein würfeln, Petersilie grob hacken. Champignons mit Schalotte, Zitronensaft, Olivenöl, Salz und Pfeffer vermengen und kurz durchziehen lassen, damit die Pilze etwas Säure aufnehmen. Mit Petersilie bestreut servieren.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Rosenkohlsalat mit Parmesan und Zitrone',
+      'Roher Rosenkohlsalat, knackig und würzig-nussig.',
+      260, 10, 16, 18,
+      array['300 g Rosenkohl', '30 g Parmesan', '2 EL Olivenöl', '1 EL Zitronensaft', '2 EL gehobelte Mandeln', 'Salz, Pfeffer']::text[],
+      'Rosenkohl putzen und mit einem Hobel oder Messer in sehr feine Streifen schneiden. Mit Olivenöl, Zitronensaft, Salz und Pfeffer vermengen und kurz durchziehen lassen, damit er etwas weicher wird. Mandeln in einer Pfanne ohne Fett rösten. Rosenkohl mit gehobeltem Parmesan und gerösteten Mandeln bestreut servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'low_carb']::text[],
+      array['glutenfrei', 'eifrei', 'sojafrei']::text[]
+    )
+) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+where not exists (
+  select 1 from public.recipes r where r.title = v.title
+);
