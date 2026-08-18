@@ -3,7 +3,14 @@ import { useProfile } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
 import { useWaterLog } from '../lib/useWaterLog'
 import { useMealLogHistory } from '../lib/useMealLogs'
-import { useFasting, fastingProtocolLabel, isOmad, formatDurationHM, toDatetimeLocalValue } from '../lib/useFasting'
+import {
+  useFasting,
+  fastingProtocolLabel,
+  isOmad,
+  formatDurationHM,
+  toDatetimeLocalValue,
+  type FastingSession,
+} from '../lib/useFasting'
 import { usePremium } from '../lib/usePremium'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
@@ -28,6 +35,8 @@ export function VerlaufPage() {
     sessions: fastingSessions,
     start: startFasting,
     stop: stopFasting,
+    updateSession: updateFastingSession,
+    deleteSession: deleteFastingSession,
     streak: fastingStreak,
     now: fastingNow,
     eatingWindow,
@@ -186,6 +195,27 @@ export function VerlaufPage() {
     if (Number.isNaN(date.getTime()) || date.getTime() > Date.now() || date.getTime() <= startMs) return
     await stopFasting(date)
     setCustomEndOpen(false)
+  }
+
+  async function handleFastingSessionEditSubmit(e: FormEvent<HTMLFormElement>, session: FastingSession) {
+    e.preventDefault()
+    const formData = new FormData(e.currentTarget)
+    const startedRaw = formData.get('started_at') as string | null
+    if (!startedRaw) return
+    const startedAt = new Date(startedRaw)
+    if (Number.isNaN(startedAt.getTime()) || startedAt.getTime() > Date.now()) return
+
+    if (session.ended_at) {
+      const endedRaw = formData.get('ended_at') as string | null
+      if (!endedRaw) return
+      const endedAt = new Date(endedRaw)
+      if (Number.isNaN(endedAt.getTime()) || endedAt.getTime() > Date.now() || endedAt.getTime() <= startedAt.getTime()) {
+        return
+      }
+      await updateFastingSession(session.id, { started_at: startedAt, ended_at: endedAt })
+    } else {
+      await updateFastingSession(session.id, { started_at: startedAt })
+    }
   }
 
   function startEditingFastingSettings() {
@@ -692,6 +722,64 @@ export function VerlaufPage() {
                   ✕
                 </button>
               </div>
+            ))}
+          </div>
+        </details>
+      )}
+
+      {fastingSessions.length > 0 && (
+        <details className="bg-surface border border-border rounded-2xl p-4">
+          <summary className="text-sm font-semibold cursor-pointer">Fasten-Verlauf verwalten</summary>
+          <div className="flex flex-col gap-2 mt-3">
+            {fastingSessions.map((session) => (
+              <form
+                key={session.id}
+                onSubmit={(e) => handleFastingSessionEditSubmit(e, session)}
+                className="bg-surface-2 rounded-lg px-3 py-2.5 flex flex-col gap-2"
+              >
+                <div className="flex items-center justify-between gap-2 text-xs text-text-muted">
+                  <span>{fastingProtocolLabel(session.target_hours)} Protokoll</span>
+                  <button
+                    type="button"
+                    onClick={() => deleteFastingSession(session.id)}
+                    aria-label="Fasten-Eintrag löschen"
+                    className="text-text-muted hover:text-danger"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="grid grid-cols-2 gap-2">
+                  <label className="flex flex-col gap-1 text-xs text-text-muted">
+                    Start
+                    <input
+                      type="datetime-local"
+                      name="started_at"
+                      defaultValue={toDatetimeLocalValue(new Date(session.started_at))}
+                      max={toDatetimeLocalValue(new Date())}
+                      className="rounded-lg border border-border bg-bg px-2 py-1.5 text-xs font-mono outline-none focus:border-primary"
+                    />
+                  </label>
+                  <label className="flex flex-col gap-1 text-xs text-text-muted">
+                    Ende
+                    {session.ended_at ? (
+                      <input
+                        type="datetime-local"
+                        name="ended_at"
+                        defaultValue={toDatetimeLocalValue(new Date(session.ended_at))}
+                        max={toDatetimeLocalValue(new Date())}
+                        className="rounded-lg border border-border bg-bg px-2 py-1.5 text-xs font-mono outline-none focus:border-primary"
+                      />
+                    ) : (
+                      <span className="rounded-lg border border-border bg-bg px-2 py-1.5 text-xs text-text-muted">
+                        läuft noch
+                      </span>
+                    )}
+                  </label>
+                </div>
+                <button type="submit" className="self-end text-xs text-primary font-medium">
+                  Speichern
+                </button>
+              </form>
             ))}
           </div>
         </details>
