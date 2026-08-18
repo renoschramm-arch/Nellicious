@@ -6,12 +6,16 @@ import type { Database } from './database.types'
 
 export type FastingSession = Database['public']['Tables']['fasting_sessions']['Row']
 
-export const FASTING_PROTOCOLS: { hours: number; label: string }[] = [
-  { hours: 16, label: '16:8' },
-  { hours: 18, label: '18:6' },
-  { hours: 20, label: '20:4' },
-  { hours: 23, label: 'OMAD' },
-]
+// Fastenfenster : Essfenster (z. B. 16 -> "16:8").
+export function fastingProtocolLabel(hours: number): string {
+  return `${hours}:${24 - hours}`
+}
+
+// Sehr kurze Essfenster (<= 1h) entsprechen dem geläufig als "OMAD"
+// (One Meal A Day) bezeichneten Protokoll.
+export function isOmad(hours: number): boolean {
+  return 24 - hours <= 1
+}
 
 export function useFasting() {
   const { user } = useAuth()

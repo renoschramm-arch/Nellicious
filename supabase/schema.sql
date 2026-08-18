@@ -2173,3 +2173,19 @@ create policy "Nutzer löschen eigene Fastenperioden"
 -- Zuletzt gewähltes Protokoll, damit es beim nächsten Fasten vorausgefüllt ist.
 alter table public.profiles
   add column if not exists fasting_default_hours numeric(4,1) not null default 16;
+
+-- Anpassbare Protokoll-Presets fürs Intervallfasten (analog zu
+-- water_quick_amounts_ml) — vier Stundenwerte statt der fest verdrahteten
+-- 16/18/20/23, damit sich das bestehende 4er-Grid im UI nicht ändern muss.
+alter table public.profiles
+  add column if not exists fasting_protocol_hours integer[] not null default '{16,18,20,23}';
+alter table public.profiles
+  drop constraint if exists profiles_fasting_protocol_hours_check;
+alter table public.profiles
+  add constraint profiles_fasting_protocol_hours_check check (
+    array_length(fasting_protocol_hours, 1) = 4
+    and fasting_protocol_hours[1] > 0
+    and fasting_protocol_hours[2] > 0
+    and fasting_protocol_hours[3] > 0
+    and fasting_protocol_hours[4] > 0
+  );

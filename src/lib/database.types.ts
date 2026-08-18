@@ -21,6 +21,7 @@ export interface Database {
           water_quick_amounts_ml: number[]
           target_weight_kg: number | null
           fasting_default_hours: number
+          fasting_protocol_hours: number[]
           is_premium: boolean
           subscription_source: 'stripe' | 'app_store' | 'play_store' | null
           stripe_customer_id: string | null
@@ -46,6 +47,7 @@ export interface Database {
           water_quick_amounts_ml?: number[]
           target_weight_kg?: number | null
           fasting_default_hours?: number
+          fasting_protocol_hours?: number[]
         }
         Update: Partial<{
           display_name: string | null
@@ -65,6 +67,7 @@ export interface Database {
           water_quick_amounts_ml: number[]
           target_weight_kg: number | null
           fasting_default_hours: number
+          fasting_protocol_hours: number[]
         }>
         Relationships: []
       }
