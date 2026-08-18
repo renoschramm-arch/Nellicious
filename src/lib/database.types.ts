@@ -287,6 +287,7 @@ export interface Database {
           target_hours: number
         }
         Update: Partial<{
+          started_at: string
           ended_at: string | null
           target_hours: number
         }>

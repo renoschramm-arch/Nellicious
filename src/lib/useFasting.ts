@@ -102,6 +102,38 @@ export function useFasting() {
     if (data) setSessions((prev) => prev.map((s) => (s.id === data.id ? data : s)))
   }
 
+  // Nachträgliche Korrektur von Start/Ende eines bereits geloggten Eintrags
+  // (im Gegensatz zu start/stop, die nur die aktuell laufende Session betreffen).
+  async function updateSession(id: string, patch: { started_at?: Date; ended_at?: Date | null }) {
+    setError(null)
+    const dbPatch: { started_at?: string; ended_at?: string | null } = {}
+    if (patch.started_at) dbPatch.started_at = patch.started_at.toISOString()
+    if ('ended_at' in patch) dbPatch.ended_at = patch.ended_at ? patch.ended_at.toISOString() : null
+    const { data, error: err } = await supabase
+      .from('fasting_sessions')
+      .update(dbPatch)
+      .eq('id', id)
+      .select('*')
+      .single()
+    if (err) {
+      console.error('fasting_sessions update failed', err)
+      setError(err.message)
+      return
+    }
+    if (data) setSessions((prev) => prev.map((s) => (s.id === data.id ? data : s)))
+  }
+
+  async function deleteSession(id: string) {
+    setError(null)
+    const { error: err } = await supabase.from('fasting_sessions').delete().eq('id', id)
+    if (err) {
+      console.error('fasting_sessions delete failed', err)
+      setError(err.message)
+      return
+    }
+    setSessions((prev) => prev.filter((s) => s.id !== id))
+  }
+
   // Tage, an denen ein beendetes Fasten die eigene Zieldauer erreicht oder
   // überschritten hat — gruppiert nach dem Datum, an dem es begonnen hat.
   const successfulDays = useMemo(() => {
@@ -154,5 +186,18 @@ export function useFasting() {
     }
   }, [activeSession, lastEndedSession, nowTick])
 
-  return { sessions, activeSession, loading, start, stop, streak, reload, now: nowTick, eatingWindow, error }
+  return {
+    sessions,
+    activeSession,
+    loading,
+    start,
+    stop,
+    updateSession,
+    deleteSession,
+    streak,
+    reload,
+    now: nowTick,
+    eatingWindow,
+    error,
+  }
 }
