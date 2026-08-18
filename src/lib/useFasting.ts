@@ -30,6 +30,51 @@ export function toDatetimeLocalValue(date: Date): string {
   return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`
 }
 
+export interface FastingPhase {
+  fromH: number
+  toH: number
+  range: string
+  title: string
+  text: string
+}
+
+// Grobe, vereinfachte Orientierung, was im Körper während des Fastens
+// passiert — keine medizinische Beratung, nur zur Einordnung im UI.
+export const FASTING_PHASES: FastingPhase[] = [
+  {
+    fromH: 0,
+    toH: 4,
+    range: '0–4 Std.',
+    title: 'Verdauungsphase',
+    text: 'Die letzte Mahlzeit wird noch verdaut. Insulin ist erhöht, der Körper deckt seinen Energiebedarf hauptsächlich über Blutzucker.',
+  },
+  {
+    fromH: 4,
+    toH: 12,
+    range: '4–12 Std.',
+    title: 'Fettverbrennung startet',
+    text: 'Der Insulinspiegel sinkt, die Glykogenspeicher in Leber und Muskeln werden zunehmend angezapft. Erste leichte Fettmobilisierung beginnt.',
+  },
+  {
+    fromH: 12,
+    toH: 18,
+    range: '12–18 Std.',
+    title: 'Ketose setzt ein',
+    text: 'Die Glykogenreserven gehen zur Neige, die Fettverbrennung nimmt spürbar zu und die Leber beginnt, Ketonkörper zu bilden.',
+  },
+  {
+    fromH: 18,
+    toH: Infinity,
+    range: 'ab 18 Std.',
+    title: 'Autophagie',
+    text: 'Der Ketonspiegel steigt weiter, das Gehirn nutzt zunehmend Ketone als Energiequelle. Zelluläre Reinigungsprozesse werden aktiviert.',
+  },
+]
+
+export function getFastingPhase(elapsedHours: number): FastingPhase | null {
+  return FASTING_PHASES.find((p) => elapsedHours >= p.fromH && elapsedHours < p.toH) ?? null
+}
+
 export function useFasting() {
   const { user } = useAuth()
   const [sessions, setSessions] = useState<FastingSession[]>([])
