@@ -24,6 +24,20 @@ export function formatDurationHM(ms: number): string {
   return `${h}h ${m}m`
 }
 
+// Für Countdowns, z. B. "03:24" statt "3h 24m".
+export function formatCountdownHM(ms: number): string {
+  const totalMinutes = Math.max(0, Math.round(ms / 60_000))
+  const h = Math.floor(totalMinutes / 60)
+  const m = totalMinutes % 60
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
+}
+
+const clockTimeFormatter = new Intl.DateTimeFormat('de-DE', { hour: '2-digit', minute: '2-digit' })
+
+export function formatClockTime(date: Date): string {
+  return clockTimeFormatter.format(date)
+}
+
 // Für <input type="datetime-local">, das lokale Zeit ohne Zeitzone erwartet.
 export function toDatetimeLocalValue(date: Date): string {
   const pad = (n: number) => String(n).padStart(2, '0')

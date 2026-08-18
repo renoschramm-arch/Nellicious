@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useFasting, formatDurationHM } from '../lib/useFasting'
+import { useFasting, formatDurationHM, formatCountdownHM, formatClockTime } from '../lib/useFasting'
 import { useProfile } from '../lib/useProfile'
 
 // Nur sichtbar, während tatsächlich gefastet wird oder ein Essensfenster
@@ -17,6 +17,8 @@ export function FastingRingCard() {
   const pct = targetMs > 0 ? Math.min(100, Math.round((progressMs / targetMs) * 100)) : 0
   const ringDeg = (pct / 100) * 360
   const ringColor = activeSession ? 'var(--basil)' : 'var(--honey)'
+  const fastingEndsAt = activeSession ? new Date(new Date(activeSession.started_at).getTime() + targetMs) : null
+  const fastingRemainingMs = fastingEndsAt ? fastingEndsAt.getTime() - now : 0
 
   return (
     <Link
@@ -30,11 +32,12 @@ export function FastingRingCard() {
         <div className="w-10 h-10 rounded-full bg-surface-2" />
       </div>
       <div className="text-sm flex-1">
-        {activeSession ? (
+        {activeSession && fastingEndsAt ? (
           <>
-            ⏱️ Fastet seit
+            ⏱️ Fastenzeit endet in
             <span className="block font-mono font-medium text-base text-basil">
-              {formatDurationHM(elapsedMs)} <span className="text-text-muted">/ {activeSession.target_hours}h Ziel</span>
+              {formatCountdownHM(fastingRemainingMs)} h{' '}
+              <span className="text-text-muted">um {formatClockTime(fastingEndsAt)} Uhr</span>
             </span>
           </>
         ) : (

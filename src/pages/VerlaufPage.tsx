@@ -8,6 +8,8 @@ import {
   fastingProtocolLabel,
   isOmad,
   formatDurationHM,
+  formatCountdownHM,
+  formatClockTime,
   toDatetimeLocalValue,
   getFastingPhase,
   type FastingSession,
@@ -95,9 +97,12 @@ export function VerlaufPage() {
   const fastingElapsedMs = activeSession ? fastingNow - new Date(activeSession.started_at).getTime() : 0
   const fastingTargetMs = (activeSession?.target_hours ?? fastingTargetHours) * 3_600_000
   const fastingPct = activeSession ? Math.min(100, Math.round((fastingElapsedMs / fastingTargetMs) * 100)) : 0
-  const fastingElapsedLabel = formatDurationHM(fastingElapsedMs)
   const fastingElapsedHours = activeSession ? fastingElapsedMs / 3_600_000 : null
   const currentFastingPhase = fastingElapsedHours != null ? getFastingPhase(fastingElapsedHours) : null
+  const fastingEndsAt = activeSession
+    ? new Date(new Date(activeSession.started_at).getTime() + activeSession.target_hours * 3_600_000)
+    : null
+  const fastingRemainingMs = fastingEndsAt ? fastingEndsAt.getTime() - fastingNow : 0
   const eatingWindowPct = eatingWindow
     ? Math.min(100, Math.round(((eatingWindow.totalMs - eatingWindow.remainingMs) / eatingWindow.totalMs) * 100))
     : 0
@@ -489,11 +494,12 @@ export function VerlaufPage() {
               <div className="w-10 h-10 rounded-full bg-surface" />
             </div>
             <div className="text-sm flex-1">
-              {activeSession ? (
+              {activeSession && fastingEndsAt ? (
                 <>
-                  Fastet seit
+                  Fastenzeit endet in
                   <span className="block font-mono font-medium text-base text-basil">
-                    {fastingElapsedLabel} <span className="text-text-muted">/ {activeSession.target_hours}h Ziel</span>
+                    {formatCountdownHM(fastingRemainingMs)} h{' '}
+                    <span className="text-text-muted">um {formatClockTime(fastingEndsAt)} Uhr</span>
                   </span>
                   {currentFastingPhase && (
                     <span className="block text-text-muted text-xs mt-0.5">
