@@ -3,7 +3,7 @@ import { useProfile } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
 import { useWaterLog } from '../lib/useWaterLog'
 import { useMealLogHistory } from '../lib/useMealLogs'
-import { useFasting, FASTING_PROTOCOLS } from '../lib/useFasting'
+import { useFasting, fastingProtocolLabel, isOmad } from '../lib/useFasting'
 import { usePremium } from '../lib/usePremium'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
@@ -11,6 +11,7 @@ import { PageFlatlay } from '../components/PageFlatlay'
 import { PremiumModal } from '../components/PremiumModal'
 
 const DEFAULT_WATER_STEPS = [150, 250, 500]
+const DEFAULT_FASTING_PROTOCOLS = [16, 18, 20, 23]
 
 function lastSevenDays(): Date[] {
   const today = new Date()
@@ -35,6 +36,8 @@ export function VerlaufPage() {
   const [fastingTargetHours, setFastingTargetHours] = useState(16)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
   const [nowTick, setNowTick] = useState(() => Date.now())
+  const [editingFastingSettings, setEditingFastingSettings] = useState(false)
+  const [fastingProtocolInputs, setFastingProtocolInputs] = useState<string[]>([])
 
   useEffect(() => {
     if (profile?.fasting_default_hours) setFastingTargetHours(profile.fasting_default_hours)
@@ -53,6 +56,7 @@ export function VerlaufPage() {
   const waterGoal = profile?.daily_water_goal_ml ?? 2500
   const waterPct = Math.min(100, Math.round((todayMl / waterGoal) * 100))
   const waterSteps = profile?.water_quick_amounts_ml ?? DEFAULT_WATER_STEPS
+  const fastingProtocols = profile?.fasting_protocol_hours ?? DEFAULT_FASTING_PROTOCOLS
   const targetWeightKg = profile?.target_weight_kg ?? null
   const weightDiffKg = targetWeightKg != null && latestWeight
     ? Math.abs(Number(latestWeight.weight_kg) - targetWeightKg)
@@ -140,6 +144,21 @@ export function VerlaufPage() {
     if (fastingTargetHours !== profile?.fasting_default_hours) {
       await updateProfile({ fasting_default_hours: fastingTargetHours })
     }
+  }
+
+  function startEditingFastingSettings() {
+    setFastingProtocolInputs(fastingProtocols.map(String))
+    setEditingFastingSettings(true)
+  }
+
+  async function handleFastingSettingsSubmit(e: FormEvent) {
+    e.preventDefault()
+    const nextProtocols = fastingProtocolInputs.map(Number)
+    if (nextProtocols.length === 4 && nextProtocols.every((n) => n > 0 && n < 24)) {
+      await updateProfile({ fasting_protocol_hours: nextProtocols })
+      if (!nextProtocols.includes(fastingTargetHours)) setFastingTargetHours(nextProtocols[0])
+    }
+    setEditingFastingSettings(false)
   }
 
   async function handleWeightSubmit(e: FormEvent) {
@@ -343,8 +362,16 @@ export function VerlaufPage() {
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="font-display font-semibold text-lg">
+          <h2 className="font-display font-semibold text-lg flex items-center gap-2">
             ⏱️ Intervallfasten{!hasPremium && ' 🔒'}
+            <button
+              type="button"
+              onClick={startEditingFastingSettings}
+              aria-label="Fasten-Protokolle anpassen"
+              className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-xs text-text-muted hover:border-primary hover:text-text transition-colors"
+            >
+              ✎
+            </button>
           </h2>
           {fastingStreak > 0 && (
             <span className="font-mono text-xs text-honey">
@@ -379,23 +406,71 @@ export function VerlaufPage() {
           </div>
         </div>
 
-        {!activeSession && (
-          <div className="grid grid-cols-4 gap-2">
-            {FASTING_PROTOCOLS.map((protocol) => (
+        {editingFastingSettings ? (
+          <form
+            onSubmit={handleFastingSettingsSubmit}
+            className="bg-surface-2 border border-border rounded-xl p-3 flex flex-col gap-2.5"
+          >
+            <label className="flex flex-col gap-1 text-xs text-text-muted">
+              Protokolle (Stunden Fasten)
+              <div className="grid grid-cols-4 gap-2">
+                {fastingProtocolInputs.map((value, i) => (
+                  <input
+                    key={i}
+                    type="number"
+                    min={1}
+                    max={23}
+                    value={value}
+                    onChange={(e) =>
+                      setFastingProtocolInputs((prev) => prev.map((v, idx) => (idx === i ? e.target.value : v)))
+                    }
+                    className="w-full rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono text-center outline-none focus:border-primary"
+                  />
+                ))}
+              </div>
+            </label>
+            <div className="flex items-center justify-end gap-3 mt-0.5">
               <button
-                key={protocol.hours}
                 type="button"
-                onClick={() => setFastingTargetHours(protocol.hours)}
-                className={`rounded-xl py-2 text-sm font-medium transition-colors ${
-                  fastingTargetHours === protocol.hours
-                    ? 'bg-primary text-on-primary'
-                    : 'bg-surface-2 border border-border hover:border-primary'
-                }`}
+                onClick={() => setEditingFastingSettings(false)}
+                className="text-sm text-text-muted"
               >
-                {protocol.label}
+                Abbrechen
               </button>
-            ))}
-          </div>
+              <button
+                type="submit"
+                className="bg-primary text-on-primary font-semibold rounded-full px-4 py-1.5 text-sm"
+              >
+                Speichern
+              </button>
+            </div>
+          </form>
+        ) : (
+          !activeSession && (
+            <div className="flex flex-col gap-1.5">
+              <div className="grid grid-cols-4 gap-2">
+                {fastingProtocols.map((hours) => (
+                  <button
+                    key={hours}
+                    type="button"
+                    onClick={() => setFastingTargetHours(hours)}
+                    className={`rounded-xl py-2 text-sm font-medium transition-colors ${
+                      fastingTargetHours === hours
+                        ? 'bg-primary text-on-primary'
+                        : 'bg-surface-2 border border-border hover:border-primary'
+                    }`}
+                  >
+                    {fastingProtocolLabel(hours)}
+                  </button>
+                ))}
+              </div>
+              {isOmad(fastingTargetHours) && (
+                <span className="text-xs text-text-muted">
+                  {fastingProtocolLabel(fastingTargetHours)} = OMAD (One Meal A Day, eine Mahlzeit am Tag)
+                </span>
+              )}
+            </div>
+          )
         )}
 
         <button
