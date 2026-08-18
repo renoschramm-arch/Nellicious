@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useFasting, formatDurationHM, formatCountdownHM, formatClockTime } from '../lib/useFasting'
+import { useFasting, formatCountdownHM, formatClockTime } from '../lib/useFasting'
 import { useProfile } from '../lib/useProfile'
 
 // Nur sichtbar, während tatsächlich gefastet wird oder ein Essensfenster
@@ -42,9 +42,10 @@ export function FastingRingCard() {
           </>
         ) : (
           <>
-            🍽️ Essensfenster
+            🍽️ Fastenzeit beginnt in
             <span className="block font-mono font-medium text-base text-honey">
-              noch {formatDurationHM(eatingWindow!.remainingMs)}
+              {formatCountdownHM(eatingWindow!.remainingMs)} h{' '}
+              <span className="text-text-muted">um {formatClockTime(new Date(eatingWindow!.endsAt))} Uhr</span>
             </span>
           </>
         )}
