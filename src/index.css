@@ -132,6 +132,20 @@ body {
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
+
+/* iOS Safari zoomt beim Fokussieren automatisch in Eingabefelder, deren
+   Schriftgröße unter 16px liegt (viele Felder hier nutzen text-sm/text-xs
+   fürs kompakte Design). Nur auf schmalen Bildschirmen — wo der Zoom
+   überhaupt passiert — auf 16px anheben, damit das Desktop-Design
+   unangetastet bleibt. !important, weil das die direkt auf einzelnen
+   Feldern gesetzten Tailwind-Textgrößen-Klassen überstimmen muss. */
+@media (max-width: 640px) {
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
 ::selection {
   background: var(--brand);
   color: var(--on-primary);
