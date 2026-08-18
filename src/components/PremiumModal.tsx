@@ -3,6 +3,7 @@ import { PREMIUM_TRIAL_DAYS, usePremium } from '../lib/usePremium'
 const PREMIUM_FEATURES = [
   'Wochenplanung beliebig viele Wochen im Voraus und zurück',
   '🍳 Kochmodus: Bildschirm bleibt beim Kochen wach',
+  '⏱️ Intervallfasten-Tracker mit Streak und Verlauf',
 ]
 
 const MONTHLY_PRICE_EUR = 3.99
