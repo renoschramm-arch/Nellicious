@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom'
 import { useFasting, formatDurationHM } from '../lib/useFasting'
+import { useProfile } from '../lib/useProfile'
 
 // Nur sichtbar, während tatsächlich gefastet wird oder ein Essensfenster
-// läuft — Nutzer, die die Funktion nicht verwenden, sehen hier nichts.
+// läuft — Nutzer, die die Funktion nicht (mehr) verwenden, sehen hier nichts.
 export function FastingRingCard() {
+  const { profile } = useProfile()
   const { activeSession, eatingWindow, now } = useFasting()
 
+  if (profile?.fasting_enabled === false) return null
   if (!activeSession && !eatingWindow) return null
 
   const elapsedMs = activeSession ? now - new Date(activeSession.started_at).getTime() : 0

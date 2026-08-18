@@ -2189,3 +2189,8 @@ alter table public.profiles
     and fasting_protocol_hours[3] > 0
     and fasting_protocol_hours[4] > 0
   );
+
+-- Erlaubt, Intervallfasten komplett auszuschalten (Ring auf "Heute" und
+-- Karte im Verlauf verschwinden dann), ohne Sessions/Einstellungen zu verlieren.
+alter table public.profiles
+  add column if not exists fasting_enabled boolean not null default true;

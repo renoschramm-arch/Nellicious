@@ -45,6 +45,7 @@ export function VerlaufPage() {
   const [showPremiumModal, setShowPremiumModal] = useState(false)
   const [editingFastingSettings, setEditingFastingSettings] = useState(false)
   const [fastingProtocolInputs, setFastingProtocolInputs] = useState<string[]>([])
+  const [fastingEnabledInput, setFastingEnabledInput] = useState(true)
   const [customStartOpen, setCustomStartOpen] = useState(false)
   const [customStartValue, setCustomStartValue] = useState('')
   const [customEndOpen, setCustomEndOpen] = useState(false)
@@ -59,6 +60,7 @@ export function VerlaufPage() {
   const waterPct = Math.min(100, Math.round((todayMl / waterGoal) * 100))
   const waterSteps = profile?.water_quick_amounts_ml ?? DEFAULT_WATER_STEPS
   const fastingProtocols = profile?.fasting_protocol_hours ?? DEFAULT_FASTING_PROTOCOLS
+  const fastingEnabled = profile?.fasting_enabled ?? true
   const targetWeightKg = profile?.target_weight_kg ?? null
   const weightDiffKg = targetWeightKg != null && latestWeight
     ? Math.abs(Number(latestWeight.weight_kg) - targetWeightKg)
@@ -189,17 +191,28 @@ export function VerlaufPage() {
     setCustomStartOpen(false)
     setCustomEndOpen(false)
     setFastingProtocolInputs(fastingProtocols.map(String))
+    setFastingEnabledInput(fastingEnabled)
     setEditingFastingSettings(true)
   }
 
   async function handleFastingSettingsSubmit(e: FormEvent) {
     e.preventDefault()
     const nextProtocols = fastingProtocolInputs.map(Number)
+    const patch: { fasting_protocol_hours?: number[]; fasting_enabled?: boolean } = {}
     if (nextProtocols.length === 4 && nextProtocols.every((n) => n > 0 && n < 24)) {
-      await updateProfile({ fasting_protocol_hours: nextProtocols })
-      if (!nextProtocols.includes(fastingTargetHours)) setFastingTargetHours(nextProtocols[0])
+      patch.fasting_protocol_hours = nextProtocols
+    }
+    // Ausschalten nur möglich, solange gerade nicht gefastet wird.
+    if (!activeSession) patch.fasting_enabled = fastingEnabledInput
+    if (Object.keys(patch).length > 0) await updateProfile(patch)
+    if (patch.fasting_protocol_hours && !patch.fasting_protocol_hours.includes(fastingTargetHours)) {
+      setFastingTargetHours(patch.fasting_protocol_hours[0])
     }
     setEditingFastingSettings(false)
+  }
+
+  async function handleQuickEnableFasting() {
+    await updateProfile({ fasting_enabled: true })
   }
 
   async function handleWeightSubmit(e: FormEvent) {
@@ -421,44 +434,70 @@ export function VerlaufPage() {
           )}
         </div>
 
-        <div className="flex items-center gap-4">
-          <div
-            className="w-14 h-14 rounded-full flex items-center justify-center shrink-0"
-            style={{
-              background: `conic-gradient(${ringColor} 0deg ${(ringPct / 100) * 360}deg, var(--border) ${(ringPct / 100) * 360}deg 360deg)`,
-            }}
-          >
-            <div className="w-10 h-10 rounded-full bg-surface" />
+        {fastingEnabled && (
+          <div className="flex items-center gap-4">
+            <div
+              className="w-14 h-14 rounded-full flex items-center justify-center shrink-0"
+              style={{
+                background: `conic-gradient(${ringColor} 0deg ${(ringPct / 100) * 360}deg, var(--border) ${(ringPct / 100) * 360}deg 360deg)`,
+              }}
+            >
+              <div className="w-10 h-10 rounded-full bg-surface" />
+            </div>
+            <div className="text-sm flex-1">
+              {activeSession ? (
+                <>
+                  Fastet seit
+                  <span className="block font-mono font-medium text-base text-basil">
+                    {fastingElapsedLabel} <span className="text-text-muted">/ {activeSession.target_hours}h Ziel</span>
+                  </span>
+                </>
+              ) : eatingWindow ? (
+                <>
+                  Im Essensfenster
+                  <span className="block font-mono font-medium text-base text-honey">
+                    noch {formatDurationHM(eatingWindow.remainingMs)}
+                  </span>
+                </>
+              ) : (
+                <>
+                  Bereit zum Fasten
+                  <span className="block text-text-muted text-xs mt-0.5">Protokoll wählen und starten</span>
+                </>
+              )}
+            </div>
           </div>
-          <div className="text-sm flex-1">
-            {activeSession ? (
-              <>
-                Fastet seit
-                <span className="block font-mono font-medium text-base text-basil">
-                  {fastingElapsedLabel} <span className="text-text-muted">/ {activeSession.target_hours}h Ziel</span>
-                </span>
-              </>
-            ) : eatingWindow ? (
-              <>
-                Im Essensfenster
-                <span className="block font-mono font-medium text-base text-honey">
-                  noch {formatDurationHM(eatingWindow.remainingMs)}
-                </span>
-              </>
-            ) : (
-              <>
-                Bereit zum Fasten
-                <span className="block text-text-muted text-xs mt-0.5">Protokoll wählen und starten</span>
-              </>
-            )}
-          </div>
-        </div>
+        )}
 
         {editingFastingSettings ? (
           <form
             onSubmit={handleFastingSettingsSubmit}
             className="bg-surface-2 border border-border rounded-xl p-3 flex flex-col gap-2.5"
           >
+            <label className="flex items-center justify-between gap-3 text-sm">
+              <span className="flex flex-col">
+                Intervallfasten aktiviert
+                {activeSession && (
+                  <span className="text-xs text-text-muted">Erst Fasten beenden, um zu deaktivieren</span>
+                )}
+              </span>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={fastingEnabledInput}
+                disabled={!!activeSession}
+                onClick={() => setFastingEnabledInput((v) => !v)}
+                className={`relative shrink-0 w-11 h-6 rounded-full transition-colors disabled:opacity-50 ${
+                  fastingEnabledInput ? 'bg-basil' : 'bg-border'
+                }`}
+              >
+                <span
+                  className={`absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-white shadow transition-transform ${
+                    fastingEnabledInput ? 'translate-x-5' : 'translate-x-0'
+                  }`}
+                />
+              </button>
+            </label>
             <label className="flex flex-col gap-1 text-xs text-text-muted">
               Protokolle (Stunden Fasten)
               <div className="grid grid-cols-4 gap-2">
@@ -493,6 +532,17 @@ export function VerlaufPage() {
               </button>
             </div>
           </form>
+        ) : !fastingEnabled ? (
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-sm text-text-muted">Intervallfasten ist ausgeschaltet.</span>
+            <button
+              type="button"
+              onClick={handleQuickEnableFasting}
+              className="text-sm text-primary font-medium shrink-0"
+            >
+              Aktivieren
+            </button>
+          </div>
         ) : (
           !activeSession && (
             <div className="flex flex-col gap-1.5">
@@ -521,7 +571,7 @@ export function VerlaufPage() {
           )
         )}
 
-        {customStartOpen || customEndOpen ? (
+        {fastingEnabled && (customStartOpen || customEndOpen ? (
           <form
             onSubmit={activeSession ? handleCustomEndSubmit : handleCustomStartSubmit}
             className="bg-surface-2 border border-border rounded-xl p-3 flex flex-col gap-2.5"
@@ -580,7 +630,7 @@ export function VerlaufPage() {
               {activeSession ? 'Rückwirkend beenden' : 'Rückwirkend starten'}
             </button>
           </div>
-        )}
+        ))}
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
