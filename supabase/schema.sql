@@ -1918,3 +1918,218 @@ from (
 where not exists (
   select 1 from public.recipes r where r.title = v.title
 );
+
+
+-- 20 gesunde Backrezepte (owner_id NULL = global sichtbar). Bewusst mit
+-- Vollkornmehl, wenig/keinem raffinierten Zucker (Banane, Datteln, Honig)
+-- und wo möglich mehr Protein/Ballaststoffen statt klassischer Kuchen-
+-- Rezepte, plus ein paar herzhafte Optionen für Mittag/Abend. Idempotent
+-- per Titel-Check.
+insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+select v.title, v.description, v.kcal, v.protein_g, v.carbs_g, v.fat_g, v.ingredients, v.instructions, v.meal_type, v.diet_tags, v.free_of
+from (
+  values
+    (
+      'Vollkorn-Bananenbrot mit Walnüssen',
+      'Saftiges Bananenbrot ohne raffinierten Zucker, mit Walnuss-Crunch.',
+      220, 6, 28, 9,
+      array['3 reife Bananen', '200 g Vollkornmehl', '2 Eier', '50 g Honig', '50 ml Rapsöl', '1 TL Backpulver', '1 TL Zimt', '50 g Walnusskerne (gehackt)']::text[],
+      'Backofen auf 175°C Ober-/Unterhitze vorheizen, eine Kastenform einfetten. Bananen in einer Schüssel mit einer Gabel zerdrücken, Eier, Honig und Rapsöl unterrühren. Vollkornmehl, Backpulver und Zimt in einer zweiten Schüssel vermischen, zur Bananenmasse geben und nur kurz verrühren, bis kein Mehl mehr sichtbar ist. Walnüsse unterheben, Teig in die Kastenform füllen und 45–50 Minuten backen, bis ein Zahnstocher sauber herauskommt. Vor dem Anschneiden vollständig auskühlen lassen.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['laktosefrei', 'sojafrei']::text[]
+    ),
+    (
+      'Haferflocken-Kekse mit Apfel und Zimt',
+      'Schnelle, zuckerarme Kekse mit fruchtiger Note.',
+      110, 2, 16, 4,
+      array['150 g Haferflocken', '1 Apfel (geraspelt)', '2 EL Honig', '2 EL Kokosöl (geschmolzen)', '1 TL Zimt', '1/2 TL Backpulver', 'Prise Salz']::text[],
+      'Backofen auf 180°C vorheizen, ein Blech mit Backpapier auslegen. Haferflocken, Backpulver, Zimt und Salz in einer Schüssel vermischen. Geraspelten Apfel, Honig und geschmolzenes Kokosöl unterrühren, bis ein klebriger Teig entsteht. Mit einem Löffel 12 Häufchen auf das Blech setzen und leicht flachdrücken. 15–18 Minuten backen, bis die Ränder golden sind, auf dem Blech auskühlen lassen.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Karottenkuchen-Muffins mit leichtem Frischkäse-Topping',
+      'Klassiker als Muffin, mit weniger Zucker und cremigem Topping.',
+      190, 4, 22, 9,
+      array['200 g Vollkornmehl', '3 Karotten (geraspelt)', '2 Eier', '80 g Honig', '60 ml Rapsöl', '1 TL Zimt', '1 TL Backpulver', 'Für das Topping: 100 g Frischkäse, 1 EL Honig, etwas Zitronensaft']::text[],
+      'Backofen auf 175°C vorheizen, ein Muffinblech mit Papierförmchen bestücken. Eier, Honig und Rapsöl verquirlen, geraspelte Karotten unterrühren. Vollkornmehl, Zimt und Backpulver vermischen und unter die Karottenmasse heben. Teig auf die Förmchen verteilen und 20–22 Minuten backen, bis ein Zahnstocher sauber herauskommt. Auskühlen lassen. Frischkäse mit Honig und etwas Zitronensaft glattrühren und die ausgekühlten Muffins damit toppen.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Haferriegel mit Erdnussbutter und Honig',
+      'Sättigende Riegel zum Vorbereiten, gut fürs Meal-Prep.',
+      180, 5, 20, 9,
+      array['200 g Haferflocken', '100 g Erdnussbutter', '80 g Honig', '30 g Kürbiskerne', '30 g getrocknete Cranberrys', '1 Prise Salz']::text[],
+      'Backofen auf 175°C vorheizen, eine flache Backform mit Backpapier auslegen. Erdnussbutter und Honig in einem Topf bei niedriger Hitze verflüssigen und verrühren. Haferflocken, Kürbiskerne, Cranberrys und Salz in einer Schüssel vermischen, die Erdnussbutter-Honig-Mischung unterrühren, bis alles gleichmäßig benetzt ist. Masse fest in die Form drücken und 18–20 Minuten backen, bis die Oberfläche golden ist. Vollständig auskühlen lassen, bevor in Riegel geschnitten wird — das macht sie fester.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['laktosefrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Kürbis-Muffins mit Zimt und Walnüssen',
+      'Herbstliche Muffins mit warmen Gewürzen.',
+      200, 4, 24, 10,
+      array['250 g Kürbispüree', '200 g Vollkornmehl', '2 Eier', '70 g Honig', '50 ml Rapsöl', '1 TL Zimt', '1/2 TL Muskat', '1 TL Backpulver', '40 g Walnusskerne (gehackt)']::text[],
+      'Backofen auf 175°C vorheizen, Muffinblech mit Papierförmchen bestücken. Kürbispüree, Eier, Honig und Rapsöl verrühren. Vollkornmehl, Zimt, Muskat und Backpulver vermischen und unter die Kürbismasse heben, Walnüsse unterheben. Teig auf die Förmchen verteilen und 20–25 Minuten backen, bis ein Zahnstocher sauber herauskommt.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['laktosefrei', 'sojafrei']::text[]
+    ),
+    (
+      'Beeren-Streuselkuchen mit Vollkornboden',
+      'Fruchtiger Streuselkuchen mit Vollkorn-Mürbeteig.',
+      230, 5, 30, 10,
+      array['200 g Vollkornmehl', '80 g kalte Butter', '50 g Honig', '1 Ei', '1 TL Backpulver', '300 g gemischte Beeren', 'Für die Streusel: 60 g Vollkornmehl, 40 g Butter, 30 g Honig, etwas Zimt']::text[],
+      'Backofen auf 180°C vorheizen, eine Springform (24 cm) einfetten. Vollkornmehl, kalte Butter, Honig, Ei und Backpulver zu einem Mürbeteig verkneten, in die Form drücken und einen Rand hochziehen. Beeren gleichmäßig darauf verteilen. Für die Streusel Mehl, Butter und Honig mit den Fingern zu Streuseln verreiben, mit etwas Zimt vermischen und über die Beeren streuen. 35–40 Minuten backen, bis die Streusel golden sind.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Dinkel-Vollkornbrötchen mit Sonnenblumenkernen',
+      'Frisch gebackene Brötchen, außen knusprig, innen locker.',
+      210, 8, 38, 3,
+      array['400 g Dinkelvollkornmehl', '1 Würfel frische Hefe (oder 1 Pkt. Trockenhefe)', '300 ml lauwarmes Wasser', '1 TL Salz', '1 TL Honig', '40 g Sonnenblumenkerne']::text[],
+      'Hefe mit Honig im lauwarmen Wasser auflösen und 5 Minuten stehen lassen. Mehl, Salz und Sonnenblumenkerne vermischen, das Hefewasser dazugeben und zu einem glatten Teig verkneten. Teig zugedeckt an einem warmen Ort etwa 45–60 Minuten gehen lassen, bis er sich sichtbar vergrößert hat. Teig in 10 Portionen teilen, zu Brötchen formen und auf ein mit Backpapier ausgelegtes Blech setzen, nochmals 15 Minuten gehen lassen. Bei 220°C 20–22 Minuten backen, bis die Brötchen goldbraun und hohl klingen, wenn man auf den Boden klopft.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Baked Oats mit Banane und Zimt',
+      'Warmes Ofen-Porridge, wie ein kleiner Kuchen zum Löffeln.',
+      380, 14, 52, 12,
+      array['80 g Haferflocken', '1 Banane', '1 Ei', '150 ml Milch oder Pflanzendrink', '1 TL Backpulver', '1 TL Zimt', '1 EL Honig', 'Optional: Beeren zum Servieren']::text[],
+      'Backofen auf 190°C vorheizen, eine kleine ofenfeste Form einfetten. Banane mit einer Gabel zerdrücken, mit Ei, Milch, Honig und Zimt verquirlen. Haferflocken und Backpulver unterrühren. Masse in die Form geben und 20–25 Minuten backen, bis die Oberfläche fest und leicht gebräunt ist. Warm servieren, nach Belieben mit frischen Beeren.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Schoko-Bananen-Brownies mit schwarzen Bohnen',
+      'Fudgy Brownies, proteinreicher als klassische Rezepte.',
+      150, 5, 18, 6,
+      array['400 g schwarze Bohnen (Dose, abgetropft)', '2 reife Bananen', '3 EL Kakaopulver', '60 g Honig', '2 Eier', '2 EL Kokosöl', '1 TL Backpulver', '50 g dunkle Schokoladenstückchen']::text[],
+      'Backofen auf 175°C vorheizen, eine kleine Backform (ca. 20x20 cm) mit Backpapier auslegen. Schwarze Bohnen, Bananen, Kakaopulver, Honig, Eier und Kokosöl im Mixer zu einer glatten Masse pürieren. Backpulver unterrühren, Schokoladenstückchen unterheben. Teig in die Form füllen und 25–30 Minuten backen, bis die Oberfläche fest ist. Vollständig auskühlen lassen, bevor in Stücke geschnitten wird.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Vollkorn-Pizzaboden mit buntem Gemüsebelag',
+      'Selbst gebackene Pizza mit Vollkornboden und frischem Gemüse.',
+      320, 12, 48, 9,
+      array['300 g Vollkornmehl', '1 TL Trockenhefe', '200 ml lauwarmes Wasser', '1 EL Olivenöl', '1 TL Salz', 'Für den Belag: 150 g passierte Tomaten, 1 Zucchini, 1 Paprika, 100 g Mozzarella, Oregano']::text[],
+      'Hefe im lauwarmen Wasser auflösen, 5 Minuten stehen lassen. Vollkornmehl, Salz und Olivenöl dazugeben und zu einem glatten Teig verkneten, zugedeckt 45 Minuten gehen lassen. Teig auf einem mit Backpapier ausgelegten Blech dünn ausrollen, mit passierten Tomaten bestreichen. Zucchini und Paprika in dünne Scheiben schneiden und auf der Pizza verteilen, mit Mozzarella belegen und mit Oregano bestreuen. Bei 220°C 15–18 Minuten backen, bis der Boden knusprig und der Käse geschmolzen ist.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Granola-Riegel mit Datteln und Nüssen',
+      'Klebrig-süße Riegel ganz ohne raffinierten Zucker.',
+      190, 5, 22, 9,
+      array['150 g Haferflocken', '100 g Datteln (entsteint)', '50 g gemischte Nüsse', '2 EL Honig', '2 EL Kokosöl', '30 g Kürbiskerne']::text[],
+      'Backofen auf 170°C vorheizen, eine flache Form mit Backpapier auslegen. Datteln in warmem Wasser 10 Minuten einweichen, abtropfen lassen und mit Honig und geschmolzenem Kokosöl zu einer klebrigen Paste pürieren. Haferflocken, grob gehackte Nüsse und Kürbiskerne unterrühren. Masse fest in die Form drücken und 20 Minuten backen. Vollständig auskühlen lassen, bevor in Riegel geschnitten wird.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Zucchini-Walnuss-Brot',
+      'Saftiges Brot, versteckt viel Gemüse in einer süßen Scheibe.',
+      210, 5, 22, 11,
+      array['1 Zucchini (geraspelt)', '200 g Vollkornmehl', '2 Eier', '60 g Honig', '60 ml Rapsöl', '1 TL Zimt', '1 TL Backpulver', '40 g Walnusskerne (gehackt)']::text[],
+      'Backofen auf 175°C vorheizen, eine Kastenform einfetten. Geraspelte Zucchini gut ausdrücken, damit überschüssige Flüssigkeit entfernt wird. Eier, Honig und Rapsöl verquirlen, Zucchini unterrühren. Vollkornmehl, Zimt und Backpulver vermischen und unterheben, Walnüsse zum Schluss unterheben. Teig in die Kastenform füllen und 45–50 Minuten backen, bis ein Zahnstocher sauber herauskommt.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['laktosefrei', 'sojafrei']::text[]
+    ),
+    (
+      'Vollkorn-Focaccia mit Rosmarin und Kirschtomaten',
+      'Italienisches Fladenbrot, außen knusprig, innen fluffig.',
+      220, 6, 34, 7,
+      array['350 g Vollkornmehl', '1 TL Trockenhefe', '250 ml lauwarmes Wasser', '4 EL Olivenöl', '1 TL Salz', '150 g Kirschtomaten', '2 Zweige Rosmarin', 'grobes Meersalz']::text[],
+      'Hefe im lauwarmen Wasser auflösen, 5 Minuten stehen lassen. Mehl, Salz und 2 EL Olivenöl dazugeben, zu einem weichen Teig verkneten, zugedeckt 1 Stunde gehen lassen. Teig auf einem geölten Blech ausbreiten, mit den Fingerspitzen Mulden hineindrücken. Kirschtomaten (halbiert) und Rosmarinnadeln darauf verteilen, mit restlichem Olivenöl beträufeln und mit grobem Meersalz bestreuen. Nochmals 20 Minuten gehen lassen, dann bei 220°C 20–25 Minuten backen, bis die Focaccia goldbraun ist.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Blaubeer-Mandel-Muffins (glutenfrei)',
+      'Saftige Muffins ganz ohne Mehl, mit gemahlenen Mandeln.',
+      210, 6, 16, 14,
+      array['200 g gemahlene Mandeln', '3 Eier', '60 g Honig', '1 TL Backpulver', '150 g Blaubeeren', '1 TL Vanilleextrakt']::text[],
+      'Backofen auf 175°C vorheizen, Muffinblech mit Papierförmchen bestücken. Eier, Honig und Vanilleextrakt verquirlen. Gemahlene Mandeln und Backpulver unterrühren, bis ein glatter Teig entsteht. Blaubeeren vorsichtig unterheben. Teig auf die Förmchen verteilen und 20–22 Minuten backen, bis die Muffins goldbraun sind und ein Zahnstocher sauber herauskommt.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'keto', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Möhren-Ingwer-Kekse',
+      'Würzig-süße Kekse mit frischem Ingwer.',
+      90, 2, 12, 4,
+      array['150 g Vollkornmehl', '1 Karotte (fein geraspelt)', '50 g weiche Butter', '40 g Honig', '1 TL frischer Ingwer (gerieben)', '1/2 TL Backpulver', '1/2 TL Zimt']::text[],
+      'Backofen auf 175°C vorheizen, ein Blech mit Backpapier auslegen. Butter und Honig cremig rühren, geriebene Karotte und Ingwer unterrühren. Vollkornmehl, Backpulver und Zimt vermischen und unterkneten, bis ein fester Teig entsteht. Kleine Kugeln formen, auf das Blech setzen und leicht flachdrücken. 12–14 Minuten backen, bis die Ränder golden sind.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Herzhafte Vollkorn-Käse-Kräuter-Muffins',
+      'Pikante Muffins als Beilage oder unterwegs-Snack.',
+      180, 7, 16, 10,
+      array['200 g Vollkornmehl', '2 Eier', '150 ml Milch', '80 g geriebener Käse', '50 ml Olivenöl', '1 Bund Kräuter (Schnittlauch, Petersilie)', '1 TL Backpulver', 'Salz, Pfeffer']::text[],
+      'Backofen auf 180°C vorheizen, Muffinblech mit Papierförmchen bestücken. Eier, Milch und Olivenöl verquirlen. Vollkornmehl und Backpulver unterrühren, geriebenen Käse und gehackte Kräuter unterheben, mit Salz und Pfeffer abschmecken. Teig auf die Förmchen verteilen und 20–22 Minuten backen, bis die Muffins goldbraun sind.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Süßkartoffel-Brownies',
+      'Schokoladige Brownies mit Süßkartoffel statt viel Zucker.',
+      140, 4, 18, 6,
+      array['300 g Süßkartoffel (gekocht, püriert)', '3 EL Kakaopulver', '60 g Honig', '2 Eier', '2 EL Kokosöl', '50 g Vollkornmehl', '1/2 TL Backpulver', '40 g dunkle Schokoladenstückchen']::text[],
+      'Backofen auf 175°C vorheizen, eine kleine Backform mit Backpapier auslegen. Süßkartoffelpüree mit Kakaopulver, Honig, Eiern und Kokosöl glattrühren. Vollkornmehl und Backpulver unterrühren, Schokoladenstückchen unterheben. Teig in die Form füllen und 25–30 Minuten backen, bis die Oberfläche fest ist. Vollständig auskühlen lassen, bevor in Stücke geschnitten wird.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['laktosefrei', 'nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Vollkorn-Kürbiskern-Cracker',
+      'Knusprige Cracker, ideal zu Dips oder als Snack pur.',
+      160, 6, 18, 7,
+      array['150 g Vollkornmehl', '30 g Kürbiskerne', '30 g Sonnenblumenkerne', '3 EL Olivenöl', '100 ml Wasser', '1/2 TL Salz', '1 TL Kräuter der Provence']::text[],
+      'Backofen auf 180°C vorheizen. Alle Zutaten in einer Schüssel zu einem festen, nicht klebrigen Teig verkneten, bei Bedarf noch etwas Wasser oder Mehl ergänzen. Teig zwischen zwei Bogen Backpapier hauchdünn ausrollen, in Rechtecke schneiden und auf ein Blech legen. 15–18 Minuten backen, bis die Cracker knusprig und golden sind, dabei nach der Hälfte der Zeit wenden.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Apfel-Hafer-Kuchen ohne Zucker',
+      'Saftiger Kuchen, gesüßt allein durch Äpfel und Apfelmus.',
+      170, 4, 26, 6,
+      array['200 g Haferflocken (fein gemahlen oder als Mehl)', '3 Äpfel (2 gerieben, 1 in Scheiben)', '2 Eier', '100 ml Apfelmus (ungesüßt)', '1 TL Zimt', '1 TL Backpulver', '1 TL Vanilleextrakt']::text[],
+      'Backofen auf 175°C vorheizen, eine Springform (20 cm) einfetten. Eier mit Apfelmus und Vanilleextrakt verquirlen, geriebene Äpfel unterrühren. Haferflocken, Zimt und Backpulver unterheben, bis ein gleichmäßiger Teig entsteht. Teig in die Form füllen, die Apfelscheiben fächerförmig obenauf verteilen. 35–40 Minuten backen, bis der Kuchen fest ist und golden aussieht.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['laktosefrei', 'nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Dinkel-Zimtschnecken mit wenig Zucker',
+      'Klassische Zimtschnecken, mit Honig statt viel Zucker.',
+      210, 6, 32, 7,
+      array['350 g Dinkelvollkornmehl', '1 TL Trockenhefe', '180 ml lauwarme Milch', '30 g Honig', '30 g weiche Butter', '1 Ei', 'Für die Füllung: 2 EL Butter, 3 EL Honig, 2 TL Zimt']::text[],
+      'Hefe mit einem Teelöffel Honig in der lauwarmen Milch auflösen, 5 Minuten stehen lassen. Mehl, restlichen Honig, Butter und Ei dazugeben und zu einem glatten Teig verkneten, zugedeckt 1 Stunde gehen lassen. Teig auf einer bemehlten Fläche zu einem Rechteck ausrollen, mit weicher Butter bestreichen und mit Honig und Zimt bestreuen. Von der langen Seite aufrollen und in 12 Scheiben schneiden, in eine gefettete Form setzen und nochmals 20 Minuten gehen lassen. Bei 190°C 20–25 Minuten backen, bis die Schnecken goldbraun sind.',
+      'snack',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'sojafrei']::text[]
+    )
+) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+where not exists (
+  select 1 from public.recipes r where r.title = v.title
+);
