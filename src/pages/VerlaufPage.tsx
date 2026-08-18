@@ -9,6 +9,7 @@ import {
   isOmad,
   formatDurationHM,
   toDatetimeLocalValue,
+  getFastingPhase,
   type FastingSession,
 } from '../lib/useFasting'
 import { usePremium } from '../lib/usePremium'
@@ -16,6 +17,7 @@ import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { PremiumModal } from '../components/PremiumModal'
+import { FastingPhaseModal } from '../components/FastingPhaseModal'
 
 const DEFAULT_WATER_STEPS = [150, 250, 500]
 const DEFAULT_FASTING_PROTOCOLS = [16, 18, 20, 23]
@@ -60,6 +62,7 @@ export function VerlaufPage() {
   const [customStartValue, setCustomStartValue] = useState('')
   const [customEndOpen, setCustomEndOpen] = useState(false)
   const [customEndValue, setCustomEndValue] = useState('')
+  const [showFastingPhaseModal, setShowFastingPhaseModal] = useState(false)
 
   useEffect(() => {
     if (profile?.fasting_default_hours) setFastingTargetHours(profile.fasting_default_hours)
@@ -93,6 +96,8 @@ export function VerlaufPage() {
   const fastingTargetMs = (activeSession?.target_hours ?? fastingTargetHours) * 3_600_000
   const fastingPct = activeSession ? Math.min(100, Math.round((fastingElapsedMs / fastingTargetMs) * 100)) : 0
   const fastingElapsedLabel = formatDurationHM(fastingElapsedMs)
+  const fastingElapsedHours = activeSession ? fastingElapsedMs / 3_600_000 : null
+  const currentFastingPhase = fastingElapsedHours != null ? getFastingPhase(fastingElapsedHours) : null
   const eatingWindowPct = eatingWindow
     ? Math.min(100, Math.round(((eatingWindow.totalMs - eatingWindow.remainingMs) / eatingWindow.totalMs) * 100))
     : 0
@@ -457,6 +462,14 @@ export function VerlaufPage() {
             >
               ✎
             </button>
+            <button
+              type="button"
+              onClick={() => setShowFastingPhaseModal(true)}
+              aria-label="Was im Körper beim Fasten passiert"
+              className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-xs text-text-muted hover:border-primary hover:text-text transition-colors"
+            >
+              ℹ️
+            </button>
           </h2>
           {fastingStreak > 0 && (
             <span className="font-mono text-xs text-honey">
@@ -482,6 +495,11 @@ export function VerlaufPage() {
                   <span className="block font-mono font-medium text-base text-basil">
                     {fastingElapsedLabel} <span className="text-text-muted">/ {activeSession.target_hours}h Ziel</span>
                   </span>
+                  {currentFastingPhase && (
+                    <span className="block text-text-muted text-xs mt-0.5">
+                      Phase: {currentFastingPhase.title}
+                    </span>
+                  )}
                 </>
               ) : eatingWindow ? (
                 <>
@@ -786,6 +804,9 @@ export function VerlaufPage() {
       )}
 
       {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
+      {showFastingPhaseModal && (
+        <FastingPhaseModal elapsedHours={fastingElapsedHours} onClose={() => setShowFastingPhaseModal(false)} />
+      )}
     </div>
   )
 }
