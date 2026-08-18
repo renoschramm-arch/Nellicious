@@ -2133,3 +2133,43 @@ from (
 where not exists (
   select 1 from public.recipes r where r.title = v.title
 );
+
+
+-- Intervallfasten: Zeiterfassung pro Fastenperiode. ended_at = null
+-- bedeutet, das Fasten läuft noch. target_hours ist die beim Start
+-- gewählte Zieldauer (Protokoll), damit sich Erfolg/Streak nachträglich
+-- auswerten lässt (Dauer ended_at - started_at >= target_hours).
+create table if not exists public.fasting_sessions (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  started_at timestamptz not null default now(),
+  ended_at timestamptz,
+  target_hours numeric(4,1) not null,
+  created_at timestamptz not null default now()
+);
+
+alter table public.fasting_sessions enable row level security;
+
+drop policy if exists "Nutzer sehen eigene Fastenperioden" on public.fasting_sessions;
+create policy "Nutzer sehen eigene Fastenperioden"
+  on public.fasting_sessions for select
+  using (auth.uid() = user_id);
+
+drop policy if exists "Nutzer legen eigene Fastenperioden an" on public.fasting_sessions;
+create policy "Nutzer legen eigene Fastenperioden an"
+  on public.fasting_sessions for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Nutzer aktualisieren eigene Fastenperioden" on public.fasting_sessions;
+create policy "Nutzer aktualisieren eigene Fastenperioden"
+  on public.fasting_sessions for update
+  using (auth.uid() = user_id);
+
+drop policy if exists "Nutzer löschen eigene Fastenperioden" on public.fasting_sessions;
+create policy "Nutzer löschen eigene Fastenperioden"
+  on public.fasting_sessions for delete
+  using (auth.uid() = user_id);
+
+-- Zuletzt gewähltes Protokoll, damit es beim nächsten Fasten vorausgefüllt ist.
+alter table public.profiles
+  add column if not exists fasting_default_hours numeric(4,1) not null default 16;

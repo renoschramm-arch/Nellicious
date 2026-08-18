@@ -1,11 +1,14 @@
-import { useMemo, useState, type FormEvent } from 'react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { useProfile } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
 import { useWaterLog } from '../lib/useWaterLog'
 import { useMealLogHistory } from '../lib/useMealLogs'
+import { useFasting, FASTING_PROTOCOLS } from '../lib/useFasting'
+import { usePremium } from '../lib/usePremium'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
 import { PageFlatlay } from '../components/PageFlatlay'
+import { PremiumModal } from '../components/PremiumModal'
 
 const DEFAULT_WATER_STEPS = [150, 250, 500]
 
@@ -19,6 +22,8 @@ export function VerlaufPage() {
   const { logs: weightLogs, upsertWeight, deleteWeight } = useWeightLogs()
   const { logs: waterLogs, todayMl, addWater, resetWater } = useWaterLog()
   const { logs: nutritionLogs } = useMealLogHistory(7)
+  const { activeSession, sessions: fastingSessions, start: startFasting, stop: stopFasting, streak: fastingStreak } = useFasting()
+  const { hasPremium } = usePremium()
 
   const today = toISODate(new Date())
   const [weightDate, setWeightDate] = useState(today)
@@ -27,6 +32,22 @@ export function VerlaufPage() {
   const [goalInput, setGoalInput] = useState('')
   const [customWater, setCustomWater] = useState('')
   const [stepInputs, setStepInputs] = useState<string[]>([])
+  const [fastingTargetHours, setFastingTargetHours] = useState(16)
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [nowTick, setNowTick] = useState(() => Date.now())
+
+  useEffect(() => {
+    if (profile?.fasting_default_hours) setFastingTargetHours(profile.fasting_default_hours)
+  }, [profile?.fasting_default_hours])
+
+  // Ring/Verlauf sollen während eines laufenden Fastens weiterlaufen, ohne
+  // bei jedem Render neu zu rechnen — daher ein Tick statt setInterval pro
+  // Aufruf von Date.now() im JSX.
+  useEffect(() => {
+    if (!activeSession) return
+    const id = setInterval(() => setNowTick(Date.now()), 30_000)
+    return () => clearInterval(id)
+  }, [activeSession])
 
   const latestWeight = weightLogs[0]
   const waterGoal = profile?.daily_water_goal_ml ?? 2500
@@ -48,6 +69,28 @@ export function VerlaufPage() {
     const iso = toISODate(d)
     const entry = waterLogs.find((log) => log.log_date === iso)
     return { label: formatWeekdayShort(d), value: entry ? entry.amount_ml : null }
+  })
+
+  const fastingElapsedMs = activeSession ? nowTick - new Date(activeSession.started_at).getTime() : 0
+  const fastingTargetMs = (activeSession?.target_hours ?? fastingTargetHours) * 3_600_000
+  const fastingPct = activeSession ? Math.min(100, Math.round((fastingElapsedMs / fastingTargetMs) * 100)) : 0
+  const fastingElapsedLabel = (() => {
+    const totalMinutes = Math.floor(fastingElapsedMs / 60_000)
+    const h = Math.floor(totalMinutes / 60)
+    const m = totalMinutes % 60
+    return `${h}h ${m}m`
+  })()
+
+  const fastingChartData = days.map((d) => {
+    const iso = toISODate(d)
+    const hours = fastingSessions
+      .filter((s) => toISODate(new Date(s.started_at)) === iso)
+      .reduce((sum, s) => {
+        const end = s.ended_at ? new Date(s.ended_at).getTime() : nowTick
+        return sum + (end - new Date(s.started_at).getTime()) / 3_600_000
+      }, 0)
+    const rounded = Math.round(hours * 10) / 10
+    return { label: formatWeekdayShort(d), value: rounded > 0 ? rounded : null, display: rounded > 0 ? `${rounded}h` : undefined }
   })
 
   const nutritionByDay = useMemo(() => {
@@ -87,6 +130,17 @@ export function VerlaufPage() {
       fat_g: Math.round(sum.fat_g / 7),
     }
   }, [nutritionLogs])
+
+  async function handleFastingStart() {
+    if (!hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    await startFasting(fastingTargetHours)
+    if (fastingTargetHours !== profile?.fasting_default_hours) {
+      await updateProfile({ fasting_default_hours: fastingTargetHours })
+    }
+  }
 
   async function handleWeightSubmit(e: FormEvent) {
     e.preventDefault()
@@ -288,6 +342,76 @@ export function VerlaufPage() {
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <h2 className="font-display font-semibold text-lg">
+            ⏱️ Intervallfasten{!hasPremium && ' 🔒'}
+          </h2>
+          {fastingStreak > 0 && (
+            <span className="font-mono text-xs text-honey">
+              🔥 {fastingStreak} {fastingStreak === 1 ? 'Tag' : 'Tage'}
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-4">
+          <div
+            className="w-14 h-14 rounded-full flex items-center justify-center shrink-0"
+            style={{
+              background: `conic-gradient(var(--basil) 0deg ${(fastingPct / 100) * 360}deg, var(--border) ${(fastingPct / 100) * 360}deg 360deg)`,
+            }}
+          >
+            <div className="w-10 h-10 rounded-full bg-surface" />
+          </div>
+          <div className="text-sm flex-1">
+            {activeSession ? (
+              <>
+                Fastet seit
+                <span className="block font-mono font-medium text-base text-basil">
+                  {fastingElapsedLabel} <span className="text-text-muted">/ {activeSession.target_hours}h Ziel</span>
+                </span>
+              </>
+            ) : (
+              <>
+                Bereit zum Fasten
+                <span className="block text-text-muted text-xs mt-0.5">Protokoll wählen und starten</span>
+              </>
+            )}
+          </div>
+        </div>
+
+        {!activeSession && (
+          <div className="grid grid-cols-4 gap-2">
+            {FASTING_PROTOCOLS.map((protocol) => (
+              <button
+                key={protocol.hours}
+                type="button"
+                onClick={() => setFastingTargetHours(protocol.hours)}
+                className={`rounded-xl py-2 text-sm font-medium transition-colors ${
+                  fastingTargetHours === protocol.hours
+                    ? 'bg-primary text-on-primary'
+                    : 'bg-surface-2 border border-border hover:border-primary'
+                }`}
+              >
+                {protocol.label}
+              </button>
+            ))}
+          </div>
+        )}
+
+        <button
+          type="button"
+          onClick={activeSession ? stopFasting : handleFastingStart}
+          className={`font-semibold rounded-xl py-3 text-sm ${
+            activeSession
+              ? 'bg-surface-2 border border-border text-danger hover:bg-danger/10'
+              : 'bg-primary text-on-primary'
+          }`}
+        >
+          {activeSession ? 'Fasten beenden' : 'Fasten starten'}
+        </button>
+      </div>
+
+      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <span className="text-sm font-medium text-text-muted">Kalorien – letzte 7 Tage</span>
         <WeekBarChart data={kcalChartData} color="var(--color-primary)" />
         <div className="grid grid-cols-3 gap-2 font-mono text-xs pt-1 border-t border-border">
@@ -316,6 +440,11 @@ export function VerlaufPage() {
         <WeekBarChart data={weightChartData} color="var(--color-basil)" />
       </div>
 
+      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
+        <span className="text-sm font-medium text-text-muted">Fasten – letzte 7 Tage</span>
+        <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
+      </div>
+
       {weightLogs.length > 0 && (
         <details className="bg-surface border border-border rounded-2xl p-4">
           <summary className="text-sm font-semibold cursor-pointer">Verlauf verwalten</summary>
@@ -340,6 +469,8 @@ export function VerlaufPage() {
           </div>
         </details>
       )}
+
+      {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
     </div>
   )
 }
