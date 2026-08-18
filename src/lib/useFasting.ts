@@ -34,6 +34,7 @@ export function useFasting() {
   const { user } = useAuth()
   const [sessions, setSessions] = useState<FastingSession[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   // Läuft durchgehend, damit Fasten-Ring und Essensfenster-Timer in jeder
   // Ansicht (Heute, Verlauf) live weiterlaufen, ohne dass jede Ansicht ihr
   // eigenes Interval verwalten muss.
@@ -70,22 +71,34 @@ export function useFasting() {
   // rückwirkend nachgetragen werden kann (statt nur "jetzt").
   async function start(targetHours: number, startedAt?: Date) {
     if (!user || activeSession) return
-    const { data } = await supabase
+    setError(null)
+    const { data, error: err } = await supabase
       .from('fasting_sessions')
       .insert({ user_id: user.id, target_hours: targetHours, started_at: (startedAt ?? new Date()).toISOString() })
       .select('*')
       .single()
+    if (err) {
+      console.error('fasting_sessions insert failed', err)
+      setError(err.message)
+      return
+    }
     if (data) setSessions((prev) => [data, ...prev])
   }
 
   async function stop(endedAt?: Date) {
     if (!activeSession) return
-    const { data } = await supabase
+    setError(null)
+    const { data, error: err } = await supabase
       .from('fasting_sessions')
       .update({ ended_at: (endedAt ?? new Date()).toISOString() })
       .eq('id', activeSession.id)
       .select('*')
       .single()
+    if (err) {
+      console.error('fasting_sessions update failed', err)
+      setError(err.message)
+      return
+    }
     if (data) setSessions((prev) => prev.map((s) => (s.id === data.id ? data : s)))
   }
 
@@ -141,5 +154,5 @@ export function useFasting() {
     }
   }, [activeSession, lastEndedSession, nowTick])
 
-  return { sessions, activeSession, loading, start, stop, streak, reload, now: nowTick, eatingWindow }
+  return { sessions, activeSession, loading, start, stop, streak, reload, now: nowTick, eatingWindow, error }
 }

@@ -31,6 +31,7 @@ export function VerlaufPage() {
     streak: fastingStreak,
     now: fastingNow,
     eatingWindow,
+    error: fastingError,
   } = useFasting()
   const { hasPremium } = usePremium()
 
@@ -569,6 +570,10 @@ export function VerlaufPage() {
               )}
             </div>
           )
+        )}
+
+        {fastingError && (
+          <p className="text-xs text-danger">Fehler beim Speichern: {fastingError}</p>
         )}
 
         {fastingEnabled && (customStartOpen || customEndOpen ? (
