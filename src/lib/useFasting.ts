@@ -232,12 +232,14 @@ export function useFasting() {
     )
   }, [sessions])
 
+  // remainingMs kann negativ werden, sobald das Essensfenster überzogen
+  // wird — es bleibt bewusst offen, bis das nächste Fasten gestartet wird,
+  // statt bei Ablauf zu verschwinden (gleiche Regel wie beim Fasten selbst).
   const eatingWindow = useMemo(() => {
     if (activeSession || !lastEndedSession) return null
     const endedAtMs = new Date(lastEndedSession.ended_at).getTime()
     const windowHours = 24 - lastEndedSession.target_hours
     const windowEndsAtMs = endedAtMs + windowHours * 3_600_000
-    if (nowTick >= windowEndsAtMs) return null
     return {
       totalMs: windowHours * 3_600_000,
       remainingMs: windowEndsAtMs - nowTick,
