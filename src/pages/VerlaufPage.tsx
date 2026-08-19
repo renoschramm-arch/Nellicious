@@ -7,7 +7,6 @@ import {
   useFasting,
   fastingProtocolLabel,
   isOmad,
-  formatDurationHM,
   formatCountdownHM,
   formatClockTime,
   toDatetimeLocalValue,
@@ -509,9 +508,10 @@ export function VerlaufPage() {
                 </>
               ) : eatingWindow ? (
                 <>
-                  Im Essensfenster
+                  Fastenzeit beginnt in
                   <span className="block font-mono font-medium text-base text-honey">
-                    noch {formatDurationHM(eatingWindow.remainingMs)}
+                    {formatCountdownHM(eatingWindow.remainingMs)} h{' '}
+                    <span className="text-text-muted">um {formatClockTime(new Date(eatingWindow.endsAt))} Uhr</span>
                   </span>
                 </>
               ) : (
