@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.35'
+export const APP_VERSION = '1.36'
 
 interface ChangelogEntry {
   seq: number
@@ -127,6 +127,24 @@ const CHANGELOG: ChangelogEntry[] = [
     items: [
       '20 Salat-Rezepte zur Rezeptdatenbank hinzugefügt',
       'Eingabefelder zoomen auf dem Handy nicht mehr automatisch beim Tippen',
+    ],
+  },
+  {
+    seq: 9,
+    date: '2026-08-18',
+    items: ['20 gesunde Backrezepte zur Rezeptdatenbank hinzugefügt'],
+  },
+  {
+    seq: 10,
+    date: '2026-08-18',
+    items: [
+      '⏱️ Neu: Intervallfasten-Tracker mit Ring, Streak und 7-Tage-Verlauf',
+      'Fasten-Protokolle (16:8, 18:6, 20:4, OMAD) selbst anpassbar',
+      'Fastenzeiten rückwirkend eintragen und im Nachhinein bearbeiten',
+      'Automatischer Countdown bis zum Fastenende bzw. bis zum nächsten Fastenbeginn',
+      'Erklärungen zu den vier Fastenphasen (Verdauung, Fettverbrennung, Ketose, Autophagie)',
+      'Fastenring auch auf der Heute-Seite sichtbar',
+      'Intervallfasten lässt sich bei Bedarf komplett ausschalten',
     ],
   },
 ]
