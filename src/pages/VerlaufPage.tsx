@@ -495,10 +495,19 @@ export function VerlaufPage() {
             <div className="text-sm flex-1">
               {activeSession && fastingEndsAt ? (
                 <>
-                  Fastenzeit endet in
+                  {fastingRemainingMs > 0 ? 'Fastenzeit endet in' : 'Fastenziel erreicht'}
                   <span className="block font-mono font-medium text-base text-basil">
-                    {formatCountdownHM(fastingRemainingMs)} h{' '}
-                    <span className="text-text-muted">um {formatClockTime(fastingEndsAt)} Uhr</span>
+                    {fastingRemainingMs > 0 ? (
+                      <>
+                        {formatCountdownHM(fastingRemainingMs)} h{' '}
+                        <span className="text-text-muted">um {formatClockTime(fastingEndsAt)} Uhr</span>
+                      </>
+                    ) : (
+                      <>
+                        +{formatCountdownHM(-fastingRemainingMs)} h{' '}
+                        <span className="text-text-muted">seit {formatClockTime(fastingEndsAt)} Uhr</span>
+                      </>
+                    )}
                   </span>
                   {currentFastingPhase && (
                     <span className="block text-text-muted text-xs mt-0.5">
@@ -508,10 +517,19 @@ export function VerlaufPage() {
                 </>
               ) : eatingWindow ? (
                 <>
-                  Fastenzeit beginnt in
+                  {eatingWindow.remainingMs > 0 ? 'Fastenzeit beginnt in' : 'Essensfenster überzogen'}
                   <span className="block font-mono font-medium text-base text-honey">
-                    {formatCountdownHM(eatingWindow.remainingMs)} h{' '}
-                    <span className="text-text-muted">um {formatClockTime(new Date(eatingWindow.endsAt))} Uhr</span>
+                    {eatingWindow.remainingMs > 0 ? (
+                      <>
+                        {formatCountdownHM(eatingWindow.remainingMs)} h{' '}
+                        <span className="text-text-muted">um {formatClockTime(new Date(eatingWindow.endsAt))} Uhr</span>
+                      </>
+                    ) : (
+                      <>
+                        +{formatCountdownHM(-eatingWindow.remainingMs)} h{' '}
+                        <span className="text-text-muted">seit {formatClockTime(new Date(eatingWindow.endsAt))} Uhr</span>
+                      </>
+                    )}
                   </span>
                 </>
               ) : (
