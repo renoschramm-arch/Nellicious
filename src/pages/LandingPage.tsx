@@ -125,10 +125,6 @@ export function LandingPage() {
         </div>
 
         <div className="relative flex justify-center min-h-[420px] md:min-h-[480px]">
-          <span className="absolute z-[3] top-[8%] right-[2%] md:right-[-4%] rotate-6 bg-basil text-white font-mono text-xs font-medium px-3.5 py-2 rounded-full shadow-lg whitespace-nowrap">
-            🔥 5 Tage in Folge
-          </span>
-
           {/* Ghost-Handy im Hintergrund */}
           <div className="absolute w-[190px] md:w-[210px] top-6 -left-2 md:-left-10 -rotate-[9deg] opacity-50 z-[1]">
             <div className="bg-[#14100d] rounded-[30px] p-1.5">
@@ -154,8 +150,11 @@ export function LandingPage() {
           </div>
 
           {/* Haupt-Handy */}
-          <div className="relative z-[2] w-[220px] md:w-[240px] rotate-2">
-            <div className="bg-[#14100d] rounded-[34px] p-1.5 shadow-2xl">
+          <div className="relative z-[2] w-[220px] md:w-[240px]">
+            <span className="absolute z-[3] -top-4 -right-3 md:-right-9 rotate-6 bg-basil text-white font-mono text-xs font-medium px-3.5 py-2 rounded-full shadow-lg whitespace-nowrap">
+              🔥 5 Tage in Folge
+            </span>
+            <div className="bg-[#14100d] rounded-[34px] p-1.5 shadow-2xl rotate-2">
               <div className="bg-bg rounded-[28px] overflow-hidden aspect-[375/760] flex flex-col text-[10px]">
                 <div className="px-4 pt-4 pb-2.5 border-b border-border">
                   <div className="font-display font-bold text-sm">
