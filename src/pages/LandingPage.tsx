@@ -93,7 +93,7 @@ export function LandingPage() {
       </header>
 
       {/* Hero */}
-      <section className="max-w-5xl mx-auto px-6 pt-16 pb-20 md:pt-20 md:pb-24 grid md:grid-cols-2 gap-12 items-center">
+      <section className="max-w-5xl mx-auto px-6 pt-16 pb-20 md:pt-20 md:pb-24 grid md:grid-cols-2 gap-12 md:gap-16 items-center">
         <div className="text-center md:text-left">
           <span className="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-basil bg-basil/10 rounded-full px-3.5 py-1.5">
             🌱 Kostenlos in der Beta
@@ -126,7 +126,7 @@ export function LandingPage() {
 
         <div className="relative flex justify-center min-h-[420px] md:min-h-[480px]">
           {/* Ghost-Handy im Hintergrund */}
-          <div className="absolute w-[190px] md:w-[210px] top-6 -left-2 md:-left-10 -rotate-[9deg] opacity-50 z-[1]">
+          <div className="absolute w-[190px] md:w-[210px] top-6 -left-2 md:-left-6 -rotate-[9deg] opacity-50 z-[1]">
             <div className="bg-[#14100d] rounded-[30px] p-1.5">
               <div className="bg-bg rounded-[24px] overflow-hidden aspect-[375/760] flex flex-col text-[10px]">
                 <div className="px-4 pt-4 pb-2.5 border-b border-border">
