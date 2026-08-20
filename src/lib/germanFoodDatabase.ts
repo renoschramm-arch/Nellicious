@@ -554,4 +554,23 @@ export const GERMAN_FOODS: FoodSearchResult[] = [
   { id: 'local-498', name: 'Walnussöl', kcal100g: 884, protein100g: 0, carbs100g: 0, fat100g: 100 },
   { id: 'local-499', name: 'Butterschmalz', kcal100g: 897, protein100g: 0, carbs100g: 0, fat100g: 100 },
   { id: 'local-500', name: 'Schweineschmalz', kcal100g: 891, protein100g: 0, carbs100g: 0, fat100g: 99 },
+
+  // Häufig in Rezepten verwendete, bisher fehlende Zutaten
+  { id: 'local-501', name: 'Knoblauch', kcal100g: 149, protein100g: 6, carbs100g: 33, fat100g: 0 },
+  { id: 'local-502', name: 'Gemüsebrühe', kcal100g: 3, protein100g: 0, carbs100g: 1, fat100g: 0 },
+  { id: 'local-503', name: 'Minze, frisch', kcal100g: 44, protein100g: 3, carbs100g: 8, fat100g: 1 },
+  { id: 'local-504', name: 'Tahini', kcal100g: 595, protein100g: 17, carbs100g: 21, fat100g: 54 },
+  { id: 'local-505', name: 'Currypaste', kcal100g: 90, protein100g: 2, carbs100g: 10, fat100g: 5 },
+  { id: 'local-506', name: 'Schalotte', kcal100g: 72, protein100g: 3, carbs100g: 17, fat100g: 0 },
+  { id: 'local-507', name: 'Limette', kcal100g: 30, protein100g: 1, carbs100g: 11, fat100g: 0 },
+  { id: 'local-508', name: 'Kakaopulver', kcal100g: 228, protein100g: 20, carbs100g: 12, fat100g: 14 },
+  { id: 'local-509', name: 'Miso-Paste', kcal100g: 199, protein100g: 12, carbs100g: 26, fat100g: 6 },
+  { id: 'local-510', name: 'Fischsauce', kcal100g: 35, protein100g: 5, carbs100g: 4, fat100g: 0 },
+  { id: 'local-511', name: 'Pak Choi', kcal100g: 13, protein100g: 2, carbs100g: 1, fat100g: 0 },
+  { id: 'local-512', name: 'Pinienkerne', kcal100g: 673, protein100g: 14, carbs100g: 13, fat100g: 68 },
+  { id: 'local-513', name: 'Proteinpulver', kcal100g: 380, protein100g: 75, carbs100g: 8, fat100g: 5 },
+  { id: 'local-514', name: 'Trockenhefe', kcal100g: 325, protein100g: 40, carbs100g: 36, fat100g: 6 },
+  { id: 'local-515', name: 'Jasminreis, gekocht', kcal100g: 130, protein100g: 3, carbs100g: 28, fat100g: 0 },
+  { id: 'local-516', name: 'Granola', kcal100g: 471, protein100g: 10, carbs100g: 55, fat100g: 22 },
+  { id: 'local-517', name: 'Kichererbsenmehl', kcal100g: 387, protein100g: 22, carbs100g: 58, fat100g: 6 },
 ]
