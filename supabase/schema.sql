@@ -2194,3 +2194,215 @@ alter table public.profiles
 -- Karte im Verlauf verschwinden dann), ohne Sessions/Einstellungen zu verlieren.
 alter table public.profiles
   add column if not exists fasting_enabled boolean not null default true;
+
+
+-- 20 weitere Fisch- und Meeresfrüchte-Rezepte für Mittag/Abend (owner_id
+-- NULL = global sichtbar). Idempotent per Titel-Check.
+insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+select v.title, v.description, v.kcal, v.protein_g, v.carbs_g, v.fat_g, v.ingredients, v.instructions, v.meal_type, v.diet_tags, v.free_of
+from (
+  values
+    (
+      'Gebratener Zander mit Kartoffelstampf und Petersilie',
+      'Butterzarter Zander auf cremigem Kartoffelstampf.',
+      480, 34, 38, 20,
+      array['2 Zanderfilets (à 150 g)', '600 g Kartoffeln', '50 g Butter', '100 ml Milch', '1 Bund Petersilie', '2 EL Mehl', '2 EL Butterschmalz', 'Salz, Pfeffer, Muskatnuss']::text[],
+      'Kartoffeln schälen, würfeln und in Salzwasser 15-20 Minuten weich kochen, abgießen. Mit Butter und heißer Milch zu einem cremigen Stampf verarbeiten, mit Salz, Pfeffer und Muskat abschmecken. Zanderfilets trockentupfen, salzen, pfeffern und leicht in Mehl wenden. In Butterschmalz bei mittlerer Hitze 3-4 Minuten pro Seite knusprig braten. Mit dem Kartoffelstampf anrichten und mit gehackter Petersilie bestreuen.',
+      'abend',
+      array['omnivore', 'pescetarisch']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Barsch-Filet mit Zitronen-Kapern-Butter und grünem Spargel',
+      'Elegantes Fischgericht mit würziger Kapernbutter.',
+      420, 33, 10, 27,
+      array['2 Barschfilets (à 150 g)', '400 g grüner Spargel', '60 g Butter', '2 EL Kapern', '1 Zitrone (Saft und Schale)', '2 EL Olivenöl', 'Salz, Pfeffer']::text[],
+      'Bei Spargel die unteren Enden abschneiden, in Olivenöl in einer Pfanne 6-8 Minuten bissfest braten und salzen. Barschfilets trockentupfen, salzen, pfeffern und in einer zweiten Pfanne in etwas Öl von beiden Seiten je 3 Minuten knusprig braten. Butter in einem kleinen Topf schmelzen, Kapern und Zitronensaft sowie etwas abgeriebene Schale zugeben, kurz aufkochen. Fisch mit Spargel anrichten und mit der Zitronen-Kapern-Butter beträufeln.',
+      'abend',
+      array['omnivore', 'pescetarisch', 'low_carb']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Makrele vom Grill mit Gurken-Dill-Salat',
+      'Rauchig-würzige Makrele mit erfrischendem Sommersalat.',
+      450, 28, 8, 34,
+      array['2 Makrelen, küchenfertig', '1 Salatgurke', '150 g griechischer Joghurt', '1 Bund Dill', '1 Zitrone', '2 EL Olivenöl', 'Salz, Pfeffer']::text[],
+      'Makrelen innen und außen salzen, pfeffern und mit etwas Olivenöl einreiben. Auf dem Grill oder unter dem Backofengrill 5-6 Minuten pro Seite grillen, bis die Haut knusprig ist. Für den Salat Gurke fein würfeln, mit Joghurt, gehacktem Dill, Zitronensaft und Olivenöl vermengen und mit Salz und Pfeffer abschmecken. Makrelen mit dem Gurken-Dill-Salat servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'low_carb']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Rotbarsch im Ofen mit Fenchel und Tomaten',
+      'Mediterran gebackener Rotbarsch auf Gemüsebett.',
+      410, 32, 14, 22,
+      array['2 Rotbarschfilets (à 150 g)', '1 Fenchelknolle', '250 g Kirschtomaten', '2 Knoblauchzehen', '3 EL Olivenöl', '1 Zitrone', 'Salz, Pfeffer, Thymian']::text[],
+      'Backofen auf 200°C vorheizen. Fenchel in dünne Scheiben schneiden, mit Kirschtomaten und gehacktem Knoblauch in eine Auflaufform geben, mit Olivenöl beträufeln, salzen und pfeffern. 15 Minuten im Ofen vorgaren. Rotbarschfilets salzen, pfeffern, mit Thymian bestreuen und auf das Gemüse legen. Mit Zitronenscheiben belegen und weitere 12-15 Minuten backen, bis der Fisch gar ist.',
+      'abend',
+      array['omnivore', 'pescetarisch', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Miesmuscheln in Weißwein-Sud mit Baguette',
+      'Klassisches Muschelgericht zum Selberpulen.',
+      380, 26, 30, 14,
+      array['1 kg Miesmuscheln', '1 Zwiebel', '2 Knoblauchzehen', '200 ml Weißwein', '2 EL Butter', '1 Bund Petersilie', '1/2 Baguette', 'Salz, Pfeffer']::text[],
+      'Muscheln gründlich putzen, nur geschlossene Muscheln verwenden, beschädigte aussortieren. Zwiebel und Knoblauch fein würfeln und in Butter glasig dünsten. Mit Weißwein ablöschen, Muscheln zugeben, Deckel schließen und 5-7 Minuten bei starker Hitze garen, bis sich die Schalen geöffnet haben (nicht geöffnete Muscheln aussortieren). Mit gehackter Petersilie bestreuen und mit dem Sud sowie warmem Baguette servieren.',
+      'abend',
+      array['omnivore', 'pescetarisch']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Tintenfischringe mit Knoblauch und Chili',
+      'Schnell gebratene Calamari nach mediterraner Art.',
+      350, 26, 12, 22,
+      array['400 g Tintenfischringe', '3 Knoblauchzehen', '1 rote Chilischote', '4 EL Olivenöl', '1 Zitrone', '1 Bund Petersilie', 'Salz, Pfeffer']::text[],
+      'Tintenfischringe trockentupfen. Knoblauch und Chili fein hacken. Olivenöl in einer Pfanne stark erhitzen, Tintenfischringe darin bei hoher Hitze 2-3 Minuten scharf anbraten (nicht länger, sonst werden sie zäh). Knoblauch und Chili kurz mitbraten. Mit Zitronensaft ablöschen, salzen, pfeffern und mit gehackter Petersilie bestreut servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Sardinen auf Toast mit Tomaten und Rucola',
+      'Schneller, proteinreicher Snack mit mediterranem Twist.',
+      380, 22, 32, 18,
+      array['1 Dose Sardinen in Olivenöl', '4 Scheiben Vollkornbrot', '2 Tomaten', '50 g Rucola', '1 Knoblauchzehe', '1 EL Olivenöl', 'Zitronensaft, Salz, Pfeffer']::text[],
+      'Brotscheiben toasten und mit der aufgeschnittenen Knoblauchzehe einreiben. Tomaten in Scheiben schneiden. Toast mit Rucola, Tomatenscheiben und den abgetropften Sardinen belegen. Mit Olivenöl und Zitronensaft beträufeln, salzen und pfeffern.',
+      'mittag',
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Räucherlachs-Bowl mit Quinoa und Gurke',
+      'Leichte, proteinreiche Bowl mit rauchigem Lachs.',
+      460, 27, 42, 19,
+      array['150 g Räucherlachs', '150 g Quinoa (gekocht)', '1 Salatgurke', '1 Avocado', '2 EL Kapern', '1 Zitrone', '2 EL Olivenöl', 'Dill, Salz, Pfeffer']::text[],
+      'Quinoa nach Packungsangabe kochen und abkühlen lassen. Gurke und Avocado würfeln. Quinoa in eine Schüssel geben, mit Gurke, Avocado, Kapern und in Streifen geschnittenem Räucherlachs belegen. Mit Zitronensaft und Olivenöl beträufeln, mit Dill, Salz und Pfeffer abschmecken.',
+      'mittag',
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Wolfsbarsch aus dem Ofen mit Kräuterkruste',
+      'Ganzer Wolfsbarsch mit knuspriger Kräuterkruste.',
+      430, 36, 8, 27,
+      array['1 Wolfsbarsch, küchenfertig (ca. 500 g)', '50 g Semmelbrösel', '2 EL Olivenöl', '1 Bund gemischte Kräuter (Petersilie, Basilikum)', '1 Knoblauchzehe', '1 Zitrone', 'Salz, Pfeffer']::text[],
+      'Backofen auf 200°C vorheizen. Semmelbrösel mit gehackten Kräutern, fein gehacktem Knoblauch und Olivenöl vermengen. Wolfsbarsch innen und außen salzen und pfeffern, mit Zitronenscheiben füllen. Mit der Kräuterkruste bestreuen und auf einem Backblech 20-25 Minuten backen, bis der Fisch durchgegart ist.',
+      'abend',
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Matjes nach Hausfrauenart mit Bratkartoffeln',
+      'Norddeutscher Klassiker mit Apfel, Zwiebel und knusprigen Kartoffeln.',
+      520, 24, 44, 28,
+      array['4 Matjesfilets', '1 Apfel', '1 Zwiebel', '150 g saure Sahne', '1 TL Senf', '500 g Kartoffeln (vorgekocht)', '2 EL Butterschmalz', 'Schnittlauch, Salz, Pfeffer']::text[],
+      'Kartoffeln in Scheiben schneiden und in Butterschmalz goldbraun braten, salzen. Apfel und Zwiebel in feine Streifen schneiden. Saure Sahne mit Senf, Salz und Pfeffer verrühren, Apfel und Zwiebel unterheben. Matjesfilets auf einem Teller anrichten, mit der Sauce übergießen und mit Schnittlauch bestreuen. Mit den Bratkartoffeln servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Fisch-Tacos mit Krautsalat und Limette',
+      'Mexikanisch angehauchte Tacos mit knusprigem Fisch.',
+      420, 26, 38, 18,
+      array['300 g Pangasius- oder Kabeljaufilet', '6 Maistortillas', '150 g Weißkohl', '2 EL griechischer Joghurt', '1 Limette', '1 TL Paprikapulver', '1 TL Kreuzkümmel', '2 EL Olivenöl', 'Koriander, Salz, Pfeffer']::text[],
+      'Fisch in Streifen schneiden, mit Paprikapulver, Kreuzkümmel, Salz und Pfeffer würzen. In Olivenöl 3-4 Minuten braten, bis er durchgegart ist. Weißkohl fein hobeln, mit Joghurt und etwas Limettensaft zu einem Krautsalat vermengen. Tortillas kurz erwärmen, mit Krautsalat und Fischstreifen füllen und mit Koriander und Limettensaft servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Krabben-Avocado-Salat mit Limette',
+      'Leichter, proteinreicher Salat, in 10 Minuten fertig.',
+      340, 20, 10, 24,
+      array['200 g Krabbenfleisch', '2 Avocados', '1/2 rote Zwiebel', '1 Limette', '2 EL Olivenöl', 'Koriander, Salz, Pfeffer, Chiliflocken']::text[],
+      'Avocados würfeln, rote Zwiebel fein hacken. Krabbenfleisch mit Avocado und Zwiebel vermengen. Mit Limettensaft und Olivenöl beträufeln, mit Salz, Pfeffer und Chiliflocken abschmecken. Mit frischem Koriander bestreut servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'low_carb', 'keto']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Pangasius-Filet mit Currysauce und Basmatireis',
+      'Mildes Currygericht, schnell und familienfreundlich.',
+      500, 30, 50, 19,
+      array['2 Pangasiusfilets (à 150 g)', '200 ml Kokosmilch', '1 Zwiebel', '2 TL Currypulver', '150 g Basmatireis', '1 EL Öl', 'Koriander, Salz, Pfeffer']::text[],
+      'Basmatireis nach Packungsangabe kochen. Zwiebel fein würfeln und in Öl glasig dünsten, Currypulver kurz mitrösten. Mit Kokosmilch ablöschen und aufkochen lassen. Pangasiusfilets in Stücke schneiden, in die Sauce geben und 8-10 Minuten sanft garen. Mit Salz und Pfeffer abschmecken, mit Reis und frischem Koriander servieren.',
+      'abend',
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Steinbeißer mit Kräuterbutter und Rosenkohl',
+      'Zartes Fischfilet mit herbstlichem Gemüse.',
+      440, 34, 12, 28,
+      array['2 Steinbeißerfilets (à 150 g)', '400 g Rosenkohl', '60 g Butter', '1 Bund gemischte Kräuter', '1 Knoblauchzehe', '1 Zitrone', 'Salz, Pfeffer']::text[],
+      'Rosenkohl putzen, halbieren und in Salzwasser 8-10 Minuten bissfest kochen. Butter mit fein gehackten Kräutern, gepresstem Knoblauch und etwas Zitronenschale vermengen. Steinbeißerfilets salzen, pfeffern und in einer Pfanne 3-4 Minuten pro Seite braten. Rosenkohl in etwas Butter kurz schwenken. Fisch mit der Kräuterbutter und dem Rosenkohl servieren.',
+      'abend',
+      array['omnivore', 'pescetarisch', 'low_carb']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Garnelenspieße mit Erdnusssauce und Wokgemüse',
+      'Asiatisch inspiriertes Gericht mit cremiger Erdnusssauce.',
+      470, 30, 26, 28,
+      array['300 g Garnelen', '2 Paprika', '200 g Brokkoli', '3 EL Erdnusssauce', '1 EL Sojasauce', '1 TL Ingwer (gerieben)', '1 EL Sesamöl', 'Sesam, Frühlingszwiebel']::text[],
+      'Garnelen auf Spieße stecken und mit etwas Sesamöl und Ingwer einreiben. Paprika und Brokkoli klein schneiden und in Sesamöl im Wok 4-5 Minuten scharf anbraten. Garnelenspieße in einer Grillpfanne 2-3 Minuten pro Seite braten. Erdnusssauce mit Sojasauce verrühren und leicht erwärmen. Garnelen mit dem Wokgemüse anrichten, mit Erdnusssauce beträufeln und mit Sesam und Frühlingszwiebel bestreuen.',
+      'abend',
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'eifrei']::text[]
+    ),
+    (
+      'Fischsuppe mit Safran und Fenchel',
+      'Aromatische mediterrane Fischsuppe für kalte Tage.',
+      320, 28, 18, 14,
+      array['400 g gemischtes Fischfilet (z. B. Kabeljau, Lachs)', '1 Fenchelknolle', '1 Zwiebel', '2 Tomaten', '500 ml Fischfond oder Gemüsebrühe', 'Safranfäden', '2 EL Olivenöl', 'Salz, Pfeffer, Petersilie']::text[],
+      'Zwiebel und Fenchel fein würfeln und in Olivenöl andünsten. Tomaten würfeln und dazugeben, kurz mitdünsten. Mit Fischfond aufgießen, Safranfäden zugeben und 15 Minuten köcheln lassen. Fischfilets in Stücke schneiden, in die Suppe geben und 5-6 Minuten sanft garen. Mit Salz, Pfeffer und Petersilie abschmecken.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'low_carb']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Lachs-Teriyaki mit Sesam und Brokkoli',
+      'Süß-würziges Lachsgericht im japanischen Stil.',
+      490, 35, 28, 26,
+      array['2 Lachsfilets (à 150 g)', '3 EL Sojasauce', '2 EL Mirin', '1 EL Honig', '300 g Brokkoli', '1 EL Sesam', '150 g Reis (gekocht)', '1 EL Sesamöl']::text[],
+      'Sojasauce, Mirin und Honig verrühren, Lachsfilets darin 15 Minuten marinieren. Brokkoli in Röschen teilen und dämpfen oder kurz kochen. Lachs in einer Pfanne mit Sesamöl 3-4 Minuten pro Seite braten, dabei die restliche Marinade zugeben und leicht einkochen lassen. Mit Reis und Brokkoli anrichten und mit Sesam bestreuen.',
+      'abend',
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei']::text[]
+    ),
+    (
+      'Thunfisch-Steak mit Sesamkruste und Wasabi-Dip',
+      'Kurz angebratenes Thunfischsteak, innen noch rosa.',
+      420, 38, 8, 25,
+      array['2 Thunfischsteaks (à 150 g)', '3 EL Sesam (hell und dunkel gemischt)', '2 EL Sojasauce', '1 TL Wasabi-Paste', '100 g griechischer Joghurt', '1 EL Öl', 'Salz, Pfeffer']::text[],
+      'Thunfischsteaks mit Sojasauce bestreichen, salzen und pfeffern, dann rundherum in Sesam wenden. In einer sehr heißen Pfanne mit Öl 1-2 Minuten pro Seite scharf anbraten, sodass der Kern noch rosa bleibt. Für den Dip Joghurt mit Wasabi-Paste verrühren. Thunfisch in Scheiben schneiden und mit dem Wasabi-Dip servieren.',
+      'abend',
+      array['omnivore', 'pescetarisch', 'low_carb']::text[],
+      array['nussfrei', 'eifrei']::text[]
+    ),
+    (
+      'Kabeljau-Curry mit Kokosmilch und Koriander',
+      'Cremiges, mild-scharfes Currygericht.',
+      460, 32, 30, 24,
+      array['2 Kabeljaufilets (à 150 g)', '200 ml Kokosmilch', '1 Zwiebel', '2 Knoblauchzehen', '1 TL Currypaste', '1 TL Kurkuma', '150 g Reis (gekocht)', 'Koriander, Salz, Pfeffer']::text[],
+      'Zwiebel und Knoblauch fein würfeln und andünsten, Currypaste und Kurkuma kurz mitrösten. Mit Kokosmilch ablöschen und aufkochen lassen. Kabeljau in Stücke schneiden, in die Sauce geben und 8-10 Minuten sanft garen, bis der Fisch gar ist. Mit Salz und Pfeffer abschmecken, mit Reis und frischem Koriander servieren.',
+      'abend',
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Forellenfilet mit Mandeln und grünen Bohnen',
+      'Forelle Müllerin-Art mit knusprigen Mandeln.',
+      410, 33, 12, 25,
+      array['2 Forellenfilets (à 150 g)', '300 g grüne Bohnen', '40 g Mandelblättchen', '50 g Butter', '2 EL Mehl', '1 Zitrone', 'Salz, Pfeffer']::text[],
+      'Bohnen in Salzwasser 8-10 Minuten bissfest kochen. Forellenfilets salzen, pfeffern und leicht in Mehl wenden. In der Hälfte der Butter 3 Minuten pro Seite braten, herausnehmen und warmstellen. Restliche Butter in der Pfanne erhitzen, Mandelblättchen darin goldbraun rösten und mit Zitronensaft ablöschen. Forelle mit Bohnen anrichten und mit der Mandelbutter übergießen.',
+      'mittag',
+      array['omnivore', 'pescetarisch']::text[],
+      array['eifrei', 'sojafrei']::text[]
+    )
+) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+where not exists (
+  select 1 from public.recipes r where r.title = v.title
+);
