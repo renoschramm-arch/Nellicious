@@ -63,6 +63,8 @@ export function VerlaufPage() {
   const [customStartValue, setCustomStartValue] = useState('')
   const [customEndOpen, setCustomEndOpen] = useState(false)
   const [customEndValue, setCustomEndValue] = useState('')
+  const [customTargetOpen, setCustomTargetOpen] = useState(false)
+  const [customTargetValue, setCustomTargetValue] = useState('')
   const [showFastingPhaseModal, setShowFastingPhaseModal] = useState(false)
 
   useEffect(() => {
@@ -206,6 +208,21 @@ export function VerlaufPage() {
     setCustomEndOpen(false)
   }
 
+  function openCustomTarget() {
+    if (!activeSession) return
+    setCustomTargetValue(String(activeSession.target_hours))
+    setCustomTargetOpen(true)
+  }
+
+  async function handleCustomTargetSubmit(e: FormEvent) {
+    e.preventDefault()
+    if (!activeSession) return
+    const hours = Number(customTargetValue)
+    if (!Number.isFinite(hours) || hours <= 0 || hours >= 24) return
+    await updateFastingSession(activeSession.id, { target_hours: hours })
+    setCustomTargetOpen(false)
+  }
+
   async function handleFastingSessionEditSubmit(e: FormEvent<HTMLFormElement>, session: FastingSession) {
     e.preventDefault()
     const formData = new FormData(e.currentTarget)
@@ -214,6 +231,10 @@ export function VerlaufPage() {
     const startedAt = new Date(startedRaw)
     if (Number.isNaN(startedAt.getTime()) || startedAt.getTime() > Date.now()) return
 
+    const targetRaw = formData.get('target_hours') as string | null
+    const targetHours = targetRaw ? Number(targetRaw) : NaN
+    if (!Number.isFinite(targetHours) || targetHours <= 0 || targetHours >= 24) return
+
     if (session.ended_at) {
       const endedRaw = formData.get('ended_at') as string | null
       if (!endedRaw) return
@@ -221,9 +242,9 @@ export function VerlaufPage() {
       if (Number.isNaN(endedAt.getTime()) || endedAt.getTime() > Date.now() || endedAt.getTime() <= startedAt.getTime()) {
         return
       }
-      await updateFastingSession(session.id, { started_at: startedAt, ended_at: endedAt })
+      await updateFastingSession(session.id, { started_at: startedAt, ended_at: endedAt, target_hours: targetHours })
     } else {
-      await updateFastingSession(session.id, { started_at: startedAt })
+      await updateFastingSession(session.id, { started_at: startedAt, target_hours: targetHours })
     }
   }
 
@@ -648,7 +669,40 @@ export function VerlaufPage() {
           <p className="text-xs text-danger">Fehler beim Speichern: {fastingError}</p>
         )}
 
-        {fastingEnabled && (customStartOpen || customEndOpen ? (
+        {fastingEnabled && (customTargetOpen ? (
+          <form
+            onSubmit={handleCustomTargetSubmit}
+            className="bg-surface-2 border border-border rounded-xl p-3 flex flex-col gap-2.5"
+          >
+            <label className="flex flex-col gap-1 text-xs text-text-muted">
+              Fastenziel dieser Session (Stunden)
+              <input
+                type="number"
+                min={1}
+                max={23}
+                autoFocus
+                value={customTargetValue}
+                onChange={(e) => setCustomTargetValue(e.target.value)}
+                className="rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono outline-none focus:border-primary"
+              />
+            </label>
+            <div className="flex items-center justify-end gap-3 mt-0.5">
+              <button
+                type="button"
+                onClick={() => setCustomTargetOpen(false)}
+                className="text-sm text-text-muted"
+              >
+                Abbrechen
+              </button>
+              <button
+                type="submit"
+                className="bg-primary text-on-primary font-semibold rounded-full px-4 py-1.5 text-sm"
+              >
+                Speichern
+              </button>
+            </div>
+          </form>
+        ) : customStartOpen || customEndOpen ? (
           <form
             onSubmit={activeSession ? handleCustomEndSubmit : handleCustomStartSubmit}
             className="bg-surface-2 border border-border rounded-xl p-3 flex flex-col gap-2.5"
@@ -699,13 +753,24 @@ export function VerlaufPage() {
             >
               {activeSession ? 'Fasten beenden' : 'Fasten starten'}
             </button>
-            <button
-              type="button"
-              onClick={activeSession ? openCustomEnd : openCustomStart}
-              className="text-xs text-text-muted underline self-center hover:text-text"
-            >
-              {activeSession ? 'Rückwirkend beenden' : 'Rückwirkend starten'}
-            </button>
+            <div className="flex items-center justify-center gap-3">
+              <button
+                type="button"
+                onClick={activeSession ? openCustomEnd : openCustomStart}
+                className="text-xs text-text-muted underline hover:text-text"
+              >
+                {activeSession ? 'Rückwirkend beenden' : 'Rückwirkend starten'}
+              </button>
+              {activeSession && (
+                <button
+                  type="button"
+                  onClick={openCustomTarget}
+                  className="text-xs text-text-muted underline hover:text-text"
+                >
+                  Ziel anpassen
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
@@ -790,6 +855,17 @@ export function VerlaufPage() {
                     ✕
                   </button>
                 </div>
+                <label className="flex flex-col gap-1 text-xs text-text-muted w-20">
+                  Ziel (h)
+                  <input
+                    type="number"
+                    name="target_hours"
+                    min={1}
+                    max={23}
+                    defaultValue={session.target_hours}
+                    className="rounded-lg border border-border bg-bg px-2 py-1.5 text-xs font-mono outline-none focus:border-primary"
+                  />
+                </label>
                 <div className="grid grid-cols-2 gap-2">
                   <label className="flex flex-col gap-1 text-xs text-text-muted">
                     Start

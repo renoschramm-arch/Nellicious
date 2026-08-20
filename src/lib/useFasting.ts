@@ -129,7 +129,14 @@ export function useFasting() {
   // startedAt/endedAt optional, damit ein vergessenes Starten/Beenden auch
   // rückwirkend nachgetragen werden kann (statt nur "jetzt").
   async function start(targetHours: number, startedAt?: Date) {
-    if (!user || activeSession) return
+    if (!user) {
+      setError('Nicht angemeldet — bitte Seite neu laden.')
+      return
+    }
+    if (activeSession) {
+      setError(`Es läuft bereits ein Fasten seit ${new Date(activeSession.started_at).toLocaleString('de-DE')}.`)
+      return
+    }
     setError(null)
     const { data, error: err } = await supabase
       .from('fasting_sessions')
@@ -161,13 +168,19 @@ export function useFasting() {
     if (data) setSessions((prev) => prev.map((s) => (s.id === data.id ? data : s)))
   }
 
-  // Nachträgliche Korrektur von Start/Ende eines bereits geloggten Eintrags
-  // (im Gegensatz zu start/stop, die nur die aktuell laufende Session betreffen).
-  async function updateSession(id: string, patch: { started_at?: Date; ended_at?: Date | null }) {
+  // Nachträgliche Korrektur von Start/Ende/Zielstunden eines bereits
+  // geloggten (oder gerade laufenden) Eintrags — im Gegensatz zu start/stop,
+  // die nur zum Beginnen/Beenden einer neuen bzw. der aktuell laufenden
+  // Session dienen.
+  async function updateSession(
+    id: string,
+    patch: { started_at?: Date; ended_at?: Date | null; target_hours?: number },
+  ) {
     setError(null)
-    const dbPatch: { started_at?: string; ended_at?: string | null } = {}
+    const dbPatch: { started_at?: string; ended_at?: string | null; target_hours?: number } = {}
     if (patch.started_at) dbPatch.started_at = patch.started_at.toISOString()
     if ('ended_at' in patch) dbPatch.ended_at = patch.ended_at ? patch.ended_at.toISOString() : null
+    if (patch.target_hours != null) dbPatch.target_hours = patch.target_hours
     const { data, error: err } = await supabase
       .from('fasting_sessions')
       .update(dbPatch)
