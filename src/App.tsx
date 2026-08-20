@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './lib/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Layout } from './components/Layout'
+import { LandingPage } from './pages/LandingPage'
 import { AuthPage } from './pages/AuthPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { RecipesPage } from './pages/RecipesPage'
@@ -22,6 +23,7 @@ export default function App() {
     <BrowserRouter basename="/Nellicious">
       <AuthProvider>
         <Routes>
+          <Route path="/willkommen" element={<LandingPage />} />
           <Route path="/anmelden" element={<AuthPage />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
