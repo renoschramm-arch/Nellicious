@@ -86,16 +86,18 @@ export function AuthPage() {
           </button>
         </form>
 
-        <button
-          onClick={() => {
-            setMode(mode === 'signin' ? 'signup' : 'signin')
-            setError(null)
-            setInfo(null)
-          }}
-          className="w-full text-center text-sm text-text-muted mt-4"
-        >
-          {mode === 'signin' ? 'Noch kein Konto? Registrieren' : 'Schon ein Konto? Anmelden'}
-        </button>
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={() => {
+              setMode(mode === 'signin' ? 'signup' : 'signin')
+              setError(null)
+              setInfo(null)
+            }}
+            className="text-center text-sm text-text-muted hover:text-text bg-surface/90 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-[var(--shadow)] transition-colors"
+          >
+            {mode === 'signin' ? 'Noch kein Konto? Registrieren' : 'Schon ein Konto? Anmelden'}
+          </button>
+        </div>
       </div>
     </div>
   )
