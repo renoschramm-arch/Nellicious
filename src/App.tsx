@@ -4,6 +4,8 @@ import { ProtectedRoute } from './components/ProtectedRoute'
 import { Layout } from './components/Layout'
 import { LandingPage } from './pages/LandingPage'
 import { AuthPage } from './pages/AuthPage'
+import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
+import { ResetPasswordPage } from './pages/ResetPasswordPage'
 import { DashboardPage } from './pages/DashboardPage'
 import { RecipesPage } from './pages/RecipesPage'
 import { RecipeNewPage } from './pages/RecipeNewPage'
@@ -25,6 +27,8 @@ export default function App() {
         <Routes>
           <Route path="/willkommen" element={<LandingPage />} />
           <Route path="/anmelden" element={<AuthPage />} />
+          <Route path="/passwort-vergessen" element={<ForgotPasswordPage />} />
+          <Route path="/passwort-neu" element={<ResetPasswordPage />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>
               <Route path="/" element={<DashboardPage />} />

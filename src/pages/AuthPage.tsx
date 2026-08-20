@@ -1,5 +1,5 @@
 import { useState, type FormEvent } from 'react'
-import { Navigate, useSearchParams } from 'react-router-dom'
+import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../lib/AuthContext'
 import { PageFlatlay } from '../components/PageFlatlay'
 
@@ -67,12 +67,18 @@ export function AuthPage() {
             <input
               type="password"
               required
-              minLength={6}
+              minLength={mode === 'signup' ? 8 : undefined}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="rounded-lg border border-border bg-bg px-3 py-2 text-text outline-none focus:border-primary"
             />
           </label>
+
+          {mode === 'signin' && (
+            <Link to="/passwort-vergessen" className="self-end text-xs text-text-muted hover:text-text -mt-2">
+              Passwort vergessen?
+            </Link>
+          )}
 
           {error && <p className="text-sm text-danger">{error}</p>}
           {info && <p className="text-sm text-basil">{info}</p>}
