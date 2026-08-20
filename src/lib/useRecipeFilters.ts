@@ -17,9 +17,27 @@ export function useRecipeFilters(
     setFreeOfFilter((prev) => (prev.includes(value) ? prev.filter((v) => v !== value) : [...prev, value]))
   }
 
+  const trimmedQuery = query.trim().toLowerCase()
+
+  function matchesQuery(r: Recipe): boolean {
+    if (!trimmedQuery) return true
+    // "Fisch"/"Fische" allgemein gesucht: viele Fischrezepte heißen nach der
+    // jeweiligen Fischart (Zander, Barsch, Kabeljau, ...) und enthalten das
+    // Wort "Fisch" nirgends im Text — daher zusätzlich über das ohnehin
+    // gepflegte diet_tags-Kennzeichen "pescetarisch" abdecken.
+    if (('fisch'.startsWith(trimmedQuery) || trimmedQuery.startsWith('fisch')) && r.diet_tags.includes('pescetarisch')) {
+      return true
+    }
+    return (
+      r.title.toLowerCase().includes(trimmedQuery) ||
+      r.description.toLowerCase().includes(trimmedQuery) ||
+      r.ingredients.some((i) => i.toLowerCase().includes(trimmedQuery))
+    )
+  }
+
   const filtered = recipes.filter(
     (r) =>
-      r.title.toLowerCase().includes(query.toLowerCase()) &&
+      matchesQuery(r) &&
       (mealType === 'alle' || r.meal_type === mealType) &&
       (dietFilter === 'alle' || r.diet_tags.includes(dietFilter)) &&
       freeOfFilter.every((f) => r.free_of.includes(f)) &&
