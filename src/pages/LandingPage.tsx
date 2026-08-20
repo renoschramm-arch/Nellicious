@@ -458,9 +458,18 @@ export function LandingPage() {
       <footer className="border-t border-border py-8">
         <div className="max-w-5xl mx-auto px-6 flex flex-wrap items-center justify-between gap-3">
           <span className="font-display font-bold">Nellicious</span>
-          <div className="flex gap-5 text-sm text-text-muted">
+          <div className="flex flex-wrap gap-5 text-sm text-text-muted">
             <Link to="/anmelden" className="hover:text-text">
               Anmelden
+            </Link>
+            <Link to="/impressum" className="hover:text-text">
+              Impressum
+            </Link>
+            <Link to="/datenschutz" className="hover:text-text">
+              Datenschutz
+            </Link>
+            <Link to="/widerruf" className="hover:text-text">
+              Widerruf
             </Link>
           </div>
         </div>
