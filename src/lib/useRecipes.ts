@@ -94,5 +94,12 @@ export function useRecipe(id: string | undefined) {
     await supabase.from('recipes').delete().eq('id', id)
   }
 
-  return { recipe, loading, updateRecipe, deleteRecipe }
+  async function setShared(shared: boolean) {
+    if (!id) return
+    const { error } = await supabase.rpc('set_recipe_shared', { p_recipe_id: id, p_shared: shared })
+    if (!error) setRecipe((prev) => (prev ? { ...prev, is_shared: shared } : prev))
+    return { error: error?.message ?? null }
+  }
+
+  return { recipe, loading, updateRecipe, deleteRecipe, setShared }
 }
