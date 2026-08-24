@@ -460,15 +460,6 @@ export function LandingPage() {
             <Link to="/anmelden" className="hover:text-text">
               Anmelden
             </Link>
-            <Link to="/impressum" className="hover:text-text">
-              Impressum
-            </Link>
-            <Link to="/datenschutz" className="hover:text-text">
-              Datenschutz
-            </Link>
-            <Link to="/widerruf" className="hover:text-text">
-              Widerruf
-            </Link>
           </div>
         </div>
       </footer>
