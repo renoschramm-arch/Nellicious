@@ -6,9 +6,6 @@ import { LandingPage } from './pages/LandingPage'
 import { AuthPage } from './pages/AuthPage'
 import { ForgotPasswordPage } from './pages/ForgotPasswordPage'
 import { ResetPasswordPage } from './pages/ResetPasswordPage'
-import { ImpressumPage } from './pages/ImpressumPage'
-import { DatenschutzPage } from './pages/DatenschutzPage'
-import { WiderrufPage } from './pages/WiderrufPage'
 import { SharedRecipePage } from './pages/SharedRecipePage'
 import { DashboardPage } from './pages/DashboardPage'
 import { RecipesPage } from './pages/RecipesPage'
@@ -33,9 +30,6 @@ export default function App() {
           <Route path="/anmelden" element={<AuthPage />} />
           <Route path="/passwort-vergessen" element={<ForgotPasswordPage />} />
           <Route path="/passwort-neu" element={<ResetPasswordPage />} />
-          <Route path="/impressum" element={<ImpressumPage />} />
-          <Route path="/datenschutz" element={<DatenschutzPage />} />
-          <Route path="/widerruf" element={<WiderrufPage />} />
           <Route path="/rezept-teilen/:id" element={<SharedRecipePage />} />
           <Route element={<ProtectedRoute />}>
             <Route element={<Layout />}>

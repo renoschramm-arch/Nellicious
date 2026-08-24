@@ -69,18 +69,6 @@ export function InfoPage() {
         🧡 Unterstütze mich
       </button>
 
-      <div className="flex justify-center gap-4 text-xs text-text-muted">
-        <Link to="/impressum" className="hover:text-text underline">
-          Impressum
-        </Link>
-        <Link to="/datenschutz" className="hover:text-text underline">
-          Datenschutz
-        </Link>
-        <Link to="/widerruf" className="hover:text-text underline">
-          Widerruf
-        </Link>
-      </div>
-
       <p className="text-center text-xs text-text-muted">
         © 2026 Nellicious. Alle Rechte vorbehalten.
         <br />
