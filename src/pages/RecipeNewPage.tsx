@@ -27,6 +27,7 @@ export function RecipeNewPage() {
         created_at: new Date().toISOString(),
         diet_tags: [],
         free_of: [],
+        is_shared: false,
         ...values,
       })
     } catch (err) {

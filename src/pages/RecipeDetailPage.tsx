@@ -14,7 +14,7 @@ import { PremiumModal } from '../components/PremiumModal'
 
 export function RecipeDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const { recipe, loading, updateRecipe, deleteRecipe } = useRecipe(id)
+  const { recipe, loading, updateRecipe, deleteRecipe, setShared } = useRecipe(id)
   const { addLog } = useMealLogs()
   const todayISO = toISODate(new Date())
   const { setEntry } = useMealPlan(todayISO, todayISO)
@@ -30,6 +30,8 @@ export function RecipeDetailPage() {
   const [showPremiumModal, setShowPremiumModal] = useState(false)
   const [noteInput, setNoteInput] = useState('')
   const [noteSaved, setNoteSaved] = useState(false)
+  const [sharing, setSharing] = useState(false)
+  const [linkCopied, setLinkCopied] = useState(false)
 
   useEffect(() => {
     setNoteInput(note)
@@ -64,6 +66,32 @@ export function RecipeDetailPage() {
       return
     }
     toggleWakeLock()
+  }
+
+  async function handleShare() {
+    if (!recipe) return
+    setSharing(true)
+    if (!recipe.is_shared) {
+      const result = await setShared(true)
+      if (result?.error) {
+        setSharing(false)
+        return
+      }
+    }
+    const url = `${window.location.origin}${import.meta.env.BASE_URL}rezept-teilen/${recipe.id}`
+    const shareText = `${recipe.title} (${recipe.kcal} kcal) — Rezept aus der Nellicious App`
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: recipe.title, text: shareText, url })
+      } catch {
+        // Nutzer:in hat den Teilen-Dialog abgebrochen — kein Fehlerfall.
+      }
+    } else {
+      await navigator.clipboard.writeText(url)
+      setLinkCopied(true)
+      setTimeout(() => setLinkCopied(false), 2000)
+    }
+    setSharing(false)
   }
 
   async function handleDelete() {
@@ -121,6 +149,13 @@ export function RecipeDetailPage() {
           }`}
         >
           {favoriteIds.has(recipe.id) ? '♥' : '♡'}
+        </button>
+        <button
+          onClick={handleShare}
+          disabled={sharing}
+          className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text disabled:opacity-60"
+        >
+          {linkCopied ? 'Link kopiert ✓' : sharing ? '…' : '↗ Teilen'}
         </button>
       </div>
 

@@ -89,6 +89,7 @@ export interface Database {
           meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
           diet_tags: string[]
           free_of: string[]
+          is_shared: boolean
           created_at: string
         }
         Insert: {
@@ -105,6 +106,7 @@ export interface Database {
           meal_type?: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
           diet_tags?: string[]
           free_of?: string[]
+          is_shared?: boolean
         }
         Update: Partial<{
           title: string
@@ -118,6 +120,7 @@ export interface Database {
           meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
           diet_tags: string[]
           free_of: string[]
+          is_shared: boolean
         }>
         Relationships: []
       }
@@ -295,6 +298,11 @@ export interface Database {
       }
     }
     Views: Record<string, never>
-    Functions: Record<string, never>
+    Functions: {
+      set_recipe_shared: {
+        Args: { p_recipe_id: string; p_shared: boolean }
+        Returns: void
+      }
+    }
   }
 }
