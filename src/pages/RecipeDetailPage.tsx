@@ -71,13 +71,12 @@ export function RecipeDetailPage() {
   async function handleShare() {
     if (!recipe) return
     setSharing(true)
-    if (!recipe.is_shared) {
-      const result = await setShared(true)
-      if (result?.error) {
-        setSharing(false)
-        return
-      }
-    }
+    // Das Freigeben in der Datenbank läuft bewusst im Hintergrund (kein
+    // await davor): iOS Safari verwirft sonst die Nutzer-Interaktion des
+    // Klicks, bevor navigator.share() aufgerufen wird, und der
+    // Teilen-Dialog öffnet sich gar nicht erst — ohne jede Fehlermeldung.
+    if (!recipe.is_shared) void setShared(true)
+
     const url = `${window.location.origin}${import.meta.env.BASE_URL}rezept-teilen/${recipe.id}`
     const shareText = `${recipe.title} (${recipe.kcal} kcal) — Rezept aus der Nellicious App`
     if (navigator.share) {
