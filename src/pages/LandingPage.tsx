@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { getChangelogHistory } from '../lib/whatsNew'
+
+const dateFormatter = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'long', year: 'numeric' })
 
 // Feuert einmalig, sobald ein Abschnitt in den sichtbaren Bereich scrollt —
 // fällt bei fehlender IntersectionObserver-Unterstützung auf "sofort
@@ -71,6 +74,8 @@ const STATS = [
 ]
 
 export function LandingPage() {
+  const recentChangelog = getChangelogHistory().slice(0, 2)
+
   return (
     <div className="min-h-screen bg-bg text-text">
       <header className="sticky top-0 z-20 border-b border-border bg-bg/90 backdrop-blur">
@@ -367,31 +372,24 @@ export function LandingPage() {
               </p>
             </div>
             <div className="flex flex-col gap-3">
-              <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-                <span className="font-mono text-xs uppercase text-honey">18. August 2026</span>
-                <ul className="flex flex-col gap-1.5">
-                  {[
-                    'Intervallfasten: Fastenring, Essensfenster-Timer & Phasen erklärt',
-                    'Fastenzeiten rückwirkend eintragen & bearbeiten',
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-1.5 text-sm">
-                      <span className="w-1.5 h-1.5 rounded-full bg-honey shrink-0 mt-1.5" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-                <span className="font-mono text-xs uppercase text-honey">12. August 2026</span>
-                <ul className="flex flex-col gap-1.5">
-                  {['20 neue Salatrezepte', '20 neue gesunde Backrezepte'].map((item) => (
-                    <li key={item} className="flex items-start gap-1.5 text-sm">
-                      <span className="w-1.5 h-1.5 rounded-full bg-honey shrink-0 mt-1.5" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              {recentChangelog.map((entry) => (
+                <div
+                  key={entry.date}
+                  className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2"
+                >
+                  <span className="font-mono text-xs uppercase text-honey">
+                    {dateFormatter.format(new Date(`${entry.date}T00:00:00`))}
+                  </span>
+                  <ul className="flex flex-col gap-1.5">
+                    {entry.items.map((item) => (
+                      <li key={item} className="flex items-start gap-1.5 text-sm">
+                        <span className="w-1.5 h-1.5 rounded-full bg-honey shrink-0 mt-1.5" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
             </div>
           </div>
         </section>

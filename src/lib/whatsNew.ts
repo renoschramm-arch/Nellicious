@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.36'
+export const APP_VERSION = '1.39'
 
 interface ChangelogEntry {
   seq: number
@@ -145,6 +145,31 @@ const CHANGELOG: ChangelogEntry[] = [
       'Erklärungen zu den vier Fastenphasen (Verdauung, Fettverbrennung, Ketose, Autophagie)',
       'Fastenring auch auf der Heute-Seite sichtbar',
       'Intervallfasten lässt sich bei Bedarf komplett ausschalten',
+    ],
+  },
+  {
+    seq: 11,
+    date: '2026-08-20',
+    items: [
+      'Rezeptdatenbank auf 146 Rezepte erweitert, u. a. 20 weitere Fisch- und Meeresfrüchte-Gerichte',
+      'Lebensmittelsuche jetzt mit 681 kuratierten Lebensmitteln',
+      'Rezeptsuche durchsucht jetzt auch Zutaten und Beschreibung — „Fisch" findet z. B. alle Fischrezepte',
+    ],
+  },
+  {
+    seq: 12,
+    date: '2026-08-21',
+    items: [
+      'Neue Startseite stellt Nellicious neuen Besucher:innen vor, bevor sie sich anmelden',
+      'Passwort vergessen: Link zum Zurücksetzen per E-Mail',
+      'Impressum, Datenschutzerklärung und Widerrufsbelehrung ergänzt',
+    ],
+  },
+  {
+    seq: 13,
+    date: '2026-08-24',
+    items: [
+      '↗ Rezepte teilen: Rezept per Link verschicken, auch ohne Nellicious-Konto abrufbar',
     ],
   },
 ]
