@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.40'
+export const APP_VERSION = '1.41'
 
 interface ChangelogEntry {
   seq: number
@@ -177,6 +177,15 @@ const CHANGELOG: ChangelogEntry[] = [
     date: '2026-08-25',
     items: [
       '9 neue Suppenrezepte aus der indischen/asiatischen Küche (u. a. Tom Kha Gai, Pho Ga, Ramen, Laksa), Miso-Suppe überarbeitet',
+    ],
+  },
+  {
+    seq: 15,
+    date: '2026-08-25',
+    items: [
+      'Landingpage komplett überarbeitet: animierte Funktionsvorschauen, die beim Scrollen durch die App führen',
+      '20 deutsche und regionale Suppen ergänzt — von Kartoffelsuppe und schwäbischer Linsensuppe bis Soljanka, Flädle- und Kerbelsuppe',
+      'Vegetarische Suppen werden jetzt auch beim Filter „Pescetarisch" gefunden',
     ],
   },
 ]

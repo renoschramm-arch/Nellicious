@@ -2518,3 +2518,226 @@ set
   diet_tags = array['omnivore', 'vegetarisch', 'vegan']::text[],
   free_of = array['laktosefrei', 'nussfrei', 'eifrei']::text[]
 where title = 'Miso-Suppe mit Tofu und Wakame';
+
+-- Nachtrag: Die vegetarischen/veganen Suppen aus dem asiatischen Batch waren
+-- nicht als "pescetarisch" gekennzeichnet. Die Kennzeichnung ist kumulativ
+-- (vegan ⊂ vegetarisch ⊂ pescetarisch ⊂ omnivore, siehe ältere Rezepte) —
+-- ohne das Tag tauchen sie beim Filter "Pescetarisch" nicht auf.
+update public.recipes
+set diet_tags = array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[]
+where title in ('Miso-Suppe mit Tofu und Wakame', 'Masoor Dal Shorba');
+
+update public.recipes
+set diet_tags = array['omnivore', 'pescetarisch', 'vegetarisch']::text[]
+where title in ('Hot & Sour Soup', 'Kimchi-Jjigae');
+
+
+-- 20 deutsche und regionale Suppen/Eintöpfe
+insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+select v.title, v.description, v.kcal, v.protein_g, v.carbs_g, v.fat_g, v.ingredients, v.instructions, v.meal_type, v.diet_tags, v.free_of
+from (
+  values
+    (
+      'Kartoffelsuppe mit Majoran und Wiener',
+      'Sämiger Klassiker mit frischem Majoran.',
+      380, 16, 40, 17,
+      array['600 g mehligkochende Kartoffeln', '1 Möhre', '1/4 Sellerieknolle', '1 Stange Lauch', '1 Zwiebel', '2 Wiener Würstchen', '1 EL Butter', '800 ml Gemüsebrühe', '2 EL Sahne', '1 TL getrockneter Majoran', 'Salz, Pfeffer, Muskatnuss', 'Petersilie']::text[],
+      'Zwiebel würfeln und in Butter glasig dünsten. Kartoffeln, Möhre und Sellerie schälen und würfeln, Lauch in Ringe schneiden. Alles zugeben, kurz mitdünsten und mit Brühe ablöschen. 20-25 Minuten köcheln, bis die Kartoffeln weich sind. Etwa ein Drittel der Suppe pürieren und zurückgeben, damit sie sämig wird und trotzdem Stücke behält. Sahne und Majoran einrühren, mit Salz, Pfeffer und Muskat abschmecken. Wiener in Scheiben schneiden, in der Suppe erwärmen und mit Petersilie bestreut servieren.',
+      'mittag',
+      array['omnivore']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Schwäbische Linsensuppe mit Spätzle',
+      'Deftiger Klassiker aus Baden-Württemberg.',
+      480, 24, 62, 14,
+      array['250 g Tellerlinsen', '2 Saitenwürstchen', '1 Möhre', '1/4 Sellerieknolle', '1 Zwiebel', '100 g durchwachsener Speck', '1 EL Mehl', '1 l Gemüsebrühe', '3 EL Rotweinessig', '1 Lorbeerblatt', '200 g Spätzle', 'Salz, Pfeffer']::text[],
+      'Linsen abspülen. Zwiebel, Möhre, Sellerie und Speck fein würfeln und in einem Topf auslassen bzw. andünsten. Mehl darüberstäuben und kurz mitrösten. Mit Brühe ablöschen, Linsen und Lorbeerblatt zugeben und 30-40 Minuten weich köcheln lassen. Spätzle nach Packungsanweisung zubereiten. Suppe mit Rotweinessig, Salz und Pfeffer kräftig abschmecken — der Essig gehört zwingend dazu. Saitenwürstchen in Scheiben schneiden und darin erwärmen. Mit den Spätzle anrichten.',
+      'mittag',
+      array['omnivore']::text[],
+      array['nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Berliner Erbseneintopf mit Kasseler',
+      'Sättigender Eintopf, der aufgewärmt noch besser schmeckt.',
+      420, 28, 45, 13,
+      array['300 g getrocknete Schälerbsen', '250 g Kasseler', '2 Möhren', '1/4 Sellerieknolle', '1 Stange Lauch', '2 Kartoffeln', '1 Zwiebel', '1,2 l Gemüsebrühe', '1 Lorbeerblatt', 'Salz, Pfeffer, Majoran']::text[],
+      'Schälerbsen abspülen (Einweichen ist bei Schälerbsen nicht nötig). Zwiebel würfeln und andünsten. Erbsen mit Brühe und Lorbeerblatt zugeben und 45 Minuten köcheln lassen. Möhren, Sellerie, Lauch und Kartoffeln würfeln, nach 25 Minuten zugeben. Kasseler in Würfel schneiden und die letzten 15 Minuten mitziehen lassen. Mit Salz, Pfeffer und Majoran abschmecken. Für eine sämigere Konsistenz einen Teil der Erbsen mit dem Kartoffelstampfer zerdrücken.',
+      'mittag',
+      array['omnivore']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Gulaschsuppe',
+      'Kräftig gewürzt, mit viel Paprika und Zwiebeln.',
+      350, 26, 24, 16,
+      array['400 g Rindergulasch', '3 Zwiebeln', '2 rote Paprika', '2 Kartoffeln', '2 Knoblauchzehen', '2 EL Öl', '2 EL edelsüßes Paprikapulver', '1 TL Kümmel, gemahlen', '1 EL Tomatenmark', '800 ml Rinderbrühe', 'Salz, Pfeffer', 'Majoran']::text[],
+      'Fleisch in kleine Würfel schneiden und in heißem Öl portionsweise kräftig anbraten, herausnehmen. Zwiebeln grob würfeln und im selben Topf langsam goldbraun dünsten — das dauert gut 10 Minuten und ist die Grundlage des Geschmacks. Knoblauch und Tomatenmark kurz mitrösten. Topf vom Herd ziehen, Paprikapulver und Kümmel einrühren (verbrennt sonst schnell und wird bitter), sofort mit Brühe ablöschen. Fleisch zurückgeben und zugedeckt 60-75 Minuten schmoren. Paprika und Kartoffeln würfeln, die letzten 20 Minuten mitgaren. Mit Salz, Pfeffer und Majoran abschmecken.',
+      'mittag',
+      array['omnivore']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Soljanka',
+      'Säuerlich-würziger Klassiker aus Ostdeutschland.',
+      330, 20, 20, 18,
+      array['200 g Jagdwurst', '100 g gekochter Schinken', '150 g Letscho aus dem Glas', '2 Gewürzgurken', '1 Zwiebel', '1 rote Paprika', '2 EL Tomatenmark', '800 ml Gemüsebrühe', '3 EL Gurkenwasser', '1 TL Paprikapulver', '4 EL Schmand', '1 Zitrone', 'Salz, Pfeffer']::text[],
+      'Zwiebel, Paprika, Gewürzgurken, Wurst und Schinken in feine Streifen schneiden. Zwiebel andünsten, Wurst und Schinken zugeben und kurz anbraten. Tomatenmark und Paprikapulver einrühren und kurz mitrösten. Mit Brühe ablöschen, Letscho, Paprika und Gurkenstreifen zugeben und 15 Minuten köcheln lassen. Mit Gurkenwasser, Salz und Pfeffer säuerlich-kräftig abschmecken. Mit einem Klecks Schmand und einer Zitronenscheibe servieren.',
+      'mittag',
+      array['omnivore']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Flädlesuppe',
+      'Schwäbische Pfannkuchensuppe in klarer Rinderbrühe.',
+      280, 14, 28, 12,
+      array['100 g Mehl', '2 Eier', '200 ml Milch', '1 Prise Salz', '1 EL Butterschmalz', '800 ml kräftige Rinderbrühe', 'Schnittlauch', 'Muskatnuss']::text[],
+      'Aus Mehl, Eiern, Milch und Salz einen glatten, eher dünnflüssigen Teig rühren und 20 Minuten quellen lassen. In einer Pfanne mit etwas Butterschmalz nacheinander dünne Pfannkuchen backen und auskühlen lassen. Pfannkuchen aufrollen und in feine Streifen (Flädle) schneiden. Rinderbrühe erhitzen und mit Muskat abschmecken. Flädle in tiefe Teller geben, mit heißer Brühe übergießen und mit reichlich Schnittlauchröllchen bestreut sofort servieren.',
+      'mittag',
+      array['omnivore']::text[],
+      array['nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Leberknödelsuppe',
+      'Bayerischer Klassiker mit lockeren Knödeln.',
+      340, 20, 30, 15,
+      array['250 g Rinderleber', '3 altbackene Semmeln', '150 ml Milch', '1 Ei', '1 Zwiebel', '1 EL Butter', '2 EL Semmelbrösel', '1 l Rinderbrühe', 'Majoran, Petersilie', 'Salz, Pfeffer', 'Schnittlauch']::text[],
+      'Semmeln in Würfel schneiden, mit warmer Milch übergießen und 20 Minuten ziehen lassen. Zwiebel fein würfeln und in Butter glasig dünsten. Leber von Häutchen befreien und fein durchdrehen oder sehr fein hacken. Mit den eingeweichten Semmeln, Zwiebel, Ei, Semmelbröseln, Majoran und Petersilie zu einer formbaren Masse verkneten, kräftig salzen und pfeffern. 15 Minuten ruhen lassen. Mit feuchten Händen Knödel formen und in siedender (nicht kochender) Brühe 15-20 Minuten gar ziehen lassen. Mit Schnittlauch bestreut servieren.',
+      'mittag',
+      array['omnivore']::text[],
+      array['nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Hochzeitssuppe',
+      'Festliche Suppe aus Westfalen mit Klößchen und Spargel.',
+      300, 22, 22, 13,
+      array['1 l kräftige Hühnerbrühe', '150 g Hähnchenfleisch, gekocht', '200 g Spargel aus dem Glas', '250 g Hackfleisch, gemischt', '1 Ei', '2 EL Semmelbrösel', '1 Möhre', '50 g Erbsen', '3 EL Sahne', 'Petersilie, Muskatnuss', 'Salz, Pfeffer']::text[],
+      'Für die Klößchen Hackfleisch mit Ei, Semmelbröseln, Salz, Pfeffer und Muskat verkneten und daumennagelgroße Kügelchen formen. In siedender Brühe 8-10 Minuten gar ziehen lassen, dann herausnehmen. Möhre in feine Würfel schneiden und in der Brühe 6 Minuten garen, Erbsen und in Stücke geschnittenen Spargel zugeben. Hähnchenfleisch klein zupfen und mit den Klößchen zurück in die Suppe geben. Mit Sahne verfeinern, abschmecken und mit Petersilie bestreut servieren.',
+      'mittag',
+      array['omnivore']::text[],
+      array['nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Steckrübeneintopf',
+      'Norddeutscher Wintereintopf, deftig und sättigend.',
+      360, 18, 38, 15,
+      array['800 g Steckrübe', '400 g Kartoffeln', '2 Möhren', '250 g Bauchfleisch oder Kochwurst', '1 Zwiebel', '1 EL Butterschmalz', '900 ml Gemüsebrühe', '1 Lorbeerblatt', 'Salz, Pfeffer, Muskatnuss', 'Petersilie']::text[],
+      'Steckrübe schälen und in etwa 2 cm große Würfel schneiden, Kartoffeln und Möhren ebenso. Zwiebel würfeln und im Butterschmalz andünsten, Fleisch zugeben und rundherum anbraten. Steckrübe und Möhren zugeben, mit Brühe ablöschen, Lorbeerblatt einlegen und 20 Minuten köcheln. Kartoffeln zugeben und weitere 20 Minuten garen, bis alles weich ist. Fleisch herausnehmen, in Stücke schneiden und zurückgeben. Einen Teil der Steckrüben zerdrücken, damit der Eintopf bindet. Mit Salz, Pfeffer und Muskat abschmecken, mit Petersilie bestreuen.',
+      'mittag',
+      array['omnivore']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Pichelsteiner Eintopf',
+      'Bayerischer Eintopf mit dreierlei Fleisch und viel Gemüse.',
+      400, 26, 32, 18,
+      array['200 g Rindfleisch', '150 g Schweinefleisch', '150 g Kalbfleisch', '400 g Kartoffeln', '2 Möhren', '1/4 Sellerieknolle', '1 Stange Lauch', '200 g Weißkohl', '2 Zwiebeln', '1 EL Butterschmalz', '800 ml Rinderbrühe', 'Petersilie', 'Salz, Pfeffer']::text[],
+      'Alle Fleischsorten in mundgerechte Würfel schneiden. Gemüse und Kartoffeln schälen und in gleichmäßige Scheiben oder Würfel schneiden. Im Topf Butterschmalz erhitzen, Fleisch kräftig anbraten und salzen. Klassisch wird nun geschichtet: Fleisch, Zwiebeln, dann lagenweise Gemüse und Kartoffeln, jede Schicht leicht salzen und pfeffern. Mit Brühe angießen, bis das Gemüse knapp bedeckt ist. Zugedeckt bei milder Hitze 60-75 Minuten schmoren, dabei möglichst nicht umrühren, damit die Schichten erhalten bleiben. Vor dem Servieren mit reichlich Petersilie bestreuen.',
+      'mittag',
+      array['omnivore']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Hamburger Aalsuppe',
+      'Norddeutsche Spezialität, süß-sauer mit Backobst.',
+      380, 24, 34, 16,
+      array['400 g Räucheraal', '80 g Backpflaumen', '80 g getrocknete Aprikosen', '1 Möhre', '1/4 Sellerieknolle', '1 Stange Lauch', '100 g Erbsen', '800 ml Gemüsebrühe', '3 EL Weinessig', '2 EL Zucker', '1 Zimtstange', 'Petersilie, Salz, Pfeffer']::text[],
+      'Backobst in etwas Wasser 20 Minuten einweichen. Möhre, Sellerie und Lauch in feine Streifen schneiden und in der Brühe mit der Zimtstange 12 Minuten garen. Backobst samt Einweichwasser sowie Erbsen zugeben und weitere 5 Minuten ziehen lassen. Mit Essig, Zucker, Salz und Pfeffer deutlich süß-sauer abschmecken — dieser Kontrast macht das Gericht aus. Zimtstange entfernen. Aal in Stücke schneiden, erst zum Schluss in die heiße Suppe geben und nur noch durchziehen lassen, damit er nicht zerfällt. Mit Petersilie servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Spargelcremesuppe',
+      'Feine Frühlingssuppe aus frischem Spargel.',
+      260, 8, 16, 18,
+      array['500 g weißer Spargel', '1 Schalotte', '1 EL Butter', '700 ml Gemüsebrühe', '150 ml Sahne', '1 TL Zitronensaft', '1 Prise Zucker', 'Salz, weißer Pfeffer, Muskatnuss', 'Kerbel oder Schnittlauch']::text[],
+      'Spargel schälen, die Schalen und Endstücke aufheben. Schalen mit der Brühe und einer Prise Zucker 20 Minuten auskochen, dann abseihen — das gibt der Suppe ihr volles Aroma. Spargelstangen in Stücke schneiden, die Spitzen beiseitelegen. Schalotte in Butter glasig dünsten, Spargelstücke zugeben und mit dem Spargelfond ablöschen. 15 Minuten weich köcheln und fein pürieren. Sahne einrühren, mit Zitronensaft, Salz, weißem Pfeffer und Muskat abschmecken. Spargelspitzen separat 5 Minuten garen und als Einlage zugeben. Mit Kerbel bestreut servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'low_carb']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Allgäuer Käsesuppe',
+      'Würzige Bergkäsesuppe, wärmt von innen.',
+      380, 18, 22, 25,
+      array['150 g Allgäuer Bergkäse', '1 Zwiebel', '1 Möhre', '1/4 Sellerieknolle', '2 EL Butter', '2 EL Mehl', '700 ml Gemüsebrühe', '150 ml Sahne', '1 Schuss Weißwein', 'Muskatnuss, Salz, Pfeffer', 'Croûtons, Schnittlauch']::text[],
+      'Zwiebel, Möhre und Sellerie sehr fein würfeln und in Butter andünsten. Mehl darüberstäuben und unter Rühren hell anschwitzen. Nach und nach Brühe und Weißwein angießen, dabei kräftig rühren, damit keine Klümpchen entstehen. 15 Minuten köcheln lassen. Käse fein reiben und portionsweise bei milder Hitze einrühren, bis er geschmolzen ist — dabei darf die Suppe nicht mehr kochen, sonst flockt der Käse aus. Sahne einrühren und mit Muskat, Salz und Pfeffer abschmecken. Mit Croûtons und Schnittlauch servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Zwiebelsuppe mit Käsecroûtons',
+      'Lange geschmorte Zwiebeln unter einer Käsehaube.',
+      320, 14, 30, 16,
+      array['700 g Zwiebeln', '2 EL Butter', '1 TL Zucker', '1 EL Mehl', '150 ml Weißwein', '800 ml Gemüsebrühe', '1 Zweig Thymian', '4 Scheiben Baguette', '100 g geriebener Käse', 'Salz, Pfeffer']::text[],
+      'Zwiebeln in feine Ringe schneiden. Butter in einem weiten Topf schmelzen, Zwiebeln mit dem Zucker zugeben und bei mittlerer Hitze 25-30 Minuten unter gelegentlichem Rühren goldbraun schmoren. Diese Zeit ist entscheidend — zu schnell gebräunte Zwiebeln schmecken bitter statt süß. Mehl einrühren, mit Weißwein ablöschen und einkochen lassen. Brühe und Thymian zugeben, 20 Minuten köcheln, salzen und pfeffern. Suppe in ofenfeste Schalen füllen, je eine Baguettescheibe auflegen, mit Käse bestreuen und unter dem Backofengrill 5 Minuten überbacken, bis der Käse goldbraun ist.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Rote-Bete-Suppe mit Meerrettich',
+      'Kräftig gefärbte Suppe mit frischer Schärfe.',
+      220, 6, 26, 10,
+      array['500 g Rote Bete, gekocht', '2 Kartoffeln', '1 Zwiebel', '1 EL Öl', '700 ml Gemüsebrühe', '1 EL Apfelessig', '2 TL frisch geriebener Meerrettich', '4 EL Schmand', 'Kümmel, Salz, Pfeffer', 'Dill']::text[],
+      'Zwiebel würfeln und in Öl glasig dünsten. Kartoffeln schälen, würfeln und mitdünsten. Mit Brühe ablöschen und 15 Minuten köcheln, bis die Kartoffeln weich sind. Rote Bete würfeln, zugeben und kurz miterwärmen. Alles fein pürieren, mit Apfelessig, Kümmel, Salz und Pfeffer abschmecken — der Essig hebt die Erdigkeit der Rote Bete. Mit einem Klecks Schmand, frisch geriebenem Meerrettich und Dill servieren. Beim Arbeiten mit Roter Bete Handschuhe tragen, sie färbt stark.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Grünkerncremesuppe',
+      'Nussig-rauchige Suppe aus fränkischem Grünkern.',
+      290, 10, 38, 11,
+      array['150 g Grünkernschrot', '1 Zwiebel', '1 Möhre', '1/4 Sellerieknolle', '1 EL Butter', '900 ml Gemüsebrühe', '100 ml Sahne', 'Muskatnuss, Salz, Pfeffer', 'Petersilie']::text[],
+      'Zwiebel, Möhre und Sellerie fein würfeln und in Butter andünsten. Grünkernschrot zugeben und kurz mitrösten, bis er duftet — das verstärkt das typisch rauchige Aroma. Mit Brühe ablöschen und unter gelegentlichem Rühren 25-30 Minuten köcheln lassen, bis der Grünkern weich ist. Die Suppe fein pürieren; falls sie zu dick gerät, mit etwas Brühe verdünnen. Sahne einrühren und mit Muskat, Salz und Pfeffer abschmecken. Mit gehackter Petersilie bestreut servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Bayerische Brotsuppe',
+      'Sparsame Resteverwertung mit viel Geschmack.',
+      250, 9, 34, 8,
+      array['250 g altbackenes Bauernbrot', '1 Zwiebel', '1 EL Butter', '800 ml kräftige Gemüsebrühe', '1 TL Kümmel', '1 Lorbeerblatt', '2 EL Sauerrahm', 'Salz, Pfeffer, Muskatnuss', 'Schnittlauch']::text[],
+      'Brot in grobe Würfel schneiden. Zwiebel fein würfeln und in Butter glasig dünsten, Kümmel kurz mitrösten. Brotwürfel zugeben, mit Brühe auffüllen, Lorbeerblatt einlegen und bei milder Hitze 20 Minuten köcheln lassen, bis das Brot zerfällt. Lorbeerblatt entfernen und die Suppe mit dem Schneebesen glatt rühren oder grob pürieren — je nachdem, ob man es rustikal oder cremig mag. Mit Salz, Pfeffer und Muskat abschmecken, Sauerrahm einrühren und mit Schnittlauch bestreut servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch']::text[],
+      array['nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Sauerkrautsuppe mit Kartoffeln',
+      'Säuerlich-herzhaft, ganz ohne tierische Zutaten.',
+      230, 7, 32, 8,
+      array['400 g Sauerkraut', '400 g Kartoffeln', '1 Zwiebel', '1 Möhre', '2 EL Öl', '1 TL Paprikapulver', '1 TL Kümmel', '900 ml Gemüsebrühe', '1 Lorbeerblatt', 'Salz, Pfeffer', 'Petersilie']::text[],
+      'Zwiebel würfeln und in Öl andünsten, Möhre in Scheiben zugeben. Paprikapulver und Kümmel kurz mitrösten, dann sofort mit etwas Brühe ablöschen. Sauerkraut grob zerteilen und zugeben, restliche Brühe und Lorbeerblatt hinzufügen. 15 Minuten köcheln lassen. Kartoffeln schälen, würfeln und weitere 20 Minuten mitgaren, bis sie weich sind. Einen Teil der Kartoffeln am Topfrand zerdrücken, damit die Suppe bindet. Lorbeerblatt entfernen, mit Salz und Pfeffer abschmecken und mit Petersilie bestreuen.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Kerbelsuppe',
+      'Feine Frühlingssuppe mit frischem Kerbel.',
+      210, 6, 14, 15,
+      array['2 Bund frischer Kerbel', '1 Schalotte', '2 EL Butter', '700 ml Gemüsebrühe', '150 ml Sahne', '1 Kartoffel', '1 Eigelb', '1 TL Zitronensaft', 'Salz, weißer Pfeffer, Muskatnuss']::text[],
+      'Kerbel waschen, die groben Stiele entfernen und die Blättchen grob hacken, einige zum Garnieren beiseitelegen. Schalotte fein würfeln und in Butter glasig dünsten. Kartoffel schälen, würfeln, zugeben und mit Brühe ablöschen. 15 Minuten köcheln, bis die Kartoffel weich ist — sie bindet die Suppe ohne Mehl. Kerbel zugeben und nur kurz mitziehen lassen, dann sofort fein pürieren, damit die frische Farbe erhalten bleibt. Sahne mit Eigelb verquirlen und bei milder Hitze einrühren, dabei nicht mehr kochen lassen. Mit Zitronensaft, Salz, weißem Pfeffer und Muskat abschmecken.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'low_carb']::text[],
+      array['glutenfrei', 'nussfrei', 'sojafrei']::text[]
+    ),
+    (
+      'Möhren-Ingwer-Cremesuppe',
+      'Samtige vegane Suppe mit wärmender Schärfe.',
+      200, 4, 24, 10,
+      array['700 g Möhren', '1 Zwiebel', '1 Stück Ingwer (ca. 3 cm)', '1 Kartoffel', '1 EL Öl', '800 ml Gemüsebrühe', '100 ml Kokosmilch', '1 TL Kreuzkümmel', '1 TL Zitronensaft', 'Salz, Pfeffer', 'Kürbiskerne, Petersilie']::text[],
+      'Zwiebel und Ingwer fein hacken, in Öl andünsten, bis die Zwiebel glasig ist. Kreuzkümmel kurz mitrösten. Möhren und Kartoffel schälen, in Scheiben bzw. Würfel schneiden und zugeben. Mit Brühe ablöschen und 20-25 Minuten köcheln lassen, bis alles weich ist. Sehr fein pürieren — je länger man püriert, desto samtiger wird die Suppe. Kokosmilch einrühren, mit Zitronensaft, Salz und Pfeffer abschmecken. Mit gerösteten Kürbiskernen und Petersilie bestreut servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'glutenfrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    )
+) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+where not exists (
+  select 1 from public.recipes r where r.title = v.title
+);

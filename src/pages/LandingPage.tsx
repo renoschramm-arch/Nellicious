@@ -667,7 +667,7 @@ function RecipeRail() {
         <div className="max-w-5xl mx-auto px-6 flex items-end justify-between gap-6 flex-wrap mb-10">
           <div>
             <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
-              154 Rezepte
+              174 Rezepte
             </span>
             <h2 className="font-display font-semibold text-2xl md:text-4xl leading-tight mt-3 max-w-[16ch] text-wrap-balance">
               Von Overnight Oats bis Tom Kha Gai.
@@ -781,7 +781,7 @@ function FastingSection() {
 
 // ---------------------------------------------------------------------------
 const STATS = [
-  { value: 154, label: 'Rezepte' },
+  { value: 174, label: 'Rezepte' },
   { value: 681, label: 'Lebensmittel' },
   { value: 6, label: 'Ernährungsformen' },
   { value: 14, label: 'Tage kostenlos' },
@@ -842,7 +842,7 @@ export function LandingPage() {
             Ernährung, die sich <span className="text-primary">nach deinem Leben</span> richtet.
           </h1>
           <p className="text-lg md:text-xl text-text-muted font-light leading-relaxed max-w-[56ch] mx-auto">
-            Kalorien und Makros tracken, aus 154 Rezepten planen und mit Intervallfasten den Überblick
+            Kalorien und Makros tracken, aus 174 Rezepten planen und mit Intervallfasten den Überblick
             behalten — alles in einer ruhigen App statt zehn Tabs.
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3.5 mt-9">
