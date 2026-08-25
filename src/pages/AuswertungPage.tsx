@@ -174,7 +174,7 @@ export function AuswertungPage() {
           </div>
 
           <div className="grid grid-cols-3 gap-2">
-            <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5">
+            <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5 min-w-0">
               <span className="font-mono text-lg font-semibold">{avgKcal.toLocaleString('de-DE')}</span>
               <span className="text-[11px] uppercase tracking-wide text-text-muted">Ø kcal / Tag</span>
               <span className={`text-xs font-medium ${Math.abs(kcalGoalDeltaPct) <= 5 ? 'text-basil' : 'text-honey'}`}>
@@ -182,14 +182,14 @@ export function AuswertungPage() {
                 {kcalGoalDeltaPct} % ggü. Ziel
               </span>
             </div>
-            <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5">
+            <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5 min-w-0">
               <span className="font-mono text-lg font-semibold">
                 {weightChange != null ? `${weightChange > 0 ? '+' : ''}${formatWeightKg(weightChange)} kg` : '–'}
               </span>
               <span className="text-[11px] uppercase tracking-wide text-text-muted">in {range.label}</span>
-              <span className="text-xs text-text-muted">Gewichtsveränderung</span>
+              <span className="text-xs text-text-muted break-words">Gewichtsveränderung</span>
             </div>
-            <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5">
+            <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5 min-w-0">
               <span className="font-mono text-lg font-semibold">{hitRate != null ? `${hitRate} %` : '–'}</span>
               <span className="text-[11px] uppercase tracking-wide text-text-muted">Tage im Ziel</span>
               <span className="text-xs text-text-muted">±10 % Toleranz</span>
@@ -211,7 +211,7 @@ export function AuswertungPage() {
             <h2 className="font-display font-semibold text-lg">🍽️ Makronährstoffe</h2>
             <p className="text-xs text-text-muted -mt-1">Ø pro Tag im gewählten Zeitraum, gegen dein Tagesziel</p>
             <div className="grid grid-cols-3 gap-2">
-              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5">
+              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{avgProtein} g</span>
                 <span className="text-[10px] text-text-muted">Protein{proteinGoal > 0 ? ` · Ziel ${proteinGoal} g` : ''}</span>
                 <div className="h-1.5 rounded-full bg-bg overflow-hidden">
@@ -221,7 +221,7 @@ export function AuswertungPage() {
                   />
                 </div>
               </div>
-              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5">
+              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{avgCarbs} g</span>
                 <span className="text-[10px] text-text-muted">Kohlenh.{carbsGoal > 0 ? ` · Ziel ${carbsGoal} g` : ''}</span>
                 <div className="h-1.5 rounded-full bg-bg overflow-hidden">
@@ -231,7 +231,7 @@ export function AuswertungPage() {
                   />
                 </div>
               </div>
-              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5">
+              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{avgFat} g</span>
                 <span className="text-[10px] text-text-muted">Fett{fatGoal > 0 ? ` · Ziel ${fatGoal} g` : ''}</span>
                 <div className="h-1.5 rounded-full bg-bg overflow-hidden">
@@ -246,11 +246,11 @@ export function AuswertungPage() {
             <p className="text-xs text-text-muted -mt-1">Ø Fastenstunden pro Tag je Abschnitt</p>
             <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
             <div className="grid grid-cols-2 gap-2">
-              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-0.5">
+              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-0.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">🔥 {currentFastingStreak} Tage</span>
                 <span className="text-[10px] text-text-muted">aktueller Streak</span>
               </div>
-              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-0.5">
+              <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-0.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">🏆 {longestFastingStreak} Tage</span>
                 <span className="text-[10px] text-text-muted">längste Serie ({range.label})</span>
               </div>
