@@ -1,24 +1,19 @@
+import { useTranslation } from 'react-i18next'
 import {
   DIET_TAGS,
-  DIET_TAG_LABELS,
-  DIET_TAG_DESCRIPTIONS,
+  getDietTagLabels,
+  getDietTagDescriptions,
   FREE_OF_OPTIONS,
-  FREE_OF_LABELS,
-  FREE_OF_DESCRIPTIONS,
-  MEAL_TYPE_LABELS,
+  getFreeOfLabels,
+  getFreeOfDescriptions,
+  getMealTypeLabels,
   MEAL_TYPES,
 } from '../lib/useRecipes'
 import type { RecipeFiltersState } from '../lib/useRecipeFilters'
 import { TagLegend } from './TagLegend'
 
-// Kürzeres Label nur für die Filter-Pills hier, damit alle Buttons in einer
-// Zeile passen — Badges auf Karten/Detailseite behalten "Frühstück".
-const FILTER_LABELS = {
-  ...MEAL_TYPE_LABELS,
-  fruehstueck: 'Früh',
-}
-
 export function RecipeFilterBar({ filters }: { filters: RecipeFiltersState }) {
+  const { t } = useTranslation()
   const {
     query,
     setQuery,
@@ -33,12 +28,20 @@ export function RecipeFilterBar({ filters }: { filters: RecipeFiltersState }) {
     activeFilterCount,
   } = filters
 
+  // Kürzeres Label nur für die Filter-Pills hier, damit alle Buttons in einer
+  // Zeile passen — Badges auf Karten/Detailseite behalten das volle Label.
+  const filterLabels = { ...getMealTypeLabels(t), fruehstueck: t('mealTypes.fruehstueckShort') }
+  const dietTagLabels = getDietTagLabels(t)
+  const dietTagDescriptions = getDietTagDescriptions(t)
+  const freeOfLabels = getFreeOfLabels(t)
+  const freeOfDescriptions = getFreeOfDescriptions(t)
+
   return (
     <div className="flex flex-col gap-3">
       <input
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        placeholder="Rezepte durchsuchen …"
+        placeholder={t('recipeFilterBar.searchPlaceholder')}
         className="w-full rounded-lg border border-border bg-surface px-3 py-2 outline-none focus:border-primary"
       />
       <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto">
@@ -48,7 +51,7 @@ export function RecipeFilterBar({ filters }: { filters: RecipeFiltersState }) {
             mealType === 'alle' ? 'bg-primary text-on-primary' : 'bg-surface border border-border text-text-muted hover:text-text'
           }`}
         >
-          Alle
+          {t('recipeFilterBar.all')}
         </button>
         {MEAL_TYPES.map((type) => (
           <button
@@ -58,7 +61,7 @@ export function RecipeFilterBar({ filters }: { filters: RecipeFiltersState }) {
               mealType === type ? 'bg-primary text-on-primary' : 'bg-surface border border-border text-text-muted hover:text-text'
             }`}
           >
-            {FILTER_LABELS[type]}
+            {filterLabels[type]}
           </button>
         ))}
         <button
@@ -67,18 +70,21 @@ export function RecipeFilterBar({ filters }: { filters: RecipeFiltersState }) {
             onlyFavorites ? 'bg-primary text-on-primary' : 'bg-surface border border-border text-text-muted hover:text-text'
           }`}
         >
-          ♥ Favoriten
+          {t('recipeFilterBar.favorites')}
         </button>
       </div>
 
       <details className="bg-surface border border-border rounded-2xl p-4 group">
         <summary className="flex items-center justify-between gap-2 cursor-pointer text-sm font-semibold list-none">
-          <span>Filter{activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}</span>
+          <span>
+            {t('recipeFilterBar.filters')}
+            {activeFilterCount > 0 ? ` (${activeFilterCount})` : ''}
+          </span>
           <span className="text-text-muted transition-transform group-open:rotate-180">▾</span>
         </summary>
         <div className="flex flex-col gap-3 mt-3">
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-text-muted">Ernährungstyp</span>
+            <span className="text-xs text-text-muted">{t('recipeFilterBar.nutritionType')}</span>
             <div className="flex flex-wrap gap-1.5">
               <button
                 onClick={() => setDietFilter('alle')}
@@ -86,7 +92,7 @@ export function RecipeFilterBar({ filters }: { filters: RecipeFiltersState }) {
                   dietFilter === 'alle' ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
                 }`}
               >
-                Alle
+                {t('recipeFilterBar.all')}
               </button>
               {DIET_TAGS.map((tag) => (
                 <button
@@ -96,16 +102,16 @@ export function RecipeFilterBar({ filters }: { filters: RecipeFiltersState }) {
                     dietFilter === tag ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
                   }`}
                 >
-                  {DIET_TAG_LABELS[tag]}
+                  {dietTagLabels[tag]}
                 </button>
               ))}
             </div>
             <TagLegend
-              items={DIET_TAGS.map((tag) => ({ label: DIET_TAG_LABELS[tag], description: DIET_TAG_DESCRIPTIONS[tag] }))}
+              items={DIET_TAGS.map((tag) => ({ label: dietTagLabels[tag], description: dietTagDescriptions[tag] }))}
             />
           </div>
           <div className="flex flex-col gap-1.5">
-            <span className="text-xs text-text-muted">Frei von</span>
+            <span className="text-xs text-text-muted">{t('recipeFilterBar.freeOf')}</span>
             <div className="flex flex-wrap gap-1.5">
               {FREE_OF_OPTIONS.map((value) => (
                 <button
@@ -115,12 +121,12 @@ export function RecipeFilterBar({ filters }: { filters: RecipeFiltersState }) {
                     freeOfFilter.includes(value) ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
                   }`}
                 >
-                  {FREE_OF_LABELS[value]}
+                  {freeOfLabels[value]}
                 </button>
               ))}
             </div>
             <TagLegend
-              items={FREE_OF_OPTIONS.map((value) => ({ label: FREE_OF_LABELS[value], description: FREE_OF_DESCRIPTIONS[value] }))}
+              items={FREE_OF_OPTIONS.map((value) => ({ label: freeOfLabels[value], description: freeOfDescriptions[value] }))}
             />
           </div>
         </div>

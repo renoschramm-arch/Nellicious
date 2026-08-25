@@ -1,12 +1,13 @@
 import { lazy, Suspense, useState, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import {
   DIET_TAGS,
-  DIET_TAG_LABELS,
-  DIET_TAG_DESCRIPTIONS,
+  getDietTagLabels,
+  getDietTagDescriptions,
   FREE_OF_OPTIONS,
-  FREE_OF_LABELS,
-  FREE_OF_DESCRIPTIONS,
-  MEAL_TYPE_LABELS,
+  getFreeOfLabels,
+  getFreeOfDescriptions,
+  getMealTypeLabels,
   MEAL_TYPES,
   type MealType,
   type Recipe,
@@ -38,8 +39,8 @@ export function RecipeForm({
   initial,
   onCancel,
   onSave,
-  submitLabel = 'Speichern',
-  savedLabel = 'Gespeichert ✓',
+  submitLabel,
+  savedLabel,
 }: {
   initial?: Recipe
   onCancel: () => void
@@ -47,6 +48,14 @@ export function RecipeForm({
   submitLabel?: string
   savedLabel?: string
 }) {
+  const { t } = useTranslation()
+  const finalSubmitLabel = submitLabel ?? t('recipeForm.save')
+  const finalSavedLabel = savedLabel ?? t('recipeForm.saved')
+  const mealTypeLabels = getMealTypeLabels(t)
+  const dietTagLabels = getDietTagLabels(t)
+  const dietTagDescriptions = getDietTagDescriptions(t)
+  const freeOfLabels = getFreeOfLabels(t)
+  const freeOfDescriptions = getFreeOfDescriptions(t)
   const [title, setTitle] = useState(initial?.title ?? '')
   const [description, setDescription] = useState(initial?.description ?? '')
   const [kcal, setKcal] = useState(initial ? String(initial.kcal) : '')
@@ -81,7 +90,7 @@ export function RecipeForm({
       setScanError(null)
       selectIngredientFood(food)
     } else {
-      setScanError('Kein Treffer für diesen Barcode gefunden. Bitte manuell suchen oder eintragen.')
+      setScanError(t('recipeForm.noBarcodeMatch'))
     }
   }
 
@@ -136,11 +145,11 @@ export function RecipeForm({
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-5">
       <button type="button" onClick={onCancel} className="text-sm text-text-muted hover:text-text w-fit">
-        ← Abbrechen
+        {t('recipeForm.cancel')}
       </button>
 
       <label className="flex flex-col gap-1.5 text-sm">
-        Titel
+        {t('recipeForm.titleLabel')}
         <input
           required
           value={title}
@@ -150,7 +159,7 @@ export function RecipeForm({
       </label>
 
       <label className="flex flex-col gap-1.5 text-sm">
-        Beschreibung
+        {t('recipeForm.description')}
         <textarea
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -160,7 +169,7 @@ export function RecipeForm({
       </label>
 
       <label className="flex flex-col gap-1.5 text-sm">
-        Mahlzeitenart
+        {t('recipeForm.mealTypeLabel')}
         <select
           value={mealType}
           onChange={(e) => setMealType(e.target.value as MealType)}
@@ -168,14 +177,14 @@ export function RecipeForm({
         >
           {MEAL_TYPES.map((type) => (
             <option key={type} value={type}>
-              {MEAL_TYPE_LABELS[type]}
+              {mealTypeLabels[type]}
             </option>
           ))}
         </select>
       </label>
 
       <label className="flex flex-col gap-1.5 text-sm w-28">
-        Portionen
+        {t('recipeForm.servings')}
         <input
           type="number"
           min={1}
@@ -198,7 +207,7 @@ export function RecipeForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-xs text-text-muted">
-          Protein g
+          {t('recipeForm.proteinG')}
           <input
             type="number"
             min={0}
@@ -208,7 +217,7 @@ export function RecipeForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-xs text-text-muted">
-          Kohlenh. g
+          {t('recipeForm.carbsG')}
           <input
             type="number"
             min={0}
@@ -218,7 +227,7 @@ export function RecipeForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-xs text-text-muted">
-          Fett g
+          {t('recipeForm.fatG')}
           <input
             type="number"
             min={0}
@@ -230,7 +239,7 @@ export function RecipeForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium">Geeignet für</span>
+        <span className="text-sm font-medium">{t('recipeForm.suitableFor')}</span>
         <div className="flex flex-wrap gap-1.5">
           {DIET_TAGS.map((tag) => (
             <button
@@ -243,17 +252,17 @@ export function RecipeForm({
                   : 'bg-surface-2 border border-border text-text-muted hover:text-text'
               }`}
             >
-              {DIET_TAG_LABELS[tag]}
+              {dietTagLabels[tag]}
             </button>
           ))}
         </div>
         <TagLegend
-          items={DIET_TAGS.map((tag) => ({ label: DIET_TAG_LABELS[tag], description: DIET_TAG_DESCRIPTIONS[tag] }))}
+          items={DIET_TAGS.map((tag) => ({ label: dietTagLabels[tag], description: dietTagDescriptions[tag] }))}
         />
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium">Frei von</span>
+        <span className="text-sm font-medium">{t('recipeForm.freeOf')}</span>
         <div className="flex flex-wrap gap-1.5">
           {FREE_OF_OPTIONS.map((value) => (
             <button
@@ -266,18 +275,18 @@ export function RecipeForm({
                   : 'bg-surface-2 border border-border text-text-muted hover:text-text'
               }`}
             >
-              {FREE_OF_LABELS[value]}
+              {freeOfLabels[value]}
             </button>
           ))}
         </div>
         <TagLegend
-          items={FREE_OF_OPTIONS.map((value) => ({ label: FREE_OF_LABELS[value], description: FREE_OF_DESCRIPTIONS[value] }))}
+          items={FREE_OF_OPTIONS.map((value) => ({ label: freeOfLabels[value], description: freeOfDescriptions[value] }))}
         />
       </div>
 
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between">
-          <span className="text-sm font-medium">Zutat aus Lebensmitteldatenbank hinzufügen (optional)</span>
+          <span className="text-sm font-medium">{t('recipeForm.searchFoodDb')}</span>
           <button
             type="button"
             onClick={() => {
@@ -286,7 +295,7 @@ export function RecipeForm({
             }}
             className="text-xs text-primary font-medium shrink-0"
           >
-            📷 Scannen
+            {t('recipeForm.scan')}
           </button>
         </div>
         <div className="relative">
@@ -296,17 +305,17 @@ export function RecipeForm({
               setFoodQuery(e.target.value)
               setSelectedFood(null)
             }}
-            placeholder="z. B. Basmati Reis"
+            placeholder={t('recipeForm.foodPlaceholder')}
             className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
           />
           {foodQuery.trim().length >= 2 && !selectedFood && (
             <div className="absolute top-full left-0 right-0 mt-1 z-10 bg-surface border border-border rounded-xl max-h-56 overflow-y-auto shadow-lg">
-              {foodLoading && <p className="text-xs text-text-muted px-3 py-2">Suche …</p>}
+              {foodLoading && <p className="text-xs text-text-muted px-3 py-2">{t('recipeForm.searching')}</p>}
               {!foodLoading && foodError && (
-                <p className="text-xs text-danger px-3 py-2">Suche fehlgeschlagen.</p>
+                <p className="text-xs text-danger px-3 py-2">{t('recipeForm.searchFailed')}</p>
               )}
               {!foodLoading && !foodError && foodResults.length === 0 && (
-                <p className="text-xs text-text-muted px-3 py-2">Keine Treffer.</p>
+                <p className="text-xs text-text-muted px-3 py-2">{t('recipeForm.noResults')}</p>
               )}
               {foodResults.map((r) => (
                 <button
@@ -337,7 +346,7 @@ export function RecipeForm({
               onClick={addIngredientFromSearch}
               className="ml-auto bg-surface-2 border border-border rounded-lg px-3 py-1.5 text-xs font-medium hover:border-primary"
             >
-              + Hinzufügen
+              {t('recipeForm.add')}
             </button>
           </div>
         )}
@@ -351,7 +360,7 @@ export function RecipeForm({
       )}
 
       <label className="flex flex-col gap-1.5 text-sm">
-        Zutaten (eine pro Zeile)
+        {t('recipeForm.ingredientsLabel')}
         <textarea
           value={ingredients}
           onChange={(e) => setIngredients(e.target.value)}
@@ -361,7 +370,7 @@ export function RecipeForm({
       </label>
 
       <label className="flex flex-col gap-1.5 text-sm">
-        Zubereitung
+        {t('recipeForm.instructionsLabel')}
         <textarea
           value={instructions}
           onChange={(e) => setInstructions(e.target.value)}
@@ -376,14 +385,14 @@ export function RecipeForm({
           onClick={onCancel}
           className="flex-1 rounded-xl py-2.5 text-sm text-text-muted border border-border"
         >
-          Abbrechen
+          {t('common.cancel')}
         </button>
         <button
           type="submit"
           disabled={saving}
           className="flex-1 bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm disabled:opacity-60"
         >
-          {saving ? 'Wird gespeichert …' : justSaved ? savedLabel : submitLabel}
+          {saving ? t('recipeForm.saving') : justSaved ? finalSavedLabel : finalSubmitLabel}
         </button>
       </div>
     </form>

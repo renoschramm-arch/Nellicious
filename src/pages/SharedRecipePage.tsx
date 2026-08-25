@@ -1,8 +1,10 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
-import { DIET_TAG_LABELS, FREE_OF_LABELS, MEAL_TYPE_LABELS, useRecipe } from '../lib/useRecipes'
+import { useTranslation } from 'react-i18next'
+import { getDietTagLabels, getFreeOfLabels, getMealTypeLabels, useRecipe } from '../lib/useRecipes'
 import { useAuth } from '../lib/AuthContext'
 
 export function SharedRecipePage() {
+  const { t } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const { recipe, loading } = useRecipe(id)
   const { session } = useAuth()
@@ -20,31 +22,29 @@ export function SharedRecipePage() {
           </Link>
           <div className="flex items-center gap-3 shrink-0">
             <Link to="/anmelden" className="text-xs sm:text-sm text-text-muted hover:text-text whitespace-nowrap">
-              Anmelden
+              {t('sharedRecipe.signIn')}
             </Link>
             <Link
               to="/anmelden?mode=signup"
               className="bg-primary text-on-primary font-semibold text-xs sm:text-sm rounded-full px-4 sm:px-5 py-2.5 hover:bg-primary-hover transition-colors whitespace-nowrap"
             >
-              Kostenlos starten
+              {t('sharedRecipe.startFree')}
             </Link>
           </div>
         </div>
       </header>
 
       <main className="max-w-2xl mx-auto px-6 py-10 flex flex-col gap-6">
-        {loading && <p className="text-text-muted text-sm">Lädt …</p>}
+        {loading && <p className="text-text-muted text-sm">{t('sharedRecipe.loading')}</p>}
 
         {!loading && !recipe && (
           <div className="text-center py-16 flex flex-col items-center gap-3">
-            <p className="text-text-muted">
-              Dieses Rezept wurde nicht gefunden oder ist nicht mehr freigegeben.
-            </p>
+            <p className="text-text-muted">{t('sharedRecipe.notFound')}</p>
             <Link
               to="/willkommen"
               className="text-primary font-semibold hover:underline"
             >
-              Zu Nellicious
+              {t('sharedRecipe.toApp')}
             </Link>
           </div>
         )}
@@ -54,7 +54,7 @@ export function SharedRecipePage() {
             <div>
               <div className="flex flex-wrap gap-1.5 mb-2">
                 <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2.5 py-1">
-                  {MEAL_TYPE_LABELS[recipe.meal_type]}
+                  {getMealTypeLabels(t)[recipe.meal_type]}
                 </span>
                 {recipe.diet_tags
                   .filter((tag) => tag !== 'omnivore')
@@ -63,7 +63,7 @@ export function SharedRecipePage() {
                       key={tag}
                       className="inline-block text-xs font-medium text-basil bg-basil/10 rounded-full px-2.5 py-1"
                     >
-                      {DIET_TAG_LABELS[tag as keyof typeof DIET_TAG_LABELS]}
+                      {getDietTagLabels(t)[tag as keyof ReturnType<typeof getDietTagLabels>]}
                     </span>
                   ))}
                 {recipe.free_of.map((value) => (
@@ -71,7 +71,7 @@ export function SharedRecipePage() {
                     key={value}
                     className="inline-block text-xs font-medium text-honey bg-honey/10 rounded-full px-2.5 py-1"
                   >
-                    {FREE_OF_LABELS[value as keyof typeof FREE_OF_LABELS]}
+                    {getFreeOfLabels(t)[value as keyof ReturnType<typeof getFreeOfLabels>]}
                   </span>
                 ))}
               </div>
@@ -85,22 +85,22 @@ export function SharedRecipePage() {
                 {recipe.kcal}
               </div>
               <div className="bg-surface border border-border rounded-xl p-3 text-center">
-                <div className="text-text-muted text-xs uppercase mb-1">Protein</div>
+                <div className="text-text-muted text-xs uppercase mb-1">{t('macros.protein')}</div>
                 {recipe.protein_g}g
               </div>
               <div className="bg-surface border border-border rounded-xl p-3 text-center">
-                <div className="text-text-muted text-xs uppercase mb-1">Kohlenh.</div>
+                <div className="text-text-muted text-xs uppercase mb-1">{t('macros.carbs')}</div>
                 {recipe.carbs_g}g
               </div>
               <div className="bg-surface border border-border rounded-xl p-3 text-center">
-                <div className="text-text-muted text-xs uppercase mb-1">Fett</div>
+                <div className="text-text-muted text-xs uppercase mb-1">{t('macros.fat')}</div>
                 {recipe.fat_g}g
               </div>
             </div>
 
             {recipe.ingredients.length > 0 && (
               <div>
-                <h2 className="font-display font-semibold text-lg mb-2">Zutaten</h2>
+                <h2 className="font-display font-semibold text-lg mb-2">{t('sharedRecipe.ingredients')}</h2>
                 <ul className="flex flex-col gap-1.5">
                   {recipe.ingredients.map((ing, i) => (
                     <li key={i} className="flex items-center gap-2 text-sm">
@@ -114,23 +114,19 @@ export function SharedRecipePage() {
 
             {recipe.instructions && (
               <div>
-                <h2 className="font-display font-semibold text-lg mb-2">Zubereitung</h2>
+                <h2 className="font-display font-semibold text-lg mb-2">{t('sharedRecipe.instructions')}</h2>
                 <p className="text-sm whitespace-pre-line">{recipe.instructions}</p>
               </div>
             )}
 
             <div className="bg-text text-bg rounded-[28px] px-6 py-10 text-center flex flex-col items-center gap-4 mt-4">
-              <h2 className="font-display font-semibold text-xl">
-                174 Rezepte wie dieses, kostenlos in der Beta.
-              </h2>
-              <p className="text-bg/70 text-sm max-w-xs">
-                Kalorien und Makros tracken, Wochenplan, Einkaufsliste — alles in einer App.
-              </p>
+              <h2 className="font-display font-semibold text-xl">{t('sharedRecipe.ctaTitle', { count: 174 })}</h2>
+              <p className="text-bg/70 text-sm max-w-xs">{t('sharedRecipe.ctaSubtitle')}</p>
               <Link
                 to="/anmelden?mode=signup"
                 className="bg-primary text-on-primary font-semibold rounded-full px-7 py-3 hover:bg-primary-hover transition-colors"
               >
-                Kostenlos starten
+                {t('sharedRecipe.startFree')}
               </Link>
             </div>
           </>
