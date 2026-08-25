@@ -34,13 +34,17 @@ export function RecipeDetailPage() {
   const [sharing, setSharing] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
   const [targetServings, setTargetServings] = useState(1)
+  const [servingsInput, setServingsInput] = useState('1')
 
   useEffect(() => {
     setNoteInput(note)
   }, [note])
 
   useEffect(() => {
-    if (recipe) setTargetServings(recipe.servings)
+    if (recipe) {
+      setTargetServings(recipe.servings)
+      setServingsInput(String(recipe.servings))
+    }
   }, [recipe])
 
   if (loading) return <p className="text-text-muted text-sm">Lädt …</p>
@@ -56,6 +60,25 @@ export function RecipeDetailPage() {
       return
     }
     setTargetServings(Math.max(1, Math.round(next)))
+  }
+
+  // Eingabe bleibt beim Tippen als reiner Text erhalten (auch leer, während
+  // man die alte Zahl löscht) — targetServings wird nur bei einem gültigen
+  // Wert aktualisiert, damit Zutaten/Nährwerte nicht zwischenzeitlich auf 1
+  // zurückspringen.
+  function handleServingsInputChange(value: string) {
+    setServingsInput(value)
+    const parsed = Number(value)
+    if (value.trim() !== '' && Number.isFinite(parsed) && parsed > 0) {
+      applyServings(parsed)
+    }
+  }
+
+  function handleServingsInputBlur() {
+    const parsed = Number(servingsInput)
+    if (servingsInput.trim() === '' || !Number.isFinite(parsed) || parsed <= 0) {
+      setServingsInput(String(targetServings))
+    }
   }
 
   function handleAddToPlan() {
@@ -239,33 +262,14 @@ export function RecipeDetailPage() {
         <h2 className="font-display font-semibold text-lg">
           🍽️ Portionen skalieren{!hasPremium && ' 🔒'}
         </h2>
-        <div className="grid grid-cols-4 gap-2">
-          {[1, 2, 4, 7].map((m) => {
-            const portions = baseServings * m
-            const active = targetServings === portions
-            return (
-              <button
-                key={m}
-                type="button"
-                onClick={() => applyServings(portions)}
-                className={`rounded-xl py-2 text-xs font-medium transition-colors ${
-                  active
-                    ? 'bg-primary text-on-primary'
-                    : 'bg-surface-2 border border-border hover:border-primary'
-                }`}
-              >
-                ×{m}
-              </button>
-            )
-          })}
-        </div>
         <div className="flex items-center gap-2">
           <input
             type="number"
             min={1}
-            value={targetServings}
+            value={servingsInput}
             disabled={!hasPremium}
-            onChange={(e) => applyServings(Number(e.target.value) || 1)}
+            onChange={(e) => handleServingsInputChange(e.target.value)}
+            onBlur={handleServingsInputBlur}
             className="w-20 rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono outline-none focus:border-primary disabled:opacity-60"
           />
           <span className="text-sm text-text-muted">
