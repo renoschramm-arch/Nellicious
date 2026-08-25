@@ -17,7 +17,7 @@ const MISSING_FIELD_LABELS: Record<string, { label: string; to: string }> = {
 }
 
 export function DailyGoalsPage() {
-  const { profile, updateProfile } = useProfile()
+  const { profile, updateProfile, reload: reloadProfile } = useProfile()
   const { logs: weightLogs } = useWeightLogs()
   const [kcal, setKcal] = useState('')
   const [protein, setProtein] = useState('')
@@ -105,13 +105,18 @@ export function DailyGoalsPage() {
     setShowNameInput(false)
   }
 
-  function handleActivateProfile(id: string) {
+  async function handleActivateProfile(id: string) {
     if (!hasPremium) {
       setShowPremiumModal(true)
       return
     }
     const target = goalProfiles.find((p) => p.id === id)
-    if (target) activateProfile(target)
+    if (!target) return
+    // activateProfile schreibt direkt über Supabase in die profiles-Zeile,
+    // ohne den lokalen State von useProfile() zu berühren — ohne reload()
+    // bleiben Eingabefelder und aktive Markierung auf dem alten Stand.
+    await activateProfile(target)
+    await reloadProfile()
   }
 
   return (
