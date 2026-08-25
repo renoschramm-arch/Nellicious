@@ -67,7 +67,7 @@ function Ring({ color, deg, size = 52 }: { color: string; deg: number; size?: nu
 }
 
 const STATS = [
-  { value: '146', label: 'Rezepte' },
+  { value: '156', label: 'Rezepte' },
   { value: '681', label: 'Lebensmittel in der Suche' },
   { value: '6', label: 'Ernährungsformen' },
   { value: '14', label: 'Tage kostenlos testen' },
@@ -107,7 +107,7 @@ export function LandingPage() {
             Ernährung, die sich <span className="text-primary">nach deinem Leben</span> richtet.
           </h1>
           <p className="text-lg text-text-muted leading-relaxed max-w-md mx-auto md:mx-0 mb-7">
-            Kalorien und Makros tracken, aus 146 Rezepten planen und mit Intervallfasten den
+            Kalorien und Makros tracken, aus 156 Rezepten planen und mit Intervallfasten den
             Überblick behalten — alles in einer ruhigen, aufgeräumten App statt zehn Tabs.
           </p>
           <div className="flex flex-wrap items-center justify-center md:justify-start gap-4">

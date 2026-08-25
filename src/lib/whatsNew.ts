@@ -1,4 +1,4 @@
-export const APP_VERSION = '1.39'
+export const APP_VERSION = '1.40'
 
 interface ChangelogEntry {
   seq: number
@@ -170,6 +170,13 @@ const CHANGELOG: ChangelogEntry[] = [
     date: '2026-08-24',
     items: [
       '↗ Rezepte teilen: Rezept per Link verschicken, auch ohne Nellicious-Konto abrufbar',
+    ],
+  },
+  {
+    seq: 14,
+    date: '2026-08-25',
+    items: [
+      '10 Suppenrezepte aus der indischen/asiatischen Küche hinzugefügt (u. a. Tom Kha Gai, Pho Ga, Ramen, Laksa)',
     ],
   },
 ]
