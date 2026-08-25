@@ -170,3 +170,54 @@ body {
 :root[data-theme='dark'] .page-flatlay {
   filter: brightness(0.55) saturate(0.85);
 }
+
+/* Choreografierter Seitenaufbau der Landingpage: Die Hero-Elemente kommen
+   nacheinander an, das Handy-Mockup steigt zum Schluss auf. */
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes landing-rise-device {
+  from {
+    opacity: 0;
+    transform: translateY(64px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.landing-stage > * {
+  animation: landing-rise 0.9s cubic-bezier(0.2, 0.7, 0.3, 1) backwards;
+}
+.landing-stage > *:nth-child(1) {
+  animation-delay: 0.05s;
+}
+.landing-stage > *:nth-child(2) {
+  animation-delay: 0.16s;
+}
+.landing-stage > *:nth-child(3) {
+  animation-delay: 0.27s;
+}
+.landing-stage > *:nth-child(4) {
+  animation-delay: 0.38s;
+}
+.landing-stage > *:nth-child(5) {
+  animation-delay: 0.49s;
+}
+.landing-hero-device {
+  animation: landing-rise-device 1.25s cubic-bezier(0.2, 0.75, 0.28, 1) 0.55s backwards;
+  transform-origin: 50% 100%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .landing-stage > *,
+  .landing-hero-device {
+    animation: none;
+  }
+}
