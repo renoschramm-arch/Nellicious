@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import type { ReactNode } from 'react'
 
 export function Placeholder({ children }: { children: ReactNode }) {
@@ -10,6 +11,7 @@ export function Placeholder({ children }: { children: ReactNode }) {
 }
 
 export function LegalPageLayout({ title, children }: { title: string; children: ReactNode }) {
+  const { t } = useTranslation()
   return (
     <div className="min-h-screen bg-bg text-text">
       <header className="border-b border-border">
@@ -18,7 +20,7 @@ export function LegalPageLayout({ title, children }: { title: string; children: 
             Nelli<span className="text-primary">cious</span>
           </Link>
           <Link to="/willkommen" className="text-sm text-text-muted hover:text-text">
-            ‹ Zurück
+            {t('legalPageLayout.back')}
           </Link>
         </div>
       </header>
@@ -27,10 +29,9 @@ export function LegalPageLayout({ title, children }: { title: string; children: 
         <div>
           <h1 className="font-display font-semibold text-3xl mb-2">{title}</h1>
           <p className="text-xs text-text-muted bg-surface-2 border border-border rounded-lg px-3 py-2 inline-block">
-            Diese Seite ist eine unausgefüllte Vorlage. Alle{' '}
-            <span className="bg-honey/20 text-honey font-mono rounded px-1">markierten</span> Stellen
-            müssen vor Veröffentlichung durch echte Angaben ersetzt und rechtlich geprüft werden —
-            keine Rechtsberatung.
+            {t('legalPageLayout.templateNoticeBefore')}{' '}
+            <span className="bg-honey/20 text-honey font-mono rounded px-1">{t('legalPageLayout.marked')}</span>{' '}
+            {t('legalPageLayout.templateNoticeAfter')}
           </p>
         </div>
 
