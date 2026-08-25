@@ -1,10 +1,12 @@
+import { useTranslation } from 'react-i18next'
 import { LegalPageLayout, Placeholder } from '../components/LegalPageLayout'
 
 export function ImpressumPage() {
+  const { t } = useTranslation()
   return (
-    <LegalPageLayout title="Impressum">
+    <LegalPageLayout title={t('legal.impressumTitle')}>
       <section>
-        <h2>Angaben gemäß § 5 DDG</h2>
+        <h2>{t('impressum.s1Title')}</h2>
         <p>
           <Placeholder>Vorname Nachname</Placeholder>
           <br />
@@ -17,70 +19,55 @@ export function ImpressumPage() {
       </section>
 
       <section>
-        <h2>Kontakt</h2>
+        <h2>{t('impressum.s2Title')}</h2>
         <p>
-          E-Mail: <Placeholder>kontakt@beispiel.de</Placeholder>
+          {t('impressum.s2Email')} <Placeholder>kontakt@beispiel.de</Placeholder>
           <br />
-          Telefon (optional): <Placeholder>+49 000 0000000</Placeholder>
+          {t('impressum.s2Phone')} <Placeholder>+49 000 0000000</Placeholder>
         </p>
       </section>
 
       <section>
-        <h2>Umsatzsteuer-ID</h2>
+        <h2>{t('impressum.s3Title')}</h2>
         <p>
-          Umsatzsteuer-Identifikationsnummer gemäß § 27 a Umsatzsteuergesetz:{' '}
-          <Placeholder>DE000000000 (falls vorhanden, sonst Abschnitt entfernen)</Placeholder>
+          {t('impressum.s3Before')} <Placeholder>{t('impressum.s3Placeholder')}</Placeholder>
         </p>
       </section>
 
       <section>
-        <h2>Verantwortlich für den Inhalt nach § 18 Abs. 2 MStV</h2>
+        <h2>{t('impressum.s4Title')}</h2>
         <p>
-          <Placeholder>Vorname Nachname, Anschrift wie oben</Placeholder>
+          <Placeholder>{t('impressum.s4Placeholder')}</Placeholder>
         </p>
       </section>
 
       <section>
-        <h2>Streitschlichtung</h2>
+        <h2>{t('impressum.s5Title')}</h2>
         <p>
-          Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung (OS) bereit:{' '}
+          {t('impressum.s5Before')}{' '}
           <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noreferrer">
             https://ec.europa.eu/consumers/odr/
           </a>
-          . Unsere E-Mail-Adresse finden Sie oben unter „Kontakt".
+          {t('impressum.s5After')}
         </p>
         <p>
-          Wir sind nicht bereit oder verpflichtet, an Streitbeilegungsverfahren vor einer
-          Verbraucherschlichtungsstelle teilzunehmen. <Placeholder>(prüfen/anpassen)</Placeholder>
+          {t('impressum.s5Note')} <Placeholder>{t('impressum.s5NotePlaceholder')}</Placeholder>
         </p>
       </section>
 
       <section>
-        <h2>Haftung für Inhalte</h2>
-        <p>
-          Als Diensteanbieter sind wir gemäß § 7 Abs. 1 DDG für eigene Inhalte auf diesen Seiten nach
-          den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind wir als Diensteanbieter
-          jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu
-          überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit
-          hinweisen.
-        </p>
+        <h2>{t('impressum.s6Title')}</h2>
+        <p>{t('impressum.s6Text')}</p>
       </section>
 
       <section>
-        <h2>Haftung für Links</h2>
-        <p>
-          Unser Angebot enthält ggf. Links zu externen Webseiten Dritter, auf deren Inhalte wir
-          keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr
-          übernehmen.
-        </p>
+        <h2>{t('impressum.s7Title')}</h2>
+        <p>{t('impressum.s7Text')}</p>
       </section>
 
       <section>
-        <h2>Urheberrecht</h2>
-        <p>
-          Die durch die Betreiber dieser App erstellten Inhalte und Werke unterliegen dem deutschen
-          Urheberrecht. Beiträge Dritter sind als solche gekennzeichnet.
-        </p>
+        <h2>{t('impressum.s8Title')}</h2>
+        <p>{t('impressum.s8Text')}</p>
       </section>
     </LegalPageLayout>
   )

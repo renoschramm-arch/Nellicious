@@ -1,121 +1,100 @@
+import { useTranslation } from 'react-i18next'
 import { LegalPageLayout, Placeholder } from '../components/LegalPageLayout'
 
 export function DatenschutzPage() {
+  const { t } = useTranslation()
   return (
-    <LegalPageLayout title="Datenschutzerklärung">
+    <LegalPageLayout title={t('legal.datenschutzTitle')}>
       <section>
-        <h2>1. Verantwortlicher</h2>
+        <h2>{t('datenschutz.s1Title')}</h2>
         <p>
-          Verantwortlicher im Sinne der Datenschutz-Grundverordnung (DSGVO) ist:
+          {t('datenschutz.s1P1')}
           <br />
           <Placeholder>Vorname Nachname</Placeholder>
           <br />
           <Placeholder>Straße Hausnummer, PLZ Ort</Placeholder>
           <br />
-          E-Mail: <Placeholder>kontakt@beispiel.de</Placeholder>
+          {t('datenschutz.s1P1Email')} <Placeholder>kontakt@beispiel.de</Placeholder>
         </p>
         <p>
-          Ein Datenschutzbeauftragter ist{' '}
-          <Placeholder>nicht bestellt / bestellt: Name, Kontakt (falls gesetzlich erforderlich)</Placeholder>.
+          {t('datenschutz.s1P2Before')} <Placeholder>{t('datenschutz.s1P2Placeholder')}</Placeholder>.
         </p>
       </section>
 
       <section>
-        <h2>2. Welche Daten wir verarbeiten</h2>
+        <h2>{t('datenschutz.s2Title')}</h2>
         <ul>
           <li>
-            <strong>Kontodaten:</strong> E-Mail-Adresse und Passwort (verschlüsselt gespeichert) bei
-            der Registrierung
+            <strong>{t('datenschutz.s2Item1Strong')}</strong> {t('datenschutz.s2Item1')}
           </li>
           <li>
-            <strong>Ernährungs- und Gesundheitsdaten:</strong> von dir eingetragene Mahlzeiten,
-            Kalorien-/Makroziele, Gewicht, Fastenzeiten, Ernährungsform und Unverträglichkeiten
+            <strong>{t('datenschutz.s2Item2Strong')}</strong> {t('datenschutz.s2Item2')}
           </li>
           <li>
-            <strong>Zahlungsdaten:</strong> bei Abschluss eines kostenpflichtigen Abos verarbeitet
-            unser Zahlungsdienstleister <Placeholder>Name des Zahlungsdienstleisters</Placeholder>{' '}
-            deine Zahlungsdaten; uns liegen nur Vertragsstatus und Zeitraum vor
+            <strong>{t('datenschutz.s2Item3Strong')}</strong> {t('datenschutz.s2Item3Before')}{' '}
+            <Placeholder>{t('datenschutz.s2Item3Placeholder')}</Placeholder> {t('datenschutz.s2Item3After')}
           </li>
           <li>
-            <strong>Nutzungsdaten:</strong> technische Daten beim Aufruf der App (z. B. IP-Adresse,
-            Zeitpunkt des Zugriffs) durch das Hosting
+            <strong>{t('datenschutz.s2Item4Strong')}</strong> {t('datenschutz.s2Item4')}
           </li>
         </ul>
       </section>
 
       <section>
-        <h2>3. Zwecke und Rechtsgrundlagen</h2>
+        <h2>{t('datenschutz.s3Title')}</h2>
         <ul>
-          <li>
-            Bereitstellung der App und ihrer Funktionen (Vertragserfüllung, Art. 6 Abs. 1 lit. b
-            DSGVO)
-          </li>
-          <li>Abwicklung kostenpflichtiger Abos (Art. 6 Abs. 1 lit. b DSGVO)</li>
-          <li>
-            Sicherheit und Missbrauchsvermeidung, z. B. automatisches Löschen unbestätigter Konten
-            (berechtigtes Interesse, Art. 6 Abs. 1 lit. f DSGVO)
-          </li>
-          <li>Erfüllung rechtlicher Pflichten, z. B. steuerrechtliche Aufbewahrung (Art. 6 Abs. 1 lit. c DSGVO)</li>
+          <li>{t('datenschutz.s3Item1')}</li>
+          <li>{t('datenschutz.s3Item2')}</li>
+          <li>{t('datenschutz.s3Item3')}</li>
+          <li>{t('datenschutz.s3Item4')}</li>
         </ul>
       </section>
 
       <section>
-        <h2>4. Hosting und Auftragsverarbeiter</h2>
+        <h2>{t('datenschutz.s4Title')}</h2>
         <p>
-          Die App wird über <Placeholder>GitHub Pages / Hosting-Anbieter</Placeholder> ausgeliefert.
-          Konten- und Nutzungsdaten werden bei unserem Datenbank- und Authentifizierungs-Dienstleister{' '}
-          <strong>Supabase</strong> (
-          <Placeholder>Supabase Inc., Serverstandort/Region prüfen und eintragen</Placeholder>)
-          gespeichert und verarbeitet. Mit allen Auftragsverarbeitern besteht ein
-          Auftragsverarbeitungsvertrag gemäß Art. 28 DSGVO.{' '}
-          <Placeholder>
-            Falls Server außerhalb der EU/des EWR liegen: Angaben zu Drittlandtransfer und
-            Garantien (z. B. Standardvertragsklauseln) ergänzen.
-          </Placeholder>
+          {t('datenschutz.s4Part1Before')} <Placeholder>{t('datenschutz.s4Part1Placeholder')}</Placeholder>{' '}
+          {t('datenschutz.s4Part1After')} <strong>Supabase</strong> (
+          <Placeholder>{t('datenschutz.s4Part2Placeholder')}</Placeholder>) {t('datenschutz.s4Part2After')}{' '}
+          <Placeholder>{t('datenschutz.s4Part3Placeholder')}</Placeholder>
         </p>
       </section>
 
       <section>
-        <h2>5. Speicherdauer</h2>
+        <h2>{t('datenschutz.s5Title')}</h2>
         <p>
-          Kontodaten speichern wir, solange dein Konto besteht. Unbestätigte Registrierungen löschen
-          wir automatisch nach 24 Stunden. Nach Löschung deines Kontos werden deine Daten{' '}
-          <Placeholder>innerhalb von … Tagen vollständig gelöscht, soweit keine gesetzliche
-          Aufbewahrungspflicht entgegensteht</Placeholder>.
+          {t('datenschutz.s5Before')} <Placeholder>{t('datenschutz.s5Placeholder')}</Placeholder>.
         </p>
       </section>
 
       <section>
-        <h2>6. Cookies und lokale Speicherung</h2>
+        <h2>{t('datenschutz.s6Title')}</h2>
         <p>
-          Die App verwendet technisch notwendige Speicherung im Browser (z. B. um deine Anmeldung
-          aufrechtzuerhalten und Einstellungen zu merken), keine Tracking- oder Marketing-Cookies.{' '}
-          <Placeholder>(anpassen, falls sich das ändert, z. B. durch Analyse-Tools)</Placeholder>
+          {t('datenschutz.s6Before')} <Placeholder>{t('datenschutz.s6Placeholder')}</Placeholder>
         </p>
       </section>
 
       <section>
-        <h2>7. Deine Rechte</h2>
-        <p>Du hast das Recht auf:</p>
+        <h2>{t('datenschutz.s7Title')}</h2>
+        <p>{t('datenschutz.s7Intro')}</p>
         <ul>
-          <li>Auskunft über deine gespeicherten Daten (Art. 15 DSGVO)</li>
-          <li>Berichtigung unrichtiger Daten (Art. 16 DSGVO)</li>
-          <li>Löschung deiner Daten (Art. 17 DSGVO)</li>
-          <li>Einschränkung der Verarbeitung (Art. 18 DSGVO)</li>
-          <li>Datenübertragbarkeit (Art. 20 DSGVO)</li>
-          <li>Widerspruch gegen die Verarbeitung (Art. 21 DSGVO)</li>
-          <li>Beschwerde bei einer Datenschutz-Aufsichtsbehörde</li>
+          <li>{t('datenschutz.s7Item1')}</li>
+          <li>{t('datenschutz.s7Item2')}</li>
+          <li>{t('datenschutz.s7Item3')}</li>
+          <li>{t('datenschutz.s7Item4')}</li>
+          <li>{t('datenschutz.s7Item5')}</li>
+          <li>{t('datenschutz.s7Item6')}</li>
+          <li>{t('datenschutz.s7Item7')}</li>
         </ul>
         <p>
-          Zuständige Aufsichtsbehörde: <Placeholder>Landesdatenschutzbehörde am Unternehmenssitz eintragen</Placeholder>
+          {t('datenschutz.s7AuthorityBefore')} <Placeholder>{t('datenschutz.s7AuthorityPlaceholder')}</Placeholder>
         </p>
       </section>
 
       <section>
-        <h2>8. Änderungen dieser Datenschutzerklärung</h2>
+        <h2>{t('datenschutz.s8Title')}</h2>
         <p>
-          Wir passen diese Datenschutzerklärung an, sobald sich die Datenverarbeitung ändert. Stand:{' '}
-          <Placeholder>Datum</Placeholder>
+          {t('datenschutz.s8Before')} <Placeholder>{t('datenschutz.s8Placeholder')}</Placeholder>
         </p>
       </section>
     </LegalPageLayout>
