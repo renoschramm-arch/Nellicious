@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../lib/AuthContext'
 import { PageFlatlay } from '../components/PageFlatlay'
 
 export function ResetPasswordPage() {
+  const { t } = useTranslation()
   const { updatePassword } = useAuth()
   const [password, setPassword] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
@@ -15,7 +17,7 @@ export function ResetPasswordPage() {
     e.preventDefault()
     setError(null)
     if (password !== passwordConfirm) {
-      setError('Die Passwörter stimmen nicht überein.')
+      setError(t('auth.passwordMismatch'))
       return
     }
     setSubmitting(true)
@@ -36,17 +38,17 @@ export function ResetPasswordPage() {
           <span className="font-display font-bold text-2xl">
             Nelli<span className="text-primary">cious</span>
           </span>
-          <p className="text-text-muted text-sm mt-2">Neues Passwort festlegen.</p>
+          <p className="text-text-muted text-sm mt-2">{t('auth.newPasswordTitle')}</p>
         </div>
 
         {done ? (
           <div className="bg-surface border border-border rounded-2xl p-6 shadow-[var(--shadow)] flex flex-col gap-4 text-center">
-            <p className="text-sm text-basil">Passwort erfolgreich geändert.</p>
+            <p className="text-sm text-basil">{t('auth.passwordChanged')}</p>
             <Link
               to="/"
               className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-center"
             >
-              Weiter zu Nellicious
+              {t('auth.continueToApp')}
             </Link>
           </div>
         ) : (
@@ -55,7 +57,7 @@ export function ResetPasswordPage() {
             className="bg-surface border border-border rounded-2xl p-6 shadow-[var(--shadow)] flex flex-col gap-4"
           >
             <label className="flex flex-col gap-1.5 text-sm">
-              Neues Passwort
+              {t('auth.newPassword')}
               <input
                 type="password"
                 required
@@ -66,7 +68,7 @@ export function ResetPasswordPage() {
               />
             </label>
             <label className="flex flex-col gap-1.5 text-sm">
-              Passwort bestätigen
+              {t('auth.confirmPassword')}
               <input
                 type="password"
                 required
@@ -84,7 +86,7 @@ export function ResetPasswordPage() {
               disabled={submitting}
               className="mt-1 bg-primary text-on-primary font-semibold rounded-xl py-2.5 disabled:opacity-60"
             >
-              Passwort speichern
+              {t('auth.savePassword')}
             </button>
           </form>
         )}
@@ -95,7 +97,7 @@ export function ResetPasswordPage() {
               to="/anmelden"
               className="text-center text-sm text-text-muted hover:text-text bg-surface/90 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-[var(--shadow)] transition-colors"
             >
-              Zurück zur Anmeldung
+              {t('auth.backToSignIn')}
             </Link>
           </div>
         )}
