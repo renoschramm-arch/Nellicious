@@ -1,14 +1,21 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
 import { useRecipes, type Recipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useShoppingListStatus, type IngredientRef } from '../lib/useShoppingListStatus'
 import { RecipePickerModal } from '../components/RecipePickerModal'
+import { MultiAssignModal, type Selection } from '../components/MultiAssignModal'
 import { PremiumModal } from '../components/PremiumModal'
 import { usePremium } from '../lib/usePremium'
 import { addDays, formatDayLabel, formatWeekRange, getMonday, toISODate } from '../lib/week'
 import { scaleIngredient } from '../lib/scaleIngredient'
+
+interface MultiAssignNavState {
+  multiAssignRecipeId: string
+  suggestedCount: number
+}
 
 const SLOTS: { key: MealSlot; label: string }[] = [
   { key: 'fruehstueck', label: 'Frühstück' },
@@ -54,6 +61,27 @@ export function PlannerPage() {
   const [shoppingView, setShoppingView] = useState<'grouped' | 'flat'>('grouped')
   const todayISO = toISODate(new Date())
 
+  const [multiPickerOpen, setMultiPickerOpen] = useState(false)
+  const [multiAssignRecipe, setMultiAssignRecipe] = useState<Recipe | null>(null)
+  const [multiAssignSuggestedCount, setMultiAssignSuggestedCount] = useState<number | undefined>(undefined)
+
+  const location = useLocation()
+  const navigate = useNavigate()
+
+  // Von der Rezeptseite aus ("In den Plan übernehmen") kommt die Ziel-Recipe-ID
+  // + Portionenzahl über den Router-State an — sobald die Rezepte geladen sind,
+  // öffnet sich die Mehrfach-Zuweisung direkt damit vorausgefüllt.
+  useEffect(() => {
+    const navState = location.state as MultiAssignNavState | null
+    if (!navState || recipes.length === 0) return
+    const recipe = recipeById.get(navState.multiAssignRecipeId)
+    if (recipe) {
+      setMultiAssignRecipe(recipe)
+      setMultiAssignSuggestedCount(navState.suggestedCount)
+    }
+    navigate(location.pathname, { replace: true, state: null })
+  }, [location, recipes, recipeById, navigate])
+
   // Ein Rezept, das für heute eingeplant wird, zählt sofort als gegessen —
   // ohne diese Synchronisierung würde die "Heute"-Ansicht auf dem Dashboard
   // Rezepte ignorieren, die hier statt über "Mahlzeit hinzufügen" eingetragen
@@ -70,6 +98,24 @@ export function PlannerPage() {
         recipe_id: recipe.id,
       })
     }
+  }
+
+  function openMultiAssign() {
+    if (!hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    setMultiAssignSuggestedCount(undefined)
+    setMultiPickerOpen(true)
+  }
+
+  async function handleMultiAssign(selections: Selection[]) {
+    if (!multiAssignRecipe) return
+    for (const { date, slot } of selections) {
+      await selectRecipe(date, slot, multiAssignRecipe)
+    }
+    setMultiAssignRecipe(null)
+    setMultiAssignSuggestedCount(undefined)
   }
 
   async function removePlanEntry(dateISO: string, entryId: string, recipeId: string) {
@@ -200,6 +246,15 @@ export function PlannerPage() {
       <div className="flex items-center justify-between">
         <h1 className="font-display font-bold text-2xl">Wochenplan</h1>
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={openMultiAssign}
+            className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
+            aria-label="Rezept mehrfach einplanen"
+            title={`Rezept mehrfach einplanen${!hasPremium ? ' (Premium)' : ''}`}
+          >
+            🍽️{!hasPremium && <span className="text-[9px] -ml-0.5">🔒</span>}
+          </button>
           <button
             onClick={() => goToWeek(weekOffset - 1)}
             className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
@@ -357,6 +412,33 @@ export function PlannerPage() {
           </button>
         )}
       </div>
+
+      {multiPickerOpen && (
+        <RecipePickerModal
+          onSelect={(recipe) => {
+            setMultiPickerOpen(false)
+            setMultiAssignRecipe(recipe)
+          }}
+          onClose={() => setMultiPickerOpen(false)}
+        />
+      )}
+
+      {multiAssignRecipe && (
+        <MultiAssignModal
+          recipe={multiAssignRecipe}
+          days={days}
+          suggestedCount={multiAssignSuggestedCount}
+          occupiedTitleFor={(dateISO, slot) => {
+            const entry = entryFor(dateISO, slot)
+            return entry ? recipeById.get(entry.recipe_id)?.title : undefined
+          }}
+          onAssign={handleMultiAssign}
+          onClose={() => {
+            setMultiAssignRecipe(null)
+            setMultiAssignSuggestedCount(undefined)
+          }}
+        />
+      )}
 
       {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
     </div>
