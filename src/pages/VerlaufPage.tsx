@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../lib/AuthContext'
 import { useProfile } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
@@ -39,6 +40,7 @@ function lastSevenDays(): Date[] {
 }
 
 export function VerlaufPage() {
+  const { t } = useTranslation()
   const { user } = useAuth()
   const { profile, updateProfile } = useProfile()
   const { logs: weightLogs, upsertWeight, deleteWeight } = useWeightLogs()
@@ -348,16 +350,16 @@ export function VerlaufPage() {
   return (
     <div className="flex flex-col gap-6">
       <PageFlatlay file="auth.png" />
-      <h1 className="font-display font-bold text-2xl">Verlauf</h1>
+      <h1 className="font-display font-bold text-2xl">{t('verlauf.title')}</h1>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-semibold text-lg flex items-center gap-2">
-            💧 Wasser
+            {t('verlauf.waterTitle')}
             <button
               type="button"
               onClick={startEditingWaterSettings}
-              aria-label="Wassereinstellungen anpassen"
+              aria-label={t('verlauf.waterSettingsAria')}
               className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-xs text-text-muted hover:border-primary hover:text-text transition-colors"
             >
               ✎
@@ -378,7 +380,7 @@ export function VerlaufPage() {
             className="bg-surface-2 border border-border rounded-xl p-3 flex flex-col gap-2.5"
           >
             <label className="flex flex-col gap-1 text-xs text-text-muted">
-              Ziel (ml)
+              {t('verlauf.goalMl')}
               <input
                 type="number"
                 min={0}
@@ -390,7 +392,7 @@ export function VerlaufPage() {
               />
             </label>
             <label className="flex flex-col gap-1 text-xs text-text-muted">
-              Schnellauswahl (ml)
+              {t('verlauf.quickSelectMl')}
               <div className="grid grid-cols-3 gap-2">
                 {stepInputs.map((value, i) => (
                   <input
@@ -412,13 +414,13 @@ export function VerlaufPage() {
                 onClick={() => setEditingWaterSettings(false)}
                 className="text-sm text-text-muted"
               >
-                Abbrechen
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 className="bg-primary text-on-primary font-semibold rounded-full px-4 py-1.5 text-sm"
               >
-                Speichern
+                {t('common.save')}
               </button>
             </div>
           </form>
@@ -444,19 +446,19 @@ export function VerlaufPage() {
             inputMode="numeric"
             value={customWater}
             onChange={(e) => setCustomWater(e.target.value)}
-            placeholder="Eigene Menge in ml"
+            placeholder={t('verlauf.customAmountPlaceholder')}
             className="flex-1 min-w-0 rounded-lg border border-border bg-bg px-3 py-2 text-sm font-mono outline-none focus:border-primary"
           />
           <button
             type="submit"
             className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm font-medium hover:border-primary transition-colors"
           >
-            + Hinzufügen
+            {t('verlauf.addButton')}
           </button>
           <button
             type="button"
             onClick={() => resetWater()}
-            aria-label="Wasser für heute zurücksetzen"
+            aria-label={t('verlauf.resetWaterAria')}
             className="shrink-0 w-[38px] h-[38px] inline-flex items-center justify-center rounded-xl bg-surface-2 border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
           >
             ↺
@@ -465,7 +467,7 @@ export function VerlaufPage() {
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-        <h2 className="font-display font-semibold text-lg">⚖️ Gewicht</h2>
+        <h2 className="font-display font-semibold text-lg">{t('verlauf.weightTitle')}</h2>
         {latestWeight && (
           <span className="font-mono text-2xl">
             {formatWeightKg(Number(latestWeight.weight_kg))} <span className="text-text-muted text-base">kg</span>
@@ -474,14 +476,17 @@ export function VerlaufPage() {
         {latestWeight && targetWeightKg != null && (
           <span className="text-xs text-text-muted -mt-2">
             {weightDiffKg <= 0.05
-              ? 'Wunschgewicht erreicht 🎉'
-              : `Noch ${formatWeightKg(weightDiffKg)} kg bis ${formatWeightKg(targetWeightKg)} kg Wunschgewicht`}
+              ? t('verlauf.targetReached')
+              : t('verlauf.targetRemaining', {
+                  diff: formatWeightKg(weightDiffKg),
+                  target: formatWeightKg(targetWeightKg),
+                })}
           </span>
         )}
         <form onSubmit={handleWeightSubmit} className="flex flex-col gap-3">
           <div className="grid grid-cols-2 gap-2">
             <label className="flex flex-col gap-1 text-xs text-text-muted">
-              Datum
+              {t('verlauf.date')}
               <input
                 type="date"
                 value={weightDate}
@@ -491,13 +496,13 @@ export function VerlaufPage() {
               />
             </label>
             <label className="flex flex-col gap-1 text-xs text-text-muted">
-              Gewicht (kg)
+              {t('verlauf.weightKg')}
               <input
                 type="text"
                 inputMode="decimal"
                 value={weightValue}
                 onChange={(e) => setWeightValue(e.target.value)}
-                placeholder="z. B. 75,5"
+                placeholder={t('verlauf.weightPlaceholder')}
                 className="rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono outline-none focus:border-primary"
               />
             </label>
@@ -506,7 +511,7 @@ export function VerlaufPage() {
             type="submit"
             className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
           >
-            Eintragen
+            {t('verlauf.logButton')}
           </button>
         </form>
       </div>
@@ -514,11 +519,11 @@ export function VerlaufPage() {
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-semibold text-lg flex items-center gap-2">
-            ⏱️ Intervallfasten{!hasPremium && ' 🔒'}
+            {t('verlauf.fastingTitle')}{!hasPremium && ' 🔒'}
             <button
               type="button"
               onClick={startEditingFastingSettings}
-              aria-label="Fasten-Protokolle anpassen"
+              aria-label={t('verlauf.adjustProtocolsAria')}
               className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-xs text-text-muted hover:border-primary hover:text-text transition-colors"
             >
               ✎
@@ -526,16 +531,14 @@ export function VerlaufPage() {
             <button
               type="button"
               onClick={() => setShowFastingPhaseModal(true)}
-              aria-label="Was im Körper beim Fasten passiert"
+              aria-label={t('verlauf.fastingInfoAria')}
               className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-xs text-text-muted hover:border-primary hover:text-text transition-colors"
             >
               ℹ️
             </button>
           </h2>
           {fastingStreak > 0 && (
-            <span className="font-mono text-xs text-honey">
-              🔥 {fastingStreak} {fastingStreak === 1 ? 'Tag' : 'Tage'}
-            </span>
+            <span className="font-mono text-xs text-honey">{t('verlauf.fastingStreak', { count: fastingStreak })}</span>
           )}
         </div>
 
@@ -552,47 +555,51 @@ export function VerlaufPage() {
             <div className="text-sm flex-1">
               {activeSession && fastingEndsAt ? (
                 <>
-                  {fastingRemainingMs > 0 ? 'Fastenzeit endet in' : 'Fastenziel erreicht'}
+                  {fastingRemainingMs > 0 ? t('verlauf.endsIn') : t('verlauf.goalReached')}
                   <span className="block font-mono font-medium text-base text-basil">
                     {fastingRemainingMs > 0 ? (
                       <>
                         {formatCountdownHM(fastingRemainingMs)} h{' '}
-                        <span className="text-text-muted">um {formatClockTime(fastingEndsAt)} Uhr</span>
+                        <span className="text-text-muted">{t('verlauf.atTime', { time: formatClockTime(fastingEndsAt) })}</span>
                       </>
                     ) : (
                       <>
                         +{formatCountdownHM(-fastingRemainingMs)} h{' '}
-                        <span className="text-text-muted">seit {formatClockTime(fastingEndsAt)} Uhr</span>
+                        <span className="text-text-muted">{t('verlauf.sinceTime', { time: formatClockTime(fastingEndsAt) })}</span>
                       </>
                     )}
                   </span>
                   {currentFastingPhase && (
                     <span className="block text-text-muted text-xs mt-0.5">
-                      Phase: {currentFastingPhase.title}
+                      {t('verlauf.phaseLabel', { title: currentFastingPhase.title })}
                     </span>
                   )}
                 </>
               ) : eatingWindow ? (
                 <>
-                  {eatingWindow.remainingMs > 0 ? 'Fastenzeit beginnt in' : 'Essensfenster überzogen'}
+                  {eatingWindow.remainingMs > 0 ? t('verlauf.eatingBeginsIn') : t('verlauf.eatingWindowExceeded')}
                   <span className="block font-mono font-medium text-base text-honey">
                     {eatingWindow.remainingMs > 0 ? (
                       <>
                         {formatCountdownHM(eatingWindow.remainingMs)} h{' '}
-                        <span className="text-text-muted">um {formatClockTime(new Date(eatingWindow.endsAt))} Uhr</span>
+                        <span className="text-text-muted">
+                          {t('verlauf.atTime', { time: formatClockTime(new Date(eatingWindow.endsAt)) })}
+                        </span>
                       </>
                     ) : (
                       <>
                         +{formatCountdownHM(-eatingWindow.remainingMs)} h{' '}
-                        <span className="text-text-muted">seit {formatClockTime(new Date(eatingWindow.endsAt))} Uhr</span>
+                        <span className="text-text-muted">
+                          {t('verlauf.sinceTime', { time: formatClockTime(new Date(eatingWindow.endsAt)) })}
+                        </span>
                       </>
                     )}
                   </span>
                 </>
               ) : (
                 <>
-                  Bereit zum Fasten
-                  <span className="block text-text-muted text-xs mt-0.5">Protokoll wählen und starten</span>
+                  {t('verlauf.readyToFast')}
+                  <span className="block text-text-muted text-xs mt-0.5">{t('verlauf.chooseProtocolHint')}</span>
                 </>
               )}
             </div>
@@ -606,9 +613,9 @@ export function VerlaufPage() {
           >
             <label className="flex items-center justify-between gap-3 text-sm">
               <span className="flex flex-col">
-                Intervallfasten aktiviert
+                {t('verlauf.fastingEnabledLabel')}
                 {activeSession && (
-                  <span className="text-xs text-text-muted">Erst Fasten beenden, um zu deaktivieren</span>
+                  <span className="text-xs text-text-muted">{t('verlauf.disableHint')}</span>
                 )}
               </span>
               <button
@@ -629,7 +636,7 @@ export function VerlaufPage() {
               </button>
             </label>
             <label className="flex flex-col gap-1 text-xs text-text-muted">
-              Protokolle (Stunden Fasten)
+              {t('verlauf.protocolsLabel')}
               <div className="grid grid-cols-4 gap-2">
                 {fastingProtocolInputs.map((value, i) => (
                   <input
@@ -652,25 +659,25 @@ export function VerlaufPage() {
                 onClick={() => setEditingFastingSettings(false)}
                 className="text-sm text-text-muted"
               >
-                Abbrechen
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 className="bg-primary text-on-primary font-semibold rounded-full px-4 py-1.5 text-sm"
               >
-                Speichern
+                {t('common.save')}
               </button>
             </div>
           </form>
         ) : !fastingEnabled ? (
           <div className="flex items-center justify-between gap-3">
-            <span className="text-sm text-text-muted">Intervallfasten ist ausgeschaltet.</span>
+            <span className="text-sm text-text-muted">{t('verlauf.fastingDisabledText')}</span>
             <button
               type="button"
               onClick={handleQuickEnableFasting}
               className="text-sm text-primary font-medium shrink-0"
             >
-              Aktivieren
+              {t('verlauf.enableButton')}
             </button>
           </div>
         ) : (
@@ -694,7 +701,7 @@ export function VerlaufPage() {
               </div>
               {isOmad(fastingTargetHours) && (
                 <span className="text-xs text-text-muted">
-                  {fastingProtocolLabel(fastingTargetHours)} = OMAD (One Meal A Day, eine Mahlzeit am Tag)
+                  {t('verlauf.omadHint', { protocol: fastingProtocolLabel(fastingTargetHours) })}
                 </span>
               )}
             </div>
@@ -702,7 +709,7 @@ export function VerlaufPage() {
         )}
 
         {fastingError && (
-          <p className="text-xs text-danger">Fehler beim Speichern: {fastingError}</p>
+          <p className="text-xs text-danger">{t('verlauf.saveError', { error: fastingError })}</p>
         )}
 
         {fastingEnabled && (customTargetOpen ? (
@@ -711,7 +718,7 @@ export function VerlaufPage() {
             className="bg-surface-2 border border-border rounded-xl p-3 flex flex-col gap-2.5"
           >
             <label className="flex flex-col gap-1 text-xs text-text-muted">
-              Fastenziel dieser Session (Stunden)
+              {t('verlauf.customTargetLabel')}
               <input
                 type="number"
                 min={1}
@@ -728,13 +735,13 @@ export function VerlaufPage() {
                 onClick={() => setCustomTargetOpen(false)}
                 className="text-sm text-text-muted"
               >
-                Abbrechen
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 className="bg-primary text-on-primary font-semibold rounded-full px-4 py-1.5 text-sm"
               >
-                Speichern
+                {t('common.save')}
               </button>
             </div>
           </form>
@@ -744,7 +751,7 @@ export function VerlaufPage() {
             className="bg-surface-2 border border-border rounded-xl p-3 flex flex-col gap-2.5"
           >
             <label className="flex flex-col gap-1 text-xs text-text-muted">
-              {activeSession ? 'Fasten beendet um' : 'Fasten gestartet um'}
+              {activeSession ? t('verlauf.endedAtLabel') : t('verlauf.startedAtLabel')}
               <input
                 type="datetime-local"
                 autoFocus
@@ -766,13 +773,13 @@ export function VerlaufPage() {
                 }}
                 className="text-sm text-text-muted"
               >
-                Abbrechen
+                {t('common.cancel')}
               </button>
               <button
                 type="submit"
                 className="bg-primary text-on-primary font-semibold rounded-full px-4 py-1.5 text-sm"
               >
-                {activeSession ? 'Beenden' : 'Starten'}
+                {activeSession ? t('verlauf.stopButton') : t('verlauf.startButton')}
               </button>
             </div>
           </form>
@@ -787,7 +794,7 @@ export function VerlaufPage() {
                   : 'bg-primary text-on-primary'
               }`}
             >
-              {activeSession ? 'Fasten beenden' : 'Fasten starten'}
+              {activeSession ? t('verlauf.stopFastingButton') : t('verlauf.startFastingButton')}
             </button>
             <div className="flex items-center justify-center gap-3">
               <button
@@ -795,7 +802,7 @@ export function VerlaufPage() {
                 onClick={activeSession ? openCustomEnd : openCustomStart}
                 className="text-xs text-text-muted underline hover:text-text"
               >
-                {activeSession ? 'Rückwirkend beenden' : 'Rückwirkend starten'}
+                {activeSession ? t('verlauf.retroEnd') : t('verlauf.retroStart')}
               </button>
               {activeSession && (
                 <button
@@ -803,7 +810,7 @@ export function VerlaufPage() {
                   onClick={openCustomTarget}
                   className="text-xs text-text-muted underline hover:text-text"
                 >
-                  Ziel anpassen
+                  {t('verlauf.adjustGoal')}
                 </button>
               )}
             </div>
@@ -812,41 +819,41 @@ export function VerlaufPage() {
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-        <span className="text-sm font-medium text-text-muted">Kalorien – letzte 7 Tage</span>
+        <span className="text-sm font-medium text-text-muted">{t('verlauf.kcalLast7')}</span>
         <WeekBarChart data={kcalChartData} color="var(--color-primary)" />
         <div className="grid grid-cols-3 gap-2 font-mono text-xs pt-1 border-t border-border">
           <div className="text-center pt-2">
-            <div className="text-text-muted uppercase mb-0.5">Ø Protein</div>
+            <div className="text-text-muted uppercase mb-0.5">{t('verlauf.avgProtein')}</div>
             {weekMacroAvg.protein_g} g
           </div>
           <div className="text-center pt-2">
-            <div className="text-text-muted uppercase mb-0.5">Ø Kohlenh.</div>
+            <div className="text-text-muted uppercase mb-0.5">{t('verlauf.avgCarbs')}</div>
             {weekMacroAvg.carbs_g} g
           </div>
           <div className="text-center pt-2">
-            <div className="text-text-muted uppercase mb-0.5">Ø Fett</div>
+            <div className="text-text-muted uppercase mb-0.5">{t('verlauf.avgFat')}</div>
             {weekMacroAvg.fat_g} g
           </div>
         </div>
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-        <span className="text-sm font-medium text-text-muted">Wasser – letzte 7 Tage</span>
+        <span className="text-sm font-medium text-text-muted">{t('verlauf.waterLast7')}</span>
         <WeekBarChart data={waterChartData} color="var(--color-honey)" />
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-        <span className="text-sm font-medium text-text-muted">Gewicht – letzte 7 Tage</span>
+        <span className="text-sm font-medium text-text-muted">{t('verlauf.weightLast7')}</span>
         <WeekBarChart data={weightChartData} color="var(--color-basil)" />
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-        <span className="text-sm font-medium text-text-muted">Fasten – letzte 7 Tage</span>
+        <span className="text-sm font-medium text-text-muted">{t('verlauf.fastingLast7')}</span>
         <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-        <h2 className="font-display font-semibold text-lg">📤 Datenexport{!hasPremium && ' 🔒'}</h2>
+        <h2 className="font-display font-semibold text-lg">{t('verlauf.exportTitle')}{!hasPremium && ' 🔒'}</h2>
         <div className="grid grid-cols-3 gap-2">
           {EXPORT_RANGES.map((range) => (
             <button
@@ -869,7 +876,7 @@ export function VerlaufPage() {
           onClick={() => handleExport('pdf')}
           className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm disabled:opacity-60"
         >
-          Als PDF-Bericht exportieren
+          {t('verlauf.exportPdf')}
         </button>
         <div className="grid grid-cols-2 gap-2">
           <button
@@ -878,7 +885,7 @@ export function VerlaufPage() {
             onClick={() => handleExport('csv-meals')}
             className="bg-surface-2 border border-border rounded-xl py-2.5 text-sm font-medium hover:border-primary transition-colors disabled:opacity-60"
           >
-            Mahlzeiten als CSV
+            {t('verlauf.exportCsvMeals')}
           </button>
           <button
             type="button"
@@ -886,14 +893,14 @@ export function VerlaufPage() {
             onClick={() => handleExport('csv-weight')}
             className="bg-surface-2 border border-border rounded-xl py-2.5 text-sm font-medium hover:border-primary transition-colors disabled:opacity-60"
           >
-            Gewicht als CSV
+            {t('verlauf.exportCsvWeight')}
           </button>
         </div>
       </div>
 
       {weightLogs.length > 0 && (
         <details className="bg-surface border border-border rounded-2xl p-4">
-          <summary className="text-sm font-semibold cursor-pointer">Verlauf verwalten</summary>
+          <summary className="text-sm font-semibold cursor-pointer">{t('verlauf.manageHistory')}</summary>
           <div className="flex flex-col gap-1.5 mt-3">
             {weightLogs.map((log) => (
               <div
@@ -905,7 +912,7 @@ export function VerlaufPage() {
                 <button
                   type="button"
                   onClick={() => deleteWeight(log.id)}
-                  aria-label="Eintrag löschen"
+                  aria-label={t('verlauf.deleteEntryAria')}
                   className="text-text-muted hover:text-danger"
                 >
                   ✕
@@ -918,7 +925,7 @@ export function VerlaufPage() {
 
       {fastingSessions.length > 0 && (
         <details className="bg-surface border border-border rounded-2xl p-4">
-          <summary className="text-sm font-semibold cursor-pointer">Fasten-Verlauf verwalten</summary>
+          <summary className="text-sm font-semibold cursor-pointer">{t('verlauf.manageFastingHistory')}</summary>
           <div className="flex flex-col gap-2 mt-3">
             {fastingSessions.map((session) => (
               <form
@@ -927,18 +934,18 @@ export function VerlaufPage() {
                 className="bg-surface-2 rounded-lg px-3 py-2.5 flex flex-col gap-2"
               >
                 <div className="flex items-center justify-between gap-2 text-xs text-text-muted">
-                  <span>{fastingProtocolLabel(session.target_hours)} Protokoll</span>
+                  <span>{t('verlauf.protocolSuffix', { protocol: fastingProtocolLabel(session.target_hours) })}</span>
                   <button
                     type="button"
                     onClick={() => deleteFastingSession(session.id)}
-                    aria-label="Fasten-Eintrag löschen"
+                    aria-label={t('verlauf.deleteFastingEntryAria')}
                     className="text-text-muted hover:text-danger"
                   >
                     ✕
                   </button>
                 </div>
                 <label className="flex flex-col gap-1 text-xs text-text-muted w-20">
-                  Ziel (h)
+                  {t('verlauf.targetHoursLabel')}
                   <input
                     type="number"
                     name="target_hours"
@@ -950,7 +957,7 @@ export function VerlaufPage() {
                 </label>
                 <div className="grid grid-cols-2 gap-2">
                   <label className="flex flex-col gap-1 text-xs text-text-muted">
-                    Start
+                    {t('verlauf.start')}
                     <input
                       type="datetime-local"
                       name="started_at"
@@ -960,7 +967,7 @@ export function VerlaufPage() {
                     />
                   </label>
                   <label className="flex flex-col gap-1 text-xs text-text-muted">
-                    Ende
+                    {t('verlauf.end')}
                     {session.ended_at ? (
                       <input
                         type="datetime-local"
@@ -971,13 +978,13 @@ export function VerlaufPage() {
                       />
                     ) : (
                       <span className="rounded-lg border border-border bg-bg px-2 py-1.5 text-xs text-text-muted">
-                        läuft noch
+                        {t('verlauf.stillRunning')}
                       </span>
                     )}
                   </label>
                 </div>
                 <button type="submit" className="self-end text-xs text-primary font-medium">
-                  Speichern
+                  {t('common.save')}
                 </button>
               </form>
             ))}
