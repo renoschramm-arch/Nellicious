@@ -3,7 +3,7 @@ import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
-import { useRecipes, getMealTypeLabels, type Recipe } from '../lib/useRecipes'
+import { useRecipes, getMealTypeLabels, localizeRecipeText, type Recipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useShoppingListStatus, type IngredientRef } from '../lib/useShoppingListStatus'
 import { useProfile } from '../lib/useProfile'
@@ -39,7 +39,7 @@ interface ShoppingLine {
 }
 
 export function PlannerPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const SLOTS: { key: MealSlot; label: string }[] = useMemo(() => {
     const labels = getMealTypeLabels(t)
     return [
@@ -101,7 +101,7 @@ export function PlannerPage() {
     await setEntry(dateISO, slot, recipe.id)
     if (dateISO === todayISO) {
       await addLog({
-        name: recipe.title,
+        name: localizeRecipeText(recipe, i18n.language).title,
         kcal: recipe.kcal,
         protein_g: recipe.protein_g,
         carbs_g: recipe.carbs_g,
@@ -182,12 +182,13 @@ export function PlannerPage() {
     for (const entry of entries) {
       const recipe = recipeById.get(entry.recipe_id)
       if (!recipe) continue
-      recipe.ingredients.forEach((text, index) => {
+      const localized = localizeRecipeText(recipe, i18n.language)
+      localized.ingredients.forEach((text, index) => {
         if (isDismissed(entry.id, index)) return
         items.push({
           entryId: entry.id,
           recipeId: recipe.id,
-          recipeTitle: recipe.title,
+          recipeTitle: localized.title,
           index,
           text,
           checked: isChecked(entry.id, index),
@@ -195,7 +196,7 @@ export function PlannerPage() {
       })
     }
     return items
-  }, [entries, recipeById, isChecked, isDismissed])
+  }, [entries, recipeById, isChecked, isDismissed, i18n.language])
 
   const groupedByRecipe = useMemo(() => {
     const byRecipe = new Map<string, { recipeTitle: string; byIndex: Map<number, LeafItem[]> }>()
@@ -352,13 +353,17 @@ export function PlannerPage() {
                             <span className="font-mono text-[10px] uppercase tracking-wide text-basil">
                               {slot.label}
                             </span>
-                            <span className="text-[15px] font-medium truncate">{recipe.title}</span>
+                            <span className="text-[15px] font-medium truncate">
+                              {localizeRecipeText(recipe, i18n.language).title}
+                            </span>
                           </Link>
                           <span className="font-mono text-xs text-text-muted shrink-0">{recipe.kcal} kcal</span>
                           <button
                             onClick={() => entry && removePlanEntry(dateISO, entry.id, entry.recipe_id)}
                             className="shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface border border-border text-text-muted hover:border-primary hover:text-danger text-xs transition-colors"
-                            aria-label={t('planner.removeFromPlanAria', { title: recipe.title })}
+                            aria-label={t('planner.removeFromPlanAria', {
+                              title: localizeRecipeText(recipe, i18n.language).title,
+                            })}
                           >
                             ✕
                           </button>
@@ -475,7 +480,8 @@ export function PlannerPage() {
           suggestedCount={multiAssignSuggestedCount}
           occupiedTitleFor={(dateISO, slot) => {
             const entry = entryFor(dateISO, slot)
-            return entry ? recipeById.get(entry.recipe_id)?.title : undefined
+            const occupiedRecipe = entry ? recipeById.get(entry.recipe_id) : undefined
+            return occupiedRecipe ? localizeRecipeText(occupiedRecipe, i18n.language).title : undefined
           }}
           onAssign={handleMultiAssign}
           onClose={() => {

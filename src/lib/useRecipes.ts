@@ -37,6 +37,36 @@ export const FREE_OF_OPTIONS = INTOLERANCES
 export const getFreeOfLabels = getIntoleranceLabels
 export const getFreeOfDescriptions = getIntoleranceDescriptions
 
+export interface LocalizedRecipeText {
+  title: string
+  description: string
+  ingredients: string[]
+  instructions: string
+}
+
+// Rezeptinhalte (Titel, Beschreibung, Zutaten, Zubereitung) sind freier Text
+// und werden separat per *_en-Spalte übersetzt — im Unterschied zu
+// Mahlzeitenart/Ernährungstyp/Unverträglichkeiten, die über feste,
+// automatisch übersetzte Labels laufen. Fehlt eine englische Übersetzung
+// (noch) nicht, wird auf den deutschen Text zurückgefallen, damit nie ein
+// leeres Feld angezeigt wird.
+export function localizeRecipeText(recipe: Recipe, language: string): LocalizedRecipeText {
+  if (language !== 'en') {
+    return {
+      title: recipe.title,
+      description: recipe.description,
+      ingredients: recipe.ingredients,
+      instructions: recipe.instructions,
+    }
+  }
+  return {
+    title: recipe.title_en?.trim() ? recipe.title_en : recipe.title,
+    description: recipe.description_en?.trim() ? recipe.description_en : recipe.description,
+    ingredients: recipe.ingredients_en && recipe.ingredients_en.length > 0 ? recipe.ingredients_en : recipe.ingredients,
+    instructions: recipe.instructions_en?.trim() ? recipe.instructions_en : recipe.instructions,
+  }
+}
+
 export function useRecipes() {
   const { user } = useAuth()
   const [recipes, setRecipes] = useState<Recipe[]>([])

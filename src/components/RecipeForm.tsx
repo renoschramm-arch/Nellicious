@@ -29,6 +29,10 @@ export interface RecipeFormValues {
   fat_g: number
   ingredients: string[]
   instructions: string
+  title_en: string | null
+  description_en: string | null
+  ingredients_en: string[] | null
+  instructions_en: string | null
   meal_type: MealType
   diet_tags: string[]
   free_of: string[]
@@ -65,6 +69,10 @@ export function RecipeForm({
   const [servings, setServings] = useState(initial ? String(initial.servings) : '1')
   const [ingredients, setIngredients] = useState(initial?.ingredients.join('\n') ?? '')
   const [instructions, setInstructions] = useState(initial?.instructions ?? '')
+  const [titleEn, setTitleEn] = useState(initial?.title_en ?? '')
+  const [descriptionEn, setDescriptionEn] = useState(initial?.description_en ?? '')
+  const [ingredientsEn, setIngredientsEn] = useState(initial?.ingredients_en?.join('\n') ?? '')
+  const [instructionsEn, setInstructionsEn] = useState(initial?.instructions_en ?? '')
   const [mealType, setMealType] = useState<MealType>(initial?.meal_type ?? 'mittag')
   const [dietTags, setDietTags] = useState<string[]>(initial?.diet_tags ?? [])
   const [freeOf, setFreeOf] = useState<string[]>(initial?.free_of ?? [])
@@ -132,6 +140,15 @@ export function RecipeForm({
         .map((line) => line.trim())
         .filter(Boolean),
       instructions,
+      title_en: titleEn.trim() || null,
+      description_en: descriptionEn.trim() || null,
+      ingredients_en: ingredientsEn.trim()
+        ? ingredientsEn
+            .split('\n')
+            .map((line) => line.trim())
+            .filter(Boolean)
+        : null,
+      instructions_en: instructionsEn.trim() || null,
       meal_type: mealType,
       diet_tags: dietTags,
       free_of: freeOf,
@@ -378,6 +395,51 @@ export function RecipeForm({
           className="rounded-lg border border-border bg-surface px-3 py-2 outline-none focus:border-primary"
         />
       </label>
+
+      <details className="bg-surface border border-border rounded-2xl p-4 group">
+        <summary className="flex items-center justify-between gap-2 cursor-pointer text-sm font-semibold list-none">
+          <span>{t('recipeForm.englishTranslation')}</span>
+          <span className="text-text-muted transition-transform group-open:rotate-180">▾</span>
+        </summary>
+        <div className="flex flex-col gap-3 mt-3">
+          <p className="text-xs text-text-muted">{t('recipeForm.englishTranslationHint')}</p>
+          <label className="flex flex-col gap-1.5 text-sm">
+            {t('recipeForm.titleEn')}
+            <input
+              value={titleEn}
+              onChange={(e) => setTitleEn(e.target.value)}
+              className="rounded-lg border border-border bg-surface px-3 py-2 outline-none focus:border-primary"
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 text-sm">
+            {t('recipeForm.descriptionEn')}
+            <textarea
+              value={descriptionEn}
+              onChange={(e) => setDescriptionEn(e.target.value)}
+              rows={2}
+              className="rounded-lg border border-border bg-surface px-3 py-2 outline-none focus:border-primary resize-none"
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 text-sm">
+            {t('recipeForm.ingredientsEn')}
+            <textarea
+              value={ingredientsEn}
+              onChange={(e) => setIngredientsEn(e.target.value)}
+              rows={6}
+              className="rounded-lg border border-border bg-surface px-3 py-2 outline-none focus:border-primary font-mono text-sm"
+            />
+          </label>
+          <label className="flex flex-col gap-1.5 text-sm">
+            {t('recipeForm.instructionsEn')}
+            <textarea
+              value={instructionsEn}
+              onChange={(e) => setInstructionsEn(e.target.value)}
+              rows={4}
+              className="rounded-lg border border-border bg-surface px-3 py-2 outline-none focus:border-primary"
+            />
+          </label>
+        </div>
+      </details>
 
       <div className="flex gap-2">
         <button

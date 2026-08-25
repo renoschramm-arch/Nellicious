@@ -674,7 +674,13 @@
     "instructionsLabel": "Instructions",
     "saving": "Saving …",
     "save": "Save",
-    "saved": "Saved ✓"
+    "saved": "Saved ✓",
+    "englishTranslation": "🇬🇧 English translation (optional)",
+    "englishTranslationHint": "Leave blank to show the German text in English mode for now.",
+    "titleEn": "Title (English)",
+    "descriptionEn": "Description (English)",
+    "ingredientsEn": "Ingredients (English, one per line)",
+    "instructionsEn": "Instructions (English)"
   },
   "recipeNew": {
     "title": "New recipe",

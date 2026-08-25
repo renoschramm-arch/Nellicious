@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { getDietTagLabels, getMealTypeLabels, useRecipes } from '../lib/useRecipes'
+import { getDietTagLabels, getMealTypeLabels, localizeRecipeText, useRecipes } from '../lib/useRecipes'
 import type { NutritionType } from '../lib/useProfile'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { RecipeFilterBar } from '../components/RecipeFilterBar'
@@ -8,7 +8,7 @@ import { useFavorites } from '../lib/useFavorites'
 import { useRecipeFilters } from '../lib/useRecipeFilters'
 
 export function RecipesPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { recipes, loading } = useRecipes()
   const { favoriteIds, toggleFavorite } = useFavorites()
   const filters = useRecipeFilters(recipes, favoriteIds)
@@ -37,7 +37,9 @@ export function RecipesPage() {
       )}
 
       <div className="grid sm:grid-cols-2 gap-3">
-        {filters.filtered.map((recipe) => (
+        {filters.filtered.map((recipe) => {
+          const localized = localizeRecipeText(recipe, i18n.language)
+          return (
           <Link
             key={recipe.id}
             to={`/rezepte/${recipe.id}`}
@@ -69,11 +71,12 @@ export function RecipesPage() {
                   </span>
                 ))}
             </div>
-            <span className="font-display font-semibold text-lg pr-6">{recipe.title}</span>
-            <span className="text-text-muted text-sm line-clamp-2">{recipe.description}</span>
+            <span className="font-display font-semibold text-lg pr-6">{localized.title}</span>
+            <span className="text-text-muted text-sm line-clamp-2">{localized.description}</span>
             <span className="font-mono text-xs text-text-muted mt-1">{recipe.kcal} kcal</span>
           </Link>
-        ))}
+          )
+        })}
       </div>
     </div>
   )

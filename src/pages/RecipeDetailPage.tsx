@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { getDietTagLabels, getFreeOfLabels, getMealTypeLabels, useRecipe } from '../lib/useRecipes'
+import { getDietTagLabels, getFreeOfLabels, getMealTypeLabels, localizeRecipeText, useRecipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useMealPlan } from '../lib/useMealPlan'
 import { useFavorites } from '../lib/useFavorites'
@@ -15,7 +15,7 @@ import { RecipeForm } from '../components/RecipeForm'
 import { PremiumModal } from '../components/PremiumModal'
 
 export function RecipeDetailPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const { recipe, loading, updateRecipe, deleteRecipe, setShared } = useRecipe(id)
   const { addLog } = useMealLogs()
@@ -55,6 +55,7 @@ export function RecipeDetailPage() {
   const isOwner = !!user && recipe.owner_id === user.id
   const baseServings = recipe.servings || 1
   const scaleFactor = targetServings / baseServings
+  const localized = localizeRecipeText(recipe, i18n.language)
 
   function applyServings(next: number) {
     if (!hasPremium) {
@@ -98,7 +99,7 @@ export function RecipeDetailPage() {
     if (!recipe) return
     setLogging(true)
     await addLog({
-      name: recipe.title,
+      name: localized.title,
       kcal: recipe.kcal,
       protein_g: recipe.protein_g,
       carbs_g: recipe.carbs_g,
@@ -130,7 +131,7 @@ export function RecipeDetailPage() {
     if (!recipe.is_shared) void setShared(true)
 
     const url = `${window.location.origin}${import.meta.env.BASE_URL}rezept-teilen/${recipe.id}`
-    const shareText = t('recipeDetail.shareText', { title: recipe.title, kcal: recipe.kcal })
+    const shareText = t('recipeDetail.shareText', { title: localized.title, kcal: recipe.kcal })
     // navigator.share existiert zwar auch in Desktop-Chrome (v. a. unter
     // Windows), der native Teilen-Dialog ist dort aber unzuverlässig und
     // kann hängen bleiben, ohne sich je aufzulösen. Deshalb nur auf
@@ -139,7 +140,7 @@ export function RecipeDetailPage() {
     const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
     if (isTouchDevice && navigator.share) {
       try {
-        await navigator.share({ title: recipe.title, text: shareText, url })
+        await navigator.share({ title: localized.title, text: shareText, url })
       } catch {
         // Nutzer:in hat den Teilen-Dialog abgebrochen — kein Fehlerfall.
       }
@@ -153,7 +154,7 @@ export function RecipeDetailPage() {
 
   async function handleDelete() {
     if (!recipe) return
-    if (!window.confirm(t('recipeDetail.confirmDelete', { title: recipe.title }))) return
+    if (!window.confirm(t('recipeDetail.confirmDelete', { title: localized.title }))) return
     setDeleting(true)
     await deleteRecipe()
     navigate('/rezepte')
@@ -234,8 +235,8 @@ export function RecipeDetailPage() {
             </span>
           ))}
         </div>
-        <h1 className="font-display font-bold text-2xl">{recipe.title}</h1>
-        <p className="text-text-muted mt-1">{recipe.description}</p>
+        <h1 className="font-display font-bold text-2xl">{localized.title}</h1>
+        <p className="text-text-muted mt-1">{localized.description}</p>
         <p className="text-xs text-text-muted mt-1">{t('recipeDetail.servings', { count: recipe.servings })}</p>
       </div>
 
@@ -322,11 +323,11 @@ export function RecipeDetailPage() {
         </button>
       )}
 
-      {recipe.ingredients.length > 0 && (
+      {localized.ingredients.length > 0 && (
         <div>
           <h2 className="font-display font-semibold text-lg mb-2">{t('recipeDetail.ingredients')}</h2>
           <ul className="flex flex-col gap-1.5">
-            {recipe.ingredients.map((ing, i) => (
+            {localized.ingredients.map((ing, i) => (
               <li key={i} className="flex items-center gap-2 text-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-honey shrink-0" />
                 {scaleIngredientLine(ing, scaleFactor)}
@@ -336,10 +337,10 @@ export function RecipeDetailPage() {
         </div>
       )}
 
-      {recipe.instructions && (
+      {localized.instructions && (
         <div>
           <h2 className="font-display font-semibold text-lg mb-2">{t('recipeDetail.instructions')}</h2>
-          <p className="text-sm whitespace-pre-line">{recipe.instructions}</p>
+          <p className="text-sm whitespace-pre-line">{localized.instructions}</p>
         </div>
       )}
 
