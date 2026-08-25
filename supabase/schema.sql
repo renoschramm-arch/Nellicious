@@ -350,13 +350,6 @@ from (
       'Tomaten und Mozzarella in Scheiben schneiden, abwechselnd anrichten, mit Basilikum und Öl beträufeln. Mit Baguette servieren.'
     ),
     (
-      'Miso-Suppe mit Tofu und Wakame',
-      'Leichte, umamireiche Suppe als Beilage oder Snack.',
-      180, 10, 12, 8,
-      array['2 EL Miso-Paste', '100 g Tofu', '1 EL getrocknete Wakame-Algen', 'Frühlingszwiebel', '500 ml Wasser']::text[],
-      'Wasser erhitzen (nicht kochen), Miso-Paste einrühren. Tofuwürfel und Wakame zugeben, mit Frühlingszwiebel servieren.'
-    ),
-    (
       'Gebackene Forelle mit Zitrone und Kräutern',
       'Leichtes Fischgericht mit wenig Aufwand.',
       400, 36, 4, 24,
@@ -2433,16 +2426,6 @@ from (
       array['glutenfrei', 'laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
     ),
     (
-      'Miso-Suppe mit Tofu und Wakame',
-      'Klassische japanische Suppe, schnell gemacht.',
-      150, 9, 8, 8,
-      array['800 ml Wasser', '4 EL Miso-Paste', '1 EL getrocknete Wakame-Algen', '150 g Seidentofu', '2 Frühlingszwiebeln', '1 TL Dashi-Granulat (optional)']::text[],
-      'Wasser (mit Dashi-Granulat, falls verwendet) erhitzen, nicht kochen lassen. Wakame-Algen 5 Minuten einweichen und abtropfen lassen. Tofu würfeln. Etwas heißes Wasser mit der Miso-Paste glattrühren und zur restlichen Brühe geben. Tofu und Wakame zugeben, kurz erwärmen, nicht mehr kochen. Mit Frühlingszwiebelringen bestreut servieren.',
-      'snack',
-      array['omnivore', 'vegetarisch', 'vegan']::text[],
-      array['laktosefrei', 'nussfrei', 'eifrei']::text[]
-    ),
-    (
       'Shoyu-Ramen mit Hühnchen und Ei',
       'Japanische Nudelsuppe in würziger Sojasauce-Brühe.',
       520, 32, 55, 18,
@@ -2516,3 +2499,22 @@ from (
 where not exists (
   select 1 from public.recipes r where r.title = v.title
 );
+
+-- "Miso-Suppe mit Tofu und Wakame" gab es unter diesem Titel schon aus der
+-- allerersten Rezept-Runde, daher kein Insert (siehe Block oben) — stattdessen
+-- hier auf die überarbeitete Fassung aktualisieren, ohne die Zeile neu
+-- anzulegen (das würde Favoriten/Notizen/Wochenplan-Einträge kappen, die auf
+-- die bestehende Zeile verweisen).
+update public.recipes
+set
+  description = 'Klassische japanische Suppe, schnell gemacht.',
+  kcal = 150,
+  protein_g = 9,
+  carbs_g = 8,
+  fat_g = 8,
+  ingredients = array['800 ml Wasser', '4 EL Miso-Paste', '1 EL getrocknete Wakame-Algen', '150 g Seidentofu', '2 Frühlingszwiebeln', '1 TL Dashi-Granulat (optional)']::text[],
+  instructions = 'Wasser (mit Dashi-Granulat, falls verwendet) erhitzen, nicht kochen lassen. Wakame-Algen 5 Minuten einweichen und abtropfen lassen. Tofu würfeln. Etwas heißes Wasser mit der Miso-Paste glattrühren und zur restlichen Brühe geben. Tofu und Wakame zugeben, kurz erwärmen, nicht mehr kochen. Mit Frühlingszwiebelringen bestreut servieren.',
+  meal_type = 'snack',
+  diet_tags = array['omnivore', 'vegetarisch', 'vegan']::text[],
+  free_of = array['laktosefrei', 'nussfrei', 'eifrei']::text[]
+where title = 'Miso-Suppe mit Tofu und Wakame';

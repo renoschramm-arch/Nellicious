@@ -176,7 +176,7 @@ const CHANGELOG: ChangelogEntry[] = [
     seq: 14,
     date: '2026-08-25',
     items: [
-      '10 Suppenrezepte aus der indischen/asiatischen Küche hinzugefügt (u. a. Tom Kha Gai, Pho Ga, Ramen, Laksa)',
+      '9 neue Suppenrezepte aus der indischen/asiatischen Küche (u. a. Tom Kha Gai, Pho Ga, Ramen, Laksa), Miso-Suppe überarbeitet',
     ],
   },
 ]
