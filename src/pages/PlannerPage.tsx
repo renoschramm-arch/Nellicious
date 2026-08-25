@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
 import { useRecipes, type Recipe } from '../lib/useRecipes'
@@ -341,12 +341,15 @@ export function PlannerPage() {
                     <div key={slot.key}>
                       {recipe ? (
                         <div className="flex items-center gap-3 min-h-[52px] bg-surface-2 border border-border rounded-2xl px-3.5 py-2.5">
-                          <div className="flex-1 min-w-0 flex flex-col gap-0.5">
+                          <Link
+                            to={`/rezepte/${recipe.id}`}
+                            className="flex-1 min-w-0 flex flex-col gap-0.5 hover:text-primary"
+                          >
                             <span className="font-mono text-[10px] uppercase tracking-wide text-basil">
                               {slot.label}
                             </span>
                             <span className="text-[15px] font-medium truncate">{recipe.title}</span>
-                          </div>
+                          </Link>
                           <span className="font-mono text-xs text-text-muted shrink-0">{recipe.kcal} kcal</span>
                           <button
                             onClick={() => entry && removePlanEntry(dateISO, entry.id, entry.recipe_id)}
