@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { useAuth } from '../lib/AuthContext'
 import { useProfile } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
 import { useWaterLog } from '../lib/useWaterLog'
@@ -14,6 +15,14 @@ import {
   type FastingSession,
 } from '../lib/useFasting'
 import { usePremium } from '../lib/usePremium'
+import {
+  EXPORT_RANGES,
+  fetchExportData,
+  downloadMealLogsCSV,
+  downloadWeightLogsCSV,
+  generatePDFReport,
+  type ExportRangeDays,
+} from '../lib/exportReport'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
 import { PageFlatlay } from '../components/PageFlatlay'
@@ -29,6 +38,7 @@ function lastSevenDays(): Date[] {
 }
 
 export function VerlaufPage() {
+  const { user } = useAuth()
   const { profile, updateProfile } = useProfile()
   const { logs: weightLogs, upsertWeight, deleteWeight } = useWeightLogs()
   const { logs: waterLogs, todayMl, addWater, resetWater } = useWaterLog()
@@ -66,6 +76,8 @@ export function VerlaufPage() {
   const [customTargetOpen, setCustomTargetOpen] = useState(false)
   const [customTargetValue, setCustomTargetValue] = useState('')
   const [showFastingPhaseModal, setShowFastingPhaseModal] = useState(false)
+  const [exportRangeDays, setExportRangeDays] = useState<ExportRangeDays>(30)
+  const [exporting, setExporting] = useState(false)
 
   useEffect(() => {
     if (profile?.fasting_default_hours) setFastingTargetHours(profile.fasting_default_hours)
@@ -274,6 +286,29 @@ export function VerlaufPage() {
 
   async function handleQuickEnableFasting() {
     await updateProfile({ fasting_enabled: true })
+  }
+
+  async function handleExport(format: 'pdf' | 'csv-meals' | 'csv-weight') {
+    if (!hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    if (!user) return
+    setExporting(true)
+    try {
+      const { mealLogs, weightLogs } = await fetchExportData(user.id, exportRangeDays)
+      if (format === 'csv-meals') {
+        downloadMealLogsCSV(mealLogs)
+      } else if (format === 'csv-weight') {
+        downloadWeightLogsCSV(weightLogs)
+      } else {
+        const rangeLabel = EXPORT_RANGES.find((r) => r.days === exportRangeDays)?.label ?? ''
+        const doc = generatePDFReport({ mealLogs, weightLogs, rangeLabel, userEmail: user.email ?? '' })
+        doc.save('nellicious-bericht.pdf')
+      }
+    } finally {
+      setExporting(false)
+    }
   }
 
   async function handleWeightSubmit(e: FormEvent) {
@@ -807,6 +842,52 @@ export function VerlaufPage() {
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
         <span className="text-sm font-medium text-text-muted">Fasten – letzte 7 Tage</span>
         <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
+      </div>
+
+      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+        <h2 className="font-display font-semibold text-lg">📤 Datenexport{!hasPremium && ' 🔒'}</h2>
+        <div className="grid grid-cols-3 gap-2">
+          {EXPORT_RANGES.map((range) => (
+            <button
+              key={range.days}
+              type="button"
+              onClick={() => setExportRangeDays(range.days)}
+              className={`rounded-xl py-2 text-xs font-medium transition-colors ${
+                exportRangeDays === range.days
+                  ? 'bg-primary text-on-primary'
+                  : 'bg-surface-2 border border-border hover:border-primary'
+              }`}
+            >
+              {range.label}
+            </button>
+          ))}
+        </div>
+        <button
+          type="button"
+          disabled={exporting}
+          onClick={() => handleExport('pdf')}
+          className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm disabled:opacity-60"
+        >
+          Als PDF-Bericht exportieren
+        </button>
+        <div className="grid grid-cols-2 gap-2">
+          <button
+            type="button"
+            disabled={exporting}
+            onClick={() => handleExport('csv-meals')}
+            className="bg-surface-2 border border-border rounded-xl py-2.5 text-sm font-medium hover:border-primary transition-colors disabled:opacity-60"
+          >
+            Mahlzeiten als CSV
+          </button>
+          <button
+            type="button"
+            disabled={exporting}
+            onClick={() => handleExport('csv-weight')}
+            className="bg-surface-2 border border-border rounded-xl py-2.5 text-sm font-medium hover:border-primary transition-colors disabled:opacity-60"
+          >
+            Gewicht als CSV
+          </button>
+        </div>
       </div>
 
       {weightLogs.length > 0 && (

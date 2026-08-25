@@ -5,6 +5,7 @@ const PREMIUM_FEATURES = [
   '🍳 Kochmodus: Bildschirm bleibt beim Kochen wach',
   '⏱️ Intervallfasten-Tracker mit Streak und Verlauf',
   '🎯 Mehrere Ziel-Profile speichern und mit einem Tap wechseln',
+  '📤 Datenexport als CSV oder PDF-Bericht',
 ]
 
 const MONTHLY_PRICE_EUR = 3.99
