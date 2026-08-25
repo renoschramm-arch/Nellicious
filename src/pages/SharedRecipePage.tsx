@@ -121,7 +121,7 @@ export function SharedRecipePage() {
 
             <div className="bg-text text-bg rounded-[28px] px-6 py-10 text-center flex flex-col items-center gap-4 mt-4">
               <h2 className="font-display font-semibold text-xl">
-                154 Rezepte wie dieses, kostenlos in der Beta.
+                174 Rezepte wie dieses, kostenlos in der Beta.
               </h2>
               <p className="text-bg/70 text-sm max-w-xs">
                 Kalorien und Makros tracken, Wochenplan, Einkaufsliste — alles in einer App.
