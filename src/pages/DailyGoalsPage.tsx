@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useProfile } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg } from '../lib/useWeightLogs'
 import { calculateTargets } from '../lib/calorieCalculator'
@@ -7,16 +8,16 @@ import { useGoalProfiles } from '../lib/useGoalProfiles'
 import { usePremium } from '../lib/usePremium'
 import { PremiumModal } from '../components/PremiumModal'
 
-const MISSING_FIELD_LABELS: Record<string, { label: string; to: string }> = {
-  gender: { label: 'Geschlecht', to: '/mehr/profil' },
-  age: { label: 'Alter', to: '/mehr/profil' },
-  heightCm: { label: 'Größe', to: '/mehr/profil' },
-  activityLevel: { label: 'Aktivitätslevel', to: '/mehr/profil' },
-  goal: { label: 'Ziel', to: '/mehr/ziele' },
-  weightKg: { label: 'Gewicht (Verlauf)', to: '/verlauf' },
-}
-
 export function DailyGoalsPage() {
+  const { t } = useTranslation()
+  const MISSING_FIELD_LABELS: Record<string, { label: string; to: string }> = {
+    gender: { label: t('dailyGoals.fieldGender'), to: '/mehr/profil' },
+    age: { label: t('dailyGoals.fieldAge'), to: '/mehr/profil' },
+    heightCm: { label: t('dailyGoals.fieldHeight'), to: '/mehr/profil' },
+    activityLevel: { label: t('dailyGoals.fieldActivityLevel'), to: '/mehr/profil' },
+    goal: { label: t('dailyGoals.fieldGoal'), to: '/mehr/ziele' },
+    weightKg: { label: t('dailyGoals.fieldWeight'), to: '/verlauf' },
+  }
   const { profile, updateProfile, reload: reloadProfile } = useProfile()
   const { logs: weightLogs } = useWeightLogs()
   const [kcal, setKcal] = useState('')
@@ -126,14 +127,14 @@ export function DailyGoalsPage() {
           to="/mehr"
           className="bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
-          ‹ Zurück
+          {t('dailyGoals.back')}
         </Link>
       </div>
-      <h1 className="font-display font-bold text-2xl">Tagesziele</h1>
+      <h1 className="font-display font-bold text-2xl">{t('dailyGoals.title')}</h1>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <span className="text-sm font-medium">
-          Ziel-Profile{!hasPremium && ' 🔒'}
+          {t('dailyGoals.goalProfiles')}{!hasPremium && ' 🔒'}
         </span>
         <div className="flex flex-wrap gap-1.5">
           {goalProfiles.map((gp) => (
@@ -154,7 +155,7 @@ export function DailyGoalsPage() {
                 <button
                   type="button"
                   onClick={() => removeProfile(gp.id)}
-                  aria-label={`${gp.name} löschen`}
+                  aria-label={t('dailyGoals.deleteProfileAria', { name: gp.name })}
                   className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-surface border border-border text-text-muted text-xs leading-none hover:text-danger hover:border-danger transition-colors flex items-center justify-center"
                 >
                   ×
@@ -167,7 +168,7 @@ export function DailyGoalsPage() {
             onClick={handleAddProfileClick}
             className="px-3 py-1.5 rounded-full text-sm font-medium bg-surface-2 border border-dashed border-border text-text-muted hover:text-text hover:border-primary transition-colors"
           >
-            + Aktuelle Werte speichern
+            {t('dailyGoals.saveCurrentValues')}
           </button>
         </div>
 
@@ -178,46 +179,48 @@ export function DailyGoalsPage() {
               autoFocus
               value={newProfileName}
               onChange={(e) => setNewProfileName(e.target.value)}
-              placeholder="z. B. Diätphase, Aufbauphase"
+              placeholder={t('dailyGoals.newProfileNamePlaceholder')}
               className="flex-1 rounded-lg border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-primary"
             />
             <button
               type="submit"
               className="bg-primary text-on-primary font-semibold rounded-lg px-4 text-sm"
             >
-              Speichern
+              {t('dailyGoals.save')}
             </button>
           </form>
         )}
 
-        <p className="text-xs text-text-muted">
-          Speichert die Werte unten als benanntes Set — z. B. unterschiedliche Ziele für Diät- und
-          Aufbauphasen, mit einem Tap wechselbar.
-        </p>
+        <p className="text-xs text-text-muted">{t('dailyGoals.goalProfilesHint')}</p>
       </div>
 
       {suggestion && (
         <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-          <span className="text-sm font-medium">Berechneter Vorschlag</span>
+          <span className="text-sm font-medium">{t('dailyGoals.calculatedSuggestion')}</span>
           <p className="text-sm text-text-muted">
-            Basierend auf deinem Profil und aktuellen Gewicht ({formatWeightKg(Number(latestWeight!.weight_kg))} kg):
+            {t('dailyGoals.basedOnProfile', { weight: formatWeightKg(Number(latestWeight!.weight_kg)) })}
           </p>
           <p className="font-mono text-sm">
-            {suggestion.kcal} kcal · {suggestion.proteinG} g Protein · {suggestion.carbsG} g Kohlenh. · {suggestion.fatG} g Fett
+            {t('dailyGoals.suggestionLine', {
+              kcal: suggestion.kcal,
+              protein: suggestion.proteinG,
+              carbs: suggestion.carbsG,
+              fat: suggestion.fatG,
+            })}
           </p>
           <button
             type="button"
             onClick={applySuggestion}
             className="bg-surface-2 border border-border rounded-xl py-2 text-sm font-medium hover:border-primary transition-colors w-fit px-4"
           >
-            Übernehmen
+            {t('dailyGoals.apply')}
           </button>
         </div>
       )}
 
       {missing.length > 0 && (
         <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-          <span className="text-sm font-medium">Automatischer Vorschlag möglich, sobald ergänzt:</span>
+          <span className="text-sm font-medium">{t('dailyGoals.missingFieldsHint')}</span>
           <ul className="flex flex-wrap gap-1.5">
             {missing.map((key) => (
               <li key={key}>
@@ -249,7 +252,7 @@ export function DailyGoalsPage() {
             />
           </label>
           <label className="flex flex-col gap-1 text-xs text-text-muted">
-            Protein g
+            {t('dailyGoals.proteinG')}
             <input
               type="number"
               min={0}
@@ -259,7 +262,7 @@ export function DailyGoalsPage() {
             />
           </label>
           <label className="flex flex-col gap-1 text-xs text-text-muted">
-            Kohlenh. g
+            {t('dailyGoals.carbsG')}
             <input
               type="number"
               min={0}
@@ -269,7 +272,7 @@ export function DailyGoalsPage() {
             />
           </label>
           <label className="flex flex-col gap-1 text-xs text-text-muted">
-            Fett g
+            {t('dailyGoals.fatG')}
             <input
               type="number"
               min={0}
@@ -283,7 +286,7 @@ export function DailyGoalsPage() {
           type="submit"
           className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm mt-1"
         >
-          {saved ? 'Gespeichert ✓' : 'Speichern'}
+          {saved ? t('dailyGoals.saved') : t('dailyGoals.save')}
         </button>
       </form>
 
@@ -292,64 +295,53 @@ export function DailyGoalsPage() {
         onClick={() => setShowFormula((v) => !v)}
         className="bg-surface-2 border border-border rounded-xl py-2.5 text-sm font-medium text-text-muted hover:text-text transition-colors"
       >
-        {showFormula ? 'Berechnungsgrundlage ausblenden' : '📐 Wie wird das berechnet?'}
+        {showFormula ? t('dailyGoals.hideFormula') : t('dailyGoals.showFormula')}
       </button>
 
       {showFormula && (
         <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-4 text-sm text-text-muted">
           <div>
-            <p className="font-medium text-text">1. Grundumsatz — Mifflin-St-Jeor-Formel</p>
-            <p className="mt-1">
-              Der Grundumsatz (BMR) ist die Energiemenge, die dein Körper in völliger Ruhe
-              verbraucht, um lebenswichtige Funktionen aufrechtzuerhalten. Die Mifflin-St-Jeor-
-              Formel gilt als eine der genauesten Schätzformeln dafür und wird in
-              Ernährungsberatung und Fitness-Apps breit eingesetzt:
-            </p>
+            <p className="font-medium text-text">{t('dailyGoals.formulaStep1Title')}</p>
+            <p className="mt-1">{t('dailyGoals.formulaStep1Text')}</p>
             <ul className="font-mono text-xs mt-2 flex flex-col gap-1">
-              <li>Männlich: 10 × Gewicht(kg) + 6,25 × Größe(cm) − 5 × Alter + 5</li>
-              <li>Weiblich: 10 × Gewicht(kg) + 6,25 × Größe(cm) − 5 × Alter − 161</li>
+              <li>{t('dailyGoals.formulaMale')}</li>
+              <li>{t('dailyGoals.formulaFemale')}</li>
             </ul>
           </div>
 
           <div>
-            <p className="font-medium text-text">2. Gesamtumsatz (TDEE)</p>
-            <p className="mt-1">
-              Der Grundumsatz wird mit deinem Aktivitätslevel aus dem Profil multipliziert, um
-              den tatsächlichen Tagesbedarf zu schätzen:
-            </p>
+            <p className="font-medium text-text">{t('dailyGoals.formulaStep2Title')}</p>
+            <p className="mt-1">{t('dailyGoals.formulaStep2Text')}</p>
             <ul className="text-xs mt-2 flex flex-col gap-1">
-              <li>Sitzend: × 1,2</li>
-              <li>Leicht aktiv: × 1,375</li>
-              <li>Mäßig aktiv: × 1,55</li>
-              <li>Sehr aktiv: × 1,725</li>
-              <li>Extrem aktiv: × 1,9</li>
+              <li>{t('dailyGoals.activitySitzend')}</li>
+              <li>{t('dailyGoals.activityLeicht')}</li>
+              <li>{t('dailyGoals.activityMaessig')}</li>
+              <li>{t('dailyGoals.activitySehr')}</li>
+              <li>{t('dailyGoals.activityExtrem')}</li>
             </ul>
           </div>
 
           <div>
-            <p className="font-medium text-text">3. Anpassung nach Ziel</p>
-            <p className="mt-1">Je nach gewähltem Ziel wird der Gesamtumsatz angepasst:</p>
+            <p className="font-medium text-text">{t('dailyGoals.formulaStep3Title')}</p>
+            <p className="mt-1">{t('dailyGoals.formulaStep3Text')}</p>
             <ul className="text-xs mt-2 flex flex-col gap-1">
-              <li>Abnehmen: −500 kcal/Tag (≈ 0,5 kg Gewichtsabnahme/Woche)</li>
-              <li>Gewicht halten: ±0 kcal</li>
-              <li>Zunehmen: +300 kcal/Tag</li>
-              <li>Muskelaufbau: +250 kcal/Tag</li>
+              <li>{t('dailyGoals.goalAbnehmen')}</li>
+              <li>{t('dailyGoals.goalHalten')}</li>
+              <li>{t('dailyGoals.goalZunehmen')}</li>
+              <li>{t('dailyGoals.goalMuskelaufbau')}</li>
             </ul>
           </div>
 
           <div>
-            <p className="font-medium text-text">4. Makroverteilung</p>
+            <p className="font-medium text-text">{t('dailyGoals.formulaStep4Title')}</p>
             <ul className="text-xs mt-2 flex flex-col gap-1">
-              <li>Protein: 2,0 g je kg Körpergewicht (Abnehmen, Muskelaufbau) bzw. 1,6 g/kg (Halten, Zunehmen)</li>
-              <li>Fett: 30 % der berechneten Gesamt-kcal</li>
-              <li>Kohlenhydrate: der verbleibende Rest der kcal</li>
+              <li>{t('dailyGoals.macroProtein')}</li>
+              <li>{t('dailyGoals.macroFat')}</li>
+              <li>{t('dailyGoals.macroCarbs')}</li>
             </ul>
           </div>
 
-          <p className="text-xs">
-            Diese Werte sind ein rechnerischer Anhaltspunkt und ersetzen keine individuelle
-            ärztliche oder ernährungswissenschaftliche Beratung.
-          </p>
+          <p className="text-xs">{t('dailyGoals.formulaDisclaimer')}</p>
         </div>
       )}
 

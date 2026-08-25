@@ -1,10 +1,12 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useFasting, formatCountdownHM, formatClockTime } from '../lib/useFasting'
 import { useProfile } from '../lib/useProfile'
 
 // Nur sichtbar, während tatsächlich gefastet wird oder ein Essensfenster
 // läuft — Nutzer, die die Funktion nicht (mehr) verwenden, sehen hier nichts.
 export function FastingRingCard() {
+  const { t } = useTranslation()
   const { profile } = useProfile()
   const { activeSession, eatingWindow, now } = useFasting()
 
@@ -34,34 +36,38 @@ export function FastingRingCard() {
       <div className="text-sm flex-1">
         {activeSession && fastingEndsAt ? (
           <>
-            ⏱️ {fastingRemainingMs > 0 ? 'Fastenzeit endet in' : 'Fastenziel erreicht'}
+            ⏱️ {fastingRemainingMs > 0 ? t('verlauf.endsIn') : t('verlauf.goalReached')}
             <span className="block font-mono font-medium text-base text-basil">
               {fastingRemainingMs > 0 ? (
                 <>
                   {formatCountdownHM(fastingRemainingMs)} h{' '}
-                  <span className="text-text-muted">um {formatClockTime(fastingEndsAt)} Uhr</span>
+                  <span className="text-text-muted">{t('verlauf.atTime', { time: formatClockTime(fastingEndsAt) })}</span>
                 </>
               ) : (
                 <>
                   +{formatCountdownHM(-fastingRemainingMs)} h{' '}
-                  <span className="text-text-muted">seit {formatClockTime(fastingEndsAt)} Uhr</span>
+                  <span className="text-text-muted">{t('verlauf.sinceTime', { time: formatClockTime(fastingEndsAt) })}</span>
                 </>
               )}
             </span>
           </>
         ) : (
           <>
-            🍽️ {eatingWindow!.remainingMs > 0 ? 'Fastenzeit beginnt in' : 'Essensfenster überzogen'}
+            🍽️ {eatingWindow!.remainingMs > 0 ? t('verlauf.eatingBeginsIn') : t('verlauf.eatingWindowExceeded')}
             <span className="block font-mono font-medium text-base text-honey">
               {eatingWindow!.remainingMs > 0 ? (
                 <>
                   {formatCountdownHM(eatingWindow!.remainingMs)} h{' '}
-                  <span className="text-text-muted">um {formatClockTime(new Date(eatingWindow!.endsAt))} Uhr</span>
+                  <span className="text-text-muted">
+                    {t('verlauf.atTime', { time: formatClockTime(new Date(eatingWindow!.endsAt)) })}
+                  </span>
                 </>
               ) : (
                 <>
                   +{formatCountdownHM(-eatingWindow!.remainingMs)} h{' '}
-                  <span className="text-text-muted">seit {formatClockTime(new Date(eatingWindow!.endsAt))} Uhr</span>
+                  <span className="text-text-muted">
+                    {t('verlauf.sinceTime', { time: formatClockTime(new Date(eatingWindow!.endsAt)) })}
+                  </span>
                 </>
               )}
             </span>

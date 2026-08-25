@@ -1,6 +1,8 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 export function TagLegend({ items }: { items: { label: string; description: string }[] }) {
+  const { t } = useTranslation()
   const [open, setOpen] = useState(false)
 
   return (
@@ -10,7 +12,7 @@ export function TagLegend({ items }: { items: { label: string; description: stri
         onClick={() => setOpen((v) => !v)}
         className="text-xs text-text-muted hover:text-text"
       >
-        ⓘ Begriffe erklärt
+        {t('tagLegend.toggle')}
       </button>
       {open && (
         <div className="absolute z-20 top-full left-0 mt-1 w-72 max-w-[80vw] bg-surface border border-border rounded-xl shadow-[var(--shadow)] p-3 flex flex-col gap-2">
@@ -27,7 +29,7 @@ export function TagLegend({ items }: { items: { label: string; description: stri
             onClick={() => setOpen(false)}
             className="text-xs text-text-muted self-end"
           >
-            Schließen
+            {t('tagLegend.close')}
           </button>
         </div>
       )}
