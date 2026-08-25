@@ -247,15 +247,6 @@ export function PlannerPage() {
         <h1 className="font-display font-bold text-2xl">Wochenplan</h1>
         <div className="flex items-center gap-2">
           <button
-            type="button"
-            onClick={openMultiAssign}
-            className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
-            aria-label="Rezept mehrfach einplanen"
-            title={`Rezept mehrfach einplanen${!hasPremium ? ' (Premium)' : ''}`}
-          >
-            🍽️{!hasPremium && <span className="text-[9px] -ml-0.5">🔒</span>}
-          </button>
-          <button
             onClick={() => goToWeek(weekOffset - 1)}
             className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
             aria-label="Vorherige Woche"
@@ -274,6 +265,14 @@ export function PlannerPage() {
           </button>
         </div>
       </div>
+
+      <button
+        type="button"
+        onClick={openMultiAssign}
+        className="w-full flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-text-muted hover:border-primary hover:text-text transition-colors"
+      >
+        🍽️ Rezept mehrfach einplanen{!hasPremium && ' 🔒'}
+      </button>
 
       <div className="flex flex-col gap-3">
         {days.map((day) => {
