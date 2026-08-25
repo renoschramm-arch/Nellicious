@@ -31,6 +31,7 @@ export interface RecipeFormValues {
   meal_type: MealType
   diet_tags: string[]
   free_of: string[]
+  servings: number
 }
 
 export function RecipeForm({
@@ -52,6 +53,7 @@ export function RecipeForm({
   const [protein, setProtein] = useState(initial ? String(initial.protein_g) : '')
   const [carbs, setCarbs] = useState(initial ? String(initial.carbs_g) : '')
   const [fat, setFat] = useState(initial ? String(initial.fat_g) : '')
+  const [servings, setServings] = useState(initial ? String(initial.servings) : '1')
   const [ingredients, setIngredients] = useState(initial?.ingredients.join('\n') ?? '')
   const [instructions, setInstructions] = useState(initial?.instructions ?? '')
   const [mealType, setMealType] = useState<MealType>(initial?.meal_type ?? 'mittag')
@@ -124,6 +126,7 @@ export function RecipeForm({
       meal_type: mealType,
       diet_tags: dietTags,
       free_of: freeOf,
+      servings: Math.max(1, Math.round(Number(servings) || 1)),
     })
     setSaving(false)
     setJustSaved(true)
@@ -169,6 +172,17 @@ export function RecipeForm({
             </option>
           ))}
         </select>
+      </label>
+
+      <label className="flex flex-col gap-1.5 text-sm w-28">
+        Portionen
+        <input
+          type="number"
+          min={1}
+          value={servings}
+          onChange={(e) => setServings(e.target.value)}
+          className="rounded-lg border border-border bg-surface px-3 py-2 font-mono outline-none focus:border-primary"
+        />
       </label>
 
       <div className="grid grid-cols-4 gap-2">
