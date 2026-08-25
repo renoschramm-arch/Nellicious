@@ -4,6 +4,7 @@ const PREMIUM_FEATURES = [
   'Wochenplanung beliebig viele Wochen im Voraus und zurück',
   '🍳 Kochmodus: Bildschirm bleibt beim Kochen wach',
   '⏱️ Intervallfasten-Tracker mit Streak und Verlauf',
+  '🎯 Mehrere Ziel-Profile speichern und mit einem Tap wechseln',
 ]
 
 const MONTHLY_PRICE_EUR = 3.99
