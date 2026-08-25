@@ -1,9 +1,11 @@
 import { useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../lib/AuthContext'
 import { PageFlatlay } from '../components/PageFlatlay'
 
 export function ForgotPasswordPage() {
+  const { t } = useTranslation()
   const { resetPasswordForEmail } = useAuth()
   const [email, setEmail] = useState('')
   const [error, setError] = useState<string | null>(null)
@@ -31,16 +33,13 @@ export function ForgotPasswordPage() {
           <span className="font-display font-bold text-2xl">
             Nelli<span className="text-primary">cious</span>
           </span>
-          <p className="text-text-muted text-sm mt-2">Passwort zurücksetzen.</p>
+          <p className="text-text-muted text-sm mt-2">{t('auth.resetPasswordTitle')}</p>
         </div>
 
         {sent ? (
           <div className="bg-surface border border-border rounded-2xl p-6 shadow-[var(--shadow)] flex flex-col gap-3 text-center">
-            <p className="text-sm text-text">
-              Falls ein Konto mit dieser E-Mail-Adresse existiert, haben wir dir einen Link zum
-              Zurücksetzen des Passworts geschickt.
-            </p>
-            <p className="text-xs text-text-muted">Schau auch im Spam-Ordner nach.</p>
+            <p className="text-sm text-text">{t('auth.resetPasswordSent')}</p>
+            <p className="text-xs text-text-muted">{t('auth.checkSpam')}</p>
           </div>
         ) : (
           <form
@@ -48,7 +47,7 @@ export function ForgotPasswordPage() {
             className="bg-surface border border-border rounded-2xl p-6 shadow-[var(--shadow)] flex flex-col gap-4"
           >
             <label className="flex flex-col gap-1.5 text-sm">
-              E-Mail
+              {t('auth.email')}
               <input
                 type="email"
                 required
@@ -65,7 +64,7 @@ export function ForgotPasswordPage() {
               disabled={submitting}
               className="mt-1 bg-primary text-on-primary font-semibold rounded-xl py-2.5 disabled:opacity-60"
             >
-              Link zum Zurücksetzen senden
+              {t('auth.sendResetLink')}
             </button>
           </form>
         )}
@@ -75,7 +74,7 @@ export function ForgotPasswordPage() {
             to="/anmelden"
             className="text-center text-sm text-text-muted hover:text-text bg-surface/90 backdrop-blur-sm border border-border rounded-full px-4 py-2 shadow-[var(--shadow)] transition-colors"
           >
-            Zurück zur Anmeldung
+            {t('auth.backToSignIn')}
           </Link>
         </div>
       </div>

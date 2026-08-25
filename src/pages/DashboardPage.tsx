@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useRef, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useProfile } from '../lib/useProfile'
 import { useMealLogs, useLoggingStreak } from '../lib/useMealLogs'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
@@ -38,17 +39,18 @@ const SLOTS: { key: MealSlot; label: string }[] = [
   { key: 'snack', label: MEAL_TYPE_LABELS.snack },
 ]
 
-function nextDays(): { iso: string; label: string }[] {
+function nextDays(t: (key: string) => string): { iso: string; label: string }[] {
   const today = new Date()
   return Array.from({ length: 7 }, (_, i) => {
     const date = addDays(today, i)
     const iso = toISODate(date)
-    const label = i === 0 ? 'Heute' : i === 1 ? 'Morgen' : formatWeekdayShort(date)
+    const label = i === 0 ? t('dashboard.today') : i === 1 ? t('dashboard.tomorrow') : formatWeekdayShort(date)
     return { iso, label }
   })
 }
 
 export function DashboardPage() {
+  const { t } = useTranslation()
   const { profile } = useProfile()
   const { logs, totals, addLog, removeLog } = useMealLogs()
   const { streak } = useLoggingStreak()
@@ -133,13 +135,15 @@ export function DashboardPage() {
         <div className="bg-basil/15 backdrop-blur-sm border border-basil/30 rounded-2xl p-4 flex items-start justify-between gap-3">
           <div>
             <p className="font-display font-semibold text-lg text-basil">
-              Hallo{firstNameFrom(profile?.display_name) ? `, ${firstNameFrom(profile?.display_name)}` : ''}! 👋
+              {firstNameFrom(profile?.display_name)
+                ? t('dashboard.greetingWithName', { name: firstNameFrom(profile?.display_name) })
+                : t('dashboard.greetingPlain')}
             </p>
             <p className="text-sm text-text-muted mt-1">{greetingQuote}</p>
           </div>
           <button
             onClick={() => setGreetingQuote(null)}
-            aria-label="Begrüßung schließen"
+            aria-label={t('dashboard.closeGreeting')}
             className="shrink-0 text-text-muted hover:text-text text-sm"
           >
             ✕
@@ -150,7 +154,7 @@ export function DashboardPage() {
       {newsItems.length > 0 && (
         <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl p-4 flex items-start justify-between gap-3">
           <div>
-            <p className="font-display font-semibold text-lg text-honey">🆕 Neu in Nellicious</p>
+            <p className="font-display font-semibold text-lg text-honey">{t('dashboard.newsTitle')}</p>
             <ul className="text-sm text-text-muted mt-1.5 flex flex-col gap-1">
               {newsItems.map((item) => (
                 <li key={item} className="flex items-start gap-1.5">
@@ -162,7 +166,7 @@ export function DashboardPage() {
           </div>
           <button
             onClick={() => setNewsItems([])}
-            aria-label="Neuigkeiten schließen"
+            aria-label={t('dashboard.closeNews')}
             className="shrink-0 text-text-muted hover:text-text text-sm"
           >
             ✕
@@ -171,7 +175,7 @@ export function DashboardPage() {
       )}
 
       <div className="flex items-baseline justify-between">
-        <h1 className="font-display font-bold text-2xl">Heute</h1>
+        <h1 className="font-display font-bold text-2xl">{t('nav.today')}</h1>
         <span className="font-mono text-xs text-text-muted uppercase tracking-wide">
           {todayLabel()}
         </span>
@@ -179,7 +183,7 @@ export function DashboardPage() {
 
       {streak > 0 && (
         <span className="inline-flex items-center gap-1.5 w-fit font-mono text-xs text-honey bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-full px-3 py-1.5">
-          🔥 {streak} {streak === 1 ? 'Tag' : 'Tage'} in Folge geloggt
+          {t('dashboard.streak', { count: streak })}
         </span>
       )}
 
@@ -195,7 +199,7 @@ export function DashboardPage() {
           <div className="w-10 h-10 rounded-full bg-surface-2" />
         </div>
         <div className="text-sm flex-1">
-          Tagesziel
+          {t('dashboard.dailyGoal')}
           <span className="block font-mono font-medium text-base text-basil">
             {totals.kcal} / {goal} kcal
           </span>
@@ -204,15 +208,15 @@ export function DashboardPage() {
 
       <div className="grid grid-cols-3 gap-3 font-mono text-sm">
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-text-muted text-xs uppercase mb-1">Protein</div>
+          <div className="text-text-muted text-xs uppercase mb-1">{t('macros.protein')}</div>
           {totals.protein_g} g
         </div>
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-text-muted text-xs uppercase mb-1">Kohlenhydrate</div>
+          <div className="text-text-muted text-xs uppercase mb-1">{t('macros.carbs')}</div>
           {totals.carbs_g} g
         </div>
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-text-muted text-xs uppercase mb-1">Fett</div>
+          <div className="text-text-muted text-xs uppercase mb-1">{t('macros.fat')}</div>
           {totals.fat_g} g
         </div>
       </div>
@@ -220,7 +224,7 @@ export function DashboardPage() {
       <div className="flex flex-col gap-2 bg-surface/85 backdrop-blur-sm border border-border rounded-2xl px-4">
         {logs.length === 0 && (
           <p className="text-text-muted text-sm py-4 text-center">
-            Noch keine Mahlzeit heute erfasst.
+            {t('dashboard.noMealsLogged')}
           </p>
         )}
         {logs.map((log) => (
@@ -240,7 +244,7 @@ export function DashboardPage() {
             <button
               onClick={() => handleRemoveLog(log.id, log.recipe_id)}
               className="text-text-muted hover:text-danger text-xs px-1"
-              aria-label={`${log.name} entfernen`}
+              aria-label={t('dashboard.removeLogAria', { name: log.name })}
             >
               ✕
             </button>
@@ -258,7 +262,7 @@ export function DashboardPage() {
                 addMode === 'rezept' ? 'bg-primary text-on-primary' : 'text-text-muted hover:text-text'
               }`}
             >
-              Rezept wählen
+              {t('dashboard.chooseRecipeTab')}
             </button>
             <button
               type="button"
@@ -267,7 +271,7 @@ export function DashboardPage() {
                 addMode === 'manuell' ? 'bg-primary text-on-primary' : 'text-text-muted hover:text-text'
               }`}
             >
-              Manuell eintragen
+              {t('dashboard.manualEntryTab')}
             </button>
           </div>
 
@@ -288,7 +292,7 @@ export function DashboardPage() {
           onClick={() => setShowForm(true)}
           className="bg-primary text-on-primary font-semibold rounded-xl py-3 hover:bg-primary-hover transition-colors"
         >
-          Mahlzeit hinzufügen
+          {t('dashboard.addMeal')}
         </button>
       )}
     </div>
@@ -302,7 +306,8 @@ function RecipeAddForm({
   onAdd: (recipe: Recipe, date: string, slot: MealSlot) => Promise<void>
   onCancel: () => void
 }) {
-  const days = nextDays()
+  const { t } = useTranslation()
+  const days = nextDays(t)
   const [pickerOpen, setPickerOpen] = useState(false)
   const [recipe, setRecipe] = useState<Recipe | null>(null)
   const [date, setDate] = useState(days[0].iso)
@@ -316,11 +321,11 @@ function RecipeAddForm({
         onClick={() => setPickerOpen(true)}
         className="text-left rounded-lg border border-border bg-bg px-3 py-2 text-sm text-text-muted hover:border-primary"
       >
-        {recipe ? recipe.title : 'Rezept auswählen …'}
+        {recipe ? recipe.title : t('dashboard.selectRecipePlaceholder')}
       </button>
 
       <div className="flex flex-col gap-1.5">
-        <span className="text-xs text-text-muted">Tag</span>
+        <span className="text-xs text-text-muted">{t('dashboard.day')}</span>
         <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto">
           {days.map((d) => (
             <button
@@ -338,7 +343,7 @@ function RecipeAddForm({
       </div>
 
       <div className="flex flex-col gap-1.5">
-        <span className="text-xs text-text-muted">Mahlzeitenart</span>
+        <span className="text-xs text-text-muted">{t('dashboard.mealTypeLabel')}</span>
         <div className="flex items-center gap-1.5 flex-wrap">
           {SLOTS.map((s) => (
             <button
@@ -361,7 +366,7 @@ function RecipeAddForm({
           onClick={onCancel}
           className="flex-1 rounded-xl py-2.5 text-sm text-text-muted border border-border"
         >
-          Abbrechen
+          {t('common.cancel')}
         </button>
         <button
           type="button"
@@ -374,7 +379,7 @@ function RecipeAddForm({
           }}
           className="flex-1 bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm disabled:opacity-60"
         >
-          {saving ? 'Wird gespeichert …' : 'Hinzufügen'}
+          {saving ? t('dashboard.saving') : t('dashboard.add')}
         </button>
       </div>
 
@@ -398,6 +403,7 @@ function MealForm({
   onSubmit: (entry: { name: string; kcal: number; protein_g: number; carbs_g: number; fat_g: number }) => void
   onCancel: () => void
 }) {
+  const { t } = useTranslation()
   const [name, setName] = useState('')
   const [kcal, setKcal] = useState('')
   const [protein, setProtein] = useState('')
@@ -424,7 +430,7 @@ function MealForm({
       setScanError(null)
       selectFood(food)
     } else {
-      setScanError('Kein Treffer für diesen Barcode gefunden. Bitte manuell suchen oder eintragen.')
+      setScanError(t('dashboard.noBarcodeMatch'))
     }
   }
 
@@ -456,7 +462,7 @@ function MealForm({
     >
       <div className="flex flex-col gap-1 text-sm relative">
         <div className="flex items-center justify-between">
-          <span>Lebensmittel suchen (optional)</span>
+          <span>{t('dashboard.searchFood')}</span>
           <button
             type="button"
             onClick={() => {
@@ -465,7 +471,7 @@ function MealForm({
             }}
             className="text-xs text-primary font-medium shrink-0"
           >
-            📷 Scannen
+            {t('dashboard.scan')}
           </button>
         </div>
         <input
@@ -474,17 +480,17 @@ function MealForm({
             setFoodQuery(e.target.value)
             setSelectedFood(null)
           }}
-          placeholder="z. B. Basmati Reis"
+          placeholder={t('dashboard.foodPlaceholder')}
           className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary"
         />
         {foodQuery.trim().length >= 2 && !selectedFood && (
           <div className="absolute top-full left-0 right-0 mt-1 z-10 bg-surface border border-border rounded-xl max-h-56 overflow-y-auto shadow-lg">
-            {loading && <p className="text-xs text-text-muted px-3 py-2">Suche …</p>}
+            {loading && <p className="text-xs text-text-muted px-3 py-2">{t('dashboard.searching')}</p>}
             {!loading && error && (
-              <p className="text-xs text-danger px-3 py-2">Suche fehlgeschlagen. Bitte manuell eintragen.</p>
+              <p className="text-xs text-danger px-3 py-2">{t('dashboard.searchFailed')}</p>
             )}
             {!loading && !error && results.length === 0 && (
-              <p className="text-xs text-text-muted px-3 py-2">Keine Treffer.</p>
+              <p className="text-xs text-text-muted px-3 py-2">{t('dashboard.noResults')}</p>
             )}
             {results.map((r) => (
               <button
@@ -510,7 +516,7 @@ function MealForm({
 
       {selectedFood && (
         <label className="flex flex-col gap-1 text-sm">
-          Menge (g)
+          {t('dashboard.amountG')}
           <input
             type="number"
             min={1}
@@ -522,12 +528,12 @@ function MealForm({
       )}
 
       <label className="flex flex-col gap-1 text-sm">
-        Bezeichnung
+        {t('dashboard.nameLabel')}
         <input
           required
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="z. B. Linsen-Bowl mit Ofengemüse"
+          placeholder={t('dashboard.namePlaceholder')}
           className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary"
         />
       </label>
@@ -544,7 +550,7 @@ function MealForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-xs text-text-muted">
-          Protein g
+          {t('dashboard.proteinG')}
           <input
             type="number"
             min={0}
@@ -554,7 +560,7 @@ function MealForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-xs text-text-muted">
-          Kohlenh. g
+          {t('dashboard.carbsG')}
           <input
             type="number"
             min={0}
@@ -564,7 +570,7 @@ function MealForm({
           />
         </label>
         <label className="flex flex-col gap-1 text-xs text-text-muted">
-          Fett g
+          {t('dashboard.fatG')}
           <input
             type="number"
             min={0}
@@ -580,13 +586,13 @@ function MealForm({
           onClick={onCancel}
           className="flex-1 rounded-xl py-2.5 text-sm text-text-muted border border-border"
         >
-          Abbrechen
+          {t('common.cancel')}
         </button>
         <button
           type="submit"
           className="flex-1 bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
         >
-          Speichern
+          {t('common.save')}
         </button>
       </div>
     </form>
