@@ -510,6 +510,23 @@ function PinnedFeatures() {
       style={{ height: `${PANELS.length * 100}vh` }}
     >
       <div className="sticky top-0 h-screen max-w-5xl mx-auto px-6 pt-14 md:pt-0 grid md:grid-cols-2 gap-4 md:gap-16 items-center content-center">
+        {/* Fortschritt als senkrechte Punkt-Leiste — gleiche Achse wie die
+            Scrollrichtung, damit die Abfolge intuitiv lesbar bleibt. */}
+        <div
+          aria-hidden="true"
+          className="absolute left-3 sm:left-4 md:left-0 top-1/2 -translate-y-1/2 z-10 flex flex-col items-center gap-4"
+        >
+          <span className="absolute inset-y-1 w-px bg-border" />
+          {PANELS.map((panel, i) => (
+            <span
+              key={panel.eyebrow}
+              className={`relative w-2.5 h-2.5 rounded-full transition-all duration-500 ease-out motion-reduce:transition-none ${
+                i === active ? 'bg-primary scale-[1.35] ring-4 ring-primary/20' : 'bg-border'
+              }`}
+            />
+          ))}
+        </div>
+
         <div className="relative min-h-[300px] order-2 md:order-1 text-center md:text-left">
           {PANELS.map((panel, i) => (
             <div
@@ -530,16 +547,6 @@ function PinnedFeatures() {
               <p className="text-text-muted text-base md:text-[17px] font-light leading-relaxed max-w-[44ch] mx-auto md:mx-0">
                 {panel.text}
               </p>
-              <div className="flex gap-[7px] mt-6 justify-center md:justify-start">
-                {PANELS.map((p, n) => (
-                  <span
-                    key={p.eyebrow}
-                    className={`h-[3px] w-[30px] rounded-full transition-colors duration-500 motion-reduce:transition-none ${
-                      n === active ? 'bg-primary' : 'bg-border'
-                    }`}
-                  />
-                ))}
-              </div>
             </div>
           ))}
         </div>
