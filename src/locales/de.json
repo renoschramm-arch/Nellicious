@@ -674,7 +674,13 @@
     "instructionsLabel": "Zubereitung",
     "saving": "Wird gespeichert …",
     "save": "Speichern",
-    "saved": "Gespeichert ✓"
+    "saved": "Gespeichert ✓",
+    "englishTranslation": "🇬🇧 Englische Übersetzung (optional)",
+    "englishTranslationHint": "Leer lassen, um vorerst den deutschen Text auf Englisch anzuzeigen.",
+    "titleEn": "Titel (Englisch)",
+    "descriptionEn": "Beschreibung (Englisch)",
+    "ingredientsEn": "Zutaten (Englisch, eine pro Zeile)",
+    "instructionsEn": "Zubereitung (Englisch)"
   },
   "recipeNew": {
     "title": "Neues Rezept",

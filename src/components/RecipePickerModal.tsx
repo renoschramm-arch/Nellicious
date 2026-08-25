@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { getDietTagLabels, getMealTypeLabels, useRecipes, type MealType, type Recipe } from '../lib/useRecipes'
+import { getDietTagLabels, getMealTypeLabels, localizeRecipeText, useRecipes, type MealType, type Recipe } from '../lib/useRecipes'
 import { useFavorites } from '../lib/useFavorites'
 import { useRecipeFilters } from '../lib/useRecipeFilters'
 import { RecipeFilterBar } from './RecipeFilterBar'
@@ -13,7 +13,7 @@ export function RecipePickerModal({
   onSelect: (recipe: Recipe) => void
   onClose: () => void
 }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { recipes, loading } = useRecipes()
   const { favoriteIds } = useFavorites()
   const filters = useRecipeFilters(recipes, favoriteIds, defaultMealType)
@@ -62,7 +62,7 @@ export function RecipePickerModal({
                       ))}
                     {favoriteIds.has(recipe.id) && <span className="text-danger text-xs">♥</span>}
                   </div>
-                  <div className="font-medium truncate">{recipe.title}</div>
+                  <div className="font-medium truncate">{localizeRecipeText(recipe, i18n.language).title}</div>
                 </div>
                 <span className="font-mono text-xs text-text-muted shrink-0">{recipe.kcal} kcal</span>
               </button>

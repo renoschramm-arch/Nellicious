@@ -1,12 +1,14 @@
 import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
 import type { NutritionType } from './useProfile'
-import type { MealType, Recipe } from './useRecipes'
+import { localizeRecipeText, type MealType, type Recipe } from './useRecipes'
 
 export function useRecipeFilters(
   recipes: Recipe[],
   favoriteIds: Set<string>,
   initialMealType: MealType | 'alle' = 'alle',
 ) {
+  const { i18n } = useTranslation()
   const [query, setQuery] = useState('')
   const [mealType, setMealType] = useState<MealType | 'alle'>(initialMealType)
   const [dietFilter, setDietFilter] = useState<NutritionType | 'alle'>('alle')
@@ -21,17 +23,19 @@ export function useRecipeFilters(
 
   function matchesQuery(r: Recipe): boolean {
     if (!trimmedQuery) return true
-    // "Fisch"/"Fische" allgemein gesucht: viele Fischrezepte heißen nach der
+    // "Fisch"/"fish" allgemein gesucht: viele Fischrezepte heißen nach der
     // jeweiligen Fischart (Zander, Barsch, Kabeljau, ...) und enthalten das
-    // Wort "Fisch" nirgends im Text — daher zusätzlich über das ohnehin
-    // gepflegte diet_tags-Kennzeichen "pescetarisch" abdecken.
-    if (('fisch'.startsWith(trimmedQuery) || trimmedQuery.startsWith('fisch')) && r.diet_tags.includes('pescetarisch')) {
+    // Wort "Fisch"/"fish" nirgends im Text — daher zusätzlich über das
+    // ohnehin gepflegte diet_tags-Kennzeichen "pescetarisch" abdecken.
+    const fishWord = i18n.language === 'en' ? 'fish' : 'fisch'
+    if ((fishWord.startsWith(trimmedQuery) || trimmedQuery.startsWith(fishWord)) && r.diet_tags.includes('pescetarisch')) {
       return true
     }
+    const { title, description, ingredients } = localizeRecipeText(r, i18n.language)
     return (
-      r.title.toLowerCase().includes(trimmedQuery) ||
-      r.description.toLowerCase().includes(trimmedQuery) ||
-      r.ingredients.some((i) => i.toLowerCase().includes(trimmedQuery))
+      title.toLowerCase().includes(trimmedQuery) ||
+      description.toLowerCase().includes(trimmedQuery) ||
+      ingredients.some((i) => i.toLowerCase().includes(trimmedQuery))
     )
   }
 

@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { MEAL_TYPES, getMealTypeLabels, type Recipe } from '../lib/useRecipes'
+import { MEAL_TYPES, getMealTypeLabels, localizeRecipeText, type Recipe } from '../lib/useRecipes'
 import type { MealSlot } from '../lib/useMealPlan'
 import { toISODate, formatWeekdayShort } from '../lib/week'
 
@@ -24,8 +24,9 @@ export function MultiAssignModal({
   onAssign: (selections: Selection[]) => Promise<void>
   onClose: () => void
 }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const mealTypeLabels = getMealTypeLabels(t)
+  const localizedTitle = localizeRecipeText(recipe, i18n.language).title
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [saving, setSaving] = useState(false)
 
@@ -69,7 +70,7 @@ export function MultiAssignModal({
       >
         <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
           <div className="min-w-0">
-            <h2 className="font-display font-semibold text-lg truncate">{recipe.title}</h2>
+            <h2 className="font-display font-semibold text-lg truncate">{localizedTitle}</h2>
             <p className="text-xs text-text-muted">{t('multiAssign.subtitle')}</p>
           </div>
           <button onClick={onClose} className="shrink-0 text-text-muted hover:text-text text-sm" aria-label={t('multiAssign.close')}>

@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useProfile } from '../lib/useProfile'
 import { useMealLogs, useLoggingStreak } from '../lib/useMealLogs'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
-import { useRecipes, getMealTypeLabels, MEAL_TYPES, type Recipe } from '../lib/useRecipes'
+import { useRecipes, getMealTypeLabels, localizeRecipeText, MEAL_TYPES, type Recipe } from '../lib/useRecipes'
 import { RecipePickerModal } from '../components/RecipePickerModal'
 import { useFoodSearch, type FoodSearchResult } from '../lib/useFoodSearch'
 import { lookupFoodByBarcode } from '../lib/lookupFoodByBarcode'
@@ -43,7 +43,7 @@ function nextDays(t: (key: string) => string): { iso: string; label: string }[] 
 }
 
 export function DashboardPage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { profile } = useProfile()
   const { logs, totals, addLog, removeLog } = useMealLogs()
   const { streak } = useLoggingStreak()
@@ -81,7 +81,7 @@ export function DashboardPage() {
       if (!recipe) continue
       catchUpInFlight.current.add(entry.recipe_id)
       addLog({
-        name: recipe.title,
+        name: localizeRecipeText(recipe, i18n.language).title,
         kcal: recipe.kcal,
         protein_g: recipe.protein_g,
         carbs_g: recipe.carbs_g,
@@ -89,7 +89,7 @@ export function DashboardPage() {
         recipe_id: recipe.id,
       })
     }
-  }, [planEntries, logs, recipes, todayISO, addLog])
+  }, [planEntries, logs, recipes, todayISO, addLog, i18n.language])
 
   async function handleRemoveLog(logId: string, recipeId: string | null) {
     await removeLog(logId)
@@ -104,7 +104,7 @@ export function DashboardPage() {
   async function handleAddRecipe(recipe: Recipe, date: string, slot: MealSlot) {
     if (date === todayISO) {
       await addLog({
-        name: recipe.title,
+        name: localizeRecipeText(recipe, i18n.language).title,
         kcal: recipe.kcal,
         protein_g: recipe.protein_g,
         carbs_g: recipe.carbs_g,
@@ -299,7 +299,7 @@ function RecipeAddForm({
   onAdd: (recipe: Recipe, date: string, slot: MealSlot) => Promise<void>
   onCancel: () => void
 }) {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const days = nextDays(t)
   const mealTypeLabels = getMealTypeLabels(t)
   const SLOTS: { key: MealSlot; label: string }[] = MEAL_TYPES.map((key) => ({ key, label: mealTypeLabels[key] }))
@@ -316,7 +316,7 @@ function RecipeAddForm({
         onClick={() => setPickerOpen(true)}
         className="text-left rounded-lg border border-border bg-bg px-3 py-2 text-sm text-text-muted hover:border-primary"
       >
-        {recipe ? recipe.title : t('dashboard.selectRecipePlaceholder')}
+        {recipe ? localizeRecipeText(recipe, i18n.language).title : t('dashboard.selectRecipePlaceholder')}
       </button>
 
       <div className="flex flex-col gap-1.5">

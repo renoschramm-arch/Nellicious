@@ -1,13 +1,14 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { getDietTagLabels, getFreeOfLabels, getMealTypeLabels, useRecipe } from '../lib/useRecipes'
+import { getDietTagLabels, getFreeOfLabels, getMealTypeLabels, localizeRecipeText, useRecipe } from '../lib/useRecipes'
 import { useAuth } from '../lib/AuthContext'
 
 export function SharedRecipePage() {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const { id } = useParams<{ id: string }>()
   const { recipe, loading } = useRecipe(id)
   const { session } = useAuth()
+  const localized = recipe ? localizeRecipeText(recipe, i18n.language) : null
 
   // Angemeldete Nutzer:innen sehen lieber die volle Rezeptseite mit allen
   // Aktionen (loggen, Notiz, Kochmodus …) statt der öffentlichen Vorschau.
@@ -75,8 +76,8 @@ export function SharedRecipePage() {
                   </span>
                 ))}
               </div>
-              <h1 className="font-display font-bold text-2xl">{recipe.title}</h1>
-              <p className="text-text-muted mt-1">{recipe.description}</p>
+              <h1 className="font-display font-bold text-2xl">{localized!.title}</h1>
+              <p className="text-text-muted mt-1">{localized!.description}</p>
             </div>
 
             <div className="grid grid-cols-4 gap-2 font-mono text-sm">
@@ -98,11 +99,11 @@ export function SharedRecipePage() {
               </div>
             </div>
 
-            {recipe.ingredients.length > 0 && (
+            {localized!.ingredients.length > 0 && (
               <div>
                 <h2 className="font-display font-semibold text-lg mb-2">{t('sharedRecipe.ingredients')}</h2>
                 <ul className="flex flex-col gap-1.5">
-                  {recipe.ingredients.map((ing, i) => (
+                  {localized!.ingredients.map((ing, i) => (
                     <li key={i} className="flex items-center gap-2 text-sm">
                       <span className="w-1.5 h-1.5 rounded-full bg-honey shrink-0" />
                       {ing}
@@ -112,10 +113,10 @@ export function SharedRecipePage() {
               </div>
             )}
 
-            {recipe.instructions && (
+            {localized!.instructions && (
               <div>
                 <h2 className="font-display font-semibold text-lg mb-2">{t('sharedRecipe.instructions')}</h2>
-                <p className="text-sm whitespace-pre-line">{recipe.instructions}</p>
+                <p className="text-sm whitespace-pre-line">{localized!.instructions}</p>
               </div>
             )}
 

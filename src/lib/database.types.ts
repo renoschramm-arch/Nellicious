@@ -120,6 +120,10 @@ export interface Database {
           fat_g: number
           ingredients: string[]
           instructions: string
+          title_en: string | null
+          description_en: string | null
+          ingredients_en: string[] | null
+          instructions_en: string | null
           meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
           diet_tags: string[]
           free_of: string[]
@@ -138,6 +142,10 @@ export interface Database {
           fat_g?: number
           ingredients?: string[]
           instructions?: string
+          title_en?: string | null
+          description_en?: string | null
+          ingredients_en?: string[] | null
+          instructions_en?: string | null
           meal_type?: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
           diet_tags?: string[]
           free_of?: string[]
@@ -153,6 +161,10 @@ export interface Database {
           fat_g: number
           ingredients: string[]
           instructions: string
+          title_en: string | null
+          description_en: string | null
+          ingredients_en: string[] | null
+          instructions_en: string | null
           meal_type: 'fruehstueck' | 'mittag' | 'abend' | 'snack'
           diet_tags: string[]
           free_of: string[]
