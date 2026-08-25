@@ -275,3 +275,33 @@ export function useFasting() {
     error,
   }
 }
+
+// Für Trend-Charts — im Unterschied zu useFasting oben nicht auf die
+// letzten 30 Tage begrenzt, sondern über einen frei wählbaren Zeitraum.
+export function useFastingHistory(days: number) {
+  const { user } = useAuth()
+  const [sessions, setSessions] = useState<FastingSession[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const reload = useCallback(async () => {
+    if (!user) return
+    setLoading(true)
+    const since = new Date()
+    since.setDate(since.getDate() - (days - 1))
+    since.setHours(0, 0, 0, 0)
+    const { data } = await supabase
+      .from('fasting_sessions')
+      .select('*')
+      .eq('user_id', user.id)
+      .gte('started_at', since.toISOString())
+      .order('started_at', { ascending: true })
+    setSessions(data ?? [])
+    setLoading(false)
+  }, [user, days])
+
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  return { sessions, loading, reload }
+}

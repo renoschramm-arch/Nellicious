@@ -7,6 +7,7 @@ const MENU_ITEMS = [
   { to: '/mehr/profil', label: 'Mein Profil', description: 'Name, Ernährungstyp, Aktivitätslevel' },
   { to: '/mehr/ziele', label: 'Ziele', description: 'Was du erreichen möchtest' },
   { to: '/mehr/tagesziele', label: 'Tagesziele', description: 'kcal, Protein, Kohlenhydrate, Fett' },
+  { to: '/mehr/auswertung', label: 'Auswertung', description: 'Trends bei Gewicht, Kalorien und Fasten' },
   { to: '/mehr/darstellung', label: 'Darstellung', description: 'System, Hell oder Dunkel' },
   { to: '/mehr/neu', label: 'Neu in Nellicious', description: 'Alle Änderungen im Überblick' },
   { to: '/mehr/info', label: 'Info', description: 'Über Nellicious' },
