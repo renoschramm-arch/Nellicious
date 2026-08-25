@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import { getChangelogHistory } from '../lib/whatsNew'
 import { getIntlLocale } from '../lib/i18n'
 
@@ -303,19 +305,29 @@ function ScreenBar({ title, meta }: { title: ReactNode; meta: string }) {
   )
 }
 
-function TabBar({ active }: { active: string }) {
+type TabKey = 'today' | 'recipes' | 'plan' | 'history' | 'more'
+
+function TabBar({ active }: { active: TabKey }) {
+  const { t } = useTranslation()
+  const tabs: { key: TabKey; label: string }[] = [
+    { key: 'today', label: t('nav.today') },
+    { key: 'recipes', label: t('nav.recipes') },
+    { key: 'plan', label: t('nav.plan') },
+    { key: 'history', label: t('nav.history') },
+    { key: 'more', label: t('nav.more') },
+  ]
   return (
     <div className="flex justify-around items-center px-1.5 pt-[9px] pb-[15px] border-t border-border shrink-0">
-      {['Heute', 'Rezepte', 'Plan', 'Verlauf', 'Mehr'].map((tab) => (
+      {tabs.map((tab) => (
         <span
-          key={tab}
+          key={tab.key}
           className={`text-[8px] ${
-            tab === active
+            tab.key === active
               ? 'text-on-primary bg-primary px-2.5 py-1 rounded-full'
               : 'text-text-muted'
           }`}
         >
-          {tab}
+          {tab.label}
         </span>
       ))}
     </div>
@@ -323,12 +335,13 @@ function TabBar({ active }: { active: string }) {
 }
 
 function MacroGrid() {
+  const { t } = useTranslation()
   return (
     <div className="grid grid-cols-3 gap-1.5">
       {[
-        ['Protein', '78 g'],
-        ['Kohlenh.', '161 g'],
-        ['Fett', '37 g'],
+        [t('macros.protein'), '78 g'],
+        [t('macros.carbs'), '161 g'],
+        [t('macros.fat'), '37 g'],
       ].map(([label, value]) => (
         <div key={label} className="bg-surface border border-border rounded-[9px] px-1 py-[7px] text-center">
           <span className="block font-mono text-[6px] text-text-muted uppercase tracking-wide mb-0.5">
@@ -351,109 +364,122 @@ function MealRow({ name, kcal, last = false }: { name: string; kcal: string; las
   )
 }
 
+const MOCK_DATE_FORMAT = { weekday: 'short', day: '2-digit', month: 'short' } as const
+
 // Die vier Bildschirme der scroll-fixierten Strecke
 function ScreenHeute() {
+  const { t } = useTranslation()
   return (
     <>
-      <ScreenBar title="Heute" meta="Mi., 19. Aug" />
+      <ScreenBar
+        title={t('nav.today')}
+        meta={new Intl.DateTimeFormat(getIntlLocale(), MOCK_DATE_FORMAT).format(new Date('2026-08-19'))}
+      />
       <div className="flex-1 p-3.5 flex flex-col gap-[9px] min-h-0">
         <div className="bg-surface-2 border border-border rounded-[13px] p-[11px] flex items-center gap-2.5">
           <ProgressRing size={60} stroke={8} radius={24} progress={0.64} color="var(--color-primary)">
             <span className="font-mono text-[8px] font-medium text-primary">64%</span>
           </ProgressRing>
           <div>
-            <div className="text-[9.5px] font-semibold">Tagesziel</div>
+            <div className="text-[9.5px] font-semibold">{t('landing.screenTodayGoal')}</div>
             <div className="font-mono text-[11px] text-primary">1340 / 2100</div>
           </div>
         </div>
         <MacroGrid />
         <div className="bg-surface border border-border rounded-[13px] p-[11px]">
-          <MealRow name="Overnight Oats" kcal="340" />
-          <MealRow name="Linsen-Bowl" kcal="480" />
-          <MealRow name="Tom Kha Gai" kcal="420" last />
+          <MealRow name={t('landing.mockMealOats')} kcal="340" />
+          <MealRow name={t('landing.mockMealLentilBowl')} kcal="480" />
+          <MealRow name={t('landing.mockMealTomKhaGai')} kcal="420" last />
         </div>
         <div className="mt-auto bg-primary text-on-primary text-center text-[9px] font-semibold py-[9px] rounded-[9px]">
-          Mahlzeit hinzufügen
+          {t('landing.screenAddMeal')}
         </div>
       </div>
-      <TabBar active="Heute" />
+      <TabBar active="today" />
     </>
   )
 }
 
 function ScreenPlan() {
+  const { t } = useTranslation()
+  const days: [string, string[]][] = [
+    [t('landing.screenDayMonday'), [t('landing.screenMeal1'), t('landing.screenMeal2')]],
+    [t('landing.screenDayTuesday'), [t('landing.screenMeal3'), t('landing.screenMeal4')]],
+  ]
   return (
     <>
-      <ScreenBar title="Wochenplan" meta="KW 34" />
+      <ScreenBar title={t('nav.plan')} meta={t('landing.screenWeekLabel', { week: 34 })} />
       <div className="flex-1 p-3.5 flex flex-col gap-[9px] min-h-0">
-        {[
-          ['Montag', ['Porridge mit Beeren', 'Quinoa-Salat']],
-          ['Dienstag', ['Pho Ga', 'Lachs mit Brokkoli']],
-        ].map(([day, meals]) => (
-          <div key={day as string} className="bg-surface border border-border rounded-[13px] p-[9px]">
-            <div className="text-[8px] text-text-muted uppercase mb-1.5">{day as string}</div>
-            {(meals as string[]).map((meal, i, arr) => (
+        {days.map(([day, meals]) => (
+          <div key={day} className="bg-surface border border-border rounded-[13px] p-[9px]">
+            <div className="text-[8px] text-text-muted uppercase mb-1.5">{day}</div>
+            {meals.map((meal, i, arr) => (
               <MealRow key={meal} name={meal} kcal="" last={i === arr.length - 1} />
             ))}
           </div>
         ))}
         <div className="bg-surface-2 border border-border rounded-[13px] p-[11px]">
-          <div className="text-[9.5px] font-semibold mb-[7px]">🛒 Einkaufsliste</div>
+          <div className="text-[9.5px] font-semibold mb-[7px]">{t('landing.screenShoppingList')}</div>
           <div className="text-[8px] text-text-muted leading-[1.9]">
-            ○ 300 g rote Linsen
-            <br />○ 2 Süßkartoffeln
-            <br />○ 1 Bund Petersilie
-            <br />○ 400 ml Kokosmilch
+            ○ {t('landing.screenIngredient1')}
+            <br />○ {t('landing.screenIngredient2')}
+            <br />○ {t('landing.screenIngredient3')}
+            <br />○ {t('landing.screenIngredient4')}
           </div>
         </div>
       </div>
-      <TabBar active="Plan" />
+      <TabBar active="plan" />
     </>
   )
 }
 
 function ScreenFasten() {
+  const { t } = useTranslation()
   return (
     <>
-      <ScreenBar title="Intervallfasten" meta="16:8" />
+      <ScreenBar title={t('landing.fastingEyebrow')} meta="16:8" />
       <div className="flex-1 p-3.5 flex flex-col items-center justify-center gap-3.5 min-h-0">
         <ProgressRing size={112} stroke={10} radius={46} progress={0.75} color="var(--color-basil)">
           <span className="font-mono text-[15px] font-medium text-basil">03:45</span>
         </ProgressRing>
         <div className="text-center">
-          <div className="text-[9.5px] font-semibold">Fastenzeit endet um 18:30</div>
-          <div className="text-[8px] text-text-muted mt-[3px]">Phase: Ketose setzt ein</div>
+          <div className="text-[9.5px] font-semibold">{t('landing.screenFastingEndsAt', { time: '18:30' })}</div>
+          <div className="text-[8px] text-text-muted mt-[3px]">{t('landing.screenFastingPhase')}</div>
         </div>
         <div className="bg-surface-2 border border-border rounded-[13px] p-[11px] w-full">
           <div className="text-[8px] text-text-muted leading-[1.85]">
-            ✓ Verdauung · ✓ Fettverbrennung
-            <br />● Ketose · ○ Autophagie
+            {t('landing.screenFastingChecklist1')}
+            <br />
+            {t('landing.screenFastingChecklist2')}
           </div>
         </div>
       </div>
-      <TabBar active="Verlauf" />
+      <TabBar active="history" />
     </>
   )
 }
 
 function ScreenScanner() {
+  const { t } = useTranslation()
   return (
     <>
-      <ScreenBar title="Barcode scannen" meta="Kamera" />
+      <ScreenBar title={t('barcodeScanner.title')} meta={t('landing.screenCameraMeta')} />
       <div className="flex-1 p-3.5 flex flex-col justify-center gap-4 min-h-0">
         <div className="border-2 border-dashed border-primary rounded-[14px] h-[130px] grid place-items-center gap-2 bg-primary/5">
           <span className="text-[30px]">📷</span>
-          <span className="font-mono text-[8px] text-text-muted">Barcode im Rahmen halten</span>
+          <span className="font-mono text-[8px] text-text-muted">{t('landing.screenScannerHint')}</span>
         </div>
         <div className="bg-surface border border-border rounded-[13px] p-[11px]">
-          <div className="text-[9.5px] font-semibold">Haferflocken, kernig</div>
-          <div className="font-mono text-[8px] text-text-muted mt-[5px]">372 kcal · 13 P · 59 K · 7 F</div>
+          <div className="text-[9.5px] font-semibold">{t('landing.screenScannedFood')}</div>
+          <div className="font-mono text-[8px] text-text-muted mt-[5px]">
+            {t('landing.screenScannedMacros', { kcal: 372, protein: 13, carbs: 59, fat: 7 })}
+          </div>
         </div>
         <div className="bg-primary text-on-primary text-center text-[9px] font-semibold py-[9px] rounded-[9px]">
-          Übernehmen
+          {t('landing.screenApply')}
         </div>
       </div>
-      <TabBar active="Heute" />
+      <TabBar active="today" />
     </>
   )
 }
@@ -462,34 +488,38 @@ function ScreenScanner() {
 // Scroll-fixierte Funktionsstrecke: Das Handy bleibt stehen, Text und Display
 // wechseln synchron mit dem Scrollfortschritt.
 // ---------------------------------------------------------------------------
-const PANELS = [
-  {
-    eyebrow: 'Tagesübersicht',
-    title: 'Kalorien & Makros, ohne Kopfrechnen.',
-    text: 'Mahlzeit aus einem Rezept übernehmen, per Barcode scannen oder manuell eintragen — dein Tagesziel und die Makroverteilung aktualisieren sich sofort.',
-    screen: <ScreenHeute />,
-  },
-  {
-    eyebrow: 'Wochenplaner',
-    title: 'Plane die Woche, die Einkaufsliste macht sich selbst.',
-    text: 'Rezepte auf die Tage verteilen — Zutatenmengen werden automatisch zusammengerechnet und nach Rezept gruppiert.',
-    screen: <ScreenPlan />,
-  },
-  {
-    eyebrow: 'Intervallfasten',
-    title: 'Fastenring, Essensfenster und Phasen erklärt.',
-    text: 'Protokoll wählen, starten — der Ring zählt bis zum Fastenende herunter und erklärt unterwegs, was im Körper gerade passiert.',
-    screen: <ScreenFasten />,
-  },
-  {
-    eyebrow: 'Barcode-Scanner',
-    title: 'Verpacktes in 2 Sekunden erfassen.',
-    text: 'Kamera drauf halten, fertig — Nährwerte werden automatisch übernommen. Für generische Zutaten greift die kuratierte 681er-Datenbank.',
-    screen: <ScreenScanner />,
-  },
-]
+function getPanels(t: TFunction) {
+  return [
+    {
+      eyebrow: t('landing.panel1Eyebrow'),
+      title: t('landing.panel1Title'),
+      text: t('landing.panel1Text'),
+      screen: <ScreenHeute />,
+    },
+    {
+      eyebrow: t('landing.panel2Eyebrow'),
+      title: t('landing.panel2Title'),
+      text: t('landing.panel2Text'),
+      screen: <ScreenPlan />,
+    },
+    {
+      eyebrow: t('landing.panel3Eyebrow'),
+      title: t('landing.panel3Title'),
+      text: t('landing.panel3Text'),
+      screen: <ScreenFasten />,
+    },
+    {
+      eyebrow: t('landing.panel4Eyebrow'),
+      title: t('landing.panel4Title'),
+      text: t('landing.panel4Text'),
+      screen: <ScreenScanner />,
+    },
+  ]
+}
 
 function PinnedFeatures() {
+  const { t } = useTranslation()
+  const PANELS = getPanels(t)
   const sectionRef = useRef<HTMLElement>(null)
   const [active, setActive] = useState(0)
 
@@ -502,7 +532,7 @@ function PinnedFeatures() {
       const progress = Math.min(1, Math.max(0, -section.getBoundingClientRect().top / total))
       const index = Math.min(PANELS.length - 1, Math.floor(progress * PANELS.length * 0.999))
       setActive(index)
-    }, []),
+    }, [PANELS.length]),
   )
 
   return (
@@ -590,12 +620,12 @@ function PinnedFeatures() {
 // ---------------------------------------------------------------------------
 // Statement: Wörter leuchten beim Scrollen nacheinander auf
 // ---------------------------------------------------------------------------
-const STATEMENT = 'Kein Punktesystem. Kein schlechtes Gewissen. Nur klare Zahlen und richtig gutes Essen.'
-const ACCENT_WORDS = new Set(['Punktesystem.', 'Gewissen.', 'gutes', 'Essen.'])
-
 function Statement() {
+  const { t } = useTranslation()
+  const statement = t('landing.statement')
+  const accentWords = new Set(t('landing.statementAccents', { returnObjects: true }) as string[])
   const ref = useRef<HTMLHeadingElement>(null)
-  const words = STATEMENT.split(' ')
+  const words = statement.split(' ')
   const [lit, setLit] = useState(0)
   const reduced = usePrefersReducedMotion()
 
@@ -621,7 +651,7 @@ function Statement() {
               key={`${word}-${i}`}
               className={`inline-block transition-all duration-500 motion-reduce:transition-none motion-reduce:!opacity-100 ${
                 reduced || i < lit ? 'opacity-100' : 'opacity-[0.16]'
-              } ${ACCENT_WORDS.has(word) && (reduced || i < lit) ? 'text-brand' : ''}`}
+              } ${accentWords.has(word) && (reduced || i < lit) ? 'text-brand' : ''}`}
             >
               {word}
               {i < words.length - 1 ? ' ' : ''}
@@ -636,18 +666,22 @@ function Statement() {
 // ---------------------------------------------------------------------------
 // Rezept-Schiene, die sich scroll-getrieben seitwärts bewegt
 // ---------------------------------------------------------------------------
-const RECIPES = [
-  { emoji: '🥣', title: 'Overnight Oats mit Beeren', kcal: '340 kcal', protein: '12 P', tag: 'Vegetarisch', meal: 'Frühstück', tint: 'var(--color-honey)' },
-  { emoji: '🍜', title: 'Tom Kha Gai', kcal: '420 kcal', protein: '28 P', tag: 'Glutenfrei', meal: 'Mittag', tint: 'var(--color-basil)' },
-  { emoji: '🐟', title: 'Lachs mit Brokkoli', kcal: '450 kcal', protein: '38 P', tag: 'Pescetarisch', meal: 'Abend', tint: 'var(--color-primary)' },
-  { emoji: '🥗', title: 'Quinoa-Salat mit Feta', kcal: '380 kcal', protein: '15 P', tag: 'Vegetarisch', meal: 'Mittag', tint: 'var(--color-basil)' },
-  { emoji: '🍲', title: 'Masoor Dal Shorba', kcal: '320 kcal', protein: '18 P', tag: 'Vegan', meal: 'Mittag', tint: 'var(--color-honey)' },
-  { emoji: '🍛', title: 'Kichererbsen-Curry', kcal: '410 kcal', protein: '16 P', tag: 'Vegan', meal: 'Abend', tint: 'var(--color-primary)' },
-  { emoji: '🥑', title: 'Avocado-Brot mit Ei', kcal: '360 kcal', protein: '17 P', tag: 'Vegetarisch', meal: 'Frühstück', tint: 'var(--color-basil)' },
-  { emoji: '🍚', title: 'Pho Ga', kcal: '430 kcal', protein: '30 P', tag: 'Glutenfrei', meal: 'Abend', tint: 'var(--color-honey)' },
-]
+function getRecipes(t: TFunction) {
+  return [
+    { emoji: '🥣', title: t('landing.recipe1Title'), kcal: '340 kcal', protein: '12 P', tag: t('profile.nutritionVegetarisch'), meal: t('mealTypes.fruehstueck'), tint: 'var(--color-honey)' },
+    { emoji: '🍜', title: t('landing.recipe2Title'), kcal: '420 kcal', protein: '28 P', tag: t('profile.intoleranceGlutenfrei'), meal: t('mealTypes.mittag'), tint: 'var(--color-basil)' },
+    { emoji: '🐟', title: t('landing.recipe3Title'), kcal: '450 kcal', protein: '38 P', tag: t('profile.nutritionPescetarisch'), meal: t('mealTypes.abend'), tint: 'var(--color-primary)' },
+    { emoji: '🥗', title: t('landing.recipe4Title'), kcal: '380 kcal', protein: '15 P', tag: t('profile.nutritionVegetarisch'), meal: t('mealTypes.mittag'), tint: 'var(--color-basil)' },
+    { emoji: '🍲', title: t('landing.recipe5Title'), kcal: '320 kcal', protein: '18 P', tag: t('profile.nutritionVegan'), meal: t('mealTypes.mittag'), tint: 'var(--color-honey)' },
+    { emoji: '🍛', title: t('landing.recipe6Title'), kcal: '410 kcal', protein: '16 P', tag: t('profile.nutritionVegan'), meal: t('mealTypes.abend'), tint: 'var(--color-primary)' },
+    { emoji: '🥑', title: t('landing.recipe7Title'), kcal: '360 kcal', protein: '17 P', tag: t('profile.nutritionVegetarisch'), meal: t('mealTypes.fruehstueck'), tint: 'var(--color-basil)' },
+    { emoji: '🍚', title: t('landing.recipe8Title'), kcal: '430 kcal', protein: '30 P', tag: t('profile.intoleranceGlutenfrei'), meal: t('mealTypes.abend'), tint: 'var(--color-honey)' },
+  ]
+}
 
 function RecipeRail() {
+  const { t } = useTranslation()
+  const RECIPES = getRecipes(t)
   const sectionRef = useRef<HTMLElement>(null)
   const railRef = useRef<HTMLDivElement>(null)
   const reduced = usePrefersReducedMotion()
@@ -674,16 +708,13 @@ function RecipeRail() {
         <div className="max-w-5xl mx-auto px-6 flex items-end justify-between gap-6 flex-wrap mb-10">
           <div>
             <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
-              174 Rezepte
+              {t('landing.recipeRailEyebrow', { count: 174 })}
             </span>
             <h2 className="font-display font-semibold text-2xl md:text-4xl leading-tight mt-3 max-w-[16ch] text-wrap-balance">
-              Von Overnight Oats bis Tom Kha Gai.
+              {t('landing.recipeRailTitle')}
             </h2>
           </div>
-          <p className="text-text-muted font-light max-w-[34ch]">
-            Jedes Rezept mit Nährwerten, Zutatenliste und Kennzeichnung für Ernährungsform und
-            Unverträglichkeiten.
-          </p>
+          <p className="text-text-muted font-light max-w-[34ch]">{t('landing.recipeRailSubtitle')}</p>
         </div>
       </Reveal>
 
@@ -728,14 +759,18 @@ function RecipeRail() {
 // ---------------------------------------------------------------------------
 // Fasten-Sektion mit großem, sich zeichnendem Ring
 // ---------------------------------------------------------------------------
-const PHASES = [
-  { time: '0–4 h', text: 'Verdauung — der Körper verarbeitet die letzte Mahlzeit' },
-  { time: '4–12 h', text: 'Fettverbrennung beginnt' },
-  { time: '12–18 h', text: 'Ketose setzt ein' },
-  { time: '18 h+', text: 'Autophagie — Zellreinigung läuft' },
-]
+function getPhases(t: TFunction) {
+  return [
+    { time: '0–4 h', text: t('landing.phase1Text') },
+    { time: '4–12 h', text: t('landing.phase2Text') },
+    { time: '12–18 h', text: t('landing.phase3Text') },
+    { time: '18 h+', text: t('landing.phase4Text') },
+  ]
+}
 
 function FastingSection() {
+  const { t } = useTranslation()
+  const PHASES = getPhases(t)
   const { ref, visible } = useReveal<HTMLDivElement>(0.4)
 
   return (
@@ -751,21 +786,18 @@ function FastingSection() {
             draw
           >
             <span className="font-mono text-3xl md:text-4xl font-medium text-basil block">03:45</span>
-            <span className="text-xs text-text-muted">bis 18:30 Uhr</span>
+            <span className="text-xs text-text-muted">{t('landing.fastingUntil', { time: '18:30' })}</span>
           </ProgressRing>
         </div>
 
         <div>
           <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
-            Intervallfasten
+            {t('landing.fastingEyebrow')}
           </span>
           <h2 className="font-display font-semibold text-2xl md:text-4xl leading-tight mt-3.5 mb-4 text-wrap-balance">
-            Der Ring zählt. Du machst einfach weiter.
+            {t('landing.fastingTitle')}
           </h2>
-          <p className="text-text-muted font-light max-w-[46ch] mx-auto md:mx-0">
-            16:8, 18:6, 20:4 oder eigenes Protokoll. Rückwirkend eintragen, wenn du es mal vergisst —
-            und jederzeit ganz abschalten.
-          </p>
+          <p className="text-text-muted font-light max-w-[46ch] mx-auto md:mx-0">{t('landing.fastingSubtitle')}</p>
           <div className="flex flex-col gap-2.5 mt-8">
             {PHASES.map((phase, i) => (
               <div
@@ -787,14 +819,18 @@ function FastingSection() {
 }
 
 // ---------------------------------------------------------------------------
-const STATS = [
-  { value: 174, label: 'Rezepte' },
-  { value: 681, label: 'Lebensmittel' },
-  { value: 6, label: 'Ernährungsformen' },
-  { value: 14, label: 'Tage kostenlos' },
-]
+function getStats(t: TFunction) {
+  return [
+    { value: 174, label: t('landing.statLabelRecipes') },
+    { value: 681, label: t('landing.statLabelFoods') },
+    { value: 6, label: t('landing.statLabelDiets') },
+    { value: 14, label: t('landing.statLabelFreeDays') },
+  ]
+}
 
 export function LandingPage() {
+  const { t } = useTranslation()
+  const STATS = getStats(t)
   const [stuck, setStuck] = useState(false)
   const recentChangelog = getChangelogHistory().slice(0, 2)
 
@@ -817,22 +853,22 @@ export function LandingPage() {
           </span>
           <div className="flex items-center gap-5 sm:gap-7 shrink-0">
             <a href="#funktionen" className="hidden md:inline text-sm text-text-muted hover:text-text transition-colors">
-              Funktionen
+              {t('landing.navFeatures')}
             </a>
             <a href="#rezepte" className="hidden md:inline text-sm text-text-muted hover:text-text transition-colors">
-              Rezepte
+              {t('landing.navRecipes')}
             </a>
             <a href="#preise" className="hidden md:inline text-sm text-text-muted hover:text-text transition-colors">
-              Preise
+              {t('landing.navPrices')}
             </a>
             <Link to="/anmelden" className="text-xs sm:text-sm text-text-muted hover:text-text whitespace-nowrap transition-colors">
-              Anmelden
+              {t('landing.signIn')}
             </Link>
             <Link
               to="/anmelden?mode=signup"
               className="bg-primary text-on-primary font-semibold text-xs sm:text-sm rounded-full px-4 sm:px-5 py-2.5 hover:bg-primary-hover hover:-translate-y-px transition-all whitespace-nowrap"
             >
-              Kostenlos starten
+              {t('landing.startFree')}
             </Link>
           </div>
         </div>
@@ -843,61 +879,62 @@ export function LandingPage() {
         <AmbientCanvas />
         <div className="relative z-[1] max-w-5xl mx-auto px-6 landing-stage">
           <span className="inline-flex items-center gap-2 font-mono text-[11.5px] uppercase tracking-[0.14em] text-basil bg-basil/10 rounded-full px-4 py-[7px]">
-            🌱 Kostenlos in der Beta
+            {t('landing.betaBadge')}
           </span>
           <h1 className="font-display font-semibold text-[clamp(2.9rem,7.2vw,5.4rem)] leading-[1.06] tracking-tight max-w-[15ch] mx-auto mt-6 mb-5 text-wrap-balance">
-            Ernährung, die sich <span className="text-primary">nach deinem Leben</span> richtet.
+            {t('landing.heroTitleBefore')} <span className="text-primary">{t('landing.heroTitleHighlight')}</span>{' '}
+            {t('landing.heroTitleAfter')}
           </h1>
           <p className="text-lg md:text-xl text-text-muted font-light leading-relaxed max-w-[56ch] mx-auto">
-            Kalorien und Makros tracken, aus 174 Rezepten planen und mit Intervallfasten den Überblick
-            behalten — alles in einer ruhigen App statt zehn Tabs.
+            {t('landing.heroSubtitle', { count: 174 })}
           </p>
           <div className="flex flex-wrap items-center justify-center gap-3.5 mt-9">
             <Link
               to="/anmelden?mode=signup"
               className="bg-primary text-on-primary font-semibold text-base rounded-full px-8 py-4 hover:bg-primary-hover hover:-translate-y-px transition-all"
             >
-              Kostenlos starten
+              {t('landing.startFree')}
             </Link>
             <a
               href="#funktionen"
               className="border border-border rounded-full px-8 py-4 font-semibold text-base hover:border-primary hover:text-primary transition-colors"
             >
-              Funktionen ansehen
+              {t('landing.viewFeatures')}
             </a>
           </div>
-          <p className="text-xs text-text-muted mt-4">
-            Keine Kreditkarte nötig · in 30 Sekunden startklar
-          </p>
+          <p className="text-xs text-text-muted mt-4">{t('landing.noCreditCard')}</p>
         </div>
 
         <div className="relative z-[1] mx-auto mt-16 w-[300px] landing-hero-device">
           <Phone>
-            <ScreenBar title={<>Nelli<span className="text-primary">cious</span></>} meta="Mi., 19. August" />
+            <ScreenBar
+              title={<>Nelli<span className="text-primary">cious</span></>}
+              meta={new Intl.DateTimeFormat(getIntlLocale(), { weekday: 'short', day: '2-digit', month: 'long' }).format(new Date('2026-08-19'))}
+            />
             <div className="flex-1 p-3.5 flex flex-col gap-[9px] min-h-0">
               <span className="self-start font-mono text-[7.5px] text-honey bg-honey/15 rounded-full px-2.5 py-1">
-                🔥 5 Tage in Folge geloggt
+                {t('landing.screenStreak', { count: 5 })}
               </span>
               <div className="bg-surface-2 border border-border rounded-[13px] p-[11px] flex items-center gap-2.5">
                 <ProgressRing size={52} stroke={7} radius={21} progress={0.64} color="var(--color-primary)" draw>
                   <span className="font-mono text-[8px] font-medium text-primary">64%</span>
                 </ProgressRing>
                 <div>
-                  <div className="text-[9.5px] font-semibold">Tagesziel</div>
+                  <div className="text-[9.5px] font-semibold">{t('landing.screenTodayGoal')}</div>
                   <div className="font-mono text-[11px] text-primary">1340 / 2100 kcal</div>
                 </div>
               </div>
               <MacroGrid />
               <div className="bg-surface border border-border rounded-[13px] p-[11px]">
-                <MealRow name="Overnight Oats mit Beeren" kcal="340" />
-                <MealRow name="Linsen-Bowl mit Ofengemüse" kcal="480" />
-                <MealRow name="Tom Kha Gai" kcal="420" last />
+                <MealRow name={t('landing.recipe1Title')} kcal="340" />
+                <MealRow name={t('landing.mockMealLentilBowlFull')} kcal="480" />
+                <MealRow name={t('landing.recipe2Title')} kcal="420" last />
               </div>
               <div className="mt-auto bg-primary text-on-primary text-center text-[9px] font-semibold py-[9px] rounded-[9px]">
-                Mahlzeit hinzufügen
+                {t('landing.screenAddMeal')}
               </div>
             </div>
-            <TabBar active="Heute" />
+            <TabBar active="today" />
           </Phone>
         </div>
       </section>
@@ -927,14 +964,13 @@ export function LandingPage() {
           <div className="max-w-5xl mx-auto px-6 grid md:grid-cols-2 gap-10 md:gap-14 items-center">
             <div className="text-center md:text-left">
               <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
-                Aktive Entwicklung
+                {t('landing.changelogEyebrow')}
               </span>
               <h2 className="font-display font-semibold text-2xl md:text-4xl leading-tight mt-3.5 mb-4 text-wrap-balance">
-                Läuft nie fertig — wird laufend besser.
+                {t('landing.changelogTitle')}
               </h2>
               <p className="text-text-muted font-light leading-relaxed max-w-sm mx-auto md:mx-0">
-                Jede Woche neue Rezepte, Funktionen und Verbesserungen. Was sich ändert, steht offen und
-                mit Datum unter „Neu in Nellicious" — kein Changelog, den niemand liest.
+                {t('landing.changelogSubtitle')}
               </p>
             </div>
             <div className="flex flex-col gap-3">
@@ -966,31 +1002,35 @@ export function LandingPage() {
         <section id="preise" className="py-20 md:py-32 text-center">
           <div className="max-w-3xl mx-auto px-6">
             <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
-              Preise
+              {t('landing.pricesEyebrow')}
             </span>
             <h2 className="font-display font-semibold text-2xl md:text-4xl leading-tight mt-3.5 mb-4 max-w-[18ch] mx-auto text-wrap-balance">
-              Kostenlos starten, upgraden wenn's passt.
+              {t('landing.pricesTitle')}
             </h2>
-            <p className="text-text-muted font-light max-w-[50ch] mx-auto mb-11">
-              Alle Grundfunktionen sind dauerhaft kostenlos. Premium schaltet Wochenplanung über die
-              aktuelle Woche hinaus und den Kochmodus frei — 14 Tage zum Ausprobieren, ohne
-              Zahlungsdaten.
-            </p>
+            <p className="text-text-muted font-light max-w-[50ch] mx-auto mb-11">{t('landing.pricesSubtitle')}</p>
             <div className="grid sm:grid-cols-2 gap-4 max-w-lg mx-auto">
               <div className="bg-surface border border-border rounded-[18px] p-6 text-left">
-                <h3 className="font-display font-semibold text-[15px] mb-2.5">Monatlich</h3>
-                <span className="font-mono text-[26px] font-medium">3,99 €</span>{' '}
-                <span className="text-[12.5px] text-text-muted">/ Monat</span>
-                <p className="text-xs text-text-muted mt-2">jederzeit kündbar</p>
+                <h3 className="font-display font-semibold text-[15px] mb-2.5">{t('landing.monthly')}</h3>
+                <span className="font-mono text-[26px] font-medium">
+                  {(3.99).toLocaleString(getIntlLocale(), { minimumFractionDigits: 2 })} €
+                </span>{' '}
+                <span className="text-[12.5px] text-text-muted">{t('landing.perMonth')}</span>
+                <p className="text-xs text-text-muted mt-2">{t('landing.cancelAnytime')}</p>
               </div>
               <div className="relative bg-surface border border-primary rounded-[18px] p-6 text-left">
                 <span className="absolute -top-3 left-5 bg-primary text-on-primary font-mono text-[9.5px] uppercase tracking-wide rounded-full px-2.5 py-1">
-                  2 Monate gratis
+                  {t('landing.twoMonthsFree')}
                 </span>
-                <h3 className="font-display font-semibold text-[15px] mb-2.5">Jährlich</h3>
-                <span className="font-mono text-[26px] font-medium">39,99 €</span>{' '}
-                <span className="text-[12.5px] text-text-muted">/ Jahr</span>
-                <p className="text-xs text-text-muted mt-2">entspricht 3,33 € / Monat</p>
+                <h3 className="font-display font-semibold text-[15px] mb-2.5">{t('landing.yearly')}</h3>
+                <span className="font-mono text-[26px] font-medium">
+                  {(39.99).toLocaleString(getIntlLocale(), { minimumFractionDigits: 2 })} €
+                </span>{' '}
+                <span className="text-[12.5px] text-text-muted">{t('landing.perYear')}</span>
+                <p className="text-xs text-text-muted mt-2">
+                  {t('landing.equivalentPerMonth', {
+                    price: `${(3.33).toLocaleString(getIntlLocale(), { minimumFractionDigits: 2 })} €`,
+                  })}
+                </p>
               </div>
             </div>
           </div>
@@ -1002,16 +1042,14 @@ export function LandingPage() {
         <Reveal>
           <div className="bg-[#1c1310] text-[#f7f0e8] rounded-[30px] px-7 py-16 md:py-24 text-center flex flex-col items-center gap-5">
             <h2 className="font-display font-semibold text-2xl md:text-5xl leading-[1.08] max-w-[17ch] text-wrap-balance">
-              Bereit für weniger Kopfzerbrechen beim Essen?
+              {t('landing.finalTitle')}
             </h2>
-            <p className="text-[#f7f0e8]/60 font-light max-w-[44ch]">
-              Kostenlos anmelden, ersten Tag loggen, in der ersten Woche schon den Rhythmus spüren.
-            </p>
+            <p className="text-[#f7f0e8]/60 font-light max-w-[44ch]">{t('landing.finalSubtitle')}</p>
             <Link
               to="/anmelden?mode=signup"
               className="mt-2 bg-primary text-on-primary font-semibold text-base rounded-full px-8 py-4 hover:bg-primary-hover hover:-translate-y-px transition-all"
             >
-              Kostenlos starten
+              {t('landing.startFree')}
             </Link>
           </div>
         </Reveal>
@@ -1024,7 +1062,7 @@ export function LandingPage() {
           </span>
           <div className="flex flex-wrap gap-5 text-sm text-text-muted">
             <Link to="/anmelden" className="hover:text-text transition-colors">
-              Anmelden
+              {t('landing.signIn')}
             </Link>
           </div>
         </div>
