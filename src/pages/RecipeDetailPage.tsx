@@ -58,6 +58,17 @@ export function RecipeDetailPage() {
     setTargetServings(Math.max(1, Math.round(next)))
   }
 
+  function handleAddToPlan() {
+    if (!recipe) return
+    if (!hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    navigate('/plan', {
+      state: { multiAssignRecipeId: recipe.id, suggestedCount: Math.max(1, Math.round(scaleFactor)) },
+    })
+  }
+
   async function handleLog() {
     if (!recipe) return
     setLogging(true)
@@ -261,6 +272,13 @@ export function RecipeDetailPage() {
             {targetServings === 1 ? 'Portion' : 'Portionen'} für Zutaten &amp; Nährwerte oben
           </span>
         </div>
+        <button
+          type="button"
+          onClick={handleAddToPlan}
+          className="bg-surface-2 border border-border rounded-xl py-2.5 text-sm font-medium hover:border-primary transition-colors"
+        >
+          📅 In den Plan übernehmen
+        </button>
       </div>
 
       {wakeLockSupported && (
