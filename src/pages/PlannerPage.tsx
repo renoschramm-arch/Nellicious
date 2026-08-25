@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
-import { useRecipes, type Recipe } from '../lib/useRecipes'
+import { useRecipes, getMealTypeLabels, type Recipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useShoppingListStatus, type IngredientRef } from '../lib/useShoppingListStatus'
 import { useProfile } from '../lib/useProfile'
@@ -21,13 +22,6 @@ interface MultiAssignNavState {
   suggestedCount: number
 }
 
-const SLOTS: { key: MealSlot; label: string }[] = [
-  { key: 'fruehstueck', label: 'Frühstück' },
-  { key: 'mittag', label: 'Mittag' },
-  { key: 'abend', label: 'Abend' },
-  { key: 'snack', label: 'Snack' },
-]
-
 interface LeafItem {
   entryId: string
   recipeId: string
@@ -45,6 +39,16 @@ interface ShoppingLine {
 }
 
 export function PlannerPage() {
+  const { t } = useTranslation()
+  const SLOTS: { key: MealSlot; label: string }[] = useMemo(() => {
+    const labels = getMealTypeLabels(t)
+    return [
+      { key: 'fruehstueck', label: labels.fruehstueck },
+      { key: 'mittag', label: labels.mittag },
+      { key: 'abend', label: labels.abend },
+      { key: 'snack', label: labels.snack },
+    ]
+  }, [t])
   const { hasPremium } = usePremium()
   const [weekOffset, setWeekOffset] = useState(0)
   const [showPremiumModal, setShowPremiumModal] = useState(false)
@@ -262,7 +266,7 @@ export function PlannerPage() {
         <button
           onClick={() => dismissLine(line.refs)}
           className="shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-text-muted hover:border-primary hover:text-danger text-xs transition-colors"
-          aria-label={`${line.text} aus Einkaufsliste entfernen`}
+          aria-label={t('planner.removeFromListAria', { text: line.text })}
         >
           ✕
         </button>
@@ -274,12 +278,12 @@ export function PlannerPage() {
     <div className="flex flex-col gap-6">
       <PageFlatlay file="planner.png" />
       <div className="flex items-center justify-between">
-        <h1 className="font-display font-bold text-2xl">Wochenplan</h1>
+        <h1 className="font-display font-bold text-2xl">{t('planner.title')}</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => goToWeek(weekOffset - 1)}
             className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
-            aria-label="Vorherige Woche"
+            aria-label={t('planner.prevWeek')}
           >
             ←
           </button>
@@ -289,7 +293,7 @@ export function PlannerPage() {
           <button
             onClick={() => goToWeek(weekOffset + 1)}
             className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
-            aria-label="Nächste Woche"
+            aria-label={t('planner.nextWeek')}
           >
             →
           </button>
@@ -302,14 +306,14 @@ export function PlannerPage() {
           onClick={openMultiAssign}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/90 backdrop-blur-sm py-2.5 text-sm font-medium text-text hover:border-primary transition-colors"
         >
-          🍽️ Rezept mehrfach einplanen{!hasPremium && ' 🔒'}
+          {t('planner.multiAssignButton')}{!hasPremium && ' 🔒'}
         </button>
         <button
           type="button"
           onClick={openAutoPlan}
           className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/90 backdrop-blur-sm py-2.5 text-sm font-medium text-text hover:border-primary transition-colors"
         >
-          🪄 Woche automatisch planen{!hasPremium && ' 🔒'}
+          {t('planner.autoPlanButton')}{!hasPremium && ' 🔒'}
         </button>
       </div>
 
@@ -328,7 +332,7 @@ export function PlannerPage() {
                 <span className="font-display font-semibold">{formatDayLabel(day)}</span>
                 {isToday && (
                   <span className="font-mono text-[10px] uppercase tracking-wide bg-primary text-on-primary rounded-full px-2 py-0.5">
-                    Heute
+                    {t('planner.today')}
                   </span>
                 )}
               </div>
@@ -354,7 +358,7 @@ export function PlannerPage() {
                           <button
                             onClick={() => entry && removePlanEntry(dateISO, entry.id, entry.recipe_id)}
                             className="shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full bg-surface border border-border text-text-muted hover:border-primary hover:text-danger text-xs transition-colors"
-                            aria-label={`${recipe.title} aus Plan entfernen`}
+                            aria-label={t('planner.removeFromPlanAria', { title: recipe.title })}
                           >
                             ✕
                           </button>
@@ -371,7 +375,7 @@ export function PlannerPage() {
                             <span className="font-mono text-[10px] uppercase tracking-wide text-text-muted">
                               {slot.label}
                             </span>
-                            <span className="text-[14.5px] font-medium">Rezept wählen</span>
+                            <span className="text-[14.5px] font-medium">{t('planner.selectRecipe')}</span>
                           </span>
                         </button>
                       )}
@@ -396,7 +400,7 @@ export function PlannerPage() {
 
       <div>
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-display font-semibold text-lg">Einkaufsliste</h2>
+          <h2 className="font-display font-semibold text-lg">{t('planner.shoppingList')}</h2>
           {hasPlannedRecipes && (
             <div className="flex items-center gap-1 bg-surface-2 rounded-full p-1">
               <button
@@ -405,7 +409,7 @@ export function PlannerPage() {
                   shoppingView === 'grouped' ? 'bg-primary text-on-primary' : 'text-text-muted'
                 }`}
               >
-                Nach Rezept
+                {t('planner.byRecipe')}
               </button>
               <button
                 onClick={() => setShoppingView('flat')}
@@ -413,7 +417,7 @@ export function PlannerPage() {
                   shoppingView === 'flat' ? 'bg-primary text-on-primary' : 'text-text-muted'
                 }`}
               >
-                Als Liste
+                {t('planner.asList')}
               </button>
             </div>
           )}
@@ -421,11 +425,11 @@ export function PlannerPage() {
 
         {!hasPlannedRecipes ? (
           <p className="text-text-muted text-sm bg-surface/80 backdrop-blur-sm border border-border rounded-2xl p-4">
-            Noch keine Rezepte für diese Woche geplant.
+            {t('planner.noRecipesPlanned')}
           </p>
         ) : !hasVisibleItems ? (
           <p className="text-text-muted text-sm bg-surface/80 backdrop-blur-sm border border-border rounded-2xl p-4">
-            Einkauf erledigt — nichts mehr auf der Liste. 🎉
+            {t('planner.shoppingDone')}
           </p>
         ) : shoppingView === 'grouped' ? (
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-4">
@@ -449,7 +453,7 @@ export function PlannerPage() {
             onClick={clearShoppingList}
             className="w-full mt-3 border border-border bg-surface/80 backdrop-blur-sm rounded-xl py-2.5 text-sm text-text-muted hover:text-text"
           >
-            Einkauf erledigt
+            {t('planner.clearShoppingList')}
           </button>
         )}
       </div>

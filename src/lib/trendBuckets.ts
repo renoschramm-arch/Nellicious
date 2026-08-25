@@ -1,13 +1,24 @@
+import type { TFunction } from 'i18next'
 import { toISODate } from './week'
 import { getIntlLocale } from './i18n'
 
 export const TREND_RANGES = [
-  { days: 30, label: '30 Tage', buckets: 10 },
-  { days: 90, label: '90 Tage', buckets: 13 },
-  { days: 365, label: '365 Tage', buckets: 12 },
+  { days: 30, buckets: 10 },
+  { days: 90, buckets: 13 },
+  { days: 365, buckets: 12 },
 ] as const
 
 export type TrendRangeDays = (typeof TREND_RANGES)[number]['days']
+
+const TREND_RANGE_KEYS: Record<TrendRangeDays, string> = {
+  30: 'trendBuckets.range30',
+  90: 'trendBuckets.range90',
+  365: 'trendBuckets.range365',
+}
+
+export function trendRangeLabel(t: TFunction, days: TrendRangeDays): string {
+  return t(TREND_RANGE_KEYS[days])
+}
 
 export interface TrendBucket {
   label: string

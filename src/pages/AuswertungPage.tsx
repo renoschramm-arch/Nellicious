@@ -1,11 +1,12 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useProfile } from '../lib/useProfile'
 import { useMealLogHistory } from '../lib/useMealLogs'
 import { useWeightLogHistory, formatWeightKg } from '../lib/useWeightLogs'
 import { useFastingHistory } from '../lib/useFasting'
 import { usePremium } from '../lib/usePremium'
-import { TREND_RANGES, bucketDailyAverage, longestStreak, type TrendRangeDays } from '../lib/trendBuckets'
+import { TREND_RANGES, bucketDailyAverage, longestStreak, trendRangeLabel, type TrendRangeDays } from '../lib/trendBuckets'
 import { toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
 import { WeightTrendChart } from '../components/WeightTrendChart'
@@ -13,6 +14,7 @@ import { PremiumModal } from '../components/PremiumModal'
 import { getIntlLocale } from '../lib/i18n'
 
 export function AuswertungPage() {
+  const { t } = useTranslation()
   const { hasPremium } = usePremium()
   const { profile } = useProfile()
   const [rangeDays, setRangeDays] = useState<TrendRangeDays>(90)
@@ -135,24 +137,21 @@ export function AuswertungPage() {
           to="/mehr"
           className="bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
-          ‹ Zurück
+          {t('auswertung.back')}
         </Link>
       </div>
-      <h1 className="font-display font-bold text-2xl">Auswertung{!hasPremium && ' 🔒'}</h1>
+      <h1 className="font-display font-bold text-2xl">{t('auswertung.title')}{!hasPremium && ' 🔒'}</h1>
 
       {!hasPremium ? (
         <div className="bg-surface border border-border rounded-2xl p-5 flex flex-col items-center text-center gap-3">
           <span className="text-3xl">📈</span>
-          <p className="text-sm text-text-muted max-w-xs">
-            Gewichts- und Kalorien-Trends über Wochen und Monate, Ziel-Trefferquote und dein Fastentrend — mit
-            Nellicious Premium.
-          </p>
+          <p className="text-sm text-text-muted max-w-xs">{t('auswertung.premiumTeaser')}</p>
           <button
             type="button"
             onClick={() => setShowPremiumModal(true)}
             className="bg-primary text-on-primary font-semibold rounded-xl px-5 py-2.5 text-sm"
           >
-            Freischalten
+            {t('auswertung.unlock')}
           </button>
         </div>
       ) : (
@@ -169,7 +168,7 @@ export function AuswertungPage() {
                     : 'bg-surface-2 border-border text-text-muted'
                 }`}
               >
-                {r.label}
+                {trendRangeLabel(t, r.days)}
               </button>
             ))}
           </div>
@@ -177,44 +176,50 @@ export function AuswertungPage() {
           <div className="grid grid-cols-3 gap-2">
             <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5 min-w-0">
               <span className="font-mono text-lg font-semibold">{avgKcal.toLocaleString(getIntlLocale())}</span>
-              <span className="text-[11px] uppercase tracking-wide text-text-muted">Ø kcal / Tag</span>
+              <span className="text-[11px] uppercase tracking-wide text-text-muted">{t('auswertung.avgKcalPerDay')}</span>
               <span className={`text-xs font-medium ${Math.abs(kcalGoalDeltaPct) <= 5 ? 'text-basil' : 'text-honey'}`}>
-                {kcalGoalDeltaPct > 0 ? '+' : ''}
-                {kcalGoalDeltaPct} % ggü. Ziel
+                {t('auswertung.vsGoal', { pct: `${kcalGoalDeltaPct > 0 ? '+' : ''}${kcalGoalDeltaPct}` })}
               </span>
             </div>
             <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5 min-w-0">
               <span className="font-mono text-lg font-semibold">
                 {weightChange != null ? `${weightChange > 0 ? '+' : ''}${formatWeightKg(weightChange)} kg` : '–'}
               </span>
-              <span className="text-[11px] uppercase tracking-wide text-text-muted">in {range.label}</span>
-              <span className="text-xs text-text-muted break-words">Gewichtsveränderung</span>
+              <span className="text-[11px] uppercase tracking-wide text-text-muted">
+                {t('auswertung.weightChangeIn', { range: trendRangeLabel(t, range.days) })}
+              </span>
+              <span className="text-xs text-text-muted break-words">{t('auswertung.weightChange')}</span>
             </div>
             <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5 min-w-0">
               <span className="font-mono text-lg font-semibold">{hitRate != null ? `${hitRate} %` : '–'}</span>
-              <span className="text-[11px] uppercase tracking-wide text-text-muted">Tage im Ziel</span>
-              <span className="text-xs text-text-muted">±10 % Toleranz</span>
+              <span className="text-[11px] uppercase tracking-wide text-text-muted">{t('auswertung.daysOnTarget')}</span>
+              <span className="text-xs text-text-muted">{t('auswertung.tolerance')}</span>
             </div>
           </div>
 
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-            <h2 className="font-display font-semibold text-lg">⚖️ Gewichtsverlauf</h2>
+            <h2 className="font-display font-semibold text-lg">{t('auswertung.weightHistory')}</h2>
             <WeightTrendChart points={weightPoints} color="var(--color-basil)" />
           </div>
 
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-            <h2 className="font-display font-semibold text-lg">🔥 Kalorien-Trend</h2>
-            <p className="text-xs text-text-muted -mt-1">Ø kcal/Tag je Abschnitt · Ziel {kcalGoal.toLocaleString(getIntlLocale())} kcal</p>
+            <h2 className="font-display font-semibold text-lg">{t('auswertung.kcalTrend')}</h2>
+            <p className="text-xs text-text-muted -mt-1">
+              {t('auswertung.kcalTrendSubtitle', { goal: kcalGoal.toLocaleString(getIntlLocale()) })}
+            </p>
             <WeekBarChart data={kcalChartData} color="var(--color-primary)" />
           </div>
 
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-            <h2 className="font-display font-semibold text-lg">🍽️ Makronährstoffe</h2>
-            <p className="text-xs text-text-muted -mt-1">Ø pro Tag im gewählten Zeitraum, gegen dein Tagesziel</p>
+            <h2 className="font-display font-semibold text-lg">{t('auswertung.macros')}</h2>
+            <p className="text-xs text-text-muted -mt-1">{t('auswertung.macrosSubtitle')}</p>
             <div className="grid grid-cols-3 gap-2">
               <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{avgProtein} g</span>
-                <span className="text-[10px] text-text-muted">Protein{proteinGoal > 0 ? ` · Ziel ${proteinGoal} g` : ''}</span>
+                <span className="text-[10px] text-text-muted">
+                  {t('macros.protein')}
+                  {proteinGoal > 0 ? t('auswertung.proteinGoalSuffix', { goal: proteinGoal }) : ''}
+                </span>
                 <div className="h-1.5 rounded-full bg-bg overflow-hidden">
                   <div
                     className="h-full rounded-full bg-basil"
@@ -224,7 +229,10 @@ export function AuswertungPage() {
               </div>
               <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{avgCarbs} g</span>
-                <span className="text-[10px] text-text-muted">Kohlenh.{carbsGoal > 0 ? ` · Ziel ${carbsGoal} g` : ''}</span>
+                <span className="text-[10px] text-text-muted">
+                  {t('macros.carbs')}
+                  {carbsGoal > 0 ? t('auswertung.proteinGoalSuffix', { goal: carbsGoal }) : ''}
+                </span>
                 <div className="h-1.5 rounded-full bg-bg overflow-hidden">
                   <div
                     className="h-full rounded-full bg-honey"
@@ -234,7 +242,10 @@ export function AuswertungPage() {
               </div>
               <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{avgFat} g</span>
-                <span className="text-[10px] text-text-muted">Fett{fatGoal > 0 ? ` · Ziel ${fatGoal} g` : ''}</span>
+                <span className="text-[10px] text-text-muted">
+                  {t('macros.fat')}
+                  {fatGoal > 0 ? t('auswertung.proteinGoalSuffix', { goal: fatGoal }) : ''}
+                </span>
                 <div className="h-1.5 rounded-full bg-bg overflow-hidden">
                   <div className="h-full rounded-full bg-primary" style={{ width: `${macroPct(avgFat, fatGoal)}%` }} />
                 </div>
@@ -243,17 +254,19 @@ export function AuswertungPage() {
           </div>
 
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-            <h2 className="font-display font-semibold text-lg">⏱️ Fastentrend</h2>
-            <p className="text-xs text-text-muted -mt-1">Ø Fastenstunden pro Tag je Abschnitt</p>
+            <h2 className="font-display font-semibold text-lg">{t('auswertung.fastingTrend')}</h2>
+            <p className="text-xs text-text-muted -mt-1">{t('auswertung.fastingTrendSubtitle')}</p>
             <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
             <div className="grid grid-cols-2 gap-2">
               <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-0.5 min-w-0">
-                <span className="font-mono text-sm font-semibold">🔥 {currentFastingStreak} Tage</span>
-                <span className="text-[10px] text-text-muted">aktueller Streak</span>
+                <span className="font-mono text-sm font-semibold">{t('auswertung.currentStreak', { count: currentFastingStreak })}</span>
+                <span className="text-[10px] text-text-muted">{t('auswertung.currentStreakLabel')}</span>
               </div>
               <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-0.5 min-w-0">
-                <span className="font-mono text-sm font-semibold">🏆 {longestFastingStreak} Tage</span>
-                <span className="text-[10px] text-text-muted">längste Serie ({range.label})</span>
+                <span className="font-mono text-sm font-semibold">{t('auswertung.longestStreak', { count: longestFastingStreak })}</span>
+                <span className="text-[10px] text-text-muted">
+                  {t('auswertung.longestStreakLabel', { range: trendRangeLabel(t, range.days) })}
+                </span>
               </div>
             </div>
           </div>
