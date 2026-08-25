@@ -1,36 +1,6 @@
-export const MOTIVATIONAL_QUOTES: string[] = [
-  'Iss bunt, fühl dich gut.',
-  'Jede gesunde Entscheidung zählt – auch die kleinen.',
-  'Dein Körper ist dein Zuhause. Pflege ihn gut.',
-  'Heute schon etwas Gutes für dich getan?',
-  'Gesund essen ist Selbstliebe auf dem Teller.',
-  'Kleine Schritte, große Wirkung.',
-  'Du musst nicht perfekt sein – nur dranbleiben.',
-  'Ein guter Tag beginnt mit einer guten Entscheidung.',
-  'Nimm dir Zeit für dich – du bist es wert.',
-  'Gemüse ist kein Kompromiss, sondern ein Geschenk.',
-  'Fortschritt schlägt Perfektion.',
-  'Höre auf deinen Körper – er weiß, was er braucht.',
-  'Wasser trinken, tief durchatmen, weitermachen.',
-  'Du bist, was du regelmäßig tust – nicht, was du einmal isst.',
-  'Jede Mahlzeit ist eine neue Chance.',
-  'Balance statt Verzicht.',
-  'Dein „Ich schaffe das" ist stärker als jede Ausrede.',
-  'Iss, um zu leben – und lebe mit Freude.',
-  'Gute Gewohnheiten sind kleine, tägliche Siege.',
-  'Sei stolz auf jeden Schritt, den du gehst.',
-  'Energie kommt von innen – füttere sie richtig.',
-  'Heute ist ein guter Tag, um auf dich zu achten.',
-  'Genuss und Gesundheit schließen sich nicht aus.',
-  'Du wächst mit jeder bewussten Entscheidung.',
-  'Selbstfürsorge ist keine Ausnahme, sondern Routine.',
-  'Ein Tag nach dem anderen – du machst das großartig.',
-  'Dein Wohlbefinden beginnt mit dem ersten Bissen.',
-  'Positives Denken beginnt im Kopf, gute Energie im Bauch.',
-  'Sei geduldig mit dir – Veränderung braucht Zeit.',
-  'Dein Weg, dein Tempo, dein Erfolg.',
-]
+import type { TFunction } from 'i18next'
 
-export function pickRandomQuote(): string {
-  return MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)]
+export function pickRandomQuote(t: TFunction): string {
+  const quotes = t('quotes', { returnObjects: true }) as string[]
+  return quotes[Math.floor(Math.random() * quotes.length)]
 }

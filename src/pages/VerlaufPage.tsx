@@ -114,7 +114,7 @@ export function VerlaufPage() {
   const fastingTargetMs = (activeSession?.target_hours ?? fastingTargetHours) * 3_600_000
   const fastingPct = activeSession ? Math.min(100, Math.round((fastingElapsedMs / fastingTargetMs) * 100)) : 0
   const fastingElapsedHours = activeSession ? fastingElapsedMs / 3_600_000 : null
-  const currentFastingPhase = fastingElapsedHours != null ? getFastingPhase(fastingElapsedHours) : null
+  const currentFastingPhase = fastingElapsedHours != null ? getFastingPhase(t, fastingElapsedHours) : null
   const fastingEndsAt = activeSession
     ? new Date(new Date(activeSession.started_at).getTime() + activeSession.target_hours * 3_600_000)
     : null

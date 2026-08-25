@@ -365,6 +365,127 @@
     "paragraph2": "A small contribution directly helps development keep going. Thanks for using Nellicious! ❤️",
     "continueToPaypal": "🧡 Continue to"
   },
+  "changelog": {
+    "seqNeg4": ["Added weekly plan with automatic shopping list (grouped by recipe or as a flat list, amounts scale with how often a recipe is planned)"],
+    "seqNeg3": [
+      "Nellicious launches: nutrition tracking, recipes and Supabase integration",
+      "Added 28 new healthy recipes to the database",
+      "Edit recipes and filter by meal type",
+      "Create your own recipes via the \"New\" button",
+      "Light/dark/system theme switcher",
+      "Introduced mobile navigation (bottom tab bar)",
+      "Header stays visible while scrolling"
+    ],
+    "seqNeg2": [
+      "Rebuilt \"Profile\" menu into \"More\", with a submenu for profile, goals, daily goals, appearance and info",
+      "History tab: weight and water tracking, profile extended with age/height/gender",
+      "Automatically calculate daily kcal goal using the Mifflin-St-Jeor formula",
+      "Tag and filter recipes by diet type and intolerance",
+      "Import recipes from a link"
+    ],
+    "seqNeg1": ["Mark recipes as favorites"],
+    "seq0": [
+      "Food search (incl. 200 curated foods) for manual meal entries and recipe ingredients",
+      "Barcode scanner: capture food via camera",
+      "Own recipes can now be deleted",
+      "Personal greeting with name and motivational quote on app start"
+    ],
+    "seq1": [
+      "20 new, healthy dinner recipes in the database",
+      "Newly created recipes now open directly to the detail page"
+    ],
+    "seq2": ["🍳 Cooking mode in recipe view: keeps the screen awake while you cook"],
+    "seq3": ["Dinner recipes with more ingredients and more detailed instructions"],
+    "seq4": ["Water tracker: enter a custom amount and set your own three quick-select amounts"],
+    "seq5": [
+      "Enter a target weight in your profile — history shows the remaining distance to it",
+      "Cleaned up the water card: one settings button for goal and quick-select instead of several rows",
+      "Weekly plan: bigger, easier-to-tap tiles for meals and shopping list",
+      "Appearance: text size can now be set to \"Large\""
+    ],
+    "seq6": ["Added a support note to the info page"],
+    "seq7": [
+      "All recipes: more ingredients and more detailed instructions",
+      "History: added calorie/macro history over the last week",
+      "Streak counter: consecutive logging days on the Today page",
+      "Recipe notes: your own note per recipe"
+    ],
+    "seq8": [
+      "Added 20 salad recipes to the recipe database",
+      "Input fields no longer auto-zoom on mobile while typing"
+    ],
+    "seq9": ["Added 20 healthy baking recipes to the recipe database"],
+    "seq10": [
+      "⏱️ New: intermittent fasting tracker with ring, streak and 7-day history",
+      "Fasting protocols (16:8, 18:6, 20:4, OMAD) can be customized",
+      "Log fasting times retroactively and edit them afterward",
+      "Automatic countdown to the end of your fast or the next fast's start",
+      "Explanations of the four fasting phases (digestion, fat burning, ketosis, autophagy)",
+      "Fasting ring also visible on the Today page",
+      "Intermittent fasting can be completely turned off if needed"
+    ],
+    "seq11": [
+      "Expanded recipe database to 146 recipes, incl. 20 more fish and seafood dishes",
+      "Food search now includes 681 curated foods",
+      "Recipe search now also searches ingredients and description — e.g. \"fish\" finds all fish recipes"
+    ],
+    "seq12": [
+      "New landing page introduces Nellicious to new visitors before they sign in",
+      "Forgot password: reset link via email",
+      "Added legal notice, privacy policy and right-of-withdrawal pages"
+    ],
+    "seq13": ["↗ Share recipes: send a recipe via link, accessible even without a Nellicious account"],
+    "seq14": ["9 new soup recipes from Indian/Asian cuisine (incl. Tom Kha Gai, Pho Ga, ramen, laksa), miso soup revised"],
+    "seq15": [
+      "Completely redesigned landing page: animated feature previews that guide you through the app while scrolling",
+      "Added 20 German and regional soups — from potato soup and Swabian lentil soup to solyanka, Flädle and chervil soup",
+      "Vegetarian soups are now also found under the \"Pescatarian\" filter"
+    ]
+  },
+  "quotes": [
+    "Eat colorful, feel good.",
+    "Every healthy choice counts – even the small ones.",
+    "Your body is your home. Take good care of it.",
+    "Done something good for yourself today?",
+    "Eating healthy is self-love on a plate.",
+    "Small steps, big impact.",
+    "You don't have to be perfect – just keep going.",
+    "A good day starts with a good decision.",
+    "Take time for yourself – you're worth it.",
+    "Vegetables aren't a compromise, they're a gift.",
+    "Progress beats perfection.",
+    "Listen to your body – it knows what it needs.",
+    "Drink water, take a deep breath, keep going.",
+    "You are what you do consistently – not what you eat once.",
+    "Every meal is a new chance.",
+    "Balance, not restriction.",
+    "Your \"I've got this\" is stronger than any excuse.",
+    "Eat to live – and live with joy.",
+    "Good habits are small, daily wins.",
+    "Be proud of every step you take.",
+    "Energy comes from within – fuel it right.",
+    "Today is a good day to take care of yourself.",
+    "Enjoyment and health aren't mutually exclusive.",
+    "You grow with every mindful choice.",
+    "Self-care isn't the exception, it's the routine.",
+    "One day at a time – you're doing great.",
+    "Your well-being starts with the first bite.",
+    "Positive thinking starts in the mind, good energy in the gut.",
+    "Be patient with yourself – change takes time.",
+    "Your path, your pace, your success."
+  ],
+  "fastingPhases": {
+    "rangeFixed": "{{from}}–{{to}} h",
+    "rangeFrom": "from {{from}} h",
+    "phase1Title": "Digestion phase",
+    "phase1Text": "Your last meal is still being digested. Insulin is elevated, and the body covers its energy needs mainly from blood sugar.",
+    "phase2Title": "Fat burning starts",
+    "phase2Text": "Insulin levels drop, and glycogen stores in the liver and muscles are increasingly tapped. Early, light fat mobilization begins.",
+    "phase3Title": "Ketosis begins",
+    "phase3Text": "Glycogen reserves are running low, fat burning noticeably increases, and the liver starts producing ketone bodies.",
+    "phase4Title": "Autophagy",
+    "phase4Text": "Ketone levels keep rising, and the brain increasingly uses ketones as an energy source. Cellular cleanup processes are activated."
+  },
   "fastingPhaseModal": {
     "title": "What happens in your body",
     "close": "Close",

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { FASTING_PHASES } from '../lib/useFasting'
+import { getFastingPhases } from '../lib/useFasting'
 
 export function FastingPhaseModal({
   elapsedHours,
@@ -9,6 +9,7 @@ export function FastingPhaseModal({
   onClose: () => void
 }) {
   const { t } = useTranslation()
+  const FASTING_PHASES = getFastingPhases(t)
   return (
     <div
       className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/60 backdrop-blur-sm p-4"

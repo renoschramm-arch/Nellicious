@@ -60,13 +60,13 @@ export function DashboardPage() {
   const [greetingQuote, setGreetingQuote] = useState<string | null>(() => {
     if (sessionStorage.getItem(GREETED_SESSION_KEY)) return null
     sessionStorage.setItem(GREETED_SESSION_KEY, '1')
-    return pickRandomQuote()
+    return pickRandomQuote(t)
   })
 
   // Neuigkeiten seit dem letzten Besuch (z. B. neue Rezepte, neue Funktionen)
   // einmalig anzeigen, bis der Nutzer sie gesehen hat — unabhängig von der
   // Begrüßung oben, die pro App-Start erscheint.
-  const [newsItems, setNewsItems] = useState<string[]>(() => takeUnseenChangelogItems())
+  const [newsItems, setNewsItems] = useState<string[]>(() => takeUnseenChangelogItems(t))
 
   // Rezepte, die an einem früheren Tag im Wochenplan für heute eingeplant
   // wurden (z. B. gestern für "morgen" gewählt), sind zu diesem Zeitpunkt
