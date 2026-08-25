@@ -27,6 +27,7 @@ export interface Database {
           subscription_source: 'stripe' | 'app_store' | 'play_store' | null
           stripe_customer_id: string | null
           premium_until: string | null
+          active_goal_profile_id: string | null
           created_at: string
         }
         Insert: {
@@ -71,6 +72,39 @@ export interface Database {
           fasting_default_hours: number
           fasting_protocol_hours: number[]
           fasting_enabled: boolean
+          active_goal_profile_id: string | null
+        }>
+        Relationships: []
+      }
+      goal_profiles: {
+        Row: {
+          id: string
+          user_id: string
+          name: string
+          daily_kcal_goal: number
+          daily_protein_goal: number
+          daily_carbs_goal: number
+          daily_fat_goal: number
+          goal: 'abnehmen' | 'halten' | 'zunehmen' | 'muskelaufbau' | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          name: string
+          daily_kcal_goal: number
+          daily_protein_goal: number
+          daily_carbs_goal: number
+          daily_fat_goal: number
+          goal?: 'abnehmen' | 'halten' | 'zunehmen' | 'muskelaufbau' | null
+        }
+        Update: Partial<{
+          name: string
+          daily_kcal_goal: number
+          daily_protein_goal: number
+          daily_carbs_goal: number
+          daily_fat_goal: number
+          goal: 'abnehmen' | 'halten' | 'zunehmen' | 'muskelaufbau' | null
         }>
         Relationships: []
       }

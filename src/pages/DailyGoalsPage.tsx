@@ -3,6 +3,9 @@ import { Link } from 'react-router-dom'
 import { useProfile } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg } from '../lib/useWeightLogs'
 import { calculateTargets } from '../lib/calorieCalculator'
+import { useGoalProfiles } from '../lib/useGoalProfiles'
+import { usePremium } from '../lib/usePremium'
+import { PremiumModal } from '../components/PremiumModal'
 
 const MISSING_FIELD_LABELS: Record<string, { label: string; to: string }> = {
   gender: { label: 'Geschlecht', to: '/mehr/profil' },
@@ -22,6 +25,11 @@ export function DailyGoalsPage() {
   const [fat, setFat] = useState('')
   const [saved, setSaved] = useState(false)
   const [showFormula, setShowFormula] = useState(false)
+  const { hasPremium } = usePremium()
+  const { profiles: goalProfiles, createProfile, removeProfile, activateProfile } = useGoalProfiles()
+  const [showPremiumModal, setShowPremiumModal] = useState(false)
+  const [showNameInput, setShowNameInput] = useState(false)
+  const [newProfileName, setNewProfileName] = useState('')
 
   useEffect(() => {
     if (!profile) return
@@ -74,6 +82,38 @@ export function DailyGoalsPage() {
     setTimeout(() => setSaved(false), 2000)
   }
 
+  function handleAddProfileClick() {
+    if (!hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    setShowNameInput(true)
+  }
+
+  async function handleSaveNewProfile(e: FormEvent) {
+    e.preventDefault()
+    if (!newProfileName.trim()) return
+    await createProfile({
+      name: newProfileName.trim(),
+      daily_kcal_goal: Number(kcal),
+      daily_protein_goal: Number(protein),
+      daily_carbs_goal: Number(carbs),
+      daily_fat_goal: Number(fat),
+      goal: profile?.goal ?? null,
+    })
+    setNewProfileName('')
+    setShowNameInput(false)
+  }
+
+  function handleActivateProfile(id: string) {
+    if (!hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    const target = goalProfiles.find((p) => p.id === id)
+    if (target) activateProfile(target)
+  }
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2">
@@ -85,6 +125,71 @@ export function DailyGoalsPage() {
         </Link>
       </div>
       <h1 className="font-display font-bold text-2xl">Tagesziele</h1>
+
+      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+        <span className="text-sm font-medium">
+          Ziel-Profile{!hasPremium && ' 🔒'}
+        </span>
+        <div className="flex flex-wrap gap-1.5">
+          {goalProfiles.map((gp) => (
+            <div key={gp.id} className="relative group">
+              <button
+                type="button"
+                onClick={() => handleActivateProfile(gp.id)}
+                className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  profile?.active_goal_profile_id === gp.id
+                    ? 'bg-primary text-on-primary'
+                    : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+                }`}
+              >
+                {gp.name}
+                <span className="ml-1.5 font-mono text-xs opacity-70">{gp.daily_kcal_goal} kcal</span>
+              </button>
+              {profile?.active_goal_profile_id !== gp.id && (
+                <button
+                  type="button"
+                  onClick={() => removeProfile(gp.id)}
+                  aria-label={`${gp.name} löschen`}
+                  className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-surface border border-border text-text-muted text-[10px] leading-none opacity-0 group-hover:opacity-100 hover:text-danger hover:border-danger transition-opacity flex items-center justify-center"
+                >
+                  ×
+                </button>
+              )}
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={handleAddProfileClick}
+            className="px-3 py-1.5 rounded-full text-sm font-medium bg-surface-2 border border-dashed border-border text-text-muted hover:text-text hover:border-primary transition-colors"
+          >
+            + Aktuelle Werte speichern
+          </button>
+        </div>
+
+        {showNameInput && (
+          <form onSubmit={handleSaveNewProfile} className="flex gap-2">
+            <input
+              type="text"
+              autoFocus
+              value={newProfileName}
+              onChange={(e) => setNewProfileName(e.target.value)}
+              placeholder="z. B. Diätphase, Aufbauphase"
+              className="flex-1 rounded-lg border border-border bg-bg px-3 py-2 text-sm outline-none focus:border-primary"
+            />
+            <button
+              type="submit"
+              className="bg-primary text-on-primary font-semibold rounded-lg px-4 text-sm"
+            >
+              Speichern
+            </button>
+          </form>
+        )}
+
+        <p className="text-xs text-text-muted">
+          Speichert die Werte unten als benanntes Set — z. B. unterschiedliche Ziele für Diät- und
+          Aufbauphasen, mit einem Tap wechselbar.
+        </p>
+      </div>
 
       {suggestion && (
         <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
@@ -242,6 +347,8 @@ export function DailyGoalsPage() {
           </p>
         </div>
       )}
+
+      {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
     </div>
   )
 }

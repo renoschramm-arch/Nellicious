@@ -2741,3 +2741,55 @@ from (
 where not exists (
   select 1 from public.recipes r where r.title = v.title
 );
+
+
+-- Premium-Feature "Mehrere Ziel-Profile": gespeicherte Kalorien-/Makro-Sets
+-- (z. B. "Diätphase", "Aufbauphase"), zwischen denen mit einem Tap
+-- gewechselt werden kann. Die eigentlich wirksamen Werte bleiben weiterhin
+-- profiles.daily_*_goal (single source of truth für Dashboard-Ring,
+-- Rezept-Logging etc.) — beim Aktivieren eines Ziel-Profils werden dessen
+-- Werte dorthin kopiert, sodass an keiner bestehenden Stelle etwas
+-- umgebaut werden muss.
+create table if not exists public.goal_profiles (
+  id uuid primary key default gen_random_uuid(),
+  user_id uuid not null references auth.users (id) on delete cascade,
+  name text not null,
+  daily_kcal_goal integer not null,
+  daily_protein_goal integer not null,
+  daily_carbs_goal integer not null,
+  daily_fat_goal integer not null,
+  goal text,
+  created_at timestamptz not null default now()
+);
+
+alter table public.goal_profiles enable row level security;
+
+drop policy if exists "Nutzer sehen eigene Ziel-Profile" on public.goal_profiles;
+create policy "Nutzer sehen eigene Ziel-Profile"
+  on public.goal_profiles for select
+  using (auth.uid() = user_id);
+
+drop policy if exists "Nutzer legen eigene Ziel-Profile an" on public.goal_profiles;
+create policy "Nutzer legen eigene Ziel-Profile an"
+  on public.goal_profiles for insert
+  with check (auth.uid() = user_id);
+
+drop policy if exists "Nutzer bearbeiten eigene Ziel-Profile" on public.goal_profiles;
+create policy "Nutzer bearbeiten eigene Ziel-Profile"
+  on public.goal_profiles for update
+  using (auth.uid() = user_id);
+
+drop policy if exists "Nutzer löschen eigene Ziel-Profile" on public.goal_profiles;
+create policy "Nutzer löschen eigene Ziel-Profile"
+  on public.goal_profiles for delete
+  using (auth.uid() = user_id);
+
+alter table public.goal_profiles
+  drop constraint if exists goal_profiles_goal_check;
+alter table public.goal_profiles
+  add constraint goal_profiles_goal_check check (
+    goal is null or goal in ('abnehmen', 'halten', 'zunehmen', 'muskelaufbau')
+  );
+
+alter table public.profiles
+  add column if not exists active_goal_profile_id uuid references public.goal_profiles (id) on delete set null;
