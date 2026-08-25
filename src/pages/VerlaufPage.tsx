@@ -17,6 +17,7 @@ import {
 import { usePremium } from '../lib/usePremium'
 import {
   EXPORT_RANGES,
+  exportRangeLabel,
   fetchExportData,
   downloadMealLogsCSV,
   downloadWeightLogsCSV,
@@ -302,7 +303,7 @@ export function VerlaufPage() {
       } else if (format === 'csv-weight') {
         downloadWeightLogsCSV(weightLogs)
       } else {
-        const rangeLabel = EXPORT_RANGES.find((r) => r.days === exportRangeDays)?.label ?? ''
+        const rangeLabel = exportRangeLabel(exportRangeDays)
         const doc = generatePDFReport({ mealLogs, weightLogs, rangeLabel, userEmail: user.email ?? '' })
         doc.save('nellicious-bericht.pdf')
       }
@@ -858,7 +859,7 @@ export function VerlaufPage() {
                   : 'bg-surface-2 border border-border hover:border-primary'
               }`}
             >
-              {range.label}
+              {exportRangeLabel(range.days)}
             </button>
           ))}
         </div>

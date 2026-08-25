@@ -10,6 +10,7 @@ import { toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
 import { WeightTrendChart } from '../components/WeightTrendChart'
 import { PremiumModal } from '../components/PremiumModal'
+import { getIntlLocale } from '../lib/i18n'
 
 export function AuswertungPage() {
   const { hasPremium } = usePremium()
@@ -96,7 +97,7 @@ export function AuswertungPage() {
     return bucketDailyAverage(fastingByDay, rangeDays, range.buckets).map((b) => ({
       label: b.label,
       value: b.value,
-      display: b.value != null ? `${(Math.round(b.value * 10) / 10).toLocaleString('de-DE')}h` : undefined,
+      display: b.value != null ? `${(Math.round(b.value * 10) / 10).toLocaleString(getIntlLocale())}h` : undefined,
     }))
   }, [fastingByDay, rangeDays, range.buckets])
 
@@ -175,7 +176,7 @@ export function AuswertungPage() {
 
           <div className="grid grid-cols-3 gap-2">
             <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5 min-w-0">
-              <span className="font-mono text-lg font-semibold">{avgKcal.toLocaleString('de-DE')}</span>
+              <span className="font-mono text-lg font-semibold">{avgKcal.toLocaleString(getIntlLocale())}</span>
               <span className="text-[11px] uppercase tracking-wide text-text-muted">Ø kcal / Tag</span>
               <span className={`text-xs font-medium ${Math.abs(kcalGoalDeltaPct) <= 5 ? 'text-basil' : 'text-honey'}`}>
                 {kcalGoalDeltaPct > 0 ? '+' : ''}
@@ -203,7 +204,7 @@ export function AuswertungPage() {
 
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
             <h2 className="font-display font-semibold text-lg">🔥 Kalorien-Trend</h2>
-            <p className="text-xs text-text-muted -mt-1">Ø kcal/Tag je Abschnitt · Ziel {kcalGoal.toLocaleString('de-DE')} kcal</p>
+            <p className="text-xs text-text-muted -mt-1">Ø kcal/Tag je Abschnitt · Ziel {kcalGoal.toLocaleString(getIntlLocale())} kcal</p>
             <WeekBarChart data={kcalChartData} color="var(--color-primary)" />
           </div>
 

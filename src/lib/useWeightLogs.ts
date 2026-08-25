@@ -2,12 +2,13 @@ import { useCallback, useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
 import { useAuth } from './AuthContext'
 import { toISODate } from './week'
+import { getIntlLocale } from './i18n'
 import type { Database } from './database.types'
 
 export type WeightLog = Database['public']['Tables']['weight_logs']['Row']
 
 export function formatWeightKg(kg: number): string {
-  return kg.toLocaleString('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 })
+  return kg.toLocaleString(getIntlLocale(), { minimumFractionDigits: 1, maximumFractionDigits: 1 })
 }
 
 // Erlaubt sowohl "75,5" als auch "75.5" als Eingabe.

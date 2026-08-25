@@ -1,3 +1,5 @@
+import { getIntlLocale } from './i18n'
+
 export function getMonday(date: Date): Date {
   const d = new Date(date)
   const day = d.getDay()
@@ -20,24 +22,17 @@ export function toISODate(date: Date): string {
   return `${year}-${month}-${day}`
 }
 
-const dayLabelFormat = new Intl.DateTimeFormat('de-DE', {
-  weekday: 'short',
-  day: '2-digit',
-  month: '2-digit',
-})
-
+// Locale wird bei jedem Aufruf frisch gelesen (statt einmalig beim Modul-Import),
+// damit ein Sprachwechsel zur Laufzeit sofort auf alle Formatierungen wirkt.
 export function formatDayLabel(date: Date): string {
-  return dayLabelFormat.format(date)
+  return new Intl.DateTimeFormat(getIntlLocale(), { weekday: 'short', day: '2-digit', month: '2-digit' }).format(date)
 }
-
-const rangeFormat = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit' })
 
 export function formatWeekRange(monday: Date, sunday: Date): string {
-  return `${rangeFormat.format(monday)} – ${rangeFormat.format(sunday)}`
+  const format = new Intl.DateTimeFormat(getIntlLocale(), { day: '2-digit', month: '2-digit' })
+  return `${format.format(monday)} – ${format.format(sunday)}`
 }
 
-const weekdayShortFormat = new Intl.DateTimeFormat('de-DE', { weekday: 'short' })
-
 export function formatWeekdayShort(date: Date): string {
-  return weekdayShortFormat.format(date).replace('.', '')
+  return new Intl.DateTimeFormat(getIntlLocale(), { weekday: 'short' }).format(date).replace('.', '')
 }

@@ -2,18 +2,25 @@ import { jsPDF } from 'jspdf'
 import { supabase } from './supabaseClient'
 import { toISODate } from './week'
 import { formatWeightKg } from './useWeightLogs'
+import i18n, { getIntlLocale } from './i18n'
 import type { Database } from './database.types'
 
 type MealLog = Database['public']['Tables']['meal_logs']['Row']
 type WeightLog = Database['public']['Tables']['weight_logs']['Row']
 
-export const EXPORT_RANGES = [
-  { days: 30, label: 'Letzte 30 Tage' },
-  { days: 90, label: 'Letzte 90 Tage' },
-  { days: 3650, label: 'Gesamter Verlauf' },
-] as const
+export const EXPORT_RANGES = [{ days: 30 }, { days: 90 }, { days: 3650 }] as const
 
 export type ExportRangeDays = (typeof EXPORT_RANGES)[number]['days']
+
+const EXPORT_RANGE_KEYS: Record<ExportRangeDays, string> = {
+  30: 'exportReport.range30',
+  90: 'exportReport.range90',
+  3650: 'exportReport.rangeAll',
+}
+
+export function exportRangeLabel(days: ExportRangeDays): string {
+  return i18n.t(EXPORT_RANGE_KEYS[days])
+}
 
 export async function fetchExportData(userId: string, days: number) {
   const end = new Date()
@@ -62,23 +69,27 @@ function downloadFile(filename: string, content: string, mime: string) {
   URL.revokeObjectURL(url)
 }
 
-const dateTimeFormatter = new Intl.DateTimeFormat('de-DE', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-})
-const dateFormatter = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit', year: 'numeric' })
+function dateTimeFormatter() {
+  return new Intl.DateTimeFormat(getIntlLocale(), {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+function dateFormatter() {
+  return new Intl.DateTimeFormat(getIntlLocale(), { day: '2-digit', month: '2-digit', year: 'numeric' })
+}
 
 export function downloadMealLogsCSV(mealLogs: MealLog[]) {
   const rows = [
-    ['Datum', 'Uhrzeit', 'Mahlzeit', 'kcal', 'Protein (g)', 'Kohlenhydrate (g)', 'Fett (g)'],
+    i18n.t('exportReport.csvMealHeaders', { returnObjects: true }) as string[],
     ...mealLogs.map((log) => {
       const logged = new Date(log.logged_at)
       return [
         toISODate(logged),
-        logged.toLocaleTimeString('de-DE', { hour: '2-digit', minute: '2-digit' }),
+        logged.toLocaleTimeString(getIntlLocale(), { hour: '2-digit', minute: '2-digit' }),
         log.name,
         String(log.kcal),
         String(log.protein_g),
@@ -92,7 +103,7 @@ export function downloadMealLogsCSV(mealLogs: MealLog[]) {
 
 export function downloadWeightLogsCSV(weightLogs: WeightLog[]) {
   const rows = [
-    ['Datum', 'Gewicht (kg)'],
+    i18n.t('exportReport.csvWeightHeaders', { returnObjects: true }) as string[],
     ...weightLogs.map((log) => [log.log_date, formatWeightKg(Number(log.weight_kg))]),
   ]
   downloadFile('nellicious-gewicht.csv', toCSV(rows), 'text/csv;charset=utf-8')
@@ -138,13 +149,17 @@ export function generatePDFReport({
 
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(18)
-  doc.text('Nellicious — Verlaufsbericht', marginX, y)
+  doc.text(i18n.t('exportReport.pdfTitle'), marginX, y)
   y += 8
 
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(10)
   doc.setTextColor(90)
-  doc.text(`${userEmail} · ${rangeLabel} · erstellt am ${dateTimeFormatter.format(new Date())}`, marginX, y)
+  doc.text(
+    i18n.t('exportReport.pdfMetaLine', { email: userEmail, range: rangeLabel, date: dateTimeFormatter().format(new Date()) }),
+    marginX,
+    y,
+  )
   doc.setTextColor(0)
   y += 12
 
@@ -157,14 +172,14 @@ export function generatePDFReport({
 
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(13)
-  doc.text('Zusammenfassung', marginX, y)
+  doc.text(i18n.t('exportReport.pdfSummary'), marginX, y)
   y += 7
   doc.setFont('helvetica', 'normal')
   doc.setFontSize(10.5)
-  doc.text(`Geloggte Tage: ${daily.length}`, marginX, y)
+  doc.text(i18n.t('exportReport.pdfLoggedDays', { count: daily.length }), marginX, y)
   y += 6
   doc.text(
-    `Ø pro Tag: ${avgKcal} kcal · ${avgProtein} g Protein · ${avgCarbs} g Kohlenh. · ${avgFat} g Fett`,
+    i18n.t('exportReport.pdfDailyAvg', { kcal: avgKcal, protein: avgProtein, carbs: avgCarbs, fat: avgFat }),
     marginX,
     y,
   )
@@ -176,7 +191,12 @@ export function generatePDFReport({
     const diff = last - first
     const sign = diff > 0 ? '+' : ''
     doc.text(
-      `Gewicht: ${formatWeightKg(first)} kg → ${formatWeightKg(last)} kg (${sign}${formatWeightKg(diff)} kg)`,
+      i18n.t('exportReport.pdfWeightLine', {
+        first: formatWeightKg(first),
+        last: formatWeightKg(last),
+        sign,
+        diff: formatWeightKg(diff),
+      }),
       marginX,
       y,
     )
@@ -204,14 +224,14 @@ export function generatePDFReport({
   }
 
   if (daily.length > 0) {
-    const columns = ['Datum', 'kcal', 'Protein (g)', 'Kohlenh. (g)', 'Fett (g)']
+    const columns = i18n.t('exportReport.pdfColumnsMeals', { returnObjects: true }) as string[]
     const widths = [35, 25, 30, 32, 25]
-    tableHeader('Mahlzeiten pro Tag', columns, widths)
+    tableHeader(i18n.t('exportReport.pdfMealsPerDay'), columns, widths)
     for (const [day, totals] of daily) {
       ensureSpace(6)
       let x = marginX
       const cells = [
-        dateFormatter.format(new Date(`${day}T00:00:00`)),
+        dateFormatter().format(new Date(`${day}T00:00:00`)),
         String(Math.round(totals.kcal)),
         String(Math.round(totals.protein)),
         String(Math.round(totals.carbs)),
@@ -227,10 +247,11 @@ export function generatePDFReport({
   }
 
   if (weightLogs.length > 0) {
-    tableHeader('Gewichtsverlauf', ['Datum', 'Gewicht (kg)'], [35, 30])
+    const weightColumns = i18n.t('exportReport.pdfColumnsWeight', { returnObjects: true }) as string[]
+    tableHeader(i18n.t('exportReport.pdfWeightHistory'), weightColumns, [35, 30])
     for (const log of weightLogs) {
       ensureSpace(6)
-      doc.text(dateFormatter.format(new Date(`${log.log_date}T00:00:00`)), marginX, y)
+      doc.text(dateFormatter().format(new Date(`${log.log_date}T00:00:00`)), marginX, y)
       doc.text(formatWeightKg(Number(log.weight_kg)), marginX + 35, y)
       y += 5.5
     }

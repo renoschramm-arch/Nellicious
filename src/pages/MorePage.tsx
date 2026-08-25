@@ -1,40 +1,40 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useAuth } from '../lib/AuthContext'
 import { usePremium } from '../lib/usePremium'
 import { PageFlatlay } from '../components/PageFlatlay'
 
-const MENU_ITEMS = [
-  { to: '/mehr/profil', label: 'Mein Profil', description: 'Name, Ernährungstyp, Aktivitätslevel' },
-  { to: '/mehr/ziele', label: 'Ziele', description: 'Was du erreichen möchtest' },
-  { to: '/mehr/tagesziele', label: 'Tagesziele', description: 'kcal, Protein, Kohlenhydrate, Fett' },
-  { to: '/mehr/auswertung', label: 'Auswertung', description: 'Trends bei Gewicht, Kalorien und Fasten' },
-  { to: '/mehr/darstellung', label: 'Darstellung', description: 'System, Hell oder Dunkel' },
-  { to: '/mehr/neu', label: 'Neu in Nellicious', description: 'Alle Änderungen im Überblick' },
-  { to: '/mehr/info', label: 'Info', description: 'Über Nellicious' },
-]
-
 export function MorePage() {
+  const { t } = useTranslation()
   const { user, signOut } = useAuth()
   const { trialActive, trialDaysLeft, isPaidPremium, isGrandfathered } = usePremium()
+
+  const MENU_ITEMS = [
+    { to: '/mehr/profil', label: t('more.profileLabel'), description: t('more.profileDesc') },
+    { to: '/mehr/ziele', label: t('more.goalsLabel'), description: t('more.goalsDesc') },
+    { to: '/mehr/tagesziele', label: t('more.dailyGoalsLabel'), description: t('more.dailyGoalsDesc') },
+    { to: '/mehr/auswertung', label: t('more.auswertungLabel'), description: t('more.auswertungDesc') },
+    { to: '/mehr/darstellung', label: t('more.darstellungLabel'), description: t('more.darstellungDesc') },
+    { to: '/mehr/neu', label: t('more.changelogLabel'), description: t('more.changelogDesc') },
+    { to: '/mehr/info', label: t('more.infoLabel'), description: t('more.infoDesc') },
+  ]
 
   return (
     <div className="flex flex-col gap-6">
       <PageFlatlay file="profile.jpg" />
       <div>
-        <h1 className="font-display font-bold text-2xl">Mehr</h1>
+        <h1 className="font-display font-bold text-2xl">{t('more.title')}</h1>
         <p className="text-text-muted text-sm mt-1">{user?.email}</p>
       </div>
 
       {(isPaidPremium || isGrandfathered) && (
         <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl px-4 py-3 text-sm font-medium text-honey">
-          {isGrandfathered
-            ? '⭐ Premium aktiv — danke, dass du von Anfang an dabei bist!'
-            : '⭐ Nellicious Premium aktiv'}
+          {isGrandfathered ? t('more.premiumActiveGrandfathered') : t('more.premiumActive')}
         </div>
       )}
       {trialActive && (
         <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl px-4 py-3 text-sm text-honey">
-          🎁 Premium-Testphase: noch {trialDaysLeft} {trialDaysLeft === 1 ? 'Tag' : 'Tage'}
+          {t('more.trialActive', { count: trialDaysLeft })}
         </div>
       )}
 
@@ -58,7 +58,7 @@ export function MorePage() {
         onClick={() => signOut()}
         className="border border-border bg-surface/80 backdrop-blur-sm rounded-xl py-2.5 text-sm text-text-muted"
       >
-        Abmelden
+        {t('nav.signOut')}
       </button>
     </div>
   )
