@@ -1,4 +1,5 @@
 import { toISODate } from './week'
+import { getIntlLocale } from './i18n'
 
 export const TREND_RANGES = [
   { days: 30, label: '30 Tage', buckets: 10 },
@@ -13,7 +14,9 @@ export interface TrendBucket {
   value: number | null
 }
 
-const bucketLabelFormatter = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: '2-digit' })
+function bucketLabelFormatter() {
+  return new Intl.DateTimeFormat(getIntlLocale(), { day: '2-digit', month: '2-digit' })
+}
 
 // Teilt einen Zeitraum in `bucketCount` gleich lange, aufeinanderfolgende
 // Abschnitte und bildet je Abschnitt den Tagesdurchschnitt — über alle
@@ -44,7 +47,7 @@ export function bucketDailyAverage(
   }
 
   return buckets.map((b) => ({
-    label: bucketLabelFormatter.format(b.startDate),
+    label: bucketLabelFormatter().format(b.startDate),
     value: b.dayCount > 0 ? b.sum / b.dayCount : null,
   }))
 }

@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react'
 import { supabase } from './supabaseClient'
 import { useAuth } from './AuthContext'
 import { toISODate } from './week'
+import { getIntlLocale } from './i18n'
 import type { Database } from './database.types'
 
 export type FastingSession = Database['public']['Tables']['fasting_sessions']['Row']
@@ -32,10 +33,8 @@ export function formatCountdownHM(ms: number): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`
 }
 
-const clockTimeFormatter = new Intl.DateTimeFormat('de-DE', { hour: '2-digit', minute: '2-digit' })
-
 export function formatClockTime(date: Date): string {
-  return clockTimeFormatter.format(date)
+  return new Intl.DateTimeFormat(getIntlLocale(), { hour: '2-digit', minute: '2-digit' }).format(date)
 }
 
 // Für <input type="datetime-local">, das lokale Zeit ohne Zeitzone erwartet.
@@ -134,7 +133,7 @@ export function useFasting() {
       return
     }
     if (activeSession) {
-      setError(`Es läuft bereits ein Fasten seit ${new Date(activeSession.started_at).toLocaleString('de-DE')}.`)
+      setError(`Es läuft bereits ein Fasten seit ${new Date(activeSession.started_at).toLocaleString(getIntlLocale())}.`)
       return
     }
     setError(null)

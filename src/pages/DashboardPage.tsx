@@ -12,6 +12,7 @@ import { PageFlatlay } from '../components/PageFlatlay'
 import { FastingRingCard } from '../components/FastingRingCard'
 import { pickRandomQuote } from '../lib/motivationalQuotes'
 import { takeUnseenChangelogItems } from '../lib/whatsNew'
+import { getIntlLocale } from '../lib/i18n'
 
 const GREETED_SESSION_KEY = 'nellicious-greeted'
 
@@ -24,11 +25,11 @@ const BarcodeScannerModal = lazy(() =>
   import('../components/BarcodeScannerModal').then((m) => ({ default: m.BarcodeScannerModal })),
 )
 
-const dateLabel = new Intl.DateTimeFormat('de-DE', {
-  weekday: 'short',
-  day: '2-digit',
-  month: 'long',
-}).format(new Date())
+function todayLabel(): string {
+  return new Intl.DateTimeFormat(getIntlLocale(), { weekday: 'short', day: '2-digit', month: 'long' }).format(
+    new Date(),
+  )
+}
 
 const SLOTS: { key: MealSlot; label: string }[] = [
   { key: 'fruehstueck', label: MEAL_TYPE_LABELS.fruehstueck },
@@ -172,7 +173,7 @@ export function DashboardPage() {
       <div className="flex items-baseline justify-between">
         <h1 className="font-display font-bold text-2xl">Heute</h1>
         <span className="font-mono text-xs text-text-muted uppercase tracking-wide">
-          {dateLabel}
+          {todayLabel()}
         </span>
       </div>
 

@@ -1,10 +1,11 @@
 import { Link } from 'react-router-dom'
 import { getChangelogHistory } from '../lib/whatsNew'
-
-const dateFormatter = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'long', year: 'numeric' })
+import { getIntlLocale } from '../lib/i18n'
 
 function formatEntryDate(iso: string): string {
-  return dateFormatter.format(new Date(`${iso}T00:00:00`))
+  return new Intl.DateTimeFormat(getIntlLocale(), { day: '2-digit', month: 'long', year: 'numeric' }).format(
+    new Date(`${iso}T00:00:00`),
+  )
 }
 
 export function NeuInNelliciousPage() {

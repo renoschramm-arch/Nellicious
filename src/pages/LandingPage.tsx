@@ -1,8 +1,11 @@
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 import { getChangelogHistory } from '../lib/whatsNew'
+import { getIntlLocale } from '../lib/i18n'
 
-const dateFormatter = new Intl.DateTimeFormat('de-DE', { day: '2-digit', month: 'long', year: 'numeric' })
+function dateFormatter() {
+  return new Intl.DateTimeFormat(getIntlLocale(), { day: '2-digit', month: 'long', year: 'numeric' })
+}
 
 // Zentrale Prüfung auf "Bewegung reduzieren" — alle JS-getriebenen Animationen
 // (Canvas, Zähler, Scroll-Effekte) schalten sich damit ab. Rein CSS-basierte
@@ -941,7 +944,7 @@ export function LandingPage() {
                   className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2"
                 >
                   <span className="font-mono text-xs uppercase tracking-wide text-honey">
-                    {dateFormatter.format(new Date(`${entry.date}T00:00:00`))}
+                    {dateFormatter().format(new Date(`${entry.date}T00:00:00`))}
                   </span>
                   <ul className="flex flex-col gap-1.5">
                     {entry.items.map((item) => (
