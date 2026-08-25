@@ -1,4 +1,5 @@
-import { DIET_TAG_LABELS, MEAL_TYPE_LABELS, useRecipes, type MealType, type Recipe } from '../lib/useRecipes'
+import { useTranslation } from 'react-i18next'
+import { getDietTagLabels, getMealTypeLabels, useRecipes, type MealType, type Recipe } from '../lib/useRecipes'
 import { useFavorites } from '../lib/useFavorites'
 import { useRecipeFilters } from '../lib/useRecipeFilters'
 import { RecipeFilterBar } from './RecipeFilterBar'
@@ -12,9 +13,12 @@ export function RecipePickerModal({
   onSelect: (recipe: Recipe) => void
   onClose: () => void
 }) {
+  const { t } = useTranslation()
   const { recipes, loading } = useRecipes()
   const { favoriteIds } = useFavorites()
   const filters = useRecipeFilters(recipes, favoriteIds, defaultMealType)
+  const mealTypeLabels = getMealTypeLabels(t)
+  const dietTagLabels = getDietTagLabels(t)
 
   return (
     <div
@@ -26,16 +30,16 @@ export function RecipePickerModal({
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
-          <h2 className="font-display font-semibold text-lg">Rezept wählen</h2>
-          <button onClick={onClose} className="text-text-muted hover:text-text text-sm" aria-label="Schließen">
+          <h2 className="font-display font-semibold text-lg">{t('recipePicker.title')}</h2>
+          <button onClick={onClose} className="text-text-muted hover:text-text text-sm" aria-label={t('recipePicker.close')}>
             ✕
           </button>
         </div>
         <div className="p-4 overflow-y-auto flex flex-col gap-3">
           <RecipeFilterBar filters={filters} />
-          {loading && <p className="text-text-muted text-sm">Lädt …</p>}
+          {loading && <p className="text-text-muted text-sm">{t('recipePicker.loading')}</p>}
           {!loading && filters.filtered.length === 0 && (
-            <p className="text-text-muted text-sm">Keine Rezepte gefunden.</p>
+            <p className="text-text-muted text-sm">{t('recipePicker.noneFound')}</p>
           )}
           <div className="flex flex-col gap-2">
             {filters.filtered.map((recipe) => (
@@ -47,13 +51,13 @@ export function RecipePickerModal({
                 <div className="flex-1 min-w-0">
                   <div className="flex flex-wrap items-center gap-1 mb-1">
                     <span className="inline-block text-xs font-medium text-primary bg-primary/10 rounded-full px-2 py-0.5">
-                      {MEAL_TYPE_LABELS[recipe.meal_type]}
+                      {mealTypeLabels[recipe.meal_type]}
                     </span>
                     {recipe.diet_tags
                       .filter((tag) => tag === 'vegan' || tag === 'vegetarisch' || tag === 'keto' || tag === 'low_carb')
                       .map((tag) => (
                         <span key={tag} className="inline-block text-xs font-medium text-basil bg-basil/10 rounded-full px-2 py-0.5">
-                          {DIET_TAG_LABELS[tag as keyof typeof DIET_TAG_LABELS]}
+                          {dietTagLabels[tag as keyof typeof dietTagLabels]}
                         </span>
                       ))}
                     {favoriteIds.has(recipe.id) && <span className="text-danger text-xs">♥</span>}

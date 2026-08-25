@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
+import type { TFunction } from 'i18next'
 import { supabase } from './supabaseClient'
 import { useAuth } from './AuthContext'
 import type { Database } from './database.types'
@@ -12,9 +13,11 @@ export type Gender = NonNullable<Profile['gender']>
 
 export const GENDERS: Gender[] = ['maennlich', 'weiblich']
 
-export const GENDER_LABELS: Record<Gender, string> = {
-  maennlich: 'Männlich',
-  weiblich: 'Weiblich',
+export function getGenderLabels(t: TFunction): Record<Gender, string> {
+  return {
+    maennlich: t('profile.genderMaennlich'),
+    weiblich: t('profile.genderWeiblich'),
+  }
 }
 
 export const NUTRITION_TYPES: NutritionType[] = [
@@ -26,22 +29,26 @@ export const NUTRITION_TYPES: NutritionType[] = [
   'low_carb',
 ]
 
-export const NUTRITION_TYPE_LABELS: Record<NutritionType, string> = {
-  omnivore: 'Omnivore',
-  vegetarisch: 'Vegetarisch',
-  vegan: 'Vegan',
-  pescetarisch: 'Pescetarisch',
-  keto: 'Keto',
-  low_carb: 'Low-Carb',
+export function getNutritionTypeLabels(t: TFunction): Record<NutritionType, string> {
+  return {
+    omnivore: t('profile.nutritionOmnivore'),
+    vegetarisch: t('profile.nutritionVegetarisch'),
+    vegan: t('profile.nutritionVegan'),
+    pescetarisch: t('profile.nutritionPescetarisch'),
+    keto: t('profile.nutritionKeto'),
+    low_carb: t('profile.nutritionLowCarb'),
+  }
 }
 
-export const NUTRITION_TYPE_DESCRIPTIONS: Record<NutritionType, string> = {
-  omnivore: 'Isst alles – Fleisch, Fisch, Milchprodukte und Pflanzliches.',
-  vegetarisch: 'Kein Fleisch und kein Fisch, aber Eier und Milchprodukte erlaubt.',
-  vegan: 'Komplett pflanzlich – keine tierischen Produkte.',
-  pescetarisch: 'Kein Fleisch, aber Fisch und Meeresfrüchte erlaubt.',
-  keto: 'Sehr wenig Kohlenhydrate, viel Fett.',
-  low_carb: 'Wenig Kohlenhydrate.',
+export function getNutritionTypeDescriptions(t: TFunction): Record<NutritionType, string> {
+  return {
+    omnivore: t('profile.nutritionOmnivoreDesc'),
+    vegetarisch: t('profile.nutritionVegetarischDesc'),
+    vegan: t('profile.nutritionVeganDesc'),
+    pescetarisch: t('profile.nutritionPescetarischDesc'),
+    keto: t('profile.nutritionKetoDesc'),
+    low_carb: t('profile.nutritionLowCarbDesc'),
+  }
 }
 
 export const INTOLERANCES = [
@@ -53,22 +60,26 @@ export const INTOLERANCES = [
   'histaminarm',
 ] as const
 
-export const INTOLERANCE_LABELS: Record<(typeof INTOLERANCES)[number], string> = {
-  laktosefrei: 'Laktosefrei',
-  glutenfrei: 'Glutenfrei',
-  nussfrei: 'Nussfrei',
-  eifrei: 'Eifrei',
-  sojafrei: 'Sojafrei',
-  histaminarm: 'Histaminarm',
+export function getIntoleranceLabels(t: TFunction): Record<(typeof INTOLERANCES)[number], string> {
+  return {
+    laktosefrei: t('profile.intoleranceLaktosefrei'),
+    glutenfrei: t('profile.intoleranceGlutenfrei'),
+    nussfrei: t('profile.intoleranceNussfrei'),
+    eifrei: t('profile.intoleranceEifrei'),
+    sojafrei: t('profile.intoleranceSojafrei'),
+    histaminarm: t('profile.intoleranceHistaminarm'),
+  }
 }
 
-export const INTOLERANCE_DESCRIPTIONS: Record<(typeof INTOLERANCES)[number], string> = {
-  laktosefrei: 'Ohne Milchzucker – kein Milchprodukt mit Laktose (z. B. Milch, Käse, Sahne).',
-  glutenfrei: 'Ohne Gluten – kein Weizen, Gerste, Roggen oder herkömmlicher Hafer.',
-  nussfrei: 'Ohne Nüsse (z. B. Mandeln, Walnüsse, Cashewkerne).',
-  eifrei: 'Ohne Ei.',
-  sojafrei: 'Ohne Soja (z. B. Tofu, Sojasauce, Sojadrink).',
-  histaminarm: 'Wenig histaminreiche Zutaten – z. B. kein gereifter Käse, Tomaten, Fermentiertes oder Geräuchertes.',
+export function getIntoleranceDescriptions(t: TFunction): Record<(typeof INTOLERANCES)[number], string> {
+  return {
+    laktosefrei: t('profile.intoleranceLaktosefreiDesc'),
+    glutenfrei: t('profile.intoleranceGlutenfreiDesc'),
+    nussfrei: t('profile.intoleranceNussfreiDesc'),
+    eifrei: t('profile.intoleranceEifreiDesc'),
+    sojafrei: t('profile.intoleranceSojafreiDesc'),
+    histaminarm: t('profile.intoleranceHistaminarmDesc'),
+  }
 }
 
 export const ACTIVITY_LEVELS: ActivityLevel[] = [
@@ -79,21 +90,25 @@ export const ACTIVITY_LEVELS: ActivityLevel[] = [
   'extrem_aktiv',
 ]
 
-export const ACTIVITY_LEVEL_LABELS: Record<ActivityLevel, string> = {
-  sitzend: 'Sitzend (PAL 1,2) – kaum Bewegung',
-  leicht_aktiv: 'Leicht aktiv (PAL 1,375) – Bürojob, wenig Sport',
-  maessig_aktiv: 'Mäßig aktiv (PAL 1,55) – 1–3× Sport/Woche',
-  sehr_aktiv: 'Sehr aktiv (PAL 1,725) – 4–6× Sport/Woche',
-  extrem_aktiv: 'Extrem aktiv (PAL 1,9) – körperliche Arbeit / Leistungssport',
+export function getActivityLevelLabels(t: TFunction): Record<ActivityLevel, string> {
+  return {
+    sitzend: t('profile.activitySitzend'),
+    leicht_aktiv: t('profile.activityLeichtAktiv'),
+    maessig_aktiv: t('profile.activityMaessigAktiv'),
+    sehr_aktiv: t('profile.activitySehrAktiv'),
+    extrem_aktiv: t('profile.activityExtremAktiv'),
+  }
 }
 
 export const GOALS: Goal[] = ['abnehmen', 'halten', 'zunehmen', 'muskelaufbau']
 
-export const GOAL_LABELS: Record<Goal, string> = {
-  abnehmen: 'Abnehmen',
-  halten: 'Gewicht halten',
-  zunehmen: 'Zunehmen',
-  muskelaufbau: 'Muskelaufbau',
+export function getGoalLabels(t: TFunction): Record<Goal, string> {
+  return {
+    abnehmen: t('profile.goalAbnehmen'),
+    halten: t('profile.goalHalten'),
+    zunehmen: t('profile.goalZunehmen'),
+    muskelaufbau: t('profile.goalMuskelaufbau'),
+  }
 }
 
 export function useProfile() {

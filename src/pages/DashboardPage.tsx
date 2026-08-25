@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { useProfile } from '../lib/useProfile'
 import { useMealLogs, useLoggingStreak } from '../lib/useMealLogs'
 import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
-import { useRecipes, MEAL_TYPE_LABELS, type Recipe } from '../lib/useRecipes'
+import { useRecipes, getMealTypeLabels, MEAL_TYPES, type Recipe } from '../lib/useRecipes'
 import { RecipePickerModal } from '../components/RecipePickerModal'
 import { useFoodSearch, type FoodSearchResult } from '../lib/useFoodSearch'
 import { lookupFoodByBarcode } from '../lib/lookupFoodByBarcode'
@@ -31,13 +31,6 @@ function todayLabel(): string {
     new Date(),
   )
 }
-
-const SLOTS: { key: MealSlot; label: string }[] = [
-  { key: 'fruehstueck', label: MEAL_TYPE_LABELS.fruehstueck },
-  { key: 'mittag', label: MEAL_TYPE_LABELS.mittag },
-  { key: 'abend', label: MEAL_TYPE_LABELS.abend },
-  { key: 'snack', label: MEAL_TYPE_LABELS.snack },
-]
 
 function nextDays(t: (key: string) => string): { iso: string; label: string }[] {
   const today = new Date()
@@ -308,6 +301,8 @@ function RecipeAddForm({
 }) {
   const { t } = useTranslation()
   const days = nextDays(t)
+  const mealTypeLabels = getMealTypeLabels(t)
+  const SLOTS: { key: MealSlot; label: string }[] = MEAL_TYPES.map((key) => ({ key, label: mealTypeLabels[key] }))
   const [pickerOpen, setPickerOpen] = useState(false)
   const [recipe, setRecipe] = useState<Recipe | null>(null)
   const [date, setDate] = useState(days[0].iso)

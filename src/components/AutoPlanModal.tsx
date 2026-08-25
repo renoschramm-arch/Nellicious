@@ -1,5 +1,6 @@
 import { useState } from 'react'
-import { MEAL_TYPES, MEAL_TYPE_LABELS } from '../lib/useRecipes'
+import { useTranslation } from 'react-i18next'
+import { MEAL_TYPES, getMealTypeLabels } from '../lib/useRecipes'
 import type { MealSlot } from '../lib/useMealPlan'
 import type { AutoPlanSlot } from '../lib/autoPlan'
 import { formatDayLabel } from '../lib/week'
@@ -11,6 +12,8 @@ export function AutoPlanModal({
   onRun: (slots: MealSlot[], overwrite: boolean) => Promise<AutoPlanSlot[]>
   onClose: () => void
 }) {
+  const { t } = useTranslation()
+  const mealTypeLabels = getMealTypeLabels(t)
   const [selectedSlots, setSelectedSlots] = useState<Set<MealSlot>>(new Set(MEAL_TYPES))
   const [overwrite, setOverwrite] = useState(false)
   const [running, setRunning] = useState(false)
@@ -42,10 +45,10 @@ export function AutoPlanModal({
       >
         <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
           <div className="min-w-0">
-            <h2 className="font-display font-semibold text-lg">🪄 Woche automatisch planen</h2>
-            <p className="text-xs text-text-muted">Passend zu deinem Ernährungstyp und Kalorienziel</p>
+            <h2 className="font-display font-semibold text-lg">{t('autoPlan.title')}</h2>
+            <p className="text-xs text-text-muted">{t('autoPlan.subtitle')}</p>
           </div>
-          <button onClick={onClose} className="shrink-0 text-text-muted hover:text-text text-sm" aria-label="Schließen">
+          <button onClick={onClose} className="shrink-0 text-text-muted hover:text-text text-sm" aria-label={t('autoPlan.close')}>
             ✕
           </button>
         </div>
@@ -54,7 +57,7 @@ export function AutoPlanModal({
           {!result ? (
             <>
               <div>
-                <p className="text-xs font-mono uppercase tracking-wide text-text-muted mb-2">Mahlzeiten</p>
+                <p className="text-xs font-mono uppercase tracking-wide text-text-muted mb-2">{t('autoPlan.meals')}</p>
                 <div className="grid grid-cols-4 gap-1.5">
                   {MEAL_TYPES.map((slot) => {
                     const active = selectedSlots.has(slot)
@@ -69,7 +72,7 @@ export function AutoPlanModal({
                             : 'bg-surface-2 border border-border text-text-muted hover:border-primary'
                         }`}
                       >
-                        {MEAL_TYPE_LABELS[slot]}
+                        {mealTypeLabels[slot]}
                       </button>
                     )
                   })}
@@ -83,7 +86,7 @@ export function AutoPlanModal({
                   onChange={(e) => setOverwrite(e.target.checked)}
                   className="w-5 h-5 shrink-0 accent-[var(--primary)]"
                 />
-                Bereits geplante Mahlzeiten überschreiben
+                {t('autoPlan.overwrite')}
               </label>
 
               <button
@@ -92,23 +95,23 @@ export function AutoPlanModal({
                 disabled={selectedSlots.size === 0 || running}
                 className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm disabled:opacity-60"
               >
-                {running ? 'Plan wird erstellt …' : 'Plan erstellen'}
+                {running ? t('autoPlan.running') : t('autoPlan.createPlan')}
               </button>
             </>
           ) : (
             <>
               <p className="text-sm">
                 {result.filled - result.unfilled.length > 0
-                  ? `${result.filled - result.unfilled.length} Mahlzeit${result.filled - result.unfilled.length === 1 ? '' : 'en'} eingeplant.`
-                  : 'Keine Mahlzeiten eingeplant.'}
+                  ? t('autoPlan.filled', { count: result.filled - result.unfilled.length })
+                  : t('autoPlan.noneFilled')}
               </p>
               {result.unfilled.length > 0 && (
                 <div className="bg-honey/10 border border-honey/40 rounded-xl p-3 text-xs text-text-muted flex flex-col gap-1">
-                  <span className="font-medium text-text">Für folgende Slots wurde kein passendes Rezept gefunden:</span>
+                  <span className="font-medium text-text">{t('autoPlan.noneFoundFor')}</span>
                   <ul className="list-disc list-inside">
                     {result.unfilled.map((u) => (
                       <li key={`${u.date}-${u.slot}`}>
-                        {formatDayLabel(new Date(`${u.date}T00:00:00`))} · {MEAL_TYPE_LABELS[u.slot]}
+                        {formatDayLabel(new Date(`${u.date}T00:00:00`))} · {mealTypeLabels[u.slot]}
                       </li>
                     ))}
                   </ul>
@@ -119,7 +122,7 @@ export function AutoPlanModal({
                 onClick={onClose}
                 className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
               >
-                Fertig
+                {t('autoPlan.done')}
               </button>
             </>
           )}

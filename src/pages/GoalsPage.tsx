@@ -1,16 +1,19 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useProfile } from '../lib/useProfile'
-import { GOALS, GOAL_LABELS, type Goal } from '../lib/useProfile'
+import { GOALS, getGoalLabels, type Goal } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
 
 export function GoalsPage() {
+  const { t } = useTranslation()
   const { profile, updateProfile } = useProfile()
   const { logs: weightLogs } = useWeightLogs()
   const [goal, setGoal] = useState<Goal | null>(null)
   const [goalNote, setGoalNote] = useState('')
   const [targetWeight, setTargetWeight] = useState('')
   const [saved, setSaved] = useState(false)
+  const goalLabels = getGoalLabels(t)
 
   useEffect(() => {
     if (!profile) return
@@ -28,13 +31,13 @@ export function GoalsPage() {
   const targetWarning = useMemo(() => {
     if (parsedTarget == null || latestWeight == null) return null
     if (goal === 'abnehmen' && parsedTarget >= latestWeight) {
-      return 'Dein Wunschgewicht liegt nicht unter deinem aktuellen Gewicht — passt das zu "Abnehmen"?'
+      return t('goals.warningBelowNotLose')
     }
     if ((goal === 'zunehmen' || goal === 'muskelaufbau') && parsedTarget <= latestWeight) {
-      return `Dein Wunschgewicht liegt nicht über deinem aktuellen Gewicht — passt das zu "${GOAL_LABELS[goal]}"?`
+      return t('goals.warningAboveNotGain', { goal: goalLabels[goal] })
     }
     return null
-  }, [goal, parsedTarget, latestWeight])
+  }, [goal, parsedTarget, latestWeight, t, goalLabels])
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -50,17 +53,17 @@ export function GoalsPage() {
           to="/mehr"
           className="bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
-          ‹ Zurück
+          {t('common.back')}
         </Link>
       </div>
-      <h1 className="font-display font-bold text-2xl">Ziele</h1>
+      <h1 className="font-display font-bold text-2xl">{t('goals.title')}</h1>
 
       <form
         onSubmit={handleSubmit}
         className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-5"
       >
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium">Was möchtest du erreichen?</span>
+          <span className="text-sm font-medium">{t('goals.whatToAchieve')}</span>
           <div className="flex flex-wrap gap-1.5">
             {GOALS.map((value) => (
               <button
@@ -73,32 +76,32 @@ export function GoalsPage() {
                     : 'bg-surface-2 border border-border text-text-muted hover:text-text'
                 }`}
               >
-                {GOAL_LABELS[value]}
+                {goalLabels[value]}
               </button>
             ))}
           </div>
         </div>
 
         <label className="flex flex-col gap-1 text-sm">
-          Wunschgewicht in kg (optional)
+          {t('goals.targetWeight')}
           <input
             type="text"
             inputMode="decimal"
             value={targetWeight}
             onChange={(e) => setTargetWeight(e.target.value)}
-            placeholder="z. B. 70,0"
+            placeholder={t('goals.targetWeightPlaceholder')}
             className="rounded-lg border border-border bg-bg px-3 py-2 font-mono outline-none focus:border-primary"
           />
           {targetWarning && <span className="text-xs text-honey mt-0.5">{targetWarning}</span>}
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
-          Notiz (optional)
+          {t('goals.note')}
           <textarea
             value={goalNote}
             onChange={(e) => setGoalNote(e.target.value)}
             rows={3}
-            placeholder="z. B. bis zur Hochzeit im Sommer"
+            placeholder={t('goals.notePlaceholder')}
             className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary resize-none"
           />
         </label>
@@ -107,7 +110,7 @@ export function GoalsPage() {
           type="submit"
           className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
         >
-          {saved ? 'Gespeichert ✓' : 'Speichern'}
+          {saved ? t('goals.saved') : t('goals.save')}
         </button>
       </form>
     </div>

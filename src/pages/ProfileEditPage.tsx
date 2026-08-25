@@ -1,17 +1,18 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { useProfile } from '../lib/useProfile'
 import {
   ACTIVITY_LEVELS,
-  ACTIVITY_LEVEL_LABELS,
+  getActivityLevelLabels,
   GENDERS,
-  GENDER_LABELS,
+  getGenderLabels,
   INTOLERANCES,
-  INTOLERANCE_LABELS,
-  INTOLERANCE_DESCRIPTIONS,
+  getIntoleranceLabels,
+  getIntoleranceDescriptions,
   NUTRITION_TYPES,
-  NUTRITION_TYPE_LABELS,
-  NUTRITION_TYPE_DESCRIPTIONS,
+  getNutritionTypeLabels,
+  getNutritionTypeDescriptions,
   type ActivityLevel,
   type Gender,
   type NutritionType,
@@ -19,6 +20,7 @@ import {
 import { TagLegend } from '../components/TagLegend'
 
 export function ProfileEditPage() {
+  const { t } = useTranslation()
   const { profile, updateProfile } = useProfile()
   const [displayName, setDisplayName] = useState('')
   const [age, setAge] = useState('')
@@ -28,6 +30,13 @@ export function ProfileEditPage() {
   const [intolerances, setIntolerances] = useState<string[]>([])
   const [activityLevel, setActivityLevel] = useState<ActivityLevel | null>(null)
   const [saved, setSaved] = useState(false)
+
+  const genderLabels = getGenderLabels(t)
+  const nutritionTypeLabels = getNutritionTypeLabels(t)
+  const nutritionTypeDescriptions = getNutritionTypeDescriptions(t)
+  const intoleranceLabels = getIntoleranceLabels(t)
+  const intoleranceDescriptions = getIntoleranceDescriptions(t)
+  const activityLevelLabels = getActivityLevelLabels(t)
 
   useEffect(() => {
     if (!profile) return
@@ -68,53 +77,53 @@ export function ProfileEditPage() {
           to="/mehr"
           className="bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
-          ‹ Zurück
+          {t('common.back')}
         </Link>
       </div>
-      <h1 className="font-display font-bold text-2xl">Mein Profil</h1>
+      <h1 className="font-display font-bold text-2xl">{t('profileEdit.title')}</h1>
 
       <form
         onSubmit={handleSubmit}
         className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-5"
       >
         <label className="flex flex-col gap-1 text-sm">
-          Name
+          {t('profileEdit.name')}
           <input
             type="text"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
-            placeholder="Dein Name"
+            placeholder={t('profileEdit.namePlaceholder')}
             className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary"
           />
         </label>
 
         <div className="grid grid-cols-2 gap-3">
           <label className="flex flex-col gap-1 text-sm">
-            Alter
+            {t('profileEdit.age')}
             <input
               type="number"
               min={0}
               value={age}
               onChange={(e) => setAge(e.target.value)}
-              placeholder="Jahre"
+              placeholder={t('profileEdit.ageUnit')}
               className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary"
             />
           </label>
           <label className="flex flex-col gap-1 text-sm">
-            Größe
+            {t('profileEdit.height')}
             <input
               type="number"
               min={0}
               value={heightCm}
               onChange={(e) => setHeightCm(e.target.value)}
-              placeholder="cm"
+              placeholder={t('profileEdit.heightUnit')}
               className="rounded-lg border border-border bg-bg px-3 py-2 outline-none focus:border-primary"
             />
           </label>
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium">Geschlecht</span>
+          <span className="text-sm font-medium">{t('profileEdit.gender')}</span>
           <div className="flex flex-wrap gap-1.5">
             {GENDERS.map((value) => (
               <button
@@ -127,14 +136,14 @@ export function ProfileEditPage() {
                     : 'bg-surface-2 border border-border text-text-muted hover:text-text'
                 }`}
               >
-                {GENDER_LABELS[value]}
+                {genderLabels[value]}
               </button>
             ))}
           </div>
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium">Ernährungstyp</span>
+          <span className="text-sm font-medium">{t('profileEdit.nutritionType')}</span>
           <div className="flex flex-wrap gap-1.5">
             {NUTRITION_TYPES.map((type) => (
               <button
@@ -147,20 +156,20 @@ export function ProfileEditPage() {
                     : 'bg-surface-2 border border-border text-text-muted hover:text-text'
                 }`}
               >
-                {NUTRITION_TYPE_LABELS[type]}
+                {nutritionTypeLabels[type]}
               </button>
             ))}
           </div>
           <TagLegend
             items={NUTRITION_TYPES.map((type) => ({
-              label: NUTRITION_TYPE_LABELS[type],
-              description: NUTRITION_TYPE_DESCRIPTIONS[type],
+              label: nutritionTypeLabels[type],
+              description: nutritionTypeDescriptions[type],
             }))}
           />
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium">Unverträglichkeiten</span>
+          <span className="text-sm font-medium">{t('profileEdit.intolerances')}</span>
           <div className="flex flex-wrap gap-1.5">
             {INTOLERANCES.map((value) => (
               <button
@@ -173,20 +182,20 @@ export function ProfileEditPage() {
                     : 'bg-surface-2 border border-border text-text-muted hover:text-text'
                 }`}
               >
-                {INTOLERANCE_LABELS[value]}
+                {intoleranceLabels[value]}
               </button>
             ))}
           </div>
           <TagLegend
             items={INTOLERANCES.map((value) => ({
-              label: INTOLERANCE_LABELS[value],
-              description: INTOLERANCE_DESCRIPTIONS[value],
+              label: intoleranceLabels[value],
+              description: intoleranceDescriptions[value],
             }))}
           />
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-sm font-medium">Fitness-/Aktivitätslevel</span>
+          <span className="text-sm font-medium">{t('profileEdit.activityLevel')}</span>
           <div className="flex flex-col gap-1.5">
             {ACTIVITY_LEVELS.map((level) => (
               <button
@@ -199,7 +208,7 @@ export function ProfileEditPage() {
                     : 'bg-surface-2 border border-border text-text-muted hover:text-text'
                 }`}
               >
-                {ACTIVITY_LEVEL_LABELS[level]}
+                {activityLevelLabels[level]}
               </button>
             ))}
           </div>
@@ -209,7 +218,7 @@ export function ProfileEditPage() {
           type="submit"
           className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
         >
-          {saved ? 'Gespeichert ✓' : 'Speichern'}
+          {saved ? t('profileEdit.saved') : t('profileEdit.save')}
         </button>
       </form>
     </div>
