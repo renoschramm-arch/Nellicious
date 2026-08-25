@@ -269,7 +269,7 @@ export function PlannerPage() {
       <button
         type="button"
         onClick={openMultiAssign}
-        className="w-full flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm font-medium text-text-muted hover:border-primary hover:text-text transition-colors"
+        className="w-full flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/90 backdrop-blur-sm py-2.5 text-sm font-medium text-text hover:border-primary transition-colors"
       >
         🍽️ Rezept mehrfach einplanen{!hasPremium && ' 🔒'}
       </button>
