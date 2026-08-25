@@ -5,12 +5,16 @@ import { useMealPlan, type MealSlot } from '../lib/useMealPlan'
 import { useRecipes, type Recipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
 import { useShoppingListStatus, type IngredientRef } from '../lib/useShoppingListStatus'
+import { useProfile } from '../lib/useProfile'
+import { useFavorites } from '../lib/useFavorites'
 import { RecipePickerModal } from '../components/RecipePickerModal'
 import { MultiAssignModal, type Selection } from '../components/MultiAssignModal'
+import { AutoPlanModal } from '../components/AutoPlanModal'
 import { PremiumModal } from '../components/PremiumModal'
 import { usePremium } from '../lib/usePremium'
 import { addDays, formatDayLabel, formatWeekRange, getMonday, toISODate } from '../lib/week'
 import { scaleIngredient } from '../lib/scaleIngredient'
+import { generateAutoPlan, type AutoPlanSlot } from '../lib/autoPlan'
 
 interface MultiAssignNavState {
   multiAssignRecipeId: string
@@ -52,6 +56,8 @@ export function PlannerPage() {
   const { entries, setEntry, removeEntry } = useMealPlan(weekStartISO, weekEndISO)
   const { recipes } = useRecipes()
   const { logs: todayLogs, addLog, removeLog } = useMealLogs()
+  const { profile } = useProfile()
+  const { favoriteIds } = useFavorites()
   const recipeById = useMemo(() => new Map(recipes.map((r) => [r.id, r])), [recipes])
 
   const entryIds = useMemo(() => entries.map((e) => e.id), [entries])
@@ -64,6 +70,7 @@ export function PlannerPage() {
   const [multiPickerOpen, setMultiPickerOpen] = useState(false)
   const [multiAssignRecipe, setMultiAssignRecipe] = useState<Recipe | null>(null)
   const [multiAssignSuggestedCount, setMultiAssignSuggestedCount] = useState<number | undefined>(undefined)
+  const [autoPlanOpen, setAutoPlanOpen] = useState(false)
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -116,6 +123,29 @@ export function PlannerPage() {
     }
     setMultiAssignRecipe(null)
     setMultiAssignSuggestedCount(undefined)
+  }
+
+  function openAutoPlan() {
+    if (!hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    setAutoPlanOpen(true)
+  }
+
+  async function handleAutoPlan(slots: MealSlot[], overwrite: boolean): Promise<AutoPlanSlot[]> {
+    if (!profile) return []
+    const { assignments, unfilled } = generateAutoPlan(
+      recipes,
+      profile,
+      favoriteIds,
+      (dateISO, slot) => entryFor(dateISO, slot) != null,
+      { days, slots, overwrite },
+    )
+    for (const { date, slot, recipe } of assignments) {
+      await selectRecipe(date, slot, recipe)
+    }
+    return unfilled
   }
 
   async function removePlanEntry(dateISO: string, entryId: string, recipeId: string) {
@@ -266,13 +296,22 @@ export function PlannerPage() {
         </div>
       </div>
 
-      <button
-        type="button"
-        onClick={openMultiAssign}
-        className="w-full flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/90 backdrop-blur-sm py-2.5 text-sm font-medium text-text hover:border-primary transition-colors"
-      >
-        🍽️ Rezept mehrfach einplanen{!hasPremium && ' 🔒'}
-      </button>
+      <div className="flex flex-col sm:flex-row gap-2">
+        <button
+          type="button"
+          onClick={openMultiAssign}
+          className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/90 backdrop-blur-sm py-2.5 text-sm font-medium text-text hover:border-primary transition-colors"
+        >
+          🍽️ Rezept mehrfach einplanen{!hasPremium && ' 🔒'}
+        </button>
+        <button
+          type="button"
+          onClick={openAutoPlan}
+          className="flex-1 flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/90 backdrop-blur-sm py-2.5 text-sm font-medium text-text hover:border-primary transition-colors"
+        >
+          🪄 Woche automatisch planen{!hasPremium && ' 🔒'}
+        </button>
+      </div>
 
       <div className="flex flex-col gap-3">
         {days.map((day) => {
@@ -438,6 +477,8 @@ export function PlannerPage() {
           }}
         />
       )}
+
+      {autoPlanOpen && <AutoPlanModal onRun={handleAutoPlan} onClose={() => setAutoPlanOpen(false)} />}
 
       {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
     </div>

@@ -8,6 +8,7 @@ const PREMIUM_FEATURES = [
   '📤 Datenexport als CSV oder PDF-Bericht',
   '🍽️ Rezepte auf beliebig viele Portionen hochskalieren',
   '📈 Auswertung: Gewichts-, Kalorien- und Fastentrends über Wochen und Monate',
+  '🪄 Automatische Wochenplanung passend zu Ernährungstyp und Kalorienziel',
 ]
 
 const MONTHLY_PRICE_EUR = 3.99
