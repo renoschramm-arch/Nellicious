@@ -29,6 +29,7 @@ export function RecipeNewPage() {
         free_of: [],
         is_shared: false,
         ...values,
+        servings: values.servings ?? 1,
       })
     } catch (err) {
       setImportError(err instanceof Error ? err.message : 'Import fehlgeschlagen.')

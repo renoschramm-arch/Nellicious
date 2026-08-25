@@ -124,6 +124,7 @@ export interface Database {
           diet_tags: string[]
           free_of: string[]
           is_shared: boolean
+          servings: number
           created_at: string
         }
         Insert: {
@@ -141,6 +142,7 @@ export interface Database {
           diet_tags?: string[]
           free_of?: string[]
           is_shared?: boolean
+          servings?: number
         }
         Update: Partial<{
           title: string
@@ -155,6 +157,7 @@ export interface Database {
           diet_tags: string[]
           free_of: string[]
           is_shared: boolean
+          servings: number
         }>
         Relationships: []
       }

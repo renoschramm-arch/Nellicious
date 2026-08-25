@@ -8,6 +8,7 @@ import { useRecipeNote } from '../lib/useRecipeNote'
 import { useAuth } from '../lib/AuthContext'
 import { useWakeLock } from '../lib/useWakeLock'
 import { usePremium } from '../lib/usePremium'
+import { scaleIngredientLine, scaleMacro } from '../lib/recipeScaling'
 import { toISODate } from '../lib/week'
 import { RecipeForm } from '../components/RecipeForm'
 import { PremiumModal } from '../components/PremiumModal'
@@ -32,15 +33,30 @@ export function RecipeDetailPage() {
   const [noteSaved, setNoteSaved] = useState(false)
   const [sharing, setSharing] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [targetServings, setTargetServings] = useState(1)
 
   useEffect(() => {
     setNoteInput(note)
   }, [note])
 
+  useEffect(() => {
+    if (recipe) setTargetServings(recipe.servings)
+  }, [recipe])
+
   if (loading) return <p className="text-text-muted text-sm">Lädt …</p>
   if (!recipe) return <p className="text-text-muted text-sm">Rezept nicht gefunden.</p>
 
   const isOwner = !!user && recipe.owner_id === user.id
+  const baseServings = recipe.servings || 1
+  const scaleFactor = targetServings / baseServings
+
+  function applyServings(next: number) {
+    if (!hasPremium) {
+      setShowPremiumModal(true)
+      return
+    }
+    setTargetServings(Math.max(1, Math.round(next)))
+  }
 
   async function handleLog() {
     if (!recipe) return
@@ -184,24 +200,66 @@ export function RecipeDetailPage() {
         </div>
         <h1 className="font-display font-bold text-2xl">{recipe.title}</h1>
         <p className="text-text-muted mt-1">{recipe.description}</p>
+        <p className="text-xs text-text-muted mt-1">
+          Ergibt {recipe.servings} {recipe.servings === 1 ? 'Portion' : 'Portionen'}
+        </p>
       </div>
 
       <div className="grid grid-cols-4 gap-2 font-mono text-sm">
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
           <div className="text-text-muted text-xs uppercase mb-1">kcal</div>
-          {recipe.kcal}
+          {scaleMacro(recipe.kcal, scaleFactor)}
         </div>
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
           <div className="text-text-muted text-xs uppercase mb-1">Protein</div>
-          {recipe.protein_g}g
+          {scaleMacro(recipe.protein_g, scaleFactor)}g
         </div>
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
           <div className="text-text-muted text-xs uppercase mb-1">Kohlenh.</div>
-          {recipe.carbs_g}g
+          {scaleMacro(recipe.carbs_g, scaleFactor)}g
         </div>
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
           <div className="text-text-muted text-xs uppercase mb-1">Fett</div>
-          {recipe.fat_g}g
+          {scaleMacro(recipe.fat_g, scaleFactor)}g
+        </div>
+      </div>
+
+      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+        <h2 className="font-display font-semibold text-lg">
+          🍽️ Portionen skalieren{!hasPremium && ' 🔒'}
+        </h2>
+        <div className="grid grid-cols-4 gap-2">
+          {[1, 2, 4, 7].map((m) => {
+            const portions = baseServings * m
+            const active = targetServings === portions
+            return (
+              <button
+                key={m}
+                type="button"
+                onClick={() => applyServings(portions)}
+                className={`rounded-xl py-2 text-xs font-medium transition-colors ${
+                  active
+                    ? 'bg-primary text-on-primary'
+                    : 'bg-surface-2 border border-border hover:border-primary'
+                }`}
+              >
+                ×{m}
+              </button>
+            )
+          })}
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="number"
+            min={1}
+            value={targetServings}
+            disabled={!hasPremium}
+            onChange={(e) => applyServings(Number(e.target.value) || 1)}
+            className="w-20 rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono outline-none focus:border-primary disabled:opacity-60"
+          />
+          <span className="text-sm text-text-muted">
+            {targetServings === 1 ? 'Portion' : 'Portionen'} für Zutaten &amp; Nährwerte oben
+          </span>
         </div>
       </div>
 
@@ -249,7 +307,7 @@ export function RecipeDetailPage() {
             {recipe.ingredients.map((ing, i) => (
               <li key={i} className="flex items-center gap-2 text-sm">
                 <span className="w-1.5 h-1.5 rounded-full bg-honey shrink-0" />
-                {ing}
+                {scaleIngredientLine(ing, scaleFactor)}
               </li>
             ))}
           </ul>

@@ -6,6 +6,7 @@ const PREMIUM_FEATURES = [
   '⏱️ Intervallfasten-Tracker mit Streak und Verlauf',
   '🎯 Mehrere Ziel-Profile speichern und mit einem Tap wechseln',
   '📤 Datenexport als CSV oder PDF-Bericht',
+  '🍽️ Rezepte auf beliebig viele Portionen hochskalieren',
 ]
 
 const MONTHLY_PRICE_EUR = 3.99
