@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 import { getChangelogHistory } from '../lib/whatsNew'
 import { getIntlLocale } from '../lib/i18n'
 
@@ -9,7 +10,8 @@ function formatEntryDate(iso: string): string {
 }
 
 export function NeuInNelliciousPage() {
-  const history = getChangelogHistory()
+  const { t } = useTranslation()
+  const history = getChangelogHistory(t)
 
   return (
     <div className="flex flex-col gap-6">
@@ -18,10 +20,10 @@ export function NeuInNelliciousPage() {
           to="/mehr"
           className="bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
-          ‹ Zurück
+          {t('common.back')}
         </Link>
       </div>
-      <h1 className="font-display font-bold text-2xl">Neu in Nellicious</h1>
+      <h1 className="font-display font-bold text-2xl">{t('more.changelogLabel')}</h1>
 
       <div className="flex flex-col gap-3">
         {history.map((entry) => (

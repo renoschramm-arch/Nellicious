@@ -365,6 +365,127 @@
     "paragraph2": "Mit einer kleinen Unterstützung hilfst du direkt, dass die Entwicklung weitergeht. Danke, dass du Nellicious nutzt! ❤️",
     "continueToPaypal": "🧡 Weiter zu"
   },
+  "changelog": {
+    "seqNeg4": ["Wochenplan mit automatischer Einkaufsliste eingeführt (nach Rezept gruppiert oder als flache Liste, Mengen skalieren je nach Planhäufigkeit)"],
+    "seqNeg3": [
+      "Nellicious startet: Ernährungs-Tracking, Rezepte und Supabase-Anbindung",
+      "28 neue, gesunde Rezepte zur Datenbank hinzugefügt",
+      "Rezepte bearbeiten und nach Mahlzeitenart filtern",
+      "Eigene Rezepte über den \"Neu\"-Button anlegen",
+      "Hell/Dunkel/System-Design-Umschalter",
+      "Mobile Navigation (Tab-Leiste unten) eingeführt",
+      "Kopfzeile bleibt beim Scrollen sichtbar"
+    ],
+    "seqNeg2": [
+      "Menü \"Profil\" zu \"Mehr\" umgebaut, mit Untermenü für Profil, Ziele, Tagesziele, Darstellung und Info",
+      "Verlauf-Tab: Gewichts- und Wassertracking, Profil um Alter/Größe/Geschlecht erweitert",
+      "Tagesziel (kcal) automatisch nach der Mifflin-St-Jeor-Formel berechnen",
+      "Rezepte nach Ernährungstyp und Unverträglichkeit kennzeichnen und filtern",
+      "Rezepte per Link importieren"
+    ],
+    "seqNeg1": ["Rezepte als Favoriten markieren"],
+    "seq0": [
+      "Lebensmittelsuche (inkl. 200 kuratierten Lebensmitteln) beim manuellen Essenseintrag und in Rezeptzutaten",
+      "Barcode-Scanner: Lebensmittel per Kamera erfassen",
+      "Eigene Rezepte lassen sich löschen",
+      "Persönliche Begrüßung mit Namen und Motivationsspruch beim App-Start"
+    ],
+    "seq1": [
+      "20 neue, gesunde Abendessen-Rezepte in der Datenbank",
+      "Neu angelegte Rezepte öffnen direkt die Detailseite"
+    ],
+    "seq2": ["🍳 Kochmodus in der Rezeptansicht: hält den Bildschirm wach, solange du kochst"],
+    "seq3": ["Abendessen-Rezepte mit mehr Zutaten und ausführlicherer Zubereitung"],
+    "seq4": ["Wassertracker: eigene Menge eintragen und die drei Schnellauswahl-Mengen selbst festlegen"],
+    "seq5": [
+      "Wunschgewicht im Profil eintragen — der Verlauf zeigt den Restweg dorthin",
+      "Wasser-Karte aufgeräumt: ein Einstellungs-Button für Ziel und Schnellauswahl statt mehrerer Zeilen",
+      "Wochenplan: größere, leichter antippbare Kacheln für Mahlzeiten und Einkaufsliste",
+      "Darstellung: Schriftgröße lässt sich jetzt auf \"Groß\" stellen"
+    ],
+    "seq6": ["Unterstützungs-Hinweis auf der Info-Seite ergänzt"],
+    "seq7": [
+      "Alle Rezepte: mehr Zutaten und ausführlichere Zubereitung",
+      "Verlauf: Kalorien-/Makro-Verlauf über die letzte Woche ergänzt",
+      "Streak-Zähler: aufeinanderfolgende Log-Tage auf der Heute-Seite",
+      "Rezept-Notizen: eigene Notiz pro Rezept"
+    ],
+    "seq8": [
+      "20 Salat-Rezepte zur Rezeptdatenbank hinzugefügt",
+      "Eingabefelder zoomen auf dem Handy nicht mehr automatisch beim Tippen"
+    ],
+    "seq9": ["20 gesunde Backrezepte zur Rezeptdatenbank hinzugefügt"],
+    "seq10": [
+      "⏱️ Neu: Intervallfasten-Tracker mit Ring, Streak und 7-Tage-Verlauf",
+      "Fasten-Protokolle (16:8, 18:6, 20:4, OMAD) selbst anpassbar",
+      "Fastenzeiten rückwirkend eintragen und im Nachhinein bearbeiten",
+      "Automatischer Countdown bis zum Fastenende bzw. bis zum nächsten Fastenbeginn",
+      "Erklärungen zu den vier Fastenphasen (Verdauung, Fettverbrennung, Ketose, Autophagie)",
+      "Fastenring auch auf der Heute-Seite sichtbar",
+      "Intervallfasten lässt sich bei Bedarf komplett ausschalten"
+    ],
+    "seq11": [
+      "Rezeptdatenbank auf 146 Rezepte erweitert, u. a. 20 weitere Fisch- und Meeresfrüchte-Gerichte",
+      "Lebensmittelsuche jetzt mit 681 kuratierten Lebensmitteln",
+      "Rezeptsuche durchsucht jetzt auch Zutaten und Beschreibung — \"Fisch\" findet z. B. alle Fischrezepte"
+    ],
+    "seq12": [
+      "Neue Startseite stellt Nellicious neuen Besucher:innen vor, bevor sie sich anmelden",
+      "Passwort vergessen: Link zum Zurücksetzen per E-Mail",
+      "Impressum, Datenschutzerklärung und Widerrufsbelehrung ergänzt"
+    ],
+    "seq13": ["↗ Rezepte teilen: Rezept per Link verschicken, auch ohne Nellicious-Konto abrufbar"],
+    "seq14": ["9 neue Suppenrezepte aus der indischen/asiatischen Küche (u. a. Tom Kha Gai, Pho Ga, Ramen, Laksa), Miso-Suppe überarbeitet"],
+    "seq15": [
+      "Landingpage komplett überarbeitet: animierte Funktionsvorschauen, die beim Scrollen durch die App führen",
+      "20 deutsche und regionale Suppen ergänzt — von Kartoffelsuppe und schwäbischer Linsensuppe bis Soljanka, Flädle- und Kerbelsuppe",
+      "Vegetarische Suppen werden jetzt auch beim Filter \"Pescetarisch\" gefunden"
+    ]
+  },
+  "quotes": [
+    "Iss bunt, fühl dich gut.",
+    "Jede gesunde Entscheidung zählt – auch die kleinen.",
+    "Dein Körper ist dein Zuhause. Pflege ihn gut.",
+    "Heute schon etwas Gutes für dich getan?",
+    "Gesund essen ist Selbstliebe auf dem Teller.",
+    "Kleine Schritte, große Wirkung.",
+    "Du musst nicht perfekt sein – nur dranbleiben.",
+    "Ein guter Tag beginnt mit einer guten Entscheidung.",
+    "Nimm dir Zeit für dich – du bist es wert.",
+    "Gemüse ist kein Kompromiss, sondern ein Geschenk.",
+    "Fortschritt schlägt Perfektion.",
+    "Höre auf deinen Körper – er weiß, was er braucht.",
+    "Wasser trinken, tief durchatmen, weitermachen.",
+    "Du bist, was du regelmäßig tust – nicht, was du einmal isst.",
+    "Jede Mahlzeit ist eine neue Chance.",
+    "Balance statt Verzicht.",
+    "Dein „Ich schaffe das\" ist stärker als jede Ausrede.",
+    "Iss, um zu leben – und lebe mit Freude.",
+    "Gute Gewohnheiten sind kleine, tägliche Siege.",
+    "Sei stolz auf jeden Schritt, den du gehst.",
+    "Energie kommt von innen – füttere sie richtig.",
+    "Heute ist ein guter Tag, um auf dich zu achten.",
+    "Genuss und Gesundheit schließen sich nicht aus.",
+    "Du wächst mit jeder bewussten Entscheidung.",
+    "Selbstfürsorge ist keine Ausnahme, sondern Routine.",
+    "Ein Tag nach dem anderen – du machst das großartig.",
+    "Dein Wohlbefinden beginnt mit dem ersten Bissen.",
+    "Positives Denken beginnt im Kopf, gute Energie im Bauch.",
+    "Sei geduldig mit dir – Veränderung braucht Zeit.",
+    "Dein Weg, dein Tempo, dein Erfolg."
+  ],
+  "fastingPhases": {
+    "rangeFixed": "{{from}}–{{to}} Std.",
+    "rangeFrom": "ab {{from}} Std.",
+    "phase1Title": "Verdauungsphase",
+    "phase1Text": "Die letzte Mahlzeit wird noch verdaut. Insulin ist erhöht, der Körper deckt seinen Energiebedarf hauptsächlich über Blutzucker.",
+    "phase2Title": "Fettverbrennung startet",
+    "phase2Text": "Der Insulinspiegel sinkt, die Glykogenspeicher in Leber und Muskeln werden zunehmend angezapft. Erste leichte Fettmobilisierung beginnt.",
+    "phase3Title": "Ketose setzt ein",
+    "phase3Text": "Die Glykogenreserven gehen zur Neige, die Fettverbrennung nimmt spürbar zu und die Leber beginnt, Ketonkörper zu bilden.",
+    "phase4Title": "Autophagie",
+    "phase4Text": "Der Ketonspiegel steigt weiter, das Gehirn nutzt zunehmend Ketone als Energiequelle. Zelluläre Reinigungsprozesse werden aktiviert."
+  },
   "fastingPhaseModal": {
     "title": "Was im Körper passiert",
     "close": "Schließen",

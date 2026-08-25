@@ -832,7 +832,7 @@ export function LandingPage() {
   const { t } = useTranslation()
   const STATS = getStats(t)
   const [stuck, setStuck] = useState(false)
-  const recentChangelog = getChangelogHistory().slice(0, 2)
+  const recentChangelog = getChangelogHistory(t).slice(0, 2)
 
   useScrollEffect(
     useCallback(() => {

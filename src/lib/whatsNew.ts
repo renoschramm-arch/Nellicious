@@ -1,9 +1,11 @@
+import type { TFunction } from 'i18next'
+
 export const APP_VERSION = '1.41'
 
 interface ChangelogEntry {
   seq: number
   date: string
-  items: string[]
+  key: string
 }
 
 // Jede neue nutzerspürbare Funktion bekommt hier einen Eintrag mit
@@ -18,186 +20,45 @@ interface ChangelogEntry {
 // Toast-Anzeige aus (immer kleiner als jeder je gespeicherte Stand),
 // dienen also ausschließlich der vollständigen Chronik auf der Seite.
 // Die Einträge ab seq 1 sind unverändert die schon live gewesenen
-// Ankündigungen; ihre seq-Nummern und Texte bleiben stabil, damit
-// bestehende "gesehen"-Stände in localStorage nicht neu ausgelöst werden.
+// Ankündigungen; ihre seq-Nummern und Übersetzungs-Keys bleiben stabil,
+// damit bestehende "gesehen"-Stände in localStorage nicht neu ausgelöst
+// werden. Die eigentlichen Texte liegen in den Sprachdateien unter
+// `changelog.<key>`.
 const CHANGELOG: ChangelogEntry[] = [
-  {
-    seq: -4,
-    date: '2026-08-11',
-    items: [
-      'Wochenplan mit automatischer Einkaufsliste eingeführt (nach Rezept gruppiert oder als flache Liste, Mengen skalieren je nach Planhäufigkeit)',
-    ],
-  },
-  {
-    seq: -3,
-    date: '2026-08-12',
-    items: [
-      'Nellicious startet: Ernährungs-Tracking, Rezepte und Supabase-Anbindung',
-      '28 neue, gesunde Rezepte zur Datenbank hinzugefügt',
-      'Rezepte bearbeiten und nach Mahlzeitenart filtern',
-      'Eigene Rezepte über den "Neu"-Button anlegen',
-      'Hell/Dunkel/System-Design-Umschalter',
-      'Mobile Navigation (Tab-Leiste unten) eingeführt',
-      'Kopfzeile bleibt beim Scrollen sichtbar',
-    ],
-  },
-  {
-    seq: -2,
-    date: '2026-08-13',
-    items: [
-      'Menü "Profil" zu "Mehr" umgebaut, mit Untermenü für Profil, Ziele, Tagesziele, Darstellung und Info',
-      'Verlauf-Tab: Gewichts- und Wassertracking, Profil um Alter/Größe/Geschlecht erweitert',
-      'Tagesziel (kcal) automatisch nach der Mifflin-St-Jeor-Formel berechnen',
-      'Rezepte nach Ernährungstyp und Unverträglichkeit kennzeichnen und filtern',
-      'Rezepte per Link importieren',
-    ],
-  },
-  {
-    seq: -1,
-    date: '2026-08-14',
-    items: ['Rezepte als Favoriten markieren'],
-  },
-  {
-    seq: 0,
-    date: '2026-08-15',
-    items: [
-      'Lebensmittelsuche (inkl. 200 kuratierten Lebensmitteln) beim manuellen Essenseintrag und in Rezeptzutaten',
-      'Barcode-Scanner: Lebensmittel per Kamera erfassen',
-      'Eigene Rezepte lassen sich löschen',
-      'Persönliche Begrüßung mit Namen und Motivationsspruch beim App-Start',
-    ],
-  },
-  {
-    seq: 1,
-    date: '2026-08-16',
-    items: [
-      '20 neue, gesunde Abendessen-Rezepte in der Datenbank',
-      'Neu angelegte Rezepte öffnen direkt die Detailseite',
-    ],
-  },
-  {
-    seq: 2,
-    date: '2026-08-16',
-    items: [
-      '🍳 Kochmodus in der Rezeptansicht: hält den Bildschirm wach, solange du kochst',
-    ],
-  },
-  {
-    seq: 3,
-    date: '2026-08-16',
-    items: [
-      'Abendessen-Rezepte mit mehr Zutaten und ausführlicherer Zubereitung',
-    ],
-  },
-  {
-    seq: 4,
-    date: '2026-08-17',
-    items: [
-      'Wassertracker: eigene Menge eintragen und die drei Schnellauswahl-Mengen selbst festlegen',
-    ],
-  },
-  {
-    seq: 5,
-    date: '2026-08-17',
-    items: [
-      'Wunschgewicht im Profil eintragen — der Verlauf zeigt den Restweg dorthin',
-      'Wasser-Karte aufgeräumt: ein Einstellungs-Button für Ziel und Schnellauswahl statt mehrerer Zeilen',
-      'Wochenplan: größere, leichter antippbare Kacheln für Mahlzeiten und Einkaufsliste',
-      'Darstellung: Schriftgröße lässt sich jetzt auf "Groß" stellen',
-    ],
-  },
-  {
-    seq: 6,
-    date: '2026-08-16',
-    items: ['Unterstützungs-Hinweis auf der Info-Seite ergänzt'],
-  },
-  {
-    seq: 7,
-    date: '2026-08-17',
-    items: [
-      'Alle Rezepte: mehr Zutaten und ausführlichere Zubereitung',
-      'Verlauf: Kalorien-/Makro-Verlauf über die letzte Woche ergänzt',
-      'Streak-Zähler: aufeinanderfolgende Log-Tage auf der Heute-Seite',
-      'Rezept-Notizen: eigene Notiz pro Rezept',
-    ],
-  },
-  {
-    seq: 8,
-    date: '2026-08-18',
-    items: [
-      '20 Salat-Rezepte zur Rezeptdatenbank hinzugefügt',
-      'Eingabefelder zoomen auf dem Handy nicht mehr automatisch beim Tippen',
-    ],
-  },
-  {
-    seq: 9,
-    date: '2026-08-18',
-    items: ['20 gesunde Backrezepte zur Rezeptdatenbank hinzugefügt'],
-  },
-  {
-    seq: 10,
-    date: '2026-08-18',
-    items: [
-      '⏱️ Neu: Intervallfasten-Tracker mit Ring, Streak und 7-Tage-Verlauf',
-      'Fasten-Protokolle (16:8, 18:6, 20:4, OMAD) selbst anpassbar',
-      'Fastenzeiten rückwirkend eintragen und im Nachhinein bearbeiten',
-      'Automatischer Countdown bis zum Fastenende bzw. bis zum nächsten Fastenbeginn',
-      'Erklärungen zu den vier Fastenphasen (Verdauung, Fettverbrennung, Ketose, Autophagie)',
-      'Fastenring auch auf der Heute-Seite sichtbar',
-      'Intervallfasten lässt sich bei Bedarf komplett ausschalten',
-    ],
-  },
-  {
-    seq: 11,
-    date: '2026-08-20',
-    items: [
-      'Rezeptdatenbank auf 146 Rezepte erweitert, u. a. 20 weitere Fisch- und Meeresfrüchte-Gerichte',
-      'Lebensmittelsuche jetzt mit 681 kuratierten Lebensmitteln',
-      'Rezeptsuche durchsucht jetzt auch Zutaten und Beschreibung — „Fisch" findet z. B. alle Fischrezepte',
-    ],
-  },
-  {
-    seq: 12,
-    date: '2026-08-21',
-    items: [
-      'Neue Startseite stellt Nellicious neuen Besucher:innen vor, bevor sie sich anmelden',
-      'Passwort vergessen: Link zum Zurücksetzen per E-Mail',
-      'Impressum, Datenschutzerklärung und Widerrufsbelehrung ergänzt',
-    ],
-  },
-  {
-    seq: 13,
-    date: '2026-08-24',
-    items: [
-      '↗ Rezepte teilen: Rezept per Link verschicken, auch ohne Nellicious-Konto abrufbar',
-    ],
-  },
-  {
-    seq: 14,
-    date: '2026-08-25',
-    items: [
-      '9 neue Suppenrezepte aus der indischen/asiatischen Küche (u. a. Tom Kha Gai, Pho Ga, Ramen, Laksa), Miso-Suppe überarbeitet',
-    ],
-  },
-  {
-    seq: 15,
-    date: '2026-08-25',
-    items: [
-      'Landingpage komplett überarbeitet: animierte Funktionsvorschauen, die beim Scrollen durch die App führen',
-      '20 deutsche und regionale Suppen ergänzt — von Kartoffelsuppe und schwäbischer Linsensuppe bis Soljanka, Flädle- und Kerbelsuppe',
-      'Vegetarische Suppen werden jetzt auch beim Filter „Pescetarisch" gefunden',
-    ],
-  },
+  { seq: -4, date: '2026-08-11', key: 'seqNeg4' },
+  { seq: -3, date: '2026-08-12', key: 'seqNeg3' },
+  { seq: -2, date: '2026-08-13', key: 'seqNeg2' },
+  { seq: -1, date: '2026-08-14', key: 'seqNeg1' },
+  { seq: 0, date: '2026-08-15', key: 'seq0' },
+  { seq: 1, date: '2026-08-16', key: 'seq1' },
+  { seq: 2, date: '2026-08-16', key: 'seq2' },
+  { seq: 3, date: '2026-08-16', key: 'seq3' },
+  { seq: 4, date: '2026-08-17', key: 'seq4' },
+  { seq: 5, date: '2026-08-17', key: 'seq5' },
+  { seq: 6, date: '2026-08-16', key: 'seq6' },
+  { seq: 7, date: '2026-08-17', key: 'seq7' },
+  { seq: 8, date: '2026-08-18', key: 'seq8' },
+  { seq: 9, date: '2026-08-18', key: 'seq9' },
+  { seq: 10, date: '2026-08-18', key: 'seq10' },
+  { seq: 11, date: '2026-08-20', key: 'seq11' },
+  { seq: 12, date: '2026-08-21', key: 'seq12' },
+  { seq: 13, date: '2026-08-24', key: 'seq13' },
+  { seq: 14, date: '2026-08-25', key: 'seq14' },
+  { seq: 15, date: '2026-08-25', key: 'seq15' },
 ]
 
 export const LATEST_CHANGELOG_SEQ = CHANGELOG.reduce((max, entry) => Math.max(max, entry.seq), 0)
 
 const SEEN_SEQ_KEY = 'nellicious-seen-changelog-seq'
 
+function itemsFor(t: TFunction, entry: ChangelogEntry): string[] {
+  return t(`changelog.${entry.key}`, { returnObjects: true }) as string[]
+}
+
 // Liefert die noch ungesehenen Ankündigungen und markiert sie sofort als
 // gesehen. Erstnutzer (kein gespeicherter Stand) bekommen keine
 // rückwirkende Liste vergangener Änderungen angezeigt.
-export function takeUnseenChangelogItems(): string[] {
+export function takeUnseenChangelogItems(t: TFunction): string[] {
   const stored = localStorage.getItem(SEEN_SEQ_KEY)
 
   if (stored === null) {
@@ -209,7 +70,7 @@ export function takeUnseenChangelogItems(): string[] {
   if (!Number.isFinite(seenSeq) || seenSeq >= LATEST_CHANGELOG_SEQ) return []
 
   localStorage.setItem(SEEN_SEQ_KEY, String(LATEST_CHANGELOG_SEQ))
-  return CHANGELOG.filter((entry) => entry.seq > seenSeq).flatMap((entry) => entry.items)
+  return CHANGELOG.filter((entry) => entry.seq > seenSeq).flatMap((entry) => itemsFor(t, entry))
 }
 
 // Vollständige Historie für die "Neu in Nellicious"-Seite unter Mehr —
@@ -218,11 +79,11 @@ export function takeUnseenChangelogItems(): string[] {
 // einer Karte zusammengefasst; die einzelnen seq-Nummern bleiben dafür
 // intern in CHANGELOG unangetastet (wichtig für bestehende
 // "gesehen"-Stände, siehe Kommentar oben).
-export function getChangelogHistory(): { date: string; items: string[] }[] {
+export function getChangelogHistory(t: TFunction): { date: string; items: string[] }[] {
   const byDate = new Map<string, string[]>()
   for (const entry of CHANGELOG) {
     const items = byDate.get(entry.date) ?? []
-    items.push(...entry.items)
+    items.push(...itemsFor(t, entry))
     byDate.set(entry.date, items)
   }
   return Array.from(byDate.entries())
