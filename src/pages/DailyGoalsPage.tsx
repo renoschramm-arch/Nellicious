@@ -137,7 +137,7 @@ export function DailyGoalsPage() {
         </span>
         <div className="flex flex-wrap gap-1.5">
           {goalProfiles.map((gp) => (
-            <div key={gp.id} className="relative group">
+            <div key={gp.id} className="relative">
               <button
                 type="button"
                 onClick={() => handleActivateProfile(gp.id)}
@@ -155,7 +155,7 @@ export function DailyGoalsPage() {
                   type="button"
                   onClick={() => removeProfile(gp.id)}
                   aria-label={`${gp.name} löschen`}
-                  className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-surface border border-border text-text-muted text-[10px] leading-none opacity-0 group-hover:opacity-100 hover:text-danger hover:border-danger transition-opacity flex items-center justify-center"
+                  className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-surface border border-border text-text-muted text-xs leading-none hover:text-danger hover:border-danger transition-colors flex items-center justify-center"
                 >
                   ×
                 </button>
