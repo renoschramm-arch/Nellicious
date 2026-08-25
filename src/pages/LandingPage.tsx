@@ -507,7 +507,11 @@ function PinnedFeatures() {
       ref={sectionRef}
       id="funktionen"
       className="relative"
-      style={{ height: `${PANELS.length * 100}vh` }}
+      // 80vh Sektionshöhe pro Panel statt 100vh: Bei sticky positioning
+      // entspricht der tatsächliche Scrollweg pro Panel-Wechsel
+      // (Sektionshöhe - 1 Viewport) / Panel-Anzahl — vorher ~75vh, jetzt
+      // ~55vh, spürbar knackiger ohne zu abrupt zu werden.
+      style={{ height: `${PANELS.length * 80}vh` }}
     >
       <div className="sticky top-0 h-screen max-w-5xl mx-auto px-6 pt-14 md:pt-0 grid md:grid-cols-2 gap-4 md:gap-16 items-center content-center">
         {/* Fortschritt als senkrechte Punkt-Leiste — gleiche Achse wie die
