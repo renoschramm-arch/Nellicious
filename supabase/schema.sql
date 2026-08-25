@@ -2406,3 +2406,113 @@ from (
 where not exists (
   select 1 from public.recipes r where r.title = v.title
 );
+
+-- 10 Suppenrezepte aus der indischen/asiatischen Küche
+insert into public.recipes (title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+select v.title, v.description, v.kcal, v.protein_g, v.carbs_g, v.fat_g, v.ingredients, v.instructions, v.meal_type, v.diet_tags, v.free_of
+from (
+  values
+    (
+      'Tom Kha Gai',
+      'Thailändische Kokos-Hühnersuppe mit Galgant und Zitronengras.',
+      420, 28, 12, 28,
+      array['300 g Hähnchenbrust', '400 ml Kokosmilch', '400 ml Hühnerbrühe', '3 Scheiben Galgant (oder Ingwer)', '2 Stangen Zitronengras', '4 Kaffirlimettenblätter (oder Limettenschale)', '150 g Champignons', '2 EL Fischsauce', '1 EL Zucker', 'Saft von 1-2 Limetten', '1-2 rote Chilis', 'Koriander zum Garnieren']::text[],
+      'Brühe mit Kokosmilch, Galgant, angequetschtem Zitronengras und Limettenblättern aufkochen und 10 Minuten ziehen lassen. Hähnchenbrust in Streifen schneiden, mit den Champignons zugeben und 8-10 Minuten gar ziehen lassen. Mit Fischsauce, Zucker und Limettensaft abschmecken, Chili zugeben. Aromaten vor dem Servieren entfernen, mit Koriander garnieren.',
+      'mittag',
+      array['omnivore']::text[],
+      array['glutenfrei', 'laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Tom Yum Goong',
+      'Scharf-saure thailändische Garnelensuppe mit Chili und Koriander.',
+      280, 22, 10, 16,
+      array['300 g Garnelen, geschält', '800 ml Hühner- oder Gemüsebrühe', '2 Stangen Zitronengras', '3 Scheiben Galgant', '4 Kaffirlimettenblätter', '200 g Champignons', '3 EL Tom-Yum-Paste', '3 EL Fischsauce', 'Saft von 2 Limetten', '2 Chilis', 'Koriander']::text[],
+      'Brühe mit Zitronengras, Galgant und Limettenblättern aufkochen und 10 Minuten ziehen lassen. Tom-Yum-Paste einrühren, Champignons zugeben und 5 Minuten köcheln. Garnelen zugeben und 3-4 Minuten gar ziehen lassen. Mit Fischsauce und Limettensaft abschmecken, mit Chili und Koriander servieren.',
+      'mittag',
+      array['omnivore', 'pescetarisch']::text[],
+      array['glutenfrei', 'laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Miso-Suppe mit Tofu und Wakame',
+      'Klassische japanische Suppe, schnell gemacht.',
+      150, 9, 8, 8,
+      array['800 ml Wasser', '4 EL Miso-Paste', '1 EL getrocknete Wakame-Algen', '150 g Seidentofu', '2 Frühlingszwiebeln', '1 TL Dashi-Granulat (optional)']::text[],
+      'Wasser (mit Dashi-Granulat, falls verwendet) erhitzen, nicht kochen lassen. Wakame-Algen 5 Minuten einweichen und abtropfen lassen. Tofu würfeln. Etwas heißes Wasser mit der Miso-Paste glattrühren und zur restlichen Brühe geben. Tofu und Wakame zugeben, kurz erwärmen, nicht mehr kochen. Mit Frühlingszwiebelringen bestreut servieren.',
+      'snack',
+      array['omnivore', 'vegetarisch', 'vegan']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei']::text[]
+    ),
+    (
+      'Shoyu-Ramen mit Hühnchen und Ei',
+      'Japanische Nudelsuppe in würziger Sojasauce-Brühe.',
+      520, 32, 55, 18,
+      array['200 g Ramen-Nudeln', '300 g Hähnchenbrust', '1 l Hühnerbrühe', '4 EL Sojasauce', '1 EL Mirin', '1 EL Sesamöl', '2 Knoblauchzehen', '1 Stück Ingwer', '2 Eier', '2 Frühlingszwiebeln', 'Nori-Blätter', 'Sesam']::text[],
+      'Eier 6-7 Minuten kochen für ein wachsweiches Ei, abschrecken und halbieren. Hähnchenbrust in der Brühe mit Knoblauch und Ingwer 15 Minuten gar ziehen lassen, herausnehmen und in Scheiben schneiden. Brühe mit Sojasauce, Mirin und Sesamöl abschmecken. Ramen-Nudeln nach Packungsanweisung kochen und abgießen. Nudeln in Schalen verteilen, mit heißer Brühe übergießen und mit Hähnchen, Ei, Frühlingszwiebeln, Nori und Sesam toppen.',
+      'abend',
+      array['omnivore']::text[],
+      array['laktosefrei', 'nussfrei']::text[]
+    ),
+    (
+      'Pho Ga',
+      'Vietnamesische Reisnudel-Hühnersuppe mit Sternanis und Ingwer.',
+      430, 30, 55, 8,
+      array['200 g Reisnudeln', '400 g Hähnchenschenkel oder -brust', '1,2 l Hühnerbrühe', '1 Zwiebel', '1 Stück Ingwer', '2 Sternanis', '1 Zimtstange', '2 Gewürznelken', '2 EL Fischsauce', 'Frühlingszwiebeln', 'Koriander', 'Limette', 'Sojasprossen', 'Chili']::text[],
+      'Zwiebel und Ingwer halbieren und in einer trockenen Pfanne anrösten, bis sie leicht angebräunt sind. Brühe mit Zwiebel, Ingwer, Sternanis, Zimt und Nelken 20 Minuten köcheln lassen, dann die Gewürze entfernen. Hähnchen in der Brühe 15-20 Minuten gar ziehen lassen, herausnehmen und in Streifen zupfen. Mit Fischsauce abschmecken. Reisnudeln nach Packungsanweisung zubereiten, in Schalen verteilen, mit Hähnchen und heißer Brühe übergießen. Mit Sojasprossen, Koriander, Frühlingszwiebeln, Limette und Chili servieren.',
+      'abend',
+      array['omnivore']::text[],
+      array['glutenfrei', 'laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Laksa',
+      'Malaysische Kokos-Nudelsuppe mit Garnelen und Currypaste.',
+      550, 26, 45, 30,
+      array['200 g Reisnudeln', '300 g Garnelen', '400 ml Kokosmilch', '400 ml Fisch- oder Gemüsebrühe', '3 EL Laksa-Paste (oder rote Currypaste)', '100 g Tofu', '100 g Sojasprossen', '2 EL Fischsauce', '1 EL Zucker', 'Limette', 'Koriander']::text[],
+      'Laksa-Paste in einem Topf kurz anrösten. Mit Kokosmilch und Brühe ablöschen und aufkochen. Tofu würfeln und zugeben, 5 Minuten köcheln lassen. Garnelen zugeben und 3-4 Minuten gar ziehen lassen. Mit Fischsauce, Zucker und Limettensaft abschmecken. Reisnudeln nach Packungsanweisung kochen, in Schalen verteilen, mit der Suppe übergießen und mit Sojasprossen und Koriander toppen.',
+      'abend',
+      array['omnivore', 'pescetarisch']::text[],
+      array['glutenfrei', 'laktosefrei', 'nussfrei', 'eifrei']::text[]
+    ),
+    (
+      'Masoor Dal Shorba',
+      'Indische rote Linsensuppe mit Kreuzkümmel und Koriander.',
+      320, 18, 45, 8,
+      array['200 g rote Linsen', '1 Zwiebel', '2 Knoblauchzehen', '1 Stück Ingwer', '1 Tomate', '1 TL Kreuzkümmel', '1 TL Kurkuma', '1/2 TL Chilipulver', '1 EL Öl', '800 ml Gemüsebrühe', 'Koriander', 'Zitrone']::text[],
+      'Zwiebel, Knoblauch und Ingwer fein hacken. Öl erhitzen, Kreuzkümmel kurz anrösten, dann Zwiebel, Knoblauch und Ingwer glasig dünsten. Kurkuma und Chilipulver zugeben und kurz mitrösten. Gewürfelte Tomate und Linsen zugeben, mit Brühe ablöschen. 20-25 Minuten köcheln, bis die Linsen weich sind. Pürieren oder stückig lassen, mit Salz und Zitronensaft abschmecken und mit Koriander garnieren.',
+      'mittag',
+      array['omnivore', 'vegetarisch', 'vegan']::text[],
+      array['glutenfrei', 'laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Mulligatawny-Suppe',
+      'Indisch-britische Curry-Hühnersuppe mit Apfel und Reis.',
+      380, 24, 35, 14,
+      array['250 g Hähnchenbrust', '1 Zwiebel', '2 Karotten', '1 Apfel', '2 Knoblauchzehen', '2 TL Currypulver', '1 EL Mehl', '800 ml Hühnerbrühe', '100 ml Kokosmilch', '80 g Reis', '1 EL Öl', 'Koriander']::text[],
+      'Zwiebel, Karotten, Apfel und Knoblauch fein würfeln. Öl erhitzen, Zwiebel glasig dünsten, Currypulver zugeben und kurz mitrösten. Karotten, Apfel und Mehl zugeben und kurz anschwitzen. Mit Brühe ablöschen und aufkochen. Hähnchenbrust würfeln, zugeben und 15 Minuten köcheln lassen. Reis separat kochen. Kokosmilch einrühren, mit Salz abschmecken. Mit Reis anrichten und mit Koriander garnieren.',
+      'mittag',
+      array['omnivore']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei', 'sojafrei']::text[]
+    ),
+    (
+      'Hot & Sour Soup',
+      'Chinesische scharf-saure Suppe mit Tofu und Pilzen.',
+      220, 14, 18, 10,
+      array['150 g fester Tofu', '100 g Champignons', '50 g Bambussprossen', '800 ml Gemüsebrühe', '3 EL Sojasauce', '3 EL Reisessig', '1 TL Chiliöl', '1 EL Speisestärke', '1 Ei', '2 Frühlingszwiebeln', 'Weißer Pfeffer']::text[],
+      'Tofu, Champignons und Bambussprossen in Streifen schneiden. Brühe aufkochen, Tofu, Champignons und Bambussprossen zugeben und 5 Minuten köcheln. Mit Sojasauce, Reisessig, Chiliöl und weißem Pfeffer würzen. Speisestärke mit etwas Wasser anrühren und die Suppe damit leicht binden. Verquirltes Ei langsam unter Rühren einlaufen lassen, sodass Eierflocken entstehen. Mit Frühlingszwiebeln bestreut servieren.',
+      'snack',
+      array['omnivore', 'vegetarisch']::text[],
+      array['laktosefrei', 'nussfrei']::text[]
+    ),
+    (
+      'Kimchi-Jjigae',
+      'Koreanischer Kimchi-Tofu-Eintopf, würzig und wärmend.',
+      340, 20, 18, 20,
+      array['300 g Kimchi', '200 g fester Tofu', '1 Zwiebel', '2 Frühlingszwiebeln', '2 Knoblauchzehen', '1 EL Gochujang', '1 EL Sesamöl', '600 ml Gemüsebrühe', '1 TL Zucker']::text[],
+      'Zwiebel und Knoblauch fein würfeln und in Sesamöl andünsten. Kimchi zugeben und 2-3 Minuten mitbraten. Mit Brühe ablöschen, Gochujang und Zucker einrühren und aufkochen. 10 Minuten köcheln lassen. Tofu würfeln, zugeben und 5 Minuten ziehen lassen. Mit Frühlingszwiebeln bestreut servieren.',
+      'abend',
+      array['omnivore', 'vegetarisch']::text[],
+      array['laktosefrei', 'nussfrei', 'eifrei']::text[]
+    )
+) as v(title, description, kcal, protein_g, carbs_g, fat_g, ingredients, instructions, meal_type, diet_tags, free_of)
+where not exists (
+  select 1 from public.recipes r where r.title = v.title
+);
