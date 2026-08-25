@@ -79,7 +79,13 @@ export function RecipeDetailPage() {
 
     const url = `${window.location.origin}${import.meta.env.BASE_URL}rezept-teilen/${recipe.id}`
     const shareText = `${recipe.title} (${recipe.kcal} kcal) — Rezept aus der Nellicious App`
-    if (navigator.share) {
+    // navigator.share existiert zwar auch in Desktop-Chrome (v. a. unter
+    // Windows), der native Teilen-Dialog ist dort aber unzuverlässig und
+    // kann hängen bleiben, ohne sich je aufzulösen. Deshalb nur auf
+    // Touch-Geräten (primär per Finger bedient) verwenden — auf dem
+    // Desktop landet der Link stattdessen direkt in der Zwischenablage.
+    const isTouchDevice = window.matchMedia('(pointer: coarse)').matches
+    if (isTouchDevice && navigator.share) {
       try {
         await navigator.share({ title: recipe.title, text: shareText, url })
       } catch {
