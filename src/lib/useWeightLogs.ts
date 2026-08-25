@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
 import { supabase } from './supabaseClient'
 import { useAuth } from './AuthContext'
+import { toISODate } from './week'
 import type { Database } from './database.types'
 
 export type WeightLog = Database['public']['Tables']['weight_logs']['Row']
@@ -53,4 +54,36 @@ export function useWeightLogs() {
   }
 
   return { logs, loading, upsertWeight, deleteWeight, reload }
+}
+
+// Für Trend-Charts — im Unterschied zu useWeightLogs oben nicht auf die
+// letzten 30 Einträge begrenzt, sondern über einen frei wählbaren Zeitraum
+// von Tagen zurück, aufsteigend sortiert (passend für einen Linienchart).
+export function useWeightLogHistory(days: number) {
+  const { user } = useAuth()
+  const [logs, setLogs] = useState<WeightLog[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const reload = useCallback(async () => {
+    if (!user) return
+    setLoading(true)
+    const end = new Date()
+    const start = new Date()
+    start.setDate(start.getDate() - (days - 1))
+    const { data } = await supabase
+      .from('weight_logs')
+      .select('*')
+      .eq('user_id', user.id)
+      .gte('log_date', toISODate(start))
+      .lte('log_date', toISODate(end))
+      .order('log_date', { ascending: true })
+    setLogs(data ?? [])
+    setLoading(false)
+  }, [user, days])
+
+  useEffect(() => {
+    reload()
+  }, [reload])
+
+  return { logs, loading, reload }
 }

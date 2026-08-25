@@ -17,6 +17,7 @@ import { MorePage } from './pages/MorePage'
 import { ProfileEditPage } from './pages/ProfileEditPage'
 import { GoalsPage } from './pages/GoalsPage'
 import { DailyGoalsPage } from './pages/DailyGoalsPage'
+import { AuswertungPage } from './pages/AuswertungPage'
 import { DarstellungPage } from './pages/DarstellungPage'
 import { InfoPage } from './pages/InfoPage'
 import { NeuInNelliciousPage } from './pages/NeuInNelliciousPage'
@@ -43,6 +44,7 @@ export default function App() {
               <Route path="/mehr/profil" element={<ProfileEditPage />} />
               <Route path="/mehr/ziele" element={<GoalsPage />} />
               <Route path="/mehr/tagesziele" element={<DailyGoalsPage />} />
+              <Route path="/mehr/auswertung" element={<AuswertungPage />} />
               <Route path="/mehr/darstellung" element={<DarstellungPage />} />
               <Route path="/mehr/info" element={<InfoPage />} />
               <Route path="/mehr/neu" element={<NeuInNelliciousPage />} />

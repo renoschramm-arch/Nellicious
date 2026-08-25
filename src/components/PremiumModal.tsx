@@ -7,6 +7,7 @@ const PREMIUM_FEATURES = [
   '🎯 Mehrere Ziel-Profile speichern und mit einem Tap wechseln',
   '📤 Datenexport als CSV oder PDF-Bericht',
   '🍽️ Rezepte auf beliebig viele Portionen hochskalieren',
+  '📈 Auswertung: Gewichts-, Kalorien- und Fastentrends über Wochen und Monate',
 ]
 
 const MONTHLY_PRICE_EUR = 3.99
