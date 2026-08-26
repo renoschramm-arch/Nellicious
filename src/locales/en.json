@@ -450,6 +450,14 @@
       "🌐 Nellicious is now fully bilingual: German and English, switchable under More → Appearance",
       "All 202 recipes (title, description, ingredients, instructions) are now also available in English",
       "New recipe / edit recipe: new section for the optional English translation"
+    ],
+    "seq17": [
+      "🧺 New feature \"What can I cook?\": recipe suggestions based on ingredients you have on hand",
+      "Shopping list: ingredients from multiple recipes are now color-distinguishable",
+      "History: fasting and weight now have their own colors",
+      "Back navigation now remembers your scroll position (e.g. from a recipe back to the list)",
+      "Various readability fixes at large font size (nav bar, nutrition tiles, fasting history)",
+      "Numerous smaller usability improvements from a UX review (clearer labels, delete confirmation dialogs, and more)"
     ]
   },
   "quotes": [
