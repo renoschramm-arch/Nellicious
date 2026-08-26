@@ -22,7 +22,7 @@ export function Layout() {
             <span className="font-display font-bold text-xl">
               Nelli<span className="text-primary">cious</span>
             </span>
-            <span className="text-xs text-text-muted">Gesund ernähren</span>
+            <span className="text-xs text-text-muted">{t('info.tagline')}</span>
           </div>
           <div className="flex items-center gap-1">
             <nav className="hidden sm:flex items-center gap-1">
