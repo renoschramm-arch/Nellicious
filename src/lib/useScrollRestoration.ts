@@ -11,19 +11,41 @@ import { useLocation, useNavigationType } from 'react-router-dom'
 // Link) wird wie gewohnt nach oben gescrollt.
 const scrollPositions = new Map<string, number>()
 
+// Seiten wie die Rezepteliste laden ihre Inhalte asynchron nach (z. B. aus
+// Supabase, ohne Cache) — direkt nach der Navigation ist die Seite oft noch
+// leer/kurz, sodass window.scrollTo() auf die gespeicherte Position gekappt
+// wird. Deshalb wird der Scroll pro Frame erneut gesetzt, bis er greift
+// (die Seite also inzwischen hoch genug gewachsen ist) oder ein Timeout
+// erreicht ist.
+const RESTORE_TIMEOUT_MS = 2000
+
 export function useScrollRestoration() {
   const location = useLocation()
   const navigationType = useNavigationType()
 
   useEffect(() => {
+    let cancelled = false
+    let frame: number
+
     if (navigationType === 'POP') {
-      const saved = scrollPositions.get(location.key)
-      window.scrollTo(0, saved ?? 0)
+      const target = scrollPositions.get(location.key) ?? 0
+      const start = performance.now()
+      const tryRestore = () => {
+        if (cancelled) return
+        window.scrollTo(0, target)
+        const closeEnough = Math.abs(window.scrollY - target) < 2
+        if (!closeEnough && performance.now() - start < RESTORE_TIMEOUT_MS) {
+          frame = requestAnimationFrame(tryRestore)
+        }
+      }
+      tryRestore()
     } else {
       window.scrollTo(0, 0)
     }
 
     return () => {
+      cancelled = true
+      cancelAnimationFrame(frame)
       scrollPositions.set(location.key, window.scrollY)
     }
   }, [location, navigationType])
