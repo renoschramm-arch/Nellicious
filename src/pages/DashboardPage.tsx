@@ -412,10 +412,22 @@ function MealForm({
   const [scannerOpen, setScannerOpen] = useState(false)
   const [scanError, setScanError] = useState<string | null>(null)
 
+  // Sobald Nutzer:innen ein Makrofeld von Hand anpassen (z. B. um einen
+  // Datenbankwert für ein konkretes Produkt zu korrigieren), darf die
+  // Grammzahl das nicht mehr überschreiben — sonst geht die manuelle
+  // Korrektur beim nächsten Tippen in "Menge (g)" stillschweigend verloren.
+  const [macrosEditedManually, setMacrosEditedManually] = useState(false)
+
   function selectFood(food: FoodSearchResult) {
     setSelectedFood(food)
     setFoodQuery(food.name)
     setName(food.name)
+    setMacrosEditedManually(false)
+  }
+
+  function handleMacroChange(setter: (value: string) => void, value: string) {
+    setter(value)
+    setMacrosEditedManually(true)
   }
 
   async function handleBarcodeDetected(barcode: string) {
@@ -430,13 +442,13 @@ function MealForm({
   }
 
   useEffect(() => {
-    if (!selectedFood) return
+    if (!selectedFood || macrosEditedManually) return
     const factor = (Number(grams) || 0) / 100
     setKcal(String(Math.round(selectedFood.kcal100g * factor)))
     setProtein(String(Math.round(selectedFood.protein100g * factor)))
     setCarbs(String(Math.round(selectedFood.carbs100g * factor)))
     setFat(String(Math.round(selectedFood.fat100g * factor)))
-  }, [selectedFood, grams])
+  }, [selectedFood, grams, macrosEditedManually])
 
   function handleSubmit(e: FormEvent) {
     e.preventDefault()
@@ -540,7 +552,7 @@ function MealForm({
             type="number"
             min={0}
             value={kcal}
-            onChange={(e) => setKcal(e.target.value)}
+            onChange={(e) => handleMacroChange(setKcal, e.target.value)}
             className="rounded-lg border border-border bg-bg px-2 py-1.5 font-mono outline-none focus:border-primary"
           />
         </label>
@@ -550,7 +562,7 @@ function MealForm({
             type="number"
             min={0}
             value={protein}
-            onChange={(e) => setProtein(e.target.value)}
+            onChange={(e) => handleMacroChange(setProtein, e.target.value)}
             className="rounded-lg border border-border bg-bg px-2 py-1.5 font-mono outline-none focus:border-primary"
           />
         </label>
@@ -560,7 +572,7 @@ function MealForm({
             type="number"
             min={0}
             value={carbs}
-            onChange={(e) => setCarbs(e.target.value)}
+            onChange={(e) => handleMacroChange(setCarbs, e.target.value)}
             className="rounded-lg border border-border bg-bg px-2 py-1.5 font-mono outline-none focus:border-primary"
           />
         </label>
@@ -570,7 +582,7 @@ function MealForm({
             type="number"
             min={0}
             value={fat}
-            onChange={(e) => setFat(e.target.value)}
+            onChange={(e) => handleMacroChange(setFat, e.target.value)}
             className="rounded-lg border border-border bg-bg px-2 py-1.5 font-mono outline-none focus:border-primary"
           />
         </label>

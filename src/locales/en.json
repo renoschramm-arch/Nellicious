@@ -524,6 +524,7 @@
     "customAmountPlaceholder": "Custom amount in ml",
     "addButton": "+ Add",
     "resetWaterAria": "Reset water for today",
+    "confirmResetWater": "Really reset today's water to 0? This can't be undone.",
     "weightTitle": "⚖️ Weight",
     "targetReached": "Target weight reached 🎉",
     "targetRemaining": "{{diff}} kg to go to {{target}} kg target weight",
@@ -762,7 +763,11 @@
     "logging": "Saving …",
     "logAsMeal": "Log as today's meal",
     "confirmDelete": "Really delete \"{{title}}\"?",
-    "shareText": "{{title}} ({{kcal}} kcal) — recipe from the Nellicious app"
+    "shareText": "{{title}} ({{kcal}} kcal) — recipe from the Nellicious app",
+    "shareHint": "Sharing makes this recipe publicly visible via a link, even to people without a Nellicious account.",
+    "sharedNotice": "🔗 Publicly shared — anyone with the link can see this recipe.",
+    "unshare": "Stop sharing",
+    "unsharing": "Removing …"
   },
   "mealTypes": {
     "fruehstueck": "Breakfast",
@@ -855,7 +860,8 @@
     "perMonth": "per month",
     "yearly": "Yearly",
     "perYear": "per year",
-    "purchaseWip": "Premium purchase is still being built — check back soon."
+    "purchaseWip": "🚧 Premium purchase is still being built — nothing below is clickable yet. Check back soon.",
+    "plannedPricing": "Planned pricing"
   },
   "more": {
     "title": "More",

@@ -35,6 +35,7 @@ export function RecipeDetailPage() {
   const [noteSaved, setNoteSaved] = useState(false)
   const [sharing, setSharing] = useState(false)
   const [linkCopied, setLinkCopied] = useState(false)
+  const [unsharing, setUnsharing] = useState(false)
   const [targetServings, setTargetServings] = useState(1)
   const [servingsInput, setServingsInput] = useState('1')
 
@@ -152,6 +153,12 @@ export function RecipeDetailPage() {
     setSharing(false)
   }
 
+  async function handleUnshare() {
+    setUnsharing(true)
+    await setShared(false)
+    setUnsharing(false)
+  }
+
   async function handleDelete() {
     if (!recipe) return
     if (!window.confirm(t('recipeDetail.confirmDelete', { title: localized.title }))) return
@@ -216,6 +223,23 @@ export function RecipeDetailPage() {
           {linkCopied ? t('recipeDetail.linkCopied') : sharing ? '…' : t('recipeDetail.share')}
         </button>
       </div>
+
+      {isOwner && !recipe.is_shared && (
+        <p className="text-xs text-text-muted -mt-3">{t('recipeDetail.shareHint')}</p>
+      )}
+      {isOwner && recipe.is_shared && (
+        <p className="text-xs text-honey bg-honey/10 border border-honey/30 rounded-xl px-3 py-2.5 -mt-1 flex items-center justify-between gap-2 flex-wrap">
+          <span>{t('recipeDetail.sharedNotice')}</span>
+          <button
+            type="button"
+            onClick={handleUnshare}
+            disabled={unsharing}
+            className="shrink-0 underline font-medium disabled:opacity-60"
+          >
+            {unsharing ? t('recipeDetail.unsharing') : t('recipeDetail.unshare')}
+          </button>
+        </p>
+      )}
 
       <div>
         <div className="flex flex-wrap gap-1.5 mb-2">

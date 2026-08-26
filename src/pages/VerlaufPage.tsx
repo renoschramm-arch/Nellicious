@@ -457,7 +457,9 @@ export function VerlaufPage() {
           </button>
           <button
             type="button"
-            onClick={() => resetWater()}
+            onClick={() => {
+              if (window.confirm(t('verlauf.confirmResetWater'))) resetWater()
+            }}
             aria-label={t('verlauf.resetWaterAria')}
             className="shrink-0 w-[38px] h-[38px] inline-flex items-center justify-center rounded-xl bg-surface-2 border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
           >
