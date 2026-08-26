@@ -450,6 +450,14 @@
       "🌐 Nellicious ist jetzt komplett zweisprachig: Deutsch und Englisch, umschaltbar unter Mehr → Darstellung",
       "Alle 202 Rezepte (Titel, Beschreibung, Zutaten, Zubereitung) sind jetzt auch auf Englisch verfügbar",
       "Rezept anlegen/bearbeiten: neuer Bereich für die optionale englische Übersetzung"
+    ],
+    "seq17": [
+      "🧺 Neues Feature „Was kann ich kochen?\": Rezeptvorschläge anhand vorhandener Zutaten",
+      "Einkaufsliste: Zutaten mehrerer Rezepte jetzt farblich unterscheidbar",
+      "Verlauf: Fasten und Gewicht haben jetzt eigene Farben",
+      "Zurück-Navigation merkt sich jetzt die Scroll-Position (z. B. von Rezeptdetail zurück zur Liste)",
+      "Diverse Lesbarkeits-Fixes bei großer Schriftgröße (Menüleiste, Nährwert-Kacheln, Fasten-Verlauf)",
+      "Zahlreiche kleinere Bedienbarkeits-Verbesserungen aus einem UX-Review (klarere Bezeichnungen, Bestätigungsdialoge vor dem Löschen, u. a.)"
     ]
   },
   "quotes": [
