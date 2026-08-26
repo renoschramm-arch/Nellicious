@@ -41,15 +41,6 @@ interface ShoppingLine {
 
 const RECIPE_ACCENT_COUNT = 6
 
-// Stabiler Index pro Rezept-ID statt zufälliger Reihenfolge — dieselbe
-// Rezept-ID bekommt bei jedem Rendern und über Sitzungen hinweg dieselbe
-// Akzentfarbe (CSS-Variablen --recipe-0 … --recipe-5 in index.css).
-function recipeAccentIndex(recipeId: string): number {
-  let hash = 0
-  for (let i = 0; i < recipeId.length; i++) hash = (hash * 31 + recipeId.charCodeAt(i)) >>> 0
-  return hash % RECIPE_ACCENT_COUNT
-}
-
 export function PlannerPage() {
   const { t, i18n } = useTranslation()
   const SLOTS: { key: MealSlot; label: string }[] = useMemo(() => {
@@ -236,6 +227,22 @@ export function PlannerPage() {
     }))
   }, [leafItems])
 
+  // Position in der aktuell sichtbaren Rezeptliste statt Hash über die
+  // Rezept-ID — ein Hash kann mehrere Rezepte zufällig auf denselben von
+  // 6 Farb-Slots mappen (Kollision), was zwei verschiedene Rezepte optisch
+  // ununterscheidbar macht. Reihenfolge sorgt dafür, dass alle gleichzeitig
+  // geplanten Rezepte bis einschließlich 6 garantiert unterschiedliche
+  // Farben bekommen; ab dem 7. wiederholt sich die Palette.
+  const recipeColorIndex = useMemo(() => {
+    const map = new Map<string, number>()
+    groupedByRecipe.forEach((group, i) => map.set(group.recipeId, i % RECIPE_ACCENT_COUNT))
+    return map
+  }, [groupedByRecipe])
+
+  function recipeAccent(recipeId: string): number {
+    return recipeColorIndex.get(recipeId) ?? 0
+  }
+
   const flatLines = useMemo(() => {
     const byText = new Map<string, LeafItem[]>()
     for (const leaf of leafItems) {
@@ -279,7 +286,7 @@ export function PlannerPage() {
                 <span
                   key={recipeId}
                   className="w-2 h-2 rounded-full shrink-0"
-                  style={{ background: `var(--recipe-${recipeAccentIndex(recipeId)})` }}
+                  style={{ background: `var(--recipe-${recipeAccent(recipeId)})` }}
                   aria-hidden
                 />
               ))}
@@ -470,7 +477,7 @@ export function PlannerPage() {
         ) : shoppingView === 'grouped' ? (
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
             {groupedByRecipe.map((group) => {
-              const accent = recipeAccentIndex(group.recipeId)
+              const accent = recipeAccent(group.recipeId)
               return (
                 <div
                   key={group.recipeId}
@@ -499,7 +506,7 @@ export function PlannerPage() {
                 <span key={group.recipeId} className="flex items-center gap-1.5 text-xs text-text-muted">
                   <span
                     className="w-2 h-2 rounded-full shrink-0"
-                    style={{ background: `var(--recipe-${recipeAccentIndex(group.recipeId)})` }}
+                    style={{ background: `var(--recipe-${recipeAccent(group.recipeId)})` }}
                     aria-hidden
                   />
                   {group.recipeTitle}
