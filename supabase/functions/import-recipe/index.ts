@@ -1,7 +1,17 @@
 // Supabase Edge Function: lädt eine Rezept-Seite serverseitig (Browser kann
 // wegen CORS nicht direkt auf fremde Seiten zugreifen), extrahiert die
-// eingebetteten schema.org/Recipe-Daten (JSON-LD) und liefert daraus
-// vorausgefüllte Felder für das Rezept-Formular zurück.
+// eingebetteten Rezeptdaten und liefert daraus vorausgefüllte Felder für das
+// Rezept-Formular zurück.
+//
+// Unterstützt zwei Auszeichnungsformen für schema.org/Recipe:
+// 1. JSON-LD (<script type="application/ld+json">) — der heute übliche
+//    Standard, wird zuerst versucht.
+// 2. Microdata (itemprop-Attribute direkt im HTML) — älterer Standard, den
+//    manche Seiten (v. a. ältere WordPress-Themes) noch statt/zusätzlich zu
+//    JSON-LD einsetzen. Wird nur als Treffer gewertet, wenn sich daraus
+//    sowohl ein Titel als auch mindestens eine Zutat gewinnen lassen — sonst
+//    bräuchte man Vertrauen in Seiten-Fragmente, die eigentlich zu einem
+//    anderen schema.org-Typ gehören (z. B. Kommentare, verwandte Artikel).
 //
 // Deploy: supabase functions deploy import-recipe
 
@@ -25,6 +35,7 @@ type ParsedRecipe = {
   ingredients: string[]
   instructions: string
   meal_type: MealType
+  servings: number | null
 }
 
 Deno.serve(async (req: Request) => {
@@ -66,8 +77,13 @@ async function fetchHtml(url: string): Promise<string> {
     const res = await fetch(url, {
       signal: controller.signal,
       headers: {
-        'User-Agent': 'Mozilla/5.0 (compatible; NelliciousImport/1.0)',
-        Accept: 'text/html',
+        // Browserähnlicher User-Agent statt eines selbst-identifizierenden
+        // Bot-Strings — manche Seiten mit einfachem Bot-Blocking lehnen
+        // unbekannte/verdächtige User-Agents sonst pauschal ab.
+        'User-Agent':
+          'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+        Accept: 'text/html,application/xhtml+xml',
+        'Accept-Language': 'de-DE,de;q=0.9,en;q=0.8',
       },
     })
     if (!res.ok) {
@@ -105,6 +121,14 @@ function concatChunks(chunks: Uint8Array[]): Uint8Array {
 }
 
 function extractRecipe(html: string): ParsedRecipe | null {
+  return extractFromJsonLd(html) ?? extractFromMicrodata(html)
+}
+
+// ---------------------------------------------------------------------------
+// JSON-LD (schema.org/Recipe)
+// ---------------------------------------------------------------------------
+
+function extractFromJsonLd(html: string): ParsedRecipe | null {
   const scriptRe = /<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi
   let match: RegExpExecArray | null
   while ((match = scriptRe.exec(html))) {
@@ -117,7 +141,7 @@ function extractRecipe(html: string): ParsedRecipe | null {
       continue
     }
     const recipeNode = findRecipeNode(data)
-    if (recipeNode) return mapRecipe(recipeNode)
+    if (recipeNode) return mapJsonLdRecipe(recipeNode)
   }
   return null
 }
@@ -146,7 +170,7 @@ function findRecipeNode(node: unknown): Record<string, unknown> | null {
   return null
 }
 
-function mapRecipe(node: Record<string, unknown>): ParsedRecipe {
+function mapJsonLdRecipe(node: Record<string, unknown>): ParsedRecipe {
   const nutrition = (node.nutrition ?? {}) as Record<string, unknown>
 
   return {
@@ -159,6 +183,7 @@ function mapRecipe(node: Record<string, unknown>): ParsedRecipe {
     ingredients: asStringArray(node.recipeIngredient),
     instructions: extractInstructions(node.recipeInstructions),
     meal_type: guessMealType(asString(node.recipeCategory) ?? ''),
+    servings: extractYield(node.recipeYield),
   }
 }
 
@@ -182,6 +207,19 @@ function extractNumber(value: unknown): number | null {
       const num = parseFloat(match[0].replace(',', '.'))
       if (!Number.isNaN(num)) return Math.round(num)
     }
+  }
+  return null
+}
+
+// recipeYield ist laut Spezifikation entweder eine Zahl/Zahl-als-String
+// ("4"), ein beschreibender String ("4 Portionen", "4-6 servings") oder ein
+// Array davon (mehrere Yield-Angaben, z. B. Personen- und Stück-Angabe
+// gleichzeitig) — hier die erste plausible Zahl daraus extrahieren.
+function extractYield(value: unknown): number | null {
+  const candidates = Array.isArray(value) ? value : [value]
+  for (const candidate of candidates) {
+    const num = extractNumber(candidate)
+    if (num != null && num > 0) return num
   }
   return null
 }
@@ -217,4 +255,113 @@ function guessMealType(category: string): MealType {
   if (/snack|vorspeise|appetizer|dessert|nachspeise|kuchen/.test(lower)) return 'snack'
   if (/abendessen|dinner/.test(lower)) return 'abend'
   return 'mittag'
+}
+
+// ---------------------------------------------------------------------------
+// Microdata (schema.org/Recipe über itemprop-Attribute im HTML)
+// ---------------------------------------------------------------------------
+
+// Nur als Treffer werten, wenn sich sowohl ein Titel als auch mindestens
+// eine Zutat finden lassen — einzelne itemprop-Fragmente ohne diesen Kontext
+// gehören zu oft zu unrelated Inhalten (Kommentare, verwandte Artikel,
+// andere schema.org-Typen auf derselben Seite), um sie blind zu übernehmen.
+function extractFromMicrodata(html: string): ParsedRecipe | null {
+  const title = extractItemprop(html, 'name')[0] ?? extractItemprop(html, 'headline')[0] ?? null
+  const ingredients = [
+    ...extractItemprop(html, 'recipeIngredient'),
+    ...extractItemprop(html, 'ingredients'), // ältere/inoffizielle Schreibweise
+  ]
+
+  if (!title || ingredients.length === 0) return null
+
+  const description = extractItemprop(html, 'description')[0] ?? ''
+  const instructionSteps = [
+    ...extractItemprop(html, 'recipeInstructions'),
+    ...extractItemprop(html, 'step'),
+  ]
+  const category = extractItemprop(html, 'recipeCategory')[0] ?? ''
+  const yieldValue = extractItemprop(html, 'recipeYield')[0] ?? null
+
+  return {
+    title,
+    description,
+    kcal: extractNumber(extractItemprop(html, 'calories')[0]) ?? 0,
+    protein_g: extractNumber(extractItemprop(html, 'proteinContent')[0]) ?? 0,
+    carbs_g: extractNumber(extractItemprop(html, 'carbohydrateContent')[0]) ?? 0,
+    fat_g: extractNumber(extractItemprop(html, 'fatContent')[0]) ?? 0,
+    ingredients: dedupe(ingredients),
+    instructions: dedupe(instructionSteps).join('\n'),
+    meal_type: guessMealType(category),
+    servings: yieldValue != null ? extractYield(yieldValue) : null,
+  }
+}
+
+function dedupe(values: string[]): string[] {
+  return [...new Set(values.map((v) => v.trim()).filter(Boolean))]
+}
+
+// Findet alle Elemente mit dem angegebenen itemprop-Wert und liefert deren
+// Textinhalt (bei <meta>/<link> stattdessen den content/href-Attributwert).
+// Bewusst regex-basiert statt mit einem HTML-Parser, um die Funktion ohne
+// externe Abhängigkeiten deploybar zu halten — das ist ein Best-Effort-
+// Ansatz, kein vollständiger HTML-Parser, funktioniert aber zuverlässig
+// genug für die typische, flache Verschachtelung von Rezept-Markup.
+function extractItemprop(html: string, itemprop: string): string[] {
+  const results: string[] = []
+  const openTagRe = new RegExp(
+    `<([a-zA-Z0-9]+)((?:\\s+[a-zA-Z0-9_:-]+(?:=(?:"[^"]*"|'[^']*'))?)*?\\s+itemprop=["']${itemprop}["'](?:\\s+[a-zA-Z0-9_:-]+(?:=(?:"[^"]*"|'[^']*'))?)*)\\s*/?>`,
+    'gi',
+  )
+  let match: RegExpExecArray | null
+  while ((match = openTagRe.exec(html))) {
+    const tagName = match[1]
+    const fullOpenTag = match[0]
+
+    const contentAttrMatch = fullOpenTag.match(/\scontent=["']([^"']*)["']/i)
+    if (/^meta$/i.test(tagName) && contentAttrMatch) {
+      const value = decodeEntities(contentAttrMatch[1]).trim()
+      if (value) results.push(value)
+      continue
+    }
+
+    const startIdx = match.index + fullOpenTag.length
+    const closeRe = new RegExp(`</${tagName}\\s*>`, 'i')
+    const rest = html.slice(startIdx)
+    const closeMatch = closeRe.exec(rest)
+    const innerHtml = closeMatch ? rest.slice(0, closeMatch.index) : rest.slice(0, 2000)
+    const text = stripTags(innerHtml).trim()
+    if (text) results.push(text)
+  }
+  return results
+}
+
+function stripTags(html: string): string {
+  return decodeEntities(html.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ')).trim()
+}
+
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+  auml: 'ä',
+  ouml: 'ö',
+  uuml: 'ü',
+  Auml: 'Ä',
+  Ouml: 'Ö',
+  Uuml: 'Ü',
+  szlig: 'ß',
+  euro: '€',
+}
+
+function decodeEntities(text: string): string {
+  return text.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, (entity, code: string) => {
+    if (code[0] === '#') {
+      const codePoint = code[1] === 'x' || code[1] === 'X' ? parseInt(code.slice(2), 16) : parseInt(code.slice(1), 10)
+      return Number.isFinite(codePoint) ? String.fromCodePoint(codePoint) : entity
+    }
+    return NAMED_ENTITIES[code] ?? entity
+  })
 }

@@ -697,7 +697,8 @@
     "import": "Importieren",
     "importFailed": "Import fehlgeschlagen.",
     "createRecipe": "Rezept anlegen",
-    "created": "Angelegt ✓"
+    "created": "Angelegt ✓",
+    "nutritionEstimated": "🧮 Die Quellseite hat keine Nährwerte angegeben — daher aus {{matched}} von {{total}} Zutaten geschätzt. Bitte prüfen und bei Bedarf anpassen."
   },
   "recipeFilterBar": {
     "searchPlaceholder": "Rezepte durchsuchen …",

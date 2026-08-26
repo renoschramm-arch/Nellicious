@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { RecipeForm } from '../components/RecipeForm'
 import { useRecipes, type Recipe } from '../lib/useRecipes'
 import { importRecipeFromUrl } from '../lib/useRecipeImport'
+import { estimateNutritionFromIngredients, type NutritionEstimate } from '../lib/estimateNutrition'
 
 type Mode = 'manuell' | 'import'
 
@@ -16,6 +17,7 @@ export function RecipeNewPage() {
   const [importing, setImporting] = useState(false)
   const [importError, setImportError] = useState('')
   const [imported, setImported] = useState<Recipe | null>(null)
+  const [nutritionEstimate, setNutritionEstimate] = useState<NutritionEstimate | null>(null)
 
   async function handleImport(e: FormEvent) {
     e.preventDefault()
@@ -23,6 +25,16 @@ export function RecipeNewPage() {
     setImportError('')
     try {
       const values = await importRecipeFromUrl(importUrl)
+
+      // Manche Seiten liefern keine eigenen Nährwertangaben — in dem Fall
+      // aus der erkannten Zutatenliste schätzen, statt stillschweigend bei
+      // 0 kcal/0g zu landen.
+      let estimate: NutritionEstimate | null = null
+      if (values.kcal === 0 && values.protein_g === 0 && values.carbs_g === 0 && values.fat_g === 0) {
+        estimate = estimateNutritionFromIngredients(values.ingredients)
+      }
+      setNutritionEstimate(estimate)
+
       setImported({
         id: '',
         owner_id: null,
@@ -31,6 +43,14 @@ export function RecipeNewPage() {
         free_of: [],
         is_shared: false,
         ...values,
+        ...(estimate
+          ? {
+              kcal: estimate.kcal,
+              protein_g: estimate.protein_g,
+              carbs_g: estimate.carbs_g,
+              fat_g: estimate.fat_g,
+            }
+          : {}),
         servings: values.servings ?? 1,
       })
     } catch (err) {
@@ -90,12 +110,28 @@ export function RecipeNewPage() {
         </form>
       )}
 
+      {imported && nutritionEstimate && (
+        <p className="text-xs text-honey bg-honey/10 border border-honey/30 rounded-xl px-3 py-2.5">
+          {t('recipeNew.nutritionEstimated', {
+            matched: nutritionEstimate.matchedCount,
+            total: nutritionEstimate.totalCount,
+          })}
+        </p>
+      )}
+
       {(mode === 'manuell' || imported) && (
         <RecipeForm
           initial={imported ?? undefined}
           submitLabel={t('recipeNew.createRecipe')}
           savedLabel={t('recipeNew.created')}
-          onCancel={() => (imported ? setImported(null) : navigate('/rezepte'))}
+          onCancel={() => {
+            if (imported) {
+              setImported(null)
+              setNutritionEstimate(null)
+            } else {
+              navigate('/rezepte')
+            }
+          }}
           onSave={async (values) => {
             const created = await createRecipe(values)
             if (created) navigate(`/rezepte/${created.id}`)
