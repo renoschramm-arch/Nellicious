@@ -78,6 +78,7 @@ export function VerlaufPage() {
   const [customEndValue, setCustomEndValue] = useState('')
   const [customTargetOpen, setCustomTargetOpen] = useState(false)
   const [customTargetValue, setCustomTargetValue] = useState('')
+  const [sessionEditMenuOpen, setSessionEditMenuOpen] = useState(false)
   const [showFastingPhaseModal, setShowFastingPhaseModal] = useState(false)
   const [exportRangeDays, setExportRangeDays] = useState<ExportRangeDays>(30)
   const [exporting, setExporting] = useState(false)
@@ -85,6 +86,12 @@ export function VerlaufPage() {
   useEffect(() => {
     if (profile?.fasting_default_hours) setFastingTargetHours(profile.fasting_default_hours)
   }, [profile?.fasting_default_hours])
+
+  // Menü wieder einklappen, sobald keine aktive Session mehr läuft — sonst
+  // stünde es beim nächsten Fasten-Start ungewollt schon offen.
+  useEffect(() => {
+    if (!activeSession) setSessionEditMenuOpen(false)
+  }, [activeSession])
 
   const latestWeight = weightLogs[0]
   const waterGoal = profile?.daily_water_goal_ml ?? 2500
@@ -798,24 +805,60 @@ export function VerlaufPage() {
             >
               {activeSession ? t('verlauf.stopFastingButton') : t('verlauf.startFastingButton')}
             </button>
-            <div className="flex items-center justify-center gap-3">
-              <button
-                type="button"
-                onClick={activeSession ? openCustomEnd : openCustomStart}
-                className="text-xs text-text-muted underline hover:text-text"
-              >
-                {activeSession ? t('verlauf.retroEnd') : t('verlauf.retroStart')}
-              </button>
-              {activeSession && (
+            {activeSession ? (
+              sessionEditMenuOpen ? (
+                <div className="flex items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSessionEditMenuOpen(false)
+                      openCustomEnd()
+                    }}
+                    className="text-xs text-text-muted underline hover:text-text"
+                  >
+                    {t('verlauf.retroEnd')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSessionEditMenuOpen(false)
+                      openCustomTarget()
+                    }}
+                    className="text-xs text-text-muted underline hover:text-text"
+                  >
+                    {t('verlauf.adjustGoal')}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setSessionEditMenuOpen(false)}
+                    className="text-xs text-text-muted"
+                    aria-label={t('common.cancel')}
+                  >
+                    ✕
+                  </button>
+                </div>
+              ) : (
+                <div className="flex items-center justify-center">
+                  <button
+                    type="button"
+                    onClick={() => setSessionEditMenuOpen(true)}
+                    className="text-xs text-text-muted underline hover:text-text"
+                  >
+                    {t('verlauf.editSession')}
+                  </button>
+                </div>
+              )
+            ) : (
+              <div className="flex items-center justify-center">
                 <button
                   type="button"
-                  onClick={openCustomTarget}
+                  onClick={openCustomStart}
                   className="text-xs text-text-muted underline hover:text-text"
                 >
-                  {t('verlauf.adjustGoal')}
+                  {t('verlauf.retroStart')}
                 </button>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         ))}
       </div>
