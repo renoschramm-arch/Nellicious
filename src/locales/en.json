@@ -697,7 +697,8 @@
     "import": "Import",
     "importFailed": "Import failed.",
     "createRecipe": "Create recipe",
-    "created": "Created ✓"
+    "created": "Created ✓",
+    "nutritionEstimated": "🧮 The source page didn't provide nutrition info — estimated instead from {{matched}} of {{total}} ingredients. Please review and adjust if needed."
   },
   "recipeFilterBar": {
     "searchPlaceholder": "Search recipes …",
