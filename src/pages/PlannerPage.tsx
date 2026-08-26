@@ -36,6 +36,7 @@ interface ShoppingLine {
   text: string
   checked: boolean
   refs: IngredientRef[]
+  recipeIds?: string[]
 }
 
 const RECIPE_ACCENT_COUNT = 6
@@ -247,6 +248,7 @@ export function PlannerPage() {
       text: scaleIngredient(text, leaves.length),
       checked: leaves.every((l) => l.checked),
       refs: leaves.map((l) => ({ entryId: l.entryId, index: l.index })),
+      recipeIds: Array.from(new Set(leaves.map((l) => l.recipeId))),
     }))
   }, [leafItems])
 
@@ -271,6 +273,18 @@ export function PlannerPage() {
             onChange={() => setChecked(line.refs, !line.checked)}
             className="w-5 h-5 shrink-0 accent-[var(--primary)]"
           />
+          {line.recipeIds && line.recipeIds.length > 0 && (
+            <span className="flex items-center gap-1 shrink-0">
+              {line.recipeIds.map((recipeId) => (
+                <span
+                  key={recipeId}
+                  className="w-2 h-2 rounded-full shrink-0"
+                  style={{ background: `var(--recipe-${recipeAccentIndex(recipeId)})` }}
+                  aria-hidden
+                />
+              ))}
+            </span>
+          )}
           <span className={`text-sm truncate ${line.checked ? 'line-through text-text-muted' : ''}`}>
             {line.text}
           </span>
@@ -480,6 +494,18 @@ export function PlannerPage() {
           </div>
         ) : (
           <div className="bg-surface border border-border rounded-2xl p-4">
+            <div className="flex flex-wrap gap-x-3 gap-y-1.5 mb-3 pb-3 border-b border-border">
+              {groupedByRecipe.map((group) => (
+                <span key={group.recipeId} className="flex items-center gap-1.5 text-xs text-text-muted">
+                  <span
+                    className="w-2 h-2 rounded-full shrink-0"
+                    style={{ background: `var(--recipe-${recipeAccentIndex(group.recipeId)})` }}
+                    aria-hidden
+                  />
+                  {group.recipeTitle}
+                </span>
+              ))}
+            </div>
             <ul className="flex flex-col gap-1">{flatLines.map(renderLine)}</ul>
           </div>
         )}
