@@ -37,6 +37,11 @@ export function PremiumModal({ onClose }: { onClose: () => void }) {
               ? t('premium.trialActiveText', { count: trialDaysLeft })
               : t('premium.trialOverText', { days: PREMIUM_TRIAL_DAYS })}
           </p>
+
+          <p className="text-sm text-honey bg-honey/10 border border-honey/30 rounded-xl px-3 py-2.5 leading-relaxed">
+            {t('premium.purchaseWip')}
+          </p>
+
           <ul className="flex flex-col gap-1.5">
             {features.map((feature) => (
               <li key={feature} className="flex items-start gap-2 text-sm">
@@ -46,14 +51,17 @@ export function PremiumModal({ onClose }: { onClose: () => void }) {
             ))}
           </ul>
 
-          <div className="grid grid-cols-2 gap-2 mt-1">
-            <div className="bg-surface border border-border rounded-xl p-3 flex flex-col">
+          <p className="text-xs text-text-muted uppercase tracking-wide font-mono mt-1">
+            {t('premium.plannedPricing')}
+          </p>
+          <div className="grid grid-cols-2 gap-2 opacity-70">
+            <div className="bg-surface border border-dashed border-border rounded-xl p-3 flex flex-col">
               <span className="text-xs text-text-muted">{t('premium.monthly')}</span>
               <span className="font-display font-semibold text-lg">{formatEUR(MONTHLY_PRICE_EUR)}</span>
               <span className="text-xs text-text-muted">{t('premium.perMonth')}</span>
             </div>
-            <div className="relative bg-primary/10 border border-primary/30 rounded-xl p-3 flex flex-col">
-              <span className="absolute -top-2 right-2 bg-primary text-on-primary text-[10px] font-semibold rounded-full px-2 py-0.5">
+            <div className="relative bg-surface border border-dashed border-border rounded-xl p-3 flex flex-col">
+              <span className="absolute -top-2 right-2 bg-text-muted text-bg text-[10px] font-semibold rounded-full px-2 py-0.5">
                 −{YEARLY_SAVINGS_PCT}%
               </span>
               <span className="text-xs text-text-muted">{t('premium.yearly')}</span>
@@ -61,8 +69,6 @@ export function PremiumModal({ onClose }: { onClose: () => void }) {
               <span className="text-xs text-text-muted">{t('premium.perYear')}</span>
             </div>
           </div>
-
-          <p className="text-sm text-text-muted leading-relaxed">{t('premium.purchaseWip')}</p>
         </div>
       </div>
     </div>
