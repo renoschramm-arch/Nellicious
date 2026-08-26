@@ -9,6 +9,8 @@ import { WhatCanICookModal } from '../components/WhatCanICookModal'
 import { useFavorites } from '../lib/useFavorites'
 import { useRecipeFilters } from '../lib/useRecipeFilters'
 
+const WHAT_CAN_I_COOK_OPEN_KEY = 'whatCanICook.open'
+
 export function RecipesPage() {
   const { t, i18n } = useTranslation()
   const { recipes, loading } = useRecipes()
@@ -16,7 +18,9 @@ export function RecipesPage() {
   const filters = useRecipeFilters(recipes, favoriteIds)
   const mealTypeLabels = getMealTypeLabels(t)
   const dietTagLabels = getDietTagLabels(t)
-  const [showWhatCanICook, setShowWhatCanICook] = useState(false)
+  // Bleibt über den Besuch eines vorgeschlagenen Rezepts hinweg offen (Zurück-
+  // Navigation entfernt die Seite und baut sie neu auf) statt sich zu schließen.
+  const [showWhatCanICook, setShowWhatCanICook] = useState(() => sessionStorage.getItem(WHAT_CAN_I_COOK_OPEN_KEY) === '1')
 
   return (
     <div className="flex flex-col gap-6">
@@ -34,7 +38,10 @@ export function RecipesPage() {
         <RecipeFilterBar filters={filters} />
         <button
           type="button"
-          onClick={() => setShowWhatCanICook(true)}
+          onClick={() => {
+            sessionStorage.setItem(WHAT_CAN_I_COOK_OPEN_KEY, '1')
+            setShowWhatCanICook(true)
+          }}
           className="flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/90 backdrop-blur-sm py-2.5 text-sm font-medium text-text hover:border-primary transition-colors"
         >
           {t('recipes.whatCanICookButton')}
@@ -42,7 +49,13 @@ export function RecipesPage() {
       </div>
 
       {showWhatCanICook && (
-        <WhatCanICookModal recipes={recipes} onClose={() => setShowWhatCanICook(false)} />
+        <WhatCanICookModal
+          recipes={recipes}
+          onClose={() => {
+            sessionStorage.removeItem(WHAT_CAN_I_COOK_OPEN_KEY)
+            setShowWhatCanICook(false)
+          }}
+        />
       )}
 
       {loading && <p className="text-text-muted text-sm">{t('recipes.loading')}</p>}

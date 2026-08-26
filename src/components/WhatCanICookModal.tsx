@@ -1,28 +1,60 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useFoodSearch } from '../lib/useFoodSearch'
-import { matchRecipesByIngredients, type RecipeIngredientMatch } from '../lib/matchRecipesByIngredients'
+import { matchRecipesByIngredients } from '../lib/matchRecipesByIngredients'
 import { localizeRecipeText, type Recipe } from '../lib/useRecipes'
+
+const INGREDIENTS_KEY = 'whatCanICook.ingredients'
+const RESULTS_SHOWN_KEY = 'whatCanICook.resultsShown'
+
+function loadIngredients(): string[] {
+  const raw = sessionStorage.getItem(INGREDIENTS_KEY)
+  return raw ? JSON.parse(raw) : []
+}
 
 export function WhatCanICookModal({ recipes, onClose }: { recipes: Recipe[]; onClose: () => void }) {
   const { t, i18n } = useTranslation()
-  const [haveIngredients, setHaveIngredients] = useState<string[]>([])
+  const [haveIngredients, setHaveIngredients] = useState<string[]>(loadIngredients)
   const [query, setQuery] = useState('')
   const { results, loading, error } = useFoodSearch(query)
-  const [matches, setMatches] = useState<RecipeIngredientMatch[] | null>(null)
+  // Nur pro Sitzung gemerkt (sessionStorage), damit die Vorschläge beim
+  // Zurückkehren von einem geöffneten Rezept nicht neu zusammengestellt
+  // werden müssen, statt die Zutaten dauerhaft im Profil zu speichern.
+  const [resultsShown, setResultsShown] = useState(() => sessionStorage.getItem(RESULTS_SHOWN_KEY) === '1')
+  const matches = useMemo(
+    () => (resultsShown ? matchRecipesByIngredients(recipes, haveIngredients, i18n.language) : null),
+    [resultsShown, recipes, haveIngredients, i18n.language],
+  )
+  const shownMatches = matches ?? []
+
+  function persistIngredients(next: string[]) {
+    setHaveIngredients(next)
+    sessionStorage.setItem(INGREDIENTS_KEY, JSON.stringify(next))
+  }
 
   function addIngredient(name: string) {
     const trimmed = name.trim()
     if (!trimmed) return
-    setHaveIngredients((prev) =>
-      prev.some((i) => i.toLowerCase() === trimmed.toLowerCase()) ? prev : [...prev, trimmed],
-    )
+    const next = haveIngredients.some((i) => i.toLowerCase() === trimmed.toLowerCase())
+      ? haveIngredients
+      : [...haveIngredients, trimmed]
+    persistIngredients(next)
     setQuery('')
   }
 
   function removeIngredient(name: string) {
-    setHaveIngredients((prev) => prev.filter((i) => i !== name))
+    persistIngredients(haveIngredients.filter((i) => i !== name))
+  }
+
+  function showResults() {
+    sessionStorage.setItem(RESULTS_SHOWN_KEY, '1')
+    setResultsShown(true)
+  }
+
+  function adjustIngredients() {
+    sessionStorage.removeItem(RESULTS_SHOWN_KEY)
+    setResultsShown(false)
   }
 
   return (
@@ -46,7 +78,7 @@ export function WhatCanICookModal({ recipes, onClose }: { recipes: Recipe[]; onC
         </div>
 
         <div className="p-4 overflow-y-auto flex flex-col gap-4">
-          {!matches ? (
+          {!resultsShown ? (
             <>
               <div className="flex flex-col gap-2">
                 <input
@@ -115,7 +147,7 @@ export function WhatCanICookModal({ recipes, onClose }: { recipes: Recipe[]; onC
 
               <button
                 type="button"
-                onClick={() => setMatches(matchRecipesByIngredients(recipes, haveIngredients, i18n.language))}
+                onClick={showResults}
                 disabled={haveIngredients.length === 0}
                 className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm disabled:opacity-60"
               >
@@ -124,15 +156,14 @@ export function WhatCanICookModal({ recipes, onClose }: { recipes: Recipe[]; onC
             </>
           ) : (
             <>
-              {matches.length === 0 ? (
+              {shownMatches.length === 0 ? (
                 <p className="text-sm text-text-muted">{t('whatCanICook.noMatches')}</p>
               ) : (
                 <ul className="flex flex-col gap-2">
-                  {matches.map(({ recipe, matchedCount, totalCount, coverage }) => (
+                  {shownMatches.map(({ recipe, matchedCount, totalCount, coverage }) => (
                     <li key={recipe.id}>
                       <Link
                         to={`/rezepte/${recipe.id}`}
-                        onClick={onClose}
                         className="flex items-center justify-between gap-3 bg-surface-2 border border-border rounded-xl px-3.5 py-2.5 hover:border-primary transition-colors"
                       >
                         <span className="text-sm font-medium truncate">
@@ -152,7 +183,7 @@ export function WhatCanICookModal({ recipes, onClose }: { recipes: Recipe[]; onC
               )}
               <button
                 type="button"
-                onClick={() => setMatches(null)}
+                onClick={adjustIngredients}
                 className="border border-border bg-surface-2 rounded-xl py-2.5 text-sm text-text-muted hover:text-text"
               >
                 {t('whatCanICook.adjustIngredients')}
