@@ -8,10 +8,6 @@ export interface RecipeIngredientMatch {
   coverage: number
 }
 
-// Rezepte mit weniger Deckung als das werden nicht vorgeschlagen — lieber
-// wenige passende Treffer als eine lange Liste kaum passender Rezepte.
-const MIN_COVERAGE = 0.4
-
 function wordsOverlap(a: string, b: string): boolean {
   return a === b || a.startsWith(b) || b.startsWith(a)
 }
@@ -24,7 +20,12 @@ function lineMatchesHave(lineWords: string[], haveWordSets: string[][]): boolean
 // Nährwert-Schätzen aus der Zutatenliste (estimateNutrition.ts), hier aber
 // pro Zutatenzeile nur ein Ja/Nein: enthält sie mindestens ein Wort, das zu
 // einer der "vorhandenen" Zutaten passt? Der Anteil zutreffender Zeilen
-// ergibt die Deckung, nach der absteigend sortiert wird.
+// ergibt die Deckung, nach der absteigend sortiert wird. Anders als bei der
+// Nährwert-Schätzung gibt es hier bewusst keine Mindest-Deckung, die Rezepte
+// ganz ausblendet — schon ein einzelner Treffer (z. B. nur "Zwiebel" von
+// sieben Zutaten) ist für Nutzer:innen eine brauchbare Information, die sie
+// selbst gewichten können; das System soll nicht vorab entscheiden, was zu
+// wenig Überschneidung ist.
 export function matchRecipesByIngredients(
   recipes: Recipe[],
   haveIngredients: string[],
@@ -38,8 +39,7 @@ export function matchRecipesByIngredients(
     const lines = localizeRecipeText(recipe, language).ingredients
     if (lines.length === 0) continue
     const matchedCount = lines.filter((line) => lineMatchesHave(significantWords(line), haveWordSets)).length
-    const coverage = matchedCount / lines.length
-    if (coverage >= MIN_COVERAGE) matches.push({ recipe, matchedCount, totalCount: lines.length, coverage })
+    if (matchedCount > 0) matches.push({ recipe, matchedCount, totalCount: lines.length, coverage: matchedCount / lines.length })
   }
   return matches.sort((a, b) => b.coverage - a.coverage)
 }
