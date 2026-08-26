@@ -1,25 +1,40 @@
 import { useEffect, useState, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { useProfile } from '../lib/useProfile'
-import { useWeightLogs, formatWeightKg } from '../lib/useWeightLogs'
+import {
+  useProfile,
+  ACTIVITY_LEVELS,
+  getActivityLevelLabels,
+  GENDERS,
+  getGenderLabels,
+  GOALS,
+  getGoalLabels,
+  type ActivityLevel,
+  type Gender,
+  type Goal,
+} from '../lib/useProfile'
+import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
 import { calculateTargets } from '../lib/calorieCalculator'
 import { useGoalProfiles } from '../lib/useGoalProfiles'
 import { usePremium } from '../lib/usePremium'
+import { toISODate } from '../lib/week'
 import { PremiumModal } from '../components/PremiumModal'
 
 export function DailyGoalsPage() {
   const { t } = useTranslation()
-  const MISSING_FIELD_LABELS: Record<string, { label: string; to: string }> = {
-    gender: { label: t('dailyGoals.fieldGender'), to: '/mehr/profil' },
-    age: { label: t('dailyGoals.fieldAge'), to: '/mehr/profil' },
-    heightCm: { label: t('dailyGoals.fieldHeight'), to: '/mehr/profil' },
-    activityLevel: { label: t('dailyGoals.fieldActivityLevel'), to: '/mehr/profil' },
-    goal: { label: t('dailyGoals.fieldGoal'), to: '/mehr/ziele' },
-    weightKg: { label: t('dailyGoals.fieldWeight'), to: '/verlauf' },
+  const MISSING_FIELD_LABELS: Record<string, { label: string }> = {
+    gender: { label: t('dailyGoals.fieldGender') },
+    age: { label: t('dailyGoals.fieldAge') },
+    heightCm: { label: t('dailyGoals.fieldHeight') },
+    activityLevel: { label: t('dailyGoals.fieldActivityLevel') },
+    goal: { label: t('dailyGoals.fieldGoal') },
+    weightKg: { label: t('dailyGoals.fieldWeight') },
   }
   const { profile, updateProfile, reload: reloadProfile } = useProfile()
-  const { logs: weightLogs } = useWeightLogs()
+  const { logs: weightLogs, upsertWeight } = useWeightLogs()
+  const genderLabels = getGenderLabels(t)
+  const activityLevelLabels = getActivityLevelLabels(t)
+  const goalLabels = getGoalLabels(t)
   const [kcal, setKcal] = useState('')
   const [protein, setProtein] = useState('')
   const [carbs, setCarbs] = useState('')
@@ -31,6 +46,13 @@ export function DailyGoalsPage() {
   const [showPremiumModal, setShowPremiumModal] = useState(false)
   const [showNameInput, setShowNameInput] = useState(false)
   const [newProfileName, setNewProfileName] = useState('')
+  const [missingGender, setMissingGender] = useState<Gender | null>(null)
+  const [missingAge, setMissingAge] = useState('')
+  const [missingHeight, setMissingHeight] = useState('')
+  const [missingActivityLevel, setMissingActivityLevel] = useState<ActivityLevel | null>(null)
+  const [missingGoal, setMissingGoal] = useState<Goal | null>(null)
+  const [missingWeight, setMissingWeight] = useState('')
+  const [savingMissing, setSavingMissing] = useState(false)
 
   useEffect(() => {
     if (!profile) return
@@ -69,6 +91,30 @@ export function DailyGoalsPage() {
     setProtein(String(suggestion.proteinG))
     setCarbs(String(suggestion.carbsG))
     setFat(String(suggestion.fatG))
+  }
+
+  // Speichert nur die tatsächlich fehlenden Angaben direkt hier auf der
+  // Seite, statt zum Ausfüllen auf Profil/Ziele/Verlauf wechseln zu müssen —
+  // updateProfile()/upsertWeight() aktualisieren `profile`/`weightLogs`
+  // reaktiv, wodurch `missing` automatisch schrumpft und die Berechnung
+  // sofort erscheint, sobald alles beisammen ist.
+  async function handleSaveMissingFields(e: FormEvent) {
+    e.preventDefault()
+    setSavingMissing(true)
+    await updateProfile({
+      ...(missing.includes('gender') && missingGender ? { gender: missingGender } : {}),
+      ...(missing.includes('age') && missingAge ? { age: Number(missingAge) } : {}),
+      ...(missing.includes('heightCm') && missingHeight ? { height_cm: Number(missingHeight) } : {}),
+      ...(missing.includes('activityLevel') && missingActivityLevel
+        ? { activity_level: missingActivityLevel }
+        : {}),
+      ...(missing.includes('goal') && missingGoal ? { goal: missingGoal } : {}),
+    })
+    if (missing.includes('weightKg')) {
+      const parsedWeight = parseWeightKg(missingWeight)
+      if (parsedWeight != null) await upsertWeight(toISODate(new Date()), parsedWeight)
+    }
+    setSavingMissing(false)
   }
 
   async function handleSubmit(e: FormEvent) {
@@ -219,21 +265,135 @@ export function DailyGoalsPage() {
       )}
 
       {missing.length > 0 && (
-        <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
+        <form
+          onSubmit={handleSaveMissingFields}
+          className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3"
+        >
           <span className="text-sm font-medium">{t('dailyGoals.missingFieldsHint')}</span>
-          <ul className="flex flex-wrap gap-1.5">
-            {missing.map((key) => (
-              <li key={key}>
-                <Link
-                  to={MISSING_FIELD_LABELS[key].to}
-                  className="text-xs bg-surface-2 border border-border rounded-full px-3 py-1 text-text-muted hover:text-text"
-                >
-                  {MISSING_FIELD_LABELS[key].label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+          <p className="text-xs text-text-muted -mt-1.5">
+            {missing.map((key) => MISSING_FIELD_LABELS[key].label).join(' · ')}
+          </p>
+
+          {missing.includes('gender') && (
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs text-text-muted">{t('dailyGoals.fieldGender')}</span>
+              <div className="flex flex-wrap gap-1.5">
+                {GENDERS.map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setMissingGender(missingGender === value ? null : value)}
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                      missingGender === value
+                        ? 'bg-primary text-on-primary'
+                        : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+                    }`}
+                  >
+                    {genderLabels[value]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {(missing.includes('age') || missing.includes('heightCm')) && (
+            <div className="grid grid-cols-2 gap-3">
+              {missing.includes('age') && (
+                <label className="flex flex-col gap-1 text-xs text-text-muted">
+                  {t('dailyGoals.fieldAge')}
+                  <input
+                    type="number"
+                    min={0}
+                    value={missingAge}
+                    onChange={(e) => setMissingAge(e.target.value)}
+                    className="rounded-lg border border-border bg-bg px-3 py-2 text-sm font-mono outline-none focus:border-primary"
+                  />
+                </label>
+              )}
+              {missing.includes('heightCm') && (
+                <label className="flex flex-col gap-1 text-xs text-text-muted">
+                  {t('dailyGoals.fieldHeight')}
+                  <input
+                    type="number"
+                    min={0}
+                    value={missingHeight}
+                    onChange={(e) => setMissingHeight(e.target.value)}
+                    className="rounded-lg border border-border bg-bg px-3 py-2 text-sm font-mono outline-none focus:border-primary"
+                  />
+                </label>
+              )}
+            </div>
+          )}
+
+          {missing.includes('activityLevel') && (
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs text-text-muted">{t('dailyGoals.fieldActivityLevel')}</span>
+              <div className="flex flex-col gap-1.5">
+                {ACTIVITY_LEVELS.map((level) => (
+                  <button
+                    key={level}
+                    type="button"
+                    onClick={() => setMissingActivityLevel(missingActivityLevel === level ? null : level)}
+                    className={`text-left px-3 py-2 rounded-xl text-sm font-medium transition-colors ${
+                      missingActivityLevel === level
+                        ? 'bg-primary text-on-primary'
+                        : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+                    }`}
+                  >
+                    {activityLevelLabels[level]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {missing.includes('goal') && (
+            <div className="flex flex-col gap-1.5">
+              <span className="text-xs text-text-muted">{t('dailyGoals.fieldGoal')}</span>
+              <div className="flex flex-wrap gap-1.5">
+                {GOALS.map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    onClick={() => setMissingGoal(missingGoal === value ? null : value)}
+                    className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                      missingGoal === value
+                        ? 'bg-primary text-on-primary'
+                        : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+                    }`}
+                  >
+                    {goalLabels[value]}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {missing.includes('weightKg') && (
+            <label className="flex flex-col gap-1 text-xs text-text-muted">
+              {t('dailyGoals.fieldWeight')}
+              <input
+                type="text"
+                inputMode="decimal"
+                value={missingWeight}
+                onChange={(e) => setMissingWeight(e.target.value)}
+                placeholder={t('goals.targetWeightPlaceholder')}
+                className="rounded-lg border border-border bg-bg px-3 py-2 text-sm font-mono outline-none focus:border-primary"
+              />
+            </label>
+          )}
+
+          <button
+            type="submit"
+            disabled={savingMissing}
+            className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm disabled:opacity-60"
+          >
+            {savingMissing ? t('dailyGoals.saving') : t('dailyGoals.saveMissingFields')}
+          </button>
+          <Link to="/mehr/profil" className="text-xs text-text-muted underline hover:text-text text-center">
+            {t('dailyGoals.fullProfileLink')}
+          </Link>
+        </form>
       )}
 
       <form
