@@ -1032,7 +1032,7 @@ export function VerlaufPage() {
                     className="rounded-lg border border-border bg-bg px-2 py-1.5 text-xs font-mono outline-none focus:border-primary"
                   />
                 </label>
-                <div className="grid grid-cols-2 gap-2">
+                <div className="flex flex-col gap-2">
                   <label className="flex flex-col gap-1 text-xs text-text-muted">
                     {t('verlauf.start')}
                     <input
