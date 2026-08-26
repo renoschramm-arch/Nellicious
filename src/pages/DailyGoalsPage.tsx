@@ -85,6 +85,16 @@ export function DailyGoalsPage() {
         })
       : null
 
+  // Sanfte Plausibilitätsprüfung statt harter Validierung — analog zum
+  // Wunschgewicht-Hinweis auf der Ziel-Seite: kcal aus Protein/Kohlenh./Fett
+  // errechnet (4/4/9 kcal pro g) und mit dem eingetragenen kcal-Wert
+  // verglichen. Nur ein Hinweis, kein Blocker, da Nutzer:innen bewusst von
+  // der Formel abweichende Werte eintragen können.
+  const kcalNum = Number(kcal) || 0
+  const macroDerivedKcal = (Number(protein) || 0) * 4 + (Number(carbs) || 0) * 4 + (Number(fat) || 0) * 9
+  const macroMismatch =
+    kcalNum > 0 && macroDerivedKcal > 0 && Math.abs(macroDerivedKcal - kcalNum) / kcalNum > 0.15
+
   function applySuggestion() {
     if (!suggestion) return
     setKcal(String(suggestion.kcal))
@@ -200,7 +210,9 @@ export function DailyGoalsPage() {
               {profile?.active_goal_profile_id !== gp.id && (
                 <button
                   type="button"
-                  onClick={() => removeProfile(gp.id)}
+                  onClick={() => {
+                    if (window.confirm(t('dailyGoals.confirmDeleteProfile', { name: gp.name }))) removeProfile(gp.id)
+                  }}
                   aria-label={t('dailyGoals.deleteProfileAria', { name: gp.name })}
                   className="absolute -top-2 -right-2 w-5 h-5 rounded-full bg-surface border border-border text-text-muted text-xs leading-none hover:text-danger hover:border-danger transition-colors flex items-center justify-center"
                 >
@@ -442,6 +454,11 @@ export function DailyGoalsPage() {
             />
           </label>
         </div>
+        {macroMismatch && (
+          <p className="text-xs text-honey -mt-1">
+            {t('dailyGoals.macroMismatch', { macroKcal: Math.round(macroDerivedKcal) })}
+          </p>
+        )}
         <button
           type="submit"
           className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm mt-1"

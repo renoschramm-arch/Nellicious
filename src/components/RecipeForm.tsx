@@ -256,7 +256,7 @@ export function RecipeForm({
       </div>
 
       <div className="flex flex-col gap-2">
-        <span className="text-sm font-medium">{t('recipeForm.suitableFor')}</span>
+        <span className="text-sm font-medium">{t('recipeForm.nutritionType')}</span>
         <div className="flex flex-wrap gap-1.5">
           {DIET_TAGS.map((tag) => (
             <button
@@ -384,6 +384,7 @@ export function RecipeForm({
           rows={6}
           className="rounded-lg border border-border bg-surface px-3 py-2 outline-none focus:border-primary font-mono text-sm"
         />
+        <span className="text-xs text-text-muted">{t('recipeForm.ingredientsMacroHint')}</span>
       </label>
 
       <label className="flex flex-col gap-1.5 text-sm">
@@ -398,7 +399,18 @@ export function RecipeForm({
 
       <details className="bg-surface border border-border rounded-2xl p-4 group">
         <summary className="flex items-center justify-between gap-2 cursor-pointer text-sm font-semibold list-none">
-          <span>{t('recipeForm.englishTranslation')}</span>
+          <span className="flex items-center gap-2">
+            {t('recipeForm.englishTranslation')}
+            {titleEn.trim() ? (
+              <span className="text-[10px] font-medium text-basil bg-basil/10 rounded-full px-2 py-0.5">
+                {t('recipeForm.englishTranslationPresent')}
+              </span>
+            ) : (
+              <span className="text-[10px] font-medium text-text-muted bg-surface-2 border border-border rounded-full px-2 py-0.5">
+                {t('recipeForm.englishTranslationMissing')}
+              </span>
+            )}
+          </span>
           <span className="text-text-muted transition-transform group-open:rotate-180">▾</span>
         </summary>
         <div className="flex flex-col gap-3 mt-3">
