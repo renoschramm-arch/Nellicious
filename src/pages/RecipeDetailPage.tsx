@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getDietTagLabels, getFreeOfLabels, getMealTypeLabels, localizeRecipeText, useRecipe } from '../lib/useRecipes'
 import { useMealLogs } from '../lib/useMealLogs'
@@ -114,6 +114,20 @@ export function RecipeDetailPage() {
     navigate('/rezepte')
   }
 
+  // Ein echtes Zurück (Browser-History, POP) statt eines festen Ziels, damit
+  // die Scroll-Wiederherstellung der aufrufenden Liste (z. B. Rezepteliste,
+  // Planer, Dashboard) greift — ein fester Link zu /rezepte würde immer eine
+  // neue Verlaufsposition anlegen (PUSH) und die dortige Scroll-Position nie
+  // wiederherstellen. Fällt auf /rezepte zurück, falls die Seite ohne
+  // eigene App-History aufgerufen wurde (z. B. direkter Link).
+  function handleBack() {
+    if (window.history.state?.idx > 0) {
+      navigate(-1)
+    } else {
+      navigate('/rezepte')
+    }
+  }
+
   function handleKochmodusToggle() {
     if (!hasPremium) {
       setShowPremiumModal(true)
@@ -183,12 +197,13 @@ export function RecipeDetailPage() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex items-center gap-2">
-        <Link
-          to="/rezepte"
+        <button
+          type="button"
+          onClick={handleBack}
           className="bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
         >
           {t('recipeDetail.backToRecipes')}
-        </Link>
+        </button>
         {isOwner && (
           <button
             onClick={() => setEditing(true)}
