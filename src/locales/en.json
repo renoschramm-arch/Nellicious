@@ -764,7 +764,7 @@
   "recipeDetail": {
     "loading": "Loading …",
     "notFound": "Recipe not found.",
-    "backToRecipes": "← Back to recipes",
+    "backToRecipes": "← Back",
     "edit": "Edit",
     "deleting": "Deleting …",
     "delete": "Delete",

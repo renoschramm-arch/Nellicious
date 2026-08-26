@@ -764,7 +764,7 @@
   "recipeDetail": {
     "loading": "Lädt …",
     "notFound": "Rezept nicht gefunden.",
-    "backToRecipes": "← Zurück zu Rezepten",
+    "backToRecipes": "← Zurück",
     "edit": "Bearbeiten",
     "deleting": "Wird gelöscht …",
     "delete": "Löschen",
