@@ -26,15 +26,11 @@ export function MultiAssignModal({
 }) {
   const { t, i18n } = useTranslation()
   const mealTypeLabels = getMealTypeLabels(t)
-  // Eigene Kurzformen statt der ersten zwei Buchstaben des vollen Namens:
-  // "Frühstück".slice(0, 2) und "Mittag".slice(0, 2) ergeben "Fr"/"Mi" —
-  // identisch mit den Wochentags-Kürzeln "Fr" (Freitag) / "Mi" (Mittwoch)
-  // in derselben Zeile, was die Spalten verwechselbar macht.
+  // Ausgeschriebene Namen statt Kürzel — nur "Frühstück" ist zu lang für die
+  // schmale Spalte und wird durch die ohnehin vorhandene Kurzform ersetzt.
   const slotShortLabels: Record<MealSlot, string> = {
-    fruehstueck: t('multiAssign.slotFruehstueck'),
-    mittag: t('multiAssign.slotMittag'),
-    abend: t('multiAssign.slotAbend'),
-    snack: t('multiAssign.slotSnack'),
+    ...mealTypeLabels,
+    fruehstueck: t('mealTypes.fruehstueckShort'),
   }
   const localizedTitle = localizeRecipeText(recipe, i18n.language).title
   const [selected, setSelected] = useState<Set<string>>(new Set())
