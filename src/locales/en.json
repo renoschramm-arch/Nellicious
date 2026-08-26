@@ -890,8 +890,8 @@
     "trialActive_other": "🎁 Premium trial: {{count}} days left"
   },
   "exportReport": {
-    "range30": "Last 30 days",
-    "range90": "Last 90 days",
+    "range30": "30 days",
+    "range90": "90 days",
     "rangeAll": "Full history",
     "csvMealHeaders": ["Date", "Time", "Meal", "kcal", "Protein (g)", "Carbs (g)", "Fat (g)"],
     "csvWeightHeaders": ["Date", "Weight (kg)"],
