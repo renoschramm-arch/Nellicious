@@ -499,9 +499,9 @@ export function VerlaufPage() {
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-        <h2 className="font-display font-semibold text-lg">{t('verlauf.weightTitle')}</h2>
+        <h2 className="font-display font-semibold text-lg text-cobalt">{t('verlauf.weightTitle')}</h2>
         {latestWeight && (
-          <span className="font-mono text-2xl">
+          <span className="font-mono text-2xl text-cobalt">
             {formatWeightKg(Number(latestWeight.weight_kg))} <span className="text-text-muted text-base">kg</span>
           </span>
         )}
@@ -550,7 +550,7 @@ export function VerlaufPage() {
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h2 className="font-display font-semibold text-lg flex items-center gap-2">
+          <h2 className="font-display font-semibold text-lg text-basil flex items-center gap-2">
             {t('verlauf.fastingTitle')}{!hasPremium && ' 🔒'}
             <button
               type="button"
@@ -979,7 +979,7 @@ export function VerlaufPage() {
                 className="flex items-center justify-between gap-2 bg-surface-2 rounded-lg px-3 py-2 text-sm"
               >
                 <span className="text-text-muted">{log.log_date}</span>
-                <span className="font-mono">{formatWeightKg(Number(log.weight_kg))} kg</span>
+                <span className="font-mono text-cobalt">{formatWeightKg(Number(log.weight_kg))} kg</span>
                 <button
                   type="button"
                   onClick={() => {
