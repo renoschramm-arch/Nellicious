@@ -890,8 +890,8 @@
     "trialActive_other": "🎁 Premium-Testphase: noch {{count}} Tage"
   },
   "exportReport": {
-    "range30": "Letzte 30 Tage",
-    "range90": "Letzte 90 Tage",
+    "range30": "30 Tage",
+    "range90": "90 Tage",
     "rangeAll": "Gesamter Verlauf",
     "csvMealHeaders": ["Datum", "Uhrzeit", "Mahlzeit", "kcal", "Protein (g)", "Kohlenhydrate (g)", "Fett (g)"],
     "csvWeightHeaders": ["Datum", "Gewicht (kg)"],
