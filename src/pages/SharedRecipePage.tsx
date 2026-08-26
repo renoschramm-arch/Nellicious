@@ -82,19 +82,19 @@ export function SharedRecipePage() {
 
             <div className="grid grid-cols-4 gap-2 font-mono text-sm">
               <div className="bg-surface border border-border rounded-xl p-3 text-center">
-                <div className="text-text-muted text-xs uppercase mb-1">kcal</div>
+                <div className="text-text-muted text-xs uppercase mb-1 break-words">kcal</div>
                 {recipe.kcal}
               </div>
               <div className="bg-surface border border-border rounded-xl p-3 text-center">
-                <div className="text-text-muted text-xs uppercase mb-1">{t('macros.protein')}</div>
+                <div className="text-text-muted text-xs uppercase mb-1 break-words">{t('macros.protein')}</div>
                 {recipe.protein_g}g
               </div>
               <div className="bg-surface border border-border rounded-xl p-3 text-center">
-                <div className="text-text-muted text-xs uppercase mb-1">{t('macros.carbs')}</div>
+                <div className="text-text-muted text-xs uppercase mb-1 break-words">{t('macros.carbs')}</div>
                 {recipe.carbs_g}g
               </div>
               <div className="bg-surface border border-border rounded-xl p-3 text-center">
-                <div className="text-text-muted text-xs uppercase mb-1">{t('macros.fat')}</div>
+                <div className="text-text-muted text-xs uppercase mb-1 break-words">{t('macros.fat')}</div>
                 {recipe.fat_g}g
               </div>
             </div>
