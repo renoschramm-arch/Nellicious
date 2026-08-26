@@ -1,9 +1,11 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { getDietTagLabels, getMealTypeLabels, localizeRecipeText, useRecipes } from '../lib/useRecipes'
 import type { NutritionType } from '../lib/useProfile'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { RecipeFilterBar } from '../components/RecipeFilterBar'
+import { WhatCanICookModal } from '../components/WhatCanICookModal'
 import { useFavorites } from '../lib/useFavorites'
 import { useRecipeFilters } from '../lib/useRecipeFilters'
 
@@ -14,6 +16,7 @@ export function RecipesPage() {
   const filters = useRecipeFilters(recipes, favoriteIds)
   const mealTypeLabels = getMealTypeLabels(t)
   const dietTagLabels = getDietTagLabels(t)
+  const [showWhatCanICook, setShowWhatCanICook] = useState(false)
 
   return (
     <div className="flex flex-col gap-6">
@@ -29,7 +32,18 @@ export function RecipesPage() {
           </Link>
         </div>
         <RecipeFilterBar filters={filters} />
+        <button
+          type="button"
+          onClick={() => setShowWhatCanICook(true)}
+          className="flex items-center justify-center gap-2 rounded-xl border border-border bg-surface/90 backdrop-blur-sm py-2.5 text-sm font-medium text-text hover:border-primary transition-colors"
+        >
+          {t('recipes.whatCanICookButton')}
+        </button>
       </div>
+
+      {showWhatCanICook && (
+        <WhatCanICookModal recipes={recipes} onClose={() => setShowWhatCanICook(false)} />
+      )}
 
       {loading && <p className="text-text-muted text-sm">{t('recipes.loading')}</p>}
       {!loading && filters.filtered.length === 0 && (
