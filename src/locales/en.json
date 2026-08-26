@@ -655,6 +655,10 @@
   "multiAssign": {
     "subtitle": "Which days and meals should this be planned for?",
     "close": "Close",
+    "slotFruehstueck": "Brk",
+    "slotMittag": "Lun",
+    "slotAbend": "Din",
+    "slotSnack": "Sna",
     "applySuggestion": "Apply suggestion: {{count}}× {{mealType}}",
     "occupiedBy": "Occupied: {{title}}",
     "slotsSelected_one": "{{count}} slot selected",

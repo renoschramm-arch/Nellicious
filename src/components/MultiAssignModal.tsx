@@ -26,6 +26,16 @@ export function MultiAssignModal({
 }) {
   const { t, i18n } = useTranslation()
   const mealTypeLabels = getMealTypeLabels(t)
+  // Eigene Kurzformen statt der ersten zwei Buchstaben des vollen Namens:
+  // "Frühstück".slice(0, 2) und "Mittag".slice(0, 2) ergeben "Fr"/"Mi" —
+  // identisch mit den Wochentags-Kürzeln "Fr" (Freitag) / "Mi" (Mittwoch)
+  // in derselben Zeile, was die Spalten verwechselbar macht.
+  const slotShortLabels: Record<MealSlot, string> = {
+    fruehstueck: t('multiAssign.slotFruehstueck'),
+    mittag: t('multiAssign.slotMittag'),
+    abend: t('multiAssign.slotAbend'),
+    snack: t('multiAssign.slotSnack'),
+  }
   const localizedTitle = localizeRecipeText(recipe, i18n.language).title
   const [selected, setSelected] = useState<Set<string>>(new Set())
   const [saving, setSaving] = useState(false)
@@ -108,7 +118,7 @@ export function MultiAssignModal({
                           key={slot}
                           type="button"
                           onClick={() => toggle(key)}
-                          title={occupiedTitle ? t('multiAssign.occupiedBy', { title: occupiedTitle }) : undefined}
+                          title={occupiedTitle ? t('multiAssign.occupiedBy', { title: occupiedTitle }) : mealTypeLabels[slot]}
                           className={`rounded-lg py-1.5 text-[11px] font-medium transition-colors ${
                             active
                               ? 'bg-primary text-on-primary'
@@ -117,7 +127,7 @@ export function MultiAssignModal({
                                 : 'bg-surface-2 border border-border text-text-muted hover:border-primary'
                           }`}
                         >
-                          {mealTypeLabels[slot].slice(0, 2)}
+                          {slotShortLabels[slot]}
                         </button>
                       )
                     })}
