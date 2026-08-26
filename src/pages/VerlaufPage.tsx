@@ -39,6 +39,27 @@ function lastSevenDays(): Date[] {
   return Array.from({ length: 7 }, (_, i) => addDays(today, i - 6))
 }
 
+// Konsistente SVG-Icons statt bare Unicode-Glyphen (✎/↺) — die rendern je
+// nach Font/Betriebssystem sehr unterschiedlich und wirken teils wie
+// verirrte Zeichen statt erkennbare Symbole.
+function EditIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 20h9" />
+      <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4Z" />
+    </svg>
+  )
+}
+
+function ResetIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M3 12a9 9 0 1 0 3-6.7" />
+      <path d="M3 3v5h5" />
+    </svg>
+  )
+}
+
 export function VerlaufPage() {
   const { t } = useTranslation()
   const { user } = useAuth()
@@ -367,9 +388,10 @@ export function VerlaufPage() {
               type="button"
               onClick={startEditingWaterSettings}
               aria-label={t('verlauf.waterSettingsAria')}
-              className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-xs text-text-muted hover:border-primary hover:text-text transition-colors"
+              title={t('verlauf.waterSettingsAria')}
+              className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
             >
-              ✎
+              <EditIcon />
             </button>
           </h2>
           <span className="font-mono text-sm">
@@ -468,9 +490,10 @@ export function VerlaufPage() {
               if (window.confirm(t('verlauf.confirmResetWater'))) resetWater()
             }}
             aria-label={t('verlauf.resetWaterAria')}
+            title={t('verlauf.resetWaterAria')}
             className="shrink-0 w-[38px] h-[38px] inline-flex items-center justify-center rounded-xl bg-surface-2 border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
           >
-            ↺
+            <ResetIcon />
           </button>
         </form>
       </div>
@@ -533,14 +556,16 @@ export function VerlaufPage() {
               type="button"
               onClick={startEditingFastingSettings}
               aria-label={t('verlauf.adjustProtocolsAria')}
-              className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-xs text-text-muted hover:border-primary hover:text-text transition-colors"
+              title={t('verlauf.adjustProtocolsAria')}
+              className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
             >
-              ✎
+              <EditIcon />
             </button>
             <button
               type="button"
               onClick={() => setShowFastingPhaseModal(true)}
               aria-label={t('verlauf.fastingInfoAria')}
+              title={t('verlauf.fastingInfoAria')}
               className="w-6 h-6 shrink-0 inline-flex items-center justify-center rounded-full bg-surface-2 border border-border text-xs text-text-muted hover:border-primary hover:text-text transition-colors"
             >
               ℹ️
@@ -833,6 +858,7 @@ export function VerlaufPage() {
                     onClick={() => setSessionEditMenuOpen(false)}
                     className="text-xs text-text-muted"
                     aria-label={t('common.cancel')}
+                    title={t('common.cancel')}
                   >
                     ✕
                   </button>
@@ -958,6 +984,7 @@ export function VerlaufPage() {
                   type="button"
                   onClick={() => deleteWeight(log.id)}
                   aria-label={t('verlauf.deleteEntryAria')}
+                  title={t('verlauf.deleteEntryAria')}
                   className="text-text-muted hover:text-danger"
                 >
                   ✕
@@ -984,6 +1011,7 @@ export function VerlaufPage() {
                     type="button"
                     onClick={() => deleteFastingSession(session.id)}
                     aria-label={t('verlauf.deleteFastingEntryAria')}
+                    title={t('verlauf.deleteFastingEntryAria')}
                     className="text-text-muted hover:text-danger"
                   >
                     ✕
