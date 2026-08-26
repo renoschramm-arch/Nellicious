@@ -41,6 +41,20 @@ interface ShoppingLine {
 
 const RECIPE_ACCENT_COUNT = 6
 
+// Zutaten aus unterschiedlichen Rezepten landen nur dann in derselben
+// Einkaufslisten-Zeile, wenn ihr Text exakt übereinstimmt — "400ml
+// Kokosmilch" und "400 ml Kokosmilch" galten bisher als zwei verschiedene
+// Zutaten. Normalisiert Groß-/Kleinschreibung, doppelte Leerzeichen und
+// fehlende Leerzeichen zwischen Zahl und Einheit für den Vergleich; die
+// ursprüngliche Schreibweise der ersten Zeile bleibt für die Anzeige erhalten.
+function normalizeIngredientText(text: string): string {
+  return text
+    .trim()
+    .toLowerCase()
+    .replace(/(\d)([a-zäöüß])/g, '$1 $2')
+    .replace(/\s+/g, ' ')
+}
+
 export function PlannerPage() {
   const { t, i18n } = useTranslation()
   const SLOTS: { key: MealSlot; label: string }[] = useMemo(() => {
@@ -244,15 +258,16 @@ export function PlannerPage() {
   }
 
   const flatLines = useMemo(() => {
-    const byText = new Map<string, LeafItem[]>()
+    const byKey = new Map<string, { displayText: string; leaves: LeafItem[] }>()
     for (const leaf of leafItems) {
-      const list = byText.get(leaf.text) ?? []
-      list.push(leaf)
-      byText.set(leaf.text, list)
+      const key = normalizeIngredientText(leaf.text)
+      const group = byKey.get(key)
+      if (group) group.leaves.push(leaf)
+      else byKey.set(key, { displayText: leaf.text, leaves: [leaf] })
     }
-    return Array.from(byText.entries()).map(([text, leaves]): ShoppingLine => ({
-      key: text,
-      text: scaleIngredient(text, leaves.length),
+    return Array.from(byKey.entries()).map(([key, { displayText, leaves }]): ShoppingLine => ({
+      key,
+      text: scaleIngredient(displayText, leaves.length),
       checked: leaves.every((l) => l.checked),
       refs: leaves.map((l) => ({ entryId: l.entryId, index: l.index })),
       recipeIds: Array.from(new Set(leaves.map((l) => l.recipeId))),
