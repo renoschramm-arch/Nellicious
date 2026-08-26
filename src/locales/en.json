@@ -743,7 +743,23 @@
     "loading": "Loading …",
     "noneFound": "No recipes found.",
     "removeFavorite": "Remove favorite",
-    "addFavorite": "Mark as favorite"
+    "addFavorite": "Mark as favorite",
+    "whatCanICookButton": "🧺 What can I cook?"
+  },
+  "whatCanICook": {
+    "title": "What can I cook?",
+    "subtitle": "Enter what you have at home — matching recipes will be suggested.",
+    "close": "Close",
+    "searchPlaceholder": "Search ingredient, e.g. onion",
+    "searching": "Searching …",
+    "searchFailed": "Search failed. Please enter manually.",
+    "addFreeText": "Add \"{{text}}\"",
+    "removeAria": "Remove {{name}}",
+    "noneYet": "No ingredients added yet.",
+    "showSuggestions": "Show recipe suggestions",
+    "noMatches": "No matching recipes found. Try adding more or different ingredients.",
+    "coverageBadge": "{{matched}}/{{total}} · {{pct}}%",
+    "adjustIngredients": "← Adjust ingredients"
   },
   "recipeDetail": {
     "loading": "Loading …",

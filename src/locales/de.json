@@ -743,7 +743,23 @@
     "loading": "Lädt …",
     "noneFound": "Keine Rezepte gefunden.",
     "removeFavorite": "Favorit entfernen",
-    "addFavorite": "Als Favorit markieren"
+    "addFavorite": "Als Favorit markieren",
+    "whatCanICookButton": "🧺 Was kann ich kochen?"
+  },
+  "whatCanICook": {
+    "title": "Was kann ich kochen?",
+    "subtitle": "Gib ein, was du zuhause hast — passende Rezepte werden vorgeschlagen.",
+    "close": "Schließen",
+    "searchPlaceholder": "Zutat suchen, z. B. Zwiebel",
+    "searching": "Suche …",
+    "searchFailed": "Suche fehlgeschlagen. Bitte manuell eintragen.",
+    "addFreeText": "\"{{text}}\" hinzufügen",
+    "removeAria": "{{name}} entfernen",
+    "noneYet": "Noch keine Zutaten hinzugefügt.",
+    "showSuggestions": "Rezeptvorschläge anzeigen",
+    "noMatches": "Keine passenden Rezepte gefunden. Versuch es mit mehr oder anderen Zutaten.",
+    "coverageBadge": "{{matched}}/{{total}} · {{pct}}%",
+    "adjustIngredients": "← Zutaten anpassen"
   },
   "recipeDetail": {
     "loading": "Lädt …",

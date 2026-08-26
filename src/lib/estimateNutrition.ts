@@ -1,4 +1,5 @@
 import { GERMAN_FOODS } from './germanFoodDatabase'
+import { significantWords } from './textMatch'
 
 export interface NutritionEstimate {
   kcal: number
@@ -79,40 +80,6 @@ function parseIngredientLine(line: string): ParsedIngredient {
 
   if (gramsPerUnit == null) return { grams: null, food: rest }
   return { grams: amount * gramsPerUnit, food: rest.slice(unitMatch![0].length).trim() }
-}
-
-const STOPWORDS = new Set([
-  'frisch',
-  'frische',
-  'frischer',
-  'fein',
-  'grob',
-  'gehackt',
-  'gehackte',
-  'gewürfelt',
-  'geraspelt',
-  'gerieben',
-  'geriebene',
-  'gemahlen',
-  'klein',
-  'kleine',
-  'groß',
-  'große',
-  'nach',
-  'geschmack',
-  'optional',
-  'oder',
-  'und',
-  'ca',
-  'etwa',
-])
-
-function significantWords(text: string): string[] {
-  return text
-    .toLowerCase()
-    .replace(/[(),.]/g, ' ')
-    .split(/\s+/)
-    .filter((w) => w.length >= 3 && !STOPWORDS.has(w))
 }
 
 // Zustände, die für den "roh vs. gekocht"-Vergleich als "nicht mehr roh"
