@@ -50,22 +50,24 @@
   --danger: #b3261e;
   --shadow: 0 1px 2px rgba(42, 27, 22, 0.06), 0 8px 24px -12px rgba(42, 27, 22, 0.18);
 
-  /* Rezept-Akzente für die Einkaufsliste — sechs zusätzliche, kräftige
-     Farben statt primary/basil/honey, die dort schon für
-     Aktion/Erfolg/Premium reserviert sind. Als Punkte (Als-Liste-Ansicht)
-     müssen sie satter sein als für die Kartentönung ("Nach Rezept"). */
-  --recipe-0: #2563a8;
-  --recipe-0-rgb: 37, 99, 168;
-  --recipe-1: #12897a;
-  --recipe-1-rgb: 18, 137, 122;
-  --recipe-2: #7c8a1f;
-  --recipe-2-rgb: 124, 138, 31;
-  --recipe-3: #ad3a8c;
-  --recipe-3-rgb: 173, 58, 140;
-  --recipe-4: #6f4fc7;
-  --recipe-4-rgb: 111, 79, 199;
-  --recipe-5: #8a5a35;
-  --recipe-5-rgb: 138, 90, 53;
+  /* Rezept-Akzente für die Einkaufsliste — sechs zusätzliche, maximal
+     unterscheidbare Farben statt primary/basil/honey, die dort schon für
+     Aktion/Erfolg/Premium reserviert sind. Angelehnt an ein bewährtes
+     kategoriales Palettenschema (D3/Tableau10), das gezielt Farbton UND
+     Helligkeit variiert statt nur den Farbton — zwei benachbarte Farbtöne
+     (z. B. Blau/Türkis) bleiben so auch bei kleinen Punkten klar trennbar. */
+  --recipe-0: #1f77b4;
+  --recipe-0-rgb: 31, 119, 180;
+  --recipe-1: #8a4fc4;
+  --recipe-1-rgb: 138, 79, 196;
+  --recipe-2: #9c6a3e;
+  --recipe-2-rgb: 156, 106, 62;
+  --recipe-3: #c2318f;
+  --recipe-3-rgb: 194, 49, 143;
+  --recipe-4: #8a9a1e;
+  --recipe-4-rgb: 138, 154, 30;
+  --recipe-5: #0b8793;
+  --recipe-5-rgb: 11, 135, 147;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -85,18 +87,18 @@
     --on-honey: #1c1310;
     --danger: #ff8a80;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 28px -14px rgba(0, 0, 0, 0.55);
-    --recipe-0: #7bb0e8;
-    --recipe-0-rgb: 123, 176, 232;
-    --recipe-1: #4fcdb8;
-    --recipe-1-rgb: 79, 205, 184;
-    --recipe-2: #c7d872;
-    --recipe-2-rgb: 199, 216, 114;
+    --recipe-0: #6fa8e0;
+    --recipe-0-rgb: 111, 168, 224;
+    --recipe-1: #b48ce8;
+    --recipe-1-rgb: 180, 140, 232;
+    --recipe-2: #d1a374;
+    --recipe-2-rgb: 209, 163, 116;
     --recipe-3: #e087c7;
     --recipe-3-rgb: 224, 135, 199;
-    --recipe-4: #b39ce8;
-    --recipe-4-rgb: 179, 156, 232;
-    --recipe-5: #cf9c6e;
-    --recipe-5-rgb: 207, 156, 110;
+    --recipe-4: #d0d873;
+    --recipe-4-rgb: 208, 216, 115;
+    --recipe-5: #4fd0d9;
+    --recipe-5-rgb: 79, 208, 217;
   }
 }
 :root[data-theme='dark'] {
@@ -115,18 +117,18 @@
   --on-honey: #1c1310;
   --danger: #ff8a80;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 28px -14px rgba(0, 0, 0, 0.55);
-  --recipe-0: #7bb0e8;
-  --recipe-0-rgb: 123, 176, 232;
-  --recipe-1: #4fcdb8;
-  --recipe-1-rgb: 79, 205, 184;
-  --recipe-2: #c7d872;
-  --recipe-2-rgb: 199, 216, 114;
+  --recipe-0: #6fa8e0;
+  --recipe-0-rgb: 111, 168, 224;
+  --recipe-1: #b48ce8;
+  --recipe-1-rgb: 180, 140, 232;
+  --recipe-2: #d1a374;
+  --recipe-2-rgb: 209, 163, 116;
   --recipe-3: #e087c7;
   --recipe-3-rgb: 224, 135, 199;
-  --recipe-4: #b39ce8;
-  --recipe-4-rgb: 179, 156, 232;
-  --recipe-5: #cf9c6e;
-  --recipe-5-rgb: 207, 156, 110;
+  --recipe-4: #d0d873;
+  --recipe-4-rgb: 208, 216, 115;
+  --recipe-5: #4fd0d9;
+  --recipe-5-rgb: 79, 208, 217;
 }
 
 /* Skaliert die Basis-Schriftgröße; Tailwinds rem-basierte text-*-Klassen
