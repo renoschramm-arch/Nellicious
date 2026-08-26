@@ -27,6 +27,16 @@ export function useScrollRestoration() {
     let cancelled = false
     let frame: number
 
+    // Scroll wird laufend mitgeschrieben statt erst beim Aufräumen gelesen:
+    // Wenn die Route wechselt, hat React zu diesem Zeitpunkt die alte Seite
+    // bereits durch die neue (oft kürzere) ersetzt — der Browser hat
+    // window.scrollY dadurch schon auf die neue, kürzere Seite gekappt.
+    // Ein Lesen erst im Aufräumen würde also fast immer 0 liefern.
+    function saveScroll() {
+      scrollPositions.set(location.key, window.scrollY)
+    }
+    window.addEventListener('scroll', saveScroll, { passive: true })
+
     if (navigationType === 'POP') {
       const target = scrollPositions.get(location.key) ?? 0
       const start = performance.now()
@@ -46,7 +56,7 @@ export function useScrollRestoration() {
     return () => {
       cancelled = true
       cancelAnimationFrame(frame)
-      scrollPositions.set(location.key, window.scrollY)
+      window.removeEventListener('scroll', saveScroll)
     }
   }, [location, navigationType])
 }
