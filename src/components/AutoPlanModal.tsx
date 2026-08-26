@@ -14,7 +14,7 @@ export function AutoPlanModal({
 }) {
   const { t } = useTranslation()
   const mealTypeLabels = getMealTypeLabels(t)
-  const [selectedSlots, setSelectedSlots] = useState<Set<MealSlot>>(new Set(MEAL_TYPES))
+  const [selectedSlots, setSelectedSlots] = useState<Set<MealSlot>>(new Set())
   const [overwrite, setOverwrite] = useState(false)
   const [running, setRunning] = useState(false)
   const [result, setResult] = useState<{ filled: number; unfilled: AutoPlanSlot[] } | null>(null)
