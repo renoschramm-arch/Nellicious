@@ -982,7 +982,9 @@ export function VerlaufPage() {
                 <span className="font-mono">{formatWeightKg(Number(log.weight_kg))} kg</span>
                 <button
                   type="button"
-                  onClick={() => deleteWeight(log.id)}
+                  onClick={() => {
+                    if (window.confirm(t('verlauf.confirmDeleteEntry'))) deleteWeight(log.id)
+                  }}
                   aria-label={t('verlauf.deleteEntryAria')}
                   title={t('verlauf.deleteEntryAria')}
                   className="text-text-muted hover:text-danger"
@@ -1009,7 +1011,9 @@ export function VerlaufPage() {
                   <span>{t('verlauf.protocolSuffix', { protocol: fastingProtocolLabel(session.target_hours) })}</span>
                   <button
                     type="button"
-                    onClick={() => deleteFastingSession(session.id)}
+                    onClick={() => {
+                      if (window.confirm(t('verlauf.confirmDeleteFastingEntry'))) deleteFastingSession(session.id)
+                    }}
                     aria-label={t('verlauf.deleteFastingEntryAria')}
                     title={t('verlauf.deleteFastingEntryAria')}
                     className="text-text-muted hover:text-danger"
