@@ -8,7 +8,7 @@ import { useRecipes, getMealTypeLabels, localizeRecipeText, MEAL_TYPES, type Rec
 import { RecipePickerModal } from '../components/RecipePickerModal'
 import { useFoodSearch, type FoodSearchResult } from '../lib/useFoodSearch'
 import { lookupFoodByBarcode } from '../lib/lookupFoodByBarcode'
-import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
+import { addDays, toISODate } from '../lib/week'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { FastingRingCard } from '../components/FastingRingCard'
 import { pickRandomQuote } from '../lib/motivationalQuotes'
@@ -30,16 +30,6 @@ function todayLabel(): string {
   return new Intl.DateTimeFormat(getIntlLocale(), { weekday: 'short', day: '2-digit', month: 'long' }).format(
     new Date(),
   )
-}
-
-function nextDays(t: (key: string) => string): { iso: string; label: string }[] {
-  const today = new Date()
-  return Array.from({ length: 7 }, (_, i) => {
-    const date = addDays(today, i)
-    const iso = toISODate(date)
-    const label = i === 0 ? t('dashboard.today') : i === 1 ? t('dashboard.tomorrow') : formatWeekdayShort(date)
-    return { iso, label }
-  })
 }
 
 export function DashboardPage() {
@@ -101,18 +91,16 @@ export function DashboardPage() {
     if (planEntry) await removePlanEntry(planEntry.id)
   }
 
-  async function handleAddRecipe(recipe: Recipe, date: string, slot: MealSlot) {
-    if (date === todayISO) {
-      await addLog({
-        name: localizeRecipeText(recipe, i18n.language).title,
-        kcal: recipe.kcal,
-        protein_g: recipe.protein_g,
-        carbs_g: recipe.carbs_g,
-        fat_g: recipe.fat_g,
-        recipe_id: recipe.id,
-      })
-    }
-    await setEntry(date, slot, recipe.id)
+  async function handleAddRecipe(recipe: Recipe, slot: MealSlot) {
+    await addLog({
+      name: localizeRecipeText(recipe, i18n.language).title,
+      kcal: recipe.kcal,
+      protein_g: recipe.protein_g,
+      carbs_g: recipe.carbs_g,
+      fat_g: recipe.fat_g,
+      recipe_id: recipe.id,
+    })
+    await setEntry(todayISO, slot, recipe.id)
     setShowForm(false)
   }
 
@@ -296,16 +284,14 @@ function RecipeAddForm({
   onAdd,
   onCancel,
 }: {
-  onAdd: (recipe: Recipe, date: string, slot: MealSlot) => Promise<void>
+  onAdd: (recipe: Recipe, slot: MealSlot) => Promise<void>
   onCancel: () => void
 }) {
   const { t, i18n } = useTranslation()
-  const days = nextDays(t)
   const mealTypeLabels = getMealTypeLabels(t)
   const SLOTS: { key: MealSlot; label: string }[] = MEAL_TYPES.map((key) => ({ key, label: mealTypeLabels[key] }))
   const [pickerOpen, setPickerOpen] = useState(false)
   const [recipe, setRecipe] = useState<Recipe | null>(null)
-  const [date, setDate] = useState(days[0].iso)
   const [slot, setSlot] = useState<MealSlot>('mittag')
   const [saving, setSaving] = useState(false)
 
@@ -318,24 +304,6 @@ function RecipeAddForm({
       >
         {recipe ? localizeRecipeText(recipe, i18n.language).title : t('dashboard.selectRecipePlaceholder')}
       </button>
-
-      <div className="flex flex-col gap-1.5">
-        <span className="text-xs text-text-muted">{t('dashboard.day')}</span>
-        <div className="flex items-center gap-1.5 flex-nowrap overflow-x-auto">
-          {days.map((d) => (
-            <button
-              key={d.iso}
-              type="button"
-              onClick={() => setDate(d.iso)}
-              className={`shrink-0 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                date === d.iso ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
-              }`}
-            >
-              {d.label}
-            </button>
-          ))}
-        </div>
-      </div>
 
       <div className="flex flex-col gap-1.5">
         <span className="text-xs text-text-muted">{t('dashboard.mealTypeLabel')}</span>
@@ -355,6 +323,13 @@ function RecipeAddForm({
         </div>
       </div>
 
+      <p className="text-xs text-text-muted">
+        {t('dashboard.planAheadHint')}{' '}
+        <Link to="/plan" className="text-primary font-medium hover:underline">
+          {t('dashboard.planAheadLink')}
+        </Link>
+      </p>
+
       <div className="flex gap-2 mt-1">
         <button
           type="button"
@@ -369,7 +344,7 @@ function RecipeAddForm({
           onClick={async () => {
             if (!recipe) return
             setSaving(true)
-            await onAdd(recipe, date, slot)
+            await onAdd(recipe, slot)
             setSaving(false)
           }}
           className="flex-1 bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm disabled:opacity-60"
