@@ -111,7 +111,7 @@ export function RecipeNewPage() {
       )}
 
       {imported && nutritionEstimate && (
-        <p className="text-xs text-honey bg-honey/10 border border-honey/30 rounded-xl px-3 py-2.5">
+        <p className="text-sm text-honey bg-honey/10 border border-honey/30 rounded-xl px-3 py-2.5 leading-relaxed">
           {t('recipeNew.nutritionEstimated', {
             matched: nutritionEstimate.matchedCount,
             total: nutritionEstimate.totalCount,
