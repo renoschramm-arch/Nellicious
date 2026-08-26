@@ -28,7 +28,7 @@ export function WhatCanICookModal({ recipes, onClose }: { recipes: Recipe[]; onC
   return (
     <div className="fixed inset-0 z-50 bg-black/40 flex items-end sm:items-center justify-center" onClick={onClose}>
       <div
-        className="bg-bg w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl max-h-[85vh] flex flex-col"
+        className="bg-bg w-full sm:max-w-md sm:rounded-2xl rounded-t-2xl min-h-[60vh] max-h-[85vh] flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between p-4 border-b border-border shrink-0">
@@ -48,7 +48,7 @@ export function WhatCanICookModal({ recipes, onClose }: { recipes: Recipe[]; onC
         <div className="p-4 overflow-y-auto flex flex-col gap-4">
           {!matches ? (
             <>
-              <div className="relative">
+              <div className="flex flex-col gap-2">
                 <input
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
@@ -62,7 +62,7 @@ export function WhatCanICookModal({ recipes, onClose }: { recipes: Recipe[]; onC
                   className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-sm outline-none focus:border-primary"
                 />
                 {query.trim().length >= 2 && (
-                  <div className="absolute top-full left-0 right-0 mt-1 z-10 bg-surface border border-border rounded-xl max-h-48 overflow-y-auto shadow-lg">
+                  <div className="bg-surface border border-border rounded-xl overflow-hidden">
                     {loading && <p className="text-xs text-text-muted px-3 py-2">{t('whatCanICook.searching')}</p>}
                     {!loading && error && (
                       <p className="text-xs text-danger px-3 py-2">{t('whatCanICook.searchFailed')}</p>
