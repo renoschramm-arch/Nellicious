@@ -283,20 +283,26 @@ export function PlannerPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => goToWeek(weekOffset - 1)}
-            className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
-            aria-label={t('planner.prevWeek')}
+            className="relative w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
+            aria-label={hasPremium ? t('planner.prevWeek') : `${t('planner.prevWeek')} 🔒`}
           >
             ←
+            {!hasPremium && (
+              <span aria-hidden className="absolute -top-1.5 -right-1.5 text-[10px] leading-none">🔒</span>
+            )}
           </button>
           <span className="font-mono text-xs text-text-muted min-w-[74px] text-center">
             {formatWeekRange(days[0], days[6])}
           </span>
           <button
             onClick={() => goToWeek(weekOffset + 1)}
-            className="w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
-            aria-label={t('planner.nextWeek')}
+            className="relative w-10 h-10 shrink-0 inline-flex items-center justify-center rounded-xl border border-border text-text-muted hover:border-primary hover:text-text transition-colors"
+            aria-label={hasPremium ? t('planner.nextWeek') : `${t('planner.nextWeek')} 🔒`}
           >
             →
+            {!hasPremium && (
+              <span aria-hidden className="absolute -top-1.5 -right-1.5 text-[10px] leading-none">🔒</span>
+            )}
           </button>
         </div>
       </div>
