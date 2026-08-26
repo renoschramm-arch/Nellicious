@@ -1,10 +1,12 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../lib/AuthContext'
+import { useScrollRestoration } from '../lib/useScrollRestoration'
 
 export function Layout() {
   const { t } = useTranslation()
   const { signOut } = useAuth()
+  useScrollRestoration()
 
   const navItems = [
     { to: '/', label: t('nav.today'), end: true },
