@@ -63,21 +63,21 @@ export function Layout() {
         <Outlet />
       </main>
       <nav className="sm:hidden fixed inset-x-0 bottom-0 z-10 border-t border-border bg-surface/95 backdrop-blur pl-[env(safe-area-inset-left)] pr-[env(safe-area-inset-right)]">
-        <div className="max-w-3xl mx-auto flex items-center justify-center gap-1 px-2.5 py-3">
+        <div className="max-w-3xl mx-auto flex items-center gap-1 px-2.5 py-3">
           {navItems.map((item) => (
             <NavLink
               key={item.to}
               to={item.to}
               end={item.end}
               className={({ isActive }) =>
-                `flex items-center justify-center px-3.5 py-3.5 rounded-full text-sm font-semibold whitespace-nowrap transition-colors ${
+                `flex-1 min-w-0 flex items-center justify-center px-1 py-3.5 rounded-full text-sm font-semibold transition-colors ${
                   isActive
                     ? 'bg-primary text-on-primary'
                     : 'text-text-muted hover:text-text'
                 }`
               }
             >
-              {item.label}
+              <span className="w-full text-center truncate">{item.label}</span>
             </NavLink>
           ))}
         </div>
