@@ -84,7 +84,7 @@
     "save": "Save"
   },
   "goals": {
-    "title": "Goals",
+    "title": "My goal",
     "whatToAchieve": "What do you want to achieve?",
     "targetWeight": "Target weight in kg (optional)",
     "targetWeightPlaceholder": "e.g. 70.0",
@@ -872,7 +872,7 @@
     "title": "More",
     "profileLabel": "My profile",
     "profileDesc": "Name, diet type, activity level",
-    "goalsLabel": "Goals",
+    "goalsLabel": "My goal",
     "goalsDesc": "What you want to achieve",
     "dailyGoalsLabel": "Daily goals",
     "dailyGoalsDesc": "kcal, protein, carbs, fat",
