@@ -283,6 +283,14 @@ export function RecipeDetailPage() {
         </div>
       </div>
 
+      <button
+        onClick={handleLog}
+        disabled={logging}
+        className="bg-primary text-on-primary font-semibold rounded-xl py-3 disabled:opacity-60"
+      >
+        {logging ? t('recipeDetail.logging') : t('recipeDetail.logAsMeal')}
+      </button>
+
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <h2 className="font-display font-semibold text-lg">
           {t('recipeDetail.scaleServings')}{!hasPremium && ' 🔒'}
@@ -385,14 +393,6 @@ export function RecipeDetailPage() {
         />
         {noteSaved && <span className="text-xs text-basil">{t('recipeDetail.noteSaved')}</span>}
       </div>
-
-      <button
-        onClick={handleLog}
-        disabled={logging}
-        className="bg-primary text-on-primary font-semibold rounded-xl py-3 disabled:opacity-60"
-      >
-        {logging ? t('recipeDetail.logging') : t('recipeDetail.logAsMeal')}
-      </button>
 
       {showPremiumModal && <PremiumModal onClose={() => setShowPremiumModal(false)} />}
     </div>
