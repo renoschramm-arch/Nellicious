@@ -58,6 +58,7 @@ export const INTOLERANCES = [
   'eifrei',
   'sojafrei',
   'histaminarm',
+  'zuckerfrei',
 ] as const
 
 export function getIntoleranceLabels(t: TFunction): Record<(typeof INTOLERANCES)[number], string> {
@@ -68,6 +69,7 @@ export function getIntoleranceLabels(t: TFunction): Record<(typeof INTOLERANCES)
     eifrei: t('profile.intoleranceEifrei'),
     sojafrei: t('profile.intoleranceSojafrei'),
     histaminarm: t('profile.intoleranceHistaminarm'),
+    zuckerfrei: t('profile.intoleranceZuckerfrei'),
   }
 }
 
@@ -79,6 +81,7 @@ export function getIntoleranceDescriptions(t: TFunction): Record<(typeof INTOLER
     eifrei: t('profile.intoleranceEifreiDesc'),
     sojafrei: t('profile.intoleranceSojafreiDesc'),
     histaminarm: t('profile.intoleranceHistaminarmDesc'),
+    zuckerfrei: t('profile.intoleranceZuckerfreiDesc'),
   }
 }
 
