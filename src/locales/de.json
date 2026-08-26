@@ -655,10 +655,6 @@
   "multiAssign": {
     "subtitle": "Für welche Tage und Mahlzeiten einplanen?",
     "close": "Schließen",
-    "slotFruehstueck": "Frü",
-    "slotMittag": "Mit",
-    "slotAbend": "Abe",
-    "slotSnack": "Sna",
     "applySuggestion": "Vorschlag übernehmen: {{count}}× {{mealType}}",
     "occupiedBy": "Belegt: {{title}}",
     "slotsSelected_one": "{{count}} Slot ausgewählt",
