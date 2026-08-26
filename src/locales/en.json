@@ -440,6 +440,11 @@
       "Completely redesigned landing page: animated feature previews that guide you through the app while scrolling",
       "Added 20 German and regional soups — from potato soup and Swabian lentil soup to solyanka, Flädle and chervil soup",
       "Vegetarian soups are now also found under the \"Pescatarian\" filter"
+    ],
+    "seq16": [
+      "🌐 Nellicious is now fully bilingual: German and English, switchable under More → Appearance",
+      "All 202 recipes (title, description, ingredients, instructions) are now also available in English",
+      "New recipe / edit recipe: new section for the optional English translation"
     ]
   },
   "quotes": [
