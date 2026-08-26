@@ -38,6 +38,17 @@ interface ShoppingLine {
   refs: IngredientRef[]
 }
 
+const RECIPE_ACCENT_COUNT = 6
+
+// Stabiler Index pro Rezept-ID statt zufälliger Reihenfolge — dieselbe
+// Rezept-ID bekommt bei jedem Rendern und über Sitzungen hinweg dieselbe
+// Akzentfarbe (CSS-Variablen --recipe-0 … --recipe-5 in index.css).
+function recipeAccentIndex(recipeId: string): number {
+  let hash = 0
+  for (let i = 0; i < recipeId.length; i++) hash = (hash * 31 + recipeId.charCodeAt(i)) >>> 0
+  return hash % RECIPE_ACCENT_COUNT
+}
+
 export function PlannerPage() {
   const { t, i18n } = useTranslation()
   const SLOTS: { key: MealSlot; label: string }[] = useMemo(() => {
@@ -443,15 +454,29 @@ export function PlannerPage() {
             {t('planner.shoppingDone')}
           </p>
         ) : shoppingView === 'grouped' ? (
-          <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-4">
-            {groupedByRecipe.map((group) => (
-              <div key={group.recipeId}>
-                <div className="text-xs font-mono uppercase tracking-wide text-text-muted mb-1.5">
-                  {group.recipeTitle}
+          <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+            {groupedByRecipe.map((group) => {
+              const accent = recipeAccentIndex(group.recipeId)
+              return (
+                <div
+                  key={group.recipeId}
+                  className="rounded-xl p-3"
+                  style={{ background: `rgba(var(--recipe-${accent}-rgb), 0.09)` }}
+                >
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <span
+                      className="w-2 h-2 rounded-full shrink-0"
+                      style={{ background: `var(--recipe-${accent})` }}
+                      aria-hidden
+                    />
+                    <span className="text-xs font-mono uppercase tracking-wide text-text-muted">
+                      {group.recipeTitle}
+                    </span>
+                  </div>
+                  <ul className="flex flex-col gap-1">{group.lines.map(renderLine)}</ul>
                 </div>
-                <ul className="flex flex-col gap-1">{group.lines.map(renderLine)}</ul>
-              </div>
-            ))}
+              )
+            })}
           </div>
         ) : (
           <div className="bg-surface border border-border rounded-2xl p-4">

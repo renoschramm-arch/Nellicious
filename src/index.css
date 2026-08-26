@@ -49,6 +49,22 @@
   --on-honey: #2a1b16;
   --danger: #b3261e;
   --shadow: 0 1px 2px rgba(42, 27, 22, 0.06), 0 8px 24px -12px rgba(42, 27, 22, 0.18);
+
+  /* Rezept-Akzente für die Einkaufsliste ("Nach Rezept") — sechs zusätzliche,
+     im Ton verwandte Farben statt primary/basil/honey, die dort schon für
+     Aktion/Erfolg/Premium reserviert sind. */
+  --recipe-0: #4f6f92;
+  --recipe-0-rgb: 79, 111, 146;
+  --recipe-1: #8a4a72;
+  --recipe-1-rgb: 138, 74, 114;
+  --recipe-2: #8a6f28;
+  --recipe-2-rgb: 138, 111, 40;
+  --recipe-3: #3f7a72;
+  --recipe-3-rgb: 63, 122, 114;
+  --recipe-4: #9c6a3e;
+  --recipe-4-rgb: 156, 106, 62;
+  --recipe-5: #5a5a92;
+  --recipe-5-rgb: 90, 90, 146;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -68,6 +84,18 @@
     --on-honey: #1c1310;
     --danger: #ff8a80;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 28px -14px rgba(0, 0, 0, 0.55);
+    --recipe-0: #8fb3d6;
+    --recipe-0-rgb: 143, 179, 214;
+    --recipe-1: #d99cc0;
+    --recipe-1-rgb: 217, 156, 192;
+    --recipe-2: #d3bd6e;
+    --recipe-2-rgb: 211, 189, 110;
+    --recipe-3: #7fc4b8;
+    --recipe-3-rgb: 127, 196, 184;
+    --recipe-4: #d1a077;
+    --recipe-4-rgb: 209, 160, 119;
+    --recipe-5: #a9a9d9;
+    --recipe-5-rgb: 169, 169, 217;
   }
 }
 :root[data-theme='dark'] {
@@ -86,6 +114,18 @@
   --on-honey: #1c1310;
   --danger: #ff8a80;
   --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 28px -14px rgba(0, 0, 0, 0.55);
+  --recipe-0: #8fb3d6;
+  --recipe-0-rgb: 143, 179, 214;
+  --recipe-1: #d99cc0;
+  --recipe-1-rgb: 217, 156, 192;
+  --recipe-2: #d3bd6e;
+  --recipe-2-rgb: 211, 189, 110;
+  --recipe-3: #7fc4b8;
+  --recipe-3-rgb: 127, 196, 184;
+  --recipe-4: #d1a077;
+  --recipe-4-rgb: 209, 160, 119;
+  --recipe-5: #a9a9d9;
+  --recipe-5-rgb: 169, 169, 217;
 }
 
 /* Skaliert die Basis-Schriftgröße; Tailwinds rem-basierte text-*-Klassen
