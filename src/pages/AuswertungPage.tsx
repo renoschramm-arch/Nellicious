@@ -216,7 +216,7 @@ export function AuswertungPage() {
             <div className="grid grid-cols-3 gap-2">
               <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{avgProtein} g</span>
-                <span className="text-[10px] text-text-muted">
+                <span className="text-[10px] text-text-muted break-words">
                   {t('macros.protein')}
                   {proteinGoal > 0 ? t('auswertung.proteinGoalSuffix', { goal: proteinGoal }) : ''}
                 </span>
@@ -229,7 +229,7 @@ export function AuswertungPage() {
               </div>
               <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{avgCarbs} g</span>
-                <span className="text-[10px] text-text-muted">
+                <span className="text-[10px] text-text-muted break-words">
                   {t('macros.carbs')}
                   {carbsGoal > 0 ? t('auswertung.proteinGoalSuffix', { goal: carbsGoal }) : ''}
                 </span>
@@ -242,7 +242,7 @@ export function AuswertungPage() {
               </div>
               <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-1.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{avgFat} g</span>
-                <span className="text-[10px] text-text-muted">
+                <span className="text-[10px] text-text-muted break-words">
                   {t('macros.fat')}
                   {fatGoal > 0 ? t('auswertung.proteinGoalSuffix', { goal: fatGoal }) : ''}
                 </span>

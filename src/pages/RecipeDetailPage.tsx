@@ -281,19 +281,19 @@ export function RecipeDetailPage() {
 
       <div className="grid grid-cols-4 gap-2 font-mono text-sm">
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-text-muted text-xs uppercase mb-1">kcal</div>
+          <div className="text-text-muted text-xs uppercase mb-1 break-words">kcal</div>
           {scaleMacro(recipe.kcal, scaleFactor)}
         </div>
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-text-muted text-xs uppercase mb-1">{t('macros.protein')}</div>
+          <div className="text-text-muted text-xs uppercase mb-1 break-words">{t('macros.protein')}</div>
           {scaleMacro(recipe.protein_g, scaleFactor)}g
         </div>
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-text-muted text-xs uppercase mb-1">{t('macros.carbs')}</div>
+          <div className="text-text-muted text-xs uppercase mb-1 break-words">{t('macros.carbs')}</div>
           {scaleMacro(recipe.carbs_g, scaleFactor)}g
         </div>
         <div className="bg-surface border border-border rounded-xl p-3 text-center">
-          <div className="text-text-muted text-xs uppercase mb-1">{t('macros.fat')}</div>
+          <div className="text-text-muted text-xs uppercase mb-1 break-words">{t('macros.fat')}</div>
           {scaleMacro(recipe.fat_g, scaleFactor)}g
         </div>
       </div>
