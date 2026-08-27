@@ -504,61 +504,6 @@ export function VerlaufPage() {
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-        <h2 className="font-display font-semibold text-lg text-cobalt">{t('verlauf.weightTitle')}</h2>
-        {latestWeight && (
-          <span className="font-mono text-2xl text-cobalt">
-            {formatWeightKg(Number(latestWeight.weight_kg))} <span className="text-text-muted text-base">kg</span>
-          </span>
-        )}
-        {latestWeight && targetWeightKg != null && (
-          <span className="text-xs text-text-muted -mt-2">
-            {weightDiffKg <= 0.05
-              ? t('verlauf.targetReached')
-              : t('verlauf.targetRemaining', {
-                  diff: formatWeightKg(weightDiffKg),
-                  target: formatWeightKg(targetWeightKg),
-                })}
-          </span>
-        )}
-        <form onSubmit={handleWeightSubmit} className="flex flex-col gap-3">
-          <div className="grid grid-cols-2 gap-2">
-            <label className="flex flex-col gap-1 text-xs text-text-muted">
-              {t('verlauf.date')}
-              <input
-                type="date"
-                value={weightDate}
-                max={today}
-                onChange={(e) => setWeightDate(e.target.value)}
-                className="rounded-lg border border-border bg-bg px-2 py-1.5 text-sm outline-none focus:border-primary"
-              />
-            </label>
-            <label className="flex flex-col gap-1 text-xs text-text-muted">
-              {t('verlauf.weightKg')}
-              <input
-                type="text"
-                inputMode="decimal"
-                value={weightValue}
-                onChange={(e) => setWeightValue(e.target.value)}
-                placeholder={t('verlauf.weightPlaceholder')}
-                className="rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono outline-none focus:border-primary"
-              />
-            </label>
-          </div>
-          <button
-            type="submit"
-            className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
-          >
-            {t('verlauf.logButton')}
-          </button>
-        </form>
-
-        <div className="flex flex-col gap-2 pt-3 border-t border-border">
-          <span className="text-sm font-medium text-text-muted">{t('verlauf.weightLast7')}</span>
-          <WeekBarChart data={weightChartData} color="var(--color-cobalt)" />
-        </div>
-      </div>
-
-      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-semibold text-lg text-basil flex items-center gap-2">
             {t('verlauf.fastingTitle')}{!hasPremium && ' 🔒'}
@@ -905,6 +850,61 @@ export function VerlaufPage() {
         <div className="flex flex-col gap-2 pt-3 border-t border-border">
           <span className="text-sm font-medium text-text-muted">{t('verlauf.fastingLast7')}</span>
           <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
+        </div>
+      </div>
+
+      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+        <h2 className="font-display font-semibold text-lg text-cobalt">{t('verlauf.weightTitle')}</h2>
+        {latestWeight && (
+          <span className="font-mono text-2xl text-cobalt">
+            {formatWeightKg(Number(latestWeight.weight_kg))} <span className="text-text-muted text-base">kg</span>
+          </span>
+        )}
+        {latestWeight && targetWeightKg != null && (
+          <span className="text-xs text-text-muted -mt-2">
+            {weightDiffKg <= 0.05
+              ? t('verlauf.targetReached')
+              : t('verlauf.targetRemaining', {
+                  diff: formatWeightKg(weightDiffKg),
+                  target: formatWeightKg(targetWeightKg),
+                })}
+          </span>
+        )}
+        <form onSubmit={handleWeightSubmit} className="flex flex-col gap-3">
+          <div className="grid grid-cols-2 gap-2">
+            <label className="flex flex-col gap-1 text-xs text-text-muted">
+              {t('verlauf.date')}
+              <input
+                type="date"
+                value={weightDate}
+                max={today}
+                onChange={(e) => setWeightDate(e.target.value)}
+                className="rounded-lg border border-border bg-bg px-2 py-1.5 text-sm outline-none focus:border-primary"
+              />
+            </label>
+            <label className="flex flex-col gap-1 text-xs text-text-muted">
+              {t('verlauf.weightKg')}
+              <input
+                type="text"
+                inputMode="decimal"
+                value={weightValue}
+                onChange={(e) => setWeightValue(e.target.value)}
+                placeholder={t('verlauf.weightPlaceholder')}
+                className="rounded-lg border border-border bg-bg px-2 py-1.5 text-sm font-mono outline-none focus:border-primary"
+              />
+            </label>
+          </div>
+          <button
+            type="submit"
+            className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
+          >
+            {t('verlauf.logButton')}
+          </button>
+        </form>
+
+        <div className="flex flex-col gap-2 pt-3 border-t border-border">
+          <span className="text-sm font-medium text-text-muted">{t('verlauf.weightLast7')}</span>
+          <WeekBarChart data={weightChartData} color="var(--color-cobalt)" />
         </div>
       </div>
 
