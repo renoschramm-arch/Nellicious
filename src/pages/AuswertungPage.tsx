@@ -199,7 +199,7 @@ export function AuswertungPage() {
 
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
             <h2 className="font-display font-semibold text-lg">{t('auswertung.weightHistory')}</h2>
-            <WeightTrendChart points={weightPoints} color="var(--color-basil)" />
+            <WeightTrendChart points={weightPoints} color="var(--color-cobalt)" />
           </div>
 
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
