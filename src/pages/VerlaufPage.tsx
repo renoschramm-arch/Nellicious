@@ -496,6 +496,11 @@ export function VerlaufPage() {
             <ResetIcon />
           </button>
         </form>
+
+        <div className="flex flex-col gap-2 pt-3 border-t border-border">
+          <span className="text-sm font-medium text-text-muted">{t('verlauf.waterLast7')}</span>
+          <WeekBarChart data={waterChartData} color="var(--color-honey)" />
+        </div>
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
@@ -546,6 +551,11 @@ export function VerlaufPage() {
             {t('verlauf.logButton')}
           </button>
         </form>
+
+        <div className="flex flex-col gap-2 pt-3 border-t border-border">
+          <span className="text-sm font-medium text-text-muted">{t('verlauf.weightLast7')}</span>
+          <WeekBarChart data={weightChartData} color="var(--color-cobalt)" />
+        </div>
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
@@ -603,11 +613,6 @@ export function VerlaufPage() {
                       </>
                     )}
                   </span>
-                  {currentFastingPhase && (
-                    <span className="block text-text-muted text-xs mt-0.5">
-                      {t('verlauf.phaseLabel', { title: currentFastingPhase.title })}
-                    </span>
-                  )}
                 </>
               ) : eatingWindow ? (
                 <>
@@ -637,6 +642,15 @@ export function VerlaufPage() {
                 </>
               )}
             </div>
+          </div>
+        )}
+
+        {activeSession && currentFastingPhase && (
+          <div className="flex flex-col gap-1">
+            <span className="inline-flex w-fit items-center rounded-lg bg-basil/10 border border-basil/30 px-2.5 py-1.5 font-display font-semibold text-sm text-basil">
+              {currentFastingPhase.title}
+            </span>
+            <p className="text-xs text-text-muted leading-relaxed">{currentFastingPhase.text}</p>
           </div>
         )}
 
@@ -887,6 +901,11 @@ export function VerlaufPage() {
             )}
           </div>
         ))}
+
+        <div className="flex flex-col gap-2 pt-3 border-t border-border">
+          <span className="text-sm font-medium text-text-muted">{t('verlauf.fastingLast7')}</span>
+          <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
+        </div>
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
@@ -906,21 +925,6 @@ export function VerlaufPage() {
             {weekMacroAvg.fat_g} g
           </div>
         </div>
-      </div>
-
-      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-        <span className="text-sm font-medium text-text-muted">{t('verlauf.waterLast7')}</span>
-        <WeekBarChart data={waterChartData} color="var(--color-honey)" />
-      </div>
-
-      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-        <span className="text-sm font-medium text-text-muted">{t('verlauf.weightLast7')}</span>
-        <WeekBarChart data={weightChartData} color="var(--color-cobalt)" />
-      </div>
-
-      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-        <span className="text-sm font-medium text-text-muted">{t('verlauf.fastingLast7')}</span>
-        <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">

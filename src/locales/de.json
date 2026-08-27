@@ -561,7 +561,6 @@
     "goalReached": "Fastenziel erreicht",
     "atTime": "um {{time}} Uhr",
     "sinceTime": "seit {{time}} Uhr",
-    "phaseLabel": "Phase: {{title}}",
     "eatingBeginsIn": "Fastenzeit beginnt in",
     "eatingWindowExceeded": "Essensfenster überzogen",
     "readyToFast": "Bereit zum Fasten",
