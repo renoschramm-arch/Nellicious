@@ -465,6 +465,12 @@
       "Zurück-Navigation merkt sich jetzt die Scroll-Position (z. B. von Rezeptdetail zurück zur Liste)",
       "Diverse Lesbarkeits-Fixes bei großer Schriftgröße (Menüleiste, Nährwert-Kacheln, Fasten-Verlauf)",
       "Zahlreiche kleinere Bedienbarkeits-Verbesserungen aus einem UX-Review (klarere Bezeichnungen, Bestätigungsdialoge vor dem Löschen, u. a.)"
+    ],
+    "seq18": [
+      "🚀 Onboarding für neue Nutzer:innen: nach der Registrierung geht's direkt weiter zu Profil, Ziel und Tageszielen",
+      "Anmeldeseite: klarerer Hinweis, nach der Registrierung das E-Mail-Postfach zur Bestätigung zu prüfen",
+      "Verlauf: Wochen-Balkencharts für Wasser, Gewicht und Fasten stecken jetzt direkt in der jeweiligen Eingabe-Karte",
+      "Verlauf: aktuelle Fastenphase wird jetzt mit Beschreibung prominent angezeigt"
     ]
   },
   "quotes": [

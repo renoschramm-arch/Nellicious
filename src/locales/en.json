@@ -465,6 +465,12 @@
       "Back navigation now remembers your scroll position (e.g. from a recipe back to the list)",
       "Various readability fixes at large font size (nav bar, nutrition tiles, fasting history)",
       "Numerous smaller usability improvements from a UX review (clearer labels, delete confirmation dialogs, and more)"
+    ],
+    "seq18": [
+      "🚀 Onboarding for new users: right after signing up, you're guided straight to your profile, goal, and daily targets",
+      "Sign-up page: clearer hint to check your inbox for the confirmation email after registering",
+      "History: weekly bar charts for water, weight, and fasting now live right inside their matching input card",
+      "History: your current fasting phase is now shown more prominently, with a description"
     ]
   },
   "quotes": [
