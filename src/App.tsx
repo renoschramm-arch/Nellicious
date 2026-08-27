@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthProvider } from './lib/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { Layout } from './components/Layout'
@@ -22,10 +23,27 @@ import { DarstellungPage } from './pages/DarstellungPage'
 import { InfoPage } from './pages/InfoPage'
 import { NeuInNelliciousPage } from './pages/NeuInNelliciousPage'
 
+// Geteilte Rezept-Links zeigen auf die Startseite mit ?share=<id> statt auf
+// /rezept-teilen/:id direkt, damit Linkvorschau-Crawler eine echte 200-Antwort
+// bekommen (siehe Kommentar in RecipeDetailPage.tsx). Menschen werden hier
+// clientseitig zur eigentlichen Rezeptseite weitergeleitet.
+function ShareLinkRedirect() {
+  const [searchParams] = useSearchParams()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const id = searchParams.get('share')
+    if (id) navigate(`/rezept-teilen/${id}`, { replace: true })
+  }, [searchParams, navigate])
+
+  return null
+}
+
 export default function App() {
   return (
     <BrowserRouter basename="/Nellicious">
       <AuthProvider>
+        <ShareLinkRedirect />
         <Routes>
           <Route path="/willkommen" element={<LandingPage />} />
           <Route path="/anmelden" element={<AuthPage />} />

@@ -145,7 +145,14 @@ export function RecipeDetailPage() {
     // Teilen-Dialog öffnet sich gar nicht erst — ohne jede Fehlermeldung.
     if (!recipe.is_shared) void setShared(true)
 
-    const url = `${window.location.origin}${import.meta.env.BASE_URL}rezept-teilen/${recipe.id}`
+    // Als Query-Parameter auf der Startseite statt als eigener Pfad: GitHub
+    // Pages liefert für /rezept-teilen/:id nur über den 404.html-Fallback
+    // aus — mit echtem HTTP-404-Status. Linkvorschau-Crawler (WhatsApp,
+    // Facebook, ...) zeigen bei 404 keine Vorschau, selbst mit korrekten
+    // og-Tags im Body. Die Startseite existiert dagegen als echte Datei
+    // (200 OK); ShareLinkRedirect leitet Menschen von dort clientseitig
+    // zur eigentlichen Rezeptseite weiter.
+    const url = `${window.location.origin}${import.meta.env.BASE_URL}?share=${recipe.id}`
     const shareText = t('recipeDetail.shareText', { title: localized.title, kcal: recipe.kcal })
     // navigator.share existiert zwar auch in Desktop-Chrome (v. a. unter
     // Windows), der native Teilen-Dialog ist dort aber unzuverlässig und
