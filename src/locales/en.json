@@ -879,7 +879,8 @@
     "createAccount": "Create account",
     "noAccount": "No account yet? Sign up",
     "haveAccount": "Already have an account? Sign in",
-    "signUpSuccess": "Account created. Please confirm your email address if required, then sign in."
+    "signUpSuccess": "Account created! Please check your email inbox (and spam folder, if needed) and confirm your address so you can sign in.",
+    "signUpEmailHint": "We'll send you a confirmation email after you submit this form."
   },
   "premium": {
     "title": "🔒 Nellicious Premium",
