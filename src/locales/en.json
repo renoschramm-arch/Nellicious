@@ -68,6 +68,13 @@
     "goalZunehmen": "Gain weight",
     "goalMuskelaufbau": "Build muscle"
   },
+  "onboarding": {
+    "step1": "Step 1 of 3 · Personal details",
+    "step2": "Step 2 of 3 · Your goal",
+    "step3": "Step 3 of 3 · Daily targets",
+    "continue": "Continue",
+    "finish": "Finish"
+  },
   "profileEdit": {
     "title": "My profile",
     "name": "Name",

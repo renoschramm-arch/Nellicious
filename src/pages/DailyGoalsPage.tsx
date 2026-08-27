@@ -1,6 +1,7 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import type { OnboardingState } from '../lib/useOnboarding'
 import {
   useProfile,
   ACTIVITY_LEVELS,
@@ -31,6 +32,9 @@ export function DailyGoalsPage() {
     weightKg: { label: t('dailyGoals.fieldWeight') },
   }
   const { profile, updateProfile, reload: reloadProfile } = useProfile()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const onboarding = (location.state as OnboardingState | null)?.onboarding ?? false
   const { logs: weightLogs, upsertWeight } = useWeightLogs()
   const genderLabels = getGenderLabels(t)
   const activityLevelLabels = getActivityLevelLabels(t)
@@ -135,6 +139,10 @@ export function DailyGoalsPage() {
       daily_carbs_goal: Number(carbs),
       daily_fat_goal: Number(fat),
     })
+    if (onboarding) {
+      navigate('/')
+      return
+    }
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
@@ -186,7 +194,10 @@ export function DailyGoalsPage() {
           {t('dailyGoals.back')}
         </Link>
       </div>
-      <h1 className="font-display font-bold text-2xl">{t('dailyGoals.title')}</h1>
+      <div className="flex flex-col gap-1">
+        <h1 className="font-display font-bold text-2xl">{t('dailyGoals.title')}</h1>
+        {onboarding && <p className="text-xs font-medium text-primary">{t('onboarding.step3')}</p>}
+      </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <span className="text-sm font-medium">
@@ -463,7 +474,7 @@ export function DailyGoalsPage() {
           type="submit"
           className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm mt-1"
         >
-          {saved ? t('dailyGoals.saved') : t('dailyGoals.save')}
+          {onboarding ? t('onboarding.finish') : saved ? t('dailyGoals.saved') : t('dailyGoals.save')}
         </button>
       </form>
 
