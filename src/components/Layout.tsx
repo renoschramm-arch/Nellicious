@@ -2,11 +2,13 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../lib/AuthContext'
 import { useScrollRestoration } from '../lib/useScrollRestoration'
+import { useOnboardingRedirect } from '../lib/useOnboarding'
 
 export function Layout() {
   const { t } = useTranslation()
   const { signOut } = useAuth()
   useScrollRestoration()
+  useOnboardingRedirect()
 
   const navItems = [
     { to: '/', label: t('nav.today'), end: true },

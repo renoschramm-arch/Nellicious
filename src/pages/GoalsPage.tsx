@@ -1,13 +1,18 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useProfile } from '../lib/useProfile'
 import { GOALS, getGoalLabels, type Goal } from '../lib/useProfile'
 import { useWeightLogs, formatWeightKg, parseWeightKg } from '../lib/useWeightLogs'
+import type { OnboardingState } from '../lib/useOnboarding'
 
 export function GoalsPage() {
   const { t } = useTranslation()
   const { profile, updateProfile } = useProfile()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const onboarding = (location.state as OnboardingState | null)?.onboarding ?? false
+  const onboardingNext = (location.state as OnboardingState | null)?.onboardingNext
   const { logs: weightLogs } = useWeightLogs()
   const [goal, setGoal] = useState<Goal | null>(null)
   const [goalNote, setGoalNote] = useState('')
@@ -42,6 +47,10 @@ export function GoalsPage() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
     await updateProfile({ goal, goal_note: goalNote, target_weight_kg: parsedTarget })
+    if (onboarding && onboardingNext) {
+      navigate(onboardingNext, { state: { onboarding: true, onboardingNext: '/' } })
+      return
+    }
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
@@ -56,7 +65,10 @@ export function GoalsPage() {
           {t('common.back')}
         </Link>
       </div>
-      <h1 className="font-display font-bold text-2xl">{t('goals.title')}</h1>
+      <div className="flex flex-col gap-1">
+        <h1 className="font-display font-bold text-2xl">{t('goals.title')}</h1>
+        {onboarding && <p className="text-xs font-medium text-primary">{t('onboarding.step2')}</p>}
+      </div>
 
       <form
         onSubmit={handleSubmit}
@@ -110,7 +122,7 @@ export function GoalsPage() {
           type="submit"
           className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
         >
-          {saved ? t('goals.saved') : t('goals.save')}
+          {onboarding ? t('onboarding.continue') : saved ? t('goals.saved') : t('goals.save')}
         </button>
       </form>
     </div>

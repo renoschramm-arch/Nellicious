@@ -1,7 +1,8 @@
 import { useEffect, useState, type FormEvent } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useProfile } from '../lib/useProfile'
+import type { OnboardingState } from '../lib/useOnboarding'
 import {
   ACTIVITY_LEVELS,
   getActivityLevelLabels,
@@ -22,6 +23,10 @@ import { TagLegend } from '../components/TagLegend'
 export function ProfileEditPage() {
   const { t } = useTranslation()
   const { profile, updateProfile } = useProfile()
+  const location = useLocation()
+  const navigate = useNavigate()
+  const onboarding = (location.state as OnboardingState | null)?.onboarding ?? false
+  const onboardingNext = (location.state as OnboardingState | null)?.onboardingNext
   const [displayName, setDisplayName] = useState('')
   const [age, setAge] = useState('')
   const [heightCm, setHeightCm] = useState('')
@@ -66,6 +71,10 @@ export function ProfileEditPage() {
       intolerances,
       activity_level: activityLevel,
     })
+    if (onboarding && onboardingNext) {
+      navigate(onboardingNext, { state: { onboarding: true, onboardingNext: '/mehr/tagesziele' } })
+      return
+    }
     setSaved(true)
     setTimeout(() => setSaved(false), 2000)
   }
@@ -80,7 +89,10 @@ export function ProfileEditPage() {
           {t('common.back')}
         </Link>
       </div>
-      <h1 className="font-display font-bold text-2xl">{t('profileEdit.title')}</h1>
+      <div className="flex flex-col gap-1">
+        <h1 className="font-display font-bold text-2xl">{t('profileEdit.title')}</h1>
+        {onboarding && <p className="text-xs font-medium text-primary">{t('onboarding.step1')}</p>}
+      </div>
 
       <form
         onSubmit={handleSubmit}
@@ -218,7 +230,7 @@ export function ProfileEditPage() {
           type="submit"
           className="bg-primary text-on-primary font-semibold rounded-xl py-2.5 text-sm"
         >
-          {saved ? t('profileEdit.saved') : t('profileEdit.save')}
+          {onboarding ? t('onboarding.continue') : saved ? t('profileEdit.saved') : t('profileEdit.save')}
         </button>
       </form>
     </div>
