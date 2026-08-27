@@ -915,7 +915,7 @@ export function VerlaufPage() {
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
         <span className="text-sm font-medium text-text-muted">{t('verlauf.weightLast7')}</span>
-        <WeekBarChart data={weightChartData} color="var(--color-basil)" />
+        <WeekBarChart data={weightChartData} color="var(--color-cobalt)" />
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
