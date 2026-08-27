@@ -81,6 +81,9 @@ export function AuthPage() {
               {t('auth.forgotPassword')}
             </Link>
           )}
+          {mode === 'signup' && (
+            <p className="text-xs text-text-muted -mt-2">{t('auth.signUpEmailHint')}</p>
+          )}
 
           {error && <p className="text-sm text-danger">{error}</p>}
           {info && <p className="text-sm text-basil">{info}</p>}
