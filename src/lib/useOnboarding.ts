@@ -11,7 +11,7 @@ import { useProfile } from './useProfile'
 // Mein Profil → Mein Ziel → Tagesziele geleitet. Der Sitzungs-Flag
 // verhindert ein erneutes Auslösen, unabhängig davon, ob der Durchlauf
 // abgeschlossen oder z. B. über "Zurück" übersprungen wurde.
-const SEEN_KEY = 'nellicious-onboarding-seen'
+const SEEN_KEY_PREFIX = 'nellicious-onboarding-seen:'
 const ONBOARDING_PATHS = ['/mehr/profil', '/mehr/ziele', '/mehr/tagesziele']
 
 export interface OnboardingState {
@@ -26,10 +26,11 @@ export function useOnboardingRedirect() {
 
   useEffect(() => {
     if (loading || !profile) return
-    if (localStorage.getItem(SEEN_KEY)) return
+    const seenKey = SEEN_KEY_PREFIX + profile.id
+    if (localStorage.getItem(seenKey)) return
     if (ONBOARDING_PATHS.includes(location.pathname)) return
 
-    localStorage.setItem(SEEN_KEY, '1')
+    localStorage.setItem(seenKey, '1')
 
     const isEmpty = !profile.display_name && !profile.nutrition_type && !profile.goal
     if (!isEmpty) return
