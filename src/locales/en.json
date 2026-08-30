@@ -478,6 +478,9 @@
       "Shared recipes are now visible without signing in",
       "Recipe links now show a preview with app icon and name when shared (e.g. via WhatsApp)",
       "More reliable delivery of confirmation emails during sign-up"
+    ],
+    "seq20": [
+      "🥄 Ingredient amounts: for honey, butter, flour, breadcrumbs & co., a spoon measure (tbsp/tsp) now appears alongside the gram amount"
     ]
   },
   "quotes": [
