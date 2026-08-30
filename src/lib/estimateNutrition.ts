@@ -47,25 +47,42 @@ const FRACTIONS: Record<string, number> = {
   '⅛': 0.125,
 }
 
-const NUMBER_TOKEN = String.raw`\d+(?:[.,]\d+)?|[½⅓⅔¼¾⅕⅙⅛]`
+// "1/2 TL ..." (mit Tastatur-Schrägstrich) muss vor der reinen Ganzzahl-
+// Variante stehen, sonst matcht die Alternation nur die "1" und lässt das
+// "/2" (und damit die ganze Einheit dahinter) unverarbeitet stehen.
+const NUMBER_TOKEN = String.raw`\d+/\d+|\d+(?:[.,]\d+)?|[½⅓⅔¼¾⅕⅙⅛]`
 const LEADING_AMOUNT_RE = new RegExp(`^\\s*(${NUMBER_TOKEN})(?:\\s*[-–]\\s*(?:${NUMBER_TOKEN}))?\\s*`)
 const UNIT_TOKEN_RE = /^([a-zA-ZäöüÄÖÜß]+)\.?\s+/
 
 function parseAmountToken(token: string): number | null {
   if (token in FRACTIONS) return FRACTIONS[token]
+  if (token.includes('/')) {
+    const [num, den] = token.split('/').map(Number)
+    return den ? num / den : null
+  }
   const n = Number(token.replace(',', '.'))
   return Number.isFinite(n) ? n : null
 }
 
+// Zutaten mit einem verlässlichen Standardgewicht pro Stück — anders als bei
+// Zwiebeln, Knoblauchzehen o. Ä., deren Größe zu stark schwankt, um sie ohne
+// Gramm-/Volumenangabe seriös zu schätzen. Ei-Größe M ist EU-weit genormt
+// (ca. 53–63 g), daher hier als Ausnahme mit fester ID statt Fuzzy-Suche —
+// "Ei" ist als Wort zu kurz für die Wortüberlappung in findBestFoodMatch.
+const PIECE_FOODS: { pattern: RegExp; gramsPerPiece: number; foodId: string }[] = [
+  { pattern: /^eier?\b/i, gramsPerPiece: 58, foodId: 'local-150' },
+]
+
 interface ParsedIngredient {
   grams: number | null
   food: string
+  directFoodId?: string
 }
 
 // Zerlegt eine Zutatenzeile wie "200 g Mehl" oder "2 EL Olivenöl" in Gramm
 // und Lebensmittelbezeichnung. Zeilen ohne führende Zahl oder ohne
-// erkennbare Gewichts-/Volumeneinheit liefern `grams: null` und werden von
-// der Schätzung ausgeschlossen.
+// erkennbare Gewichts-/Volumeneinheit bzw. Stückzutat aus PIECE_FOODS liefern
+// `grams: null` und werden von der Schätzung ausgeschlossen.
 function parseIngredientLine(line: string): ParsedIngredient {
   const amountMatch = line.match(LEADING_AMOUNT_RE)
   if (!amountMatch) return { grams: null, food: line.trim() }
@@ -73,6 +90,9 @@ function parseIngredientLine(line: string): ParsedIngredient {
   const amount = parseAmountToken(amountMatch[1])
   const rest = line.slice(amountMatch[0].length).trim()
   if (amount == null) return { grams: null, food: rest }
+
+  const piece = PIECE_FOODS.find((p) => p.pattern.test(rest))
+  if (piece) return { grams: amount * piece.gramsPerPiece, food: rest, directFoodId: piece.foodId }
 
   const unitMatch = rest.match(UNIT_TOKEN_RE)
   const unitToken = unitMatch ? unitMatch[1].toLowerCase().replace(/\.$/, '') : null
@@ -129,9 +149,9 @@ export function estimateNutritionFromIngredients(ingredients: string[]): Nutriti
   let matchedCount = 0
 
   for (const line of ingredients) {
-    const { grams, food } = parseIngredientLine(line)
+    const { grams, food, directFoodId } = parseIngredientLine(line)
     if (grams == null) continue
-    const match = findBestFoodMatch(food)
+    const match = directFoodId ? GERMAN_FOODS.find((f) => f.id === directFoodId) : findBestFoodMatch(food)
     if (!match) continue
 
     const factor = grams / 100
