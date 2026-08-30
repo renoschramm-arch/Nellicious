@@ -121,7 +121,7 @@ export function SharedRecipePage() {
             )}
 
             <div className="bg-text text-bg rounded-[28px] px-6 py-10 text-center flex flex-col items-center gap-4 mt-4">
-              <h2 className="font-display font-semibold text-xl">{t('sharedRecipe.ctaTitle', { count: 202 })}</h2>
+              <h2 className="font-display font-semibold text-xl">{t('sharedRecipe.ctaTitle', { count: 262 })}</h2>
               <p className="text-bg/70 text-sm max-w-xs">{t('sharedRecipe.ctaSubtitle')}</p>
               <Link
                 to="/anmelden?mode=signup"
