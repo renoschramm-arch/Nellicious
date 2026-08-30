@@ -13,6 +13,17 @@ export type FoodSearchResult = {
 const OFF_SEARCH_URL = 'https://world.openfoodfacts.org/cgi/search.pl'
 const MAX_LOCAL_RESULTS = 8
 
+// Höherer Wert = relevanter. 0 = kein Treffer. Namen sind kommagetrennt
+// ("Ei, Huhn", "Reis, weiß, roh"), daher zählt auch der Wortanfang nach
+// einem Komma/Leerzeichen als "beginnt mit", nicht nur der Namensanfang.
+function matchScore(name: string, query: string): number {
+  if (name === query) return 3
+  if (name.startsWith(query)) return 2
+  if (name.split(/[\s,]+/).some((word) => word.startsWith(query))) return 1
+  if (name.includes(query)) return 0.5
+  return 0
+}
+
 type OffProduct = {
   code: string
   product_name?: string
@@ -30,10 +41,20 @@ export function useFoodSearch(query: string) {
   // primär eine Barcode-Datenbank für Markenprodukte und bei generischen
   // Lebensmitteln (Reis, Gemüse, Fleisch roh, ...) für den deutschen Markt
   // oft lückenhaft. Lokale Treffer werden bevorzugt angezeigt.
+  //
+  // Reine Teilstring-Suche + harte Anzeigegrenze (MAX_LOCAL_RESULTS) reicht
+  // nicht: Bei kurzen Suchbegriffen wie "Ei" gibt es Dutzende zufällige
+  // Teilstring-Treffer (Reis, Weizen, Weißkohl, ...), die den eigentlich
+  // gesuchten Eintrag ("Ei, Huhn") aus den ersten 8 Plätzen verdrängen.
+  // Treffer werden deshalb nach Relevanz sortiert, bevor gekürzt wird.
   const localResults = useMemo(() => {
     if (trimmed.length < 2) return []
     const q = trimmed.toLowerCase()
-    return GERMAN_FOODS.filter((f) => f.name.toLowerCase().includes(q)).slice(0, MAX_LOCAL_RESULTS)
+    return GERMAN_FOODS.map((f) => ({ food: f, score: matchScore(f.name.toLowerCase(), q) }))
+      .filter((r) => r.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, MAX_LOCAL_RESULTS)
+      .map((r) => r.food)
   }, [trimmed])
 
   useEffect(() => {
