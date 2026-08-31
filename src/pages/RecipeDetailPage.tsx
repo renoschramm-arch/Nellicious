@@ -63,7 +63,7 @@ export function RecipeDetailPage() {
       setShowPremiumModal(true)
       return
     }
-    setTargetServings(Math.max(1, Math.round(next)))
+    setTargetServings(next)
   }
 
   // Eingabe bleibt beim Tippen als reiner Text erhalten (auch leer, während
@@ -320,7 +320,8 @@ export function RecipeDetailPage() {
         <div className="flex items-center gap-2">
           <input
             type="number"
-            min={1}
+            min={0.1}
+            step="any"
             value={servingsInput}
             disabled={!hasPremium}
             onChange={(e) => handleServingsInputChange(e.target.value)}
