@@ -8,10 +8,19 @@ export type FoodSearchResult = {
   protein100g: number
   carbs100g: number
   fat100g: number
+  category?: 'fisch'
 }
 
 const OFF_SEARCH_URL = 'https://world.openfoodfacts.org/cgi/search.pl'
 const MAX_LOCAL_RESULTS = 8
+const FISH_WORDS = ['fisch', 'fish']
+
+// Viele Fischarten (Lachs, Kabeljau, Forelle, ...) enthalten das Wort
+// "Fisch" nirgends im Namen. Eine Suche nach "Fisch" soll trotzdem alle
+// als solche kategorisierten Einträge finden.
+function isFishQuery(q: string): boolean {
+  return FISH_WORDS.some((w) => w.startsWith(q) || q.startsWith(w))
+}
 
 // Höherer Wert = relevanter. 0 = kein Treffer. Namen sind kommagetrennt
 // ("Ei, Huhn", "Reis, weiß, roh"), daher zählt auch der Wortanfang nach
@@ -50,7 +59,23 @@ export function useFoodSearch(query: string) {
   const localResults = useMemo(() => {
     if (trimmed.length < 2) return []
     const q = trimmed.toLowerCase()
-    return GERMAN_FOODS.map((f) => ({ food: f, score: matchScore(f.name.toLowerCase(), q) }))
+    const scored = GERMAN_FOODS.map((f) => ({ food: f, score: matchScore(f.name.toLowerCase(), q) }))
+
+    if (isFishQuery(q)) {
+      // Kategorie-Treffer sind hier absichtlich nicht auf MAX_LOCAL_RESULTS
+      // begrenzt, da bei "Fisch" gezielt eine vollständige Übersicht aller
+      // Fischarten gewünscht ist, nicht nur die ersten 8 Treffer.
+      const fishMatches = scored
+        .filter((r) => r.food.category === 'fisch')
+        .sort((a, b) => a.food.name.localeCompare(b.food.name))
+      const otherMatches = scored
+        .filter((r) => r.score > 0 && r.food.category !== 'fisch')
+        .sort((a, b) => b.score - a.score)
+        .slice(0, MAX_LOCAL_RESULTS)
+      return [...fishMatches, ...otherMatches].map((r) => r.food)
+    }
+
+    return scored
       .filter((r) => r.score > 0)
       .sort((a, b) => b.score - a.score)
       .slice(0, MAX_LOCAL_RESULTS)
