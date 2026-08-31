@@ -101,10 +101,10 @@ export function RecipeDetailPage() {
     setLogging(true)
     await addLog({
       name: localized.title,
-      kcal: recipe.kcal,
-      protein_g: recipe.protein_g,
-      carbs_g: recipe.carbs_g,
-      fat_g: recipe.fat_g,
+      kcal: scaleMacro(recipe.kcal, scaleFactor),
+      protein_g: scaleMacro(recipe.protein_g, scaleFactor),
+      carbs_g: scaleMacro(recipe.carbs_g, scaleFactor),
+      fat_g: scaleMacro(recipe.fat_g, scaleFactor),
       recipe_id: recipe.id,
     })
     // Loggen heißt: heute gegessen — also auch in den Wochenplan für heute
