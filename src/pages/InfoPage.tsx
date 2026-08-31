@@ -4,9 +4,18 @@ import { useTranslation } from 'react-i18next'
 import { APP_VERSION } from '../lib/whatsNew'
 import { SupportModal } from '../components/SupportModal'
 
+// Android-Geräte per User-Agent erkennen, um den passenden Tab
+// vorauszuwählen — alles andere (inkl. iOS und Desktop) zeigt iOS als
+// Standard, da "Zum Home-Bildschirm hinzufügen" auf dem iPhone der mit
+// Abstand häufigste Fall ist.
+function detectDefaultPlatform(): 'ios' | 'android' {
+  return /android/i.test(navigator.userAgent) ? 'android' : 'ios'
+}
+
 export function InfoPage() {
   const { t } = useTranslation()
   const [showSupportModal, setShowSupportModal] = useState(false)
+  const [platform, setPlatform] = useState<'ios' | 'android'>(detectDefaultPlatform)
 
   return (
     <div className="flex flex-col gap-6">
@@ -56,11 +65,39 @@ export function InfoPage() {
           <span>{t('info.addToHomeScreen')}</span>
           <span className="text-text-muted transition-transform group-open:rotate-180">▾</span>
         </summary>
-        <ol className="text-sm text-text-muted mt-3 flex flex-col gap-1.5 list-decimal list-inside">
-          <li>{t('info.step1')}</li>
-          <li>{t('info.step2')}</li>
-          <li>{t('info.step3')}</li>
-        </ol>
+        <div className="flex gap-2 mt-3">
+          <button
+            type="button"
+            onClick={() => setPlatform('ios')}
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              platform === 'ios' ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+            }`}
+          >
+            {t('info.platformIos')}
+          </button>
+          <button
+            type="button"
+            onClick={() => setPlatform('android')}
+            className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              platform === 'android' ? 'bg-primary text-on-primary' : 'bg-surface-2 border border-border text-text-muted hover:text-text'
+            }`}
+          >
+            {t('info.platformAndroid')}
+          </button>
+        </div>
+        {platform === 'ios' ? (
+          <ol className="text-sm text-text-muted mt-3 flex flex-col gap-1.5 list-decimal list-inside">
+            <li>{t('info.iosStep1')}</li>
+            <li>{t('info.iosStep2')}</li>
+            <li>{t('info.iosStep3')}</li>
+          </ol>
+        ) : (
+          <ol className="text-sm text-text-muted mt-3 flex flex-col gap-1.5 list-decimal list-inside">
+            <li>{t('info.androidStep1')}</li>
+            <li>{t('info.androidStep2')}</li>
+            <li>{t('info.androidStep3')}</li>
+          </ol>
+        )}
       </details>
 
       <button
