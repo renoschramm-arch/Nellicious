@@ -3,6 +3,22 @@ import { useTranslation } from 'react-i18next'
 import type { NutritionType } from './useProfile'
 import { localizeRecipeText, type MealType, type Recipe } from './useRecipes'
 
+// Viele Fischrezepte heißen nach der jeweiligen Fischart (Zander, Barsch,
+// Kabeljau, ...) und enthalten das Wort "Fisch"/"fish" nirgends im Text.
+// Der diet_tags-Wert "pescetarisch" taugt dafür nicht als Ersatz, da er auch
+// auf rein vegetarische/vegane Rezepte gesetzt wird (die isst ein Pescetarier
+// schließlich auch) — daher stattdessen eine feste Liste an Fischarten.
+const FISH_SPECIES_DE = [
+  'lachs', 'thunfisch', 'kabeljau', 'forelle', 'hering', 'matjes', 'scholle',
+  'sardine', 'sardelle', 'makrele', 'zander', 'barsch', 'seelachs', 'rotbarsch',
+  'aal', 'wolfsbarsch', 'steinbeißer', 'pangasius',
+]
+const FISH_SPECIES_EN = [
+  'salmon', 'tuna', 'cod', 'trout', 'herring', 'plaice', 'sardine', 'anchov',
+  'mackerel', 'zander', 'pike-perch', 'perch', 'pollock', 'redfish', 'eel',
+  'sea bass', 'wolffish', 'catfish', 'pangasius',
+]
+
 export function useRecipeFilters(
   recipes: Recipe[],
   favoriteIds: Set<string>,
@@ -23,20 +39,16 @@ export function useRecipeFilters(
 
   function matchesQuery(r: Recipe): boolean {
     if (!trimmedQuery) return true
-    // "Fisch"/"fish" allgemein gesucht: viele Fischrezepte heißen nach der
-    // jeweiligen Fischart (Zander, Barsch, Kabeljau, ...) und enthalten das
-    // Wort "Fisch"/"fish" nirgends im Text — daher zusätzlich über das
-    // ohnehin gepflegte diet_tags-Kennzeichen "pescetarisch" abdecken.
-    const fishWord = i18n.language === 'en' ? 'fish' : 'fisch'
-    if ((fishWord.startsWith(trimmedQuery) || trimmedQuery.startsWith(fishWord)) && r.diet_tags.includes('pescetarisch')) {
-      return true
-    }
     const { title, description, ingredients } = localizeRecipeText(r, i18n.language)
-    return (
-      title.toLowerCase().includes(trimmedQuery) ||
-      description.toLowerCase().includes(trimmedQuery) ||
-      ingredients.some((i) => i.toLowerCase().includes(trimmedQuery))
-    )
+    const haystack = `${title} ${description} ${ingredients.join(' ')}`.toLowerCase()
+
+    const fishWord = i18n.language === 'en' ? 'fish' : 'fisch'
+    if (fishWord.startsWith(trimmedQuery) || trimmedQuery.startsWith(fishWord)) {
+      const species = i18n.language === 'en' ? FISH_SPECIES_EN : FISH_SPECIES_DE
+      if (species.some((s) => haystack.includes(s))) return true
+    }
+
+    return haystack.includes(trimmedQuery)
   }
 
   const filtered = recipes.filter(
