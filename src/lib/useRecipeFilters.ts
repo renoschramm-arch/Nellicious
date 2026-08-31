@@ -3,20 +3,35 @@ import { useTranslation } from 'react-i18next'
 import type { NutritionType } from './useProfile'
 import { localizeRecipeText, type MealType, type Recipe } from './useRecipes'
 
-// Viele Fischrezepte heißen nach der jeweiligen Fischart (Zander, Barsch,
-// Kabeljau, ...) und enthalten das Wort "Fisch"/"fish" nirgends im Text.
+// Viele Fisch-/Meeresfrüchte-Rezepte heißen nach der jeweiligen Art (Zander,
+// Barsch, Garnele, ...) und enthalten das Suchwort selbst nirgends im Text.
 // Der diet_tags-Wert "pescetarisch" taugt dafür nicht als Ersatz, da er auch
 // auf rein vegetarische/vegane Rezepte gesetzt wird (die isst ein Pescetarier
-// schließlich auch) — daher stattdessen eine feste Liste an Fischarten.
-const FISH_SPECIES_DE = [
-  'lachs', 'thunfisch', 'kabeljau', 'forelle', 'hering', 'matjes', 'scholle',
-  'sardine', 'sardelle', 'makrele', 'zander', 'barsch', 'seelachs', 'rotbarsch',
-  'aal', 'wolfsbarsch', 'steinbeißer', 'pangasius',
-]
-const FISH_SPECIES_EN = [
-  'salmon', 'tuna', 'cod', 'trout', 'herring', 'plaice', 'sardine', 'anchov',
-  'mackerel', 'zander', 'pike-perch', 'perch', 'pollock', 'redfish', 'eel',
-  'sea bass', 'wolffish', 'catfish', 'pangasius',
+// schließlich auch) — daher stattdessen feste Listen konkreter Arten je
+// Kategorie.
+type SearchCategory = { wordsDe: string[]; wordsEn: string[]; speciesDe: string[]; speciesEn: string[] }
+
+const SEARCH_CATEGORIES: SearchCategory[] = [
+  {
+    wordsDe: ['fisch'],
+    wordsEn: ['fish'],
+    speciesDe: [
+      'lachs', 'thunfisch', 'kabeljau', 'forelle', 'hering', 'matjes', 'scholle',
+      'sardine', 'sardelle', 'makrele', 'zander', 'barsch', 'seelachs', 'rotbarsch',
+      'aal', 'wolfsbarsch', 'steinbeißer', 'pangasius',
+    ],
+    speciesEn: [
+      'salmon', 'tuna', 'cod', 'trout', 'herring', 'plaice', 'sardine', 'anchov',
+      'mackerel', 'zander', 'pike-perch', 'perch', 'pollock', 'redfish', 'eel',
+      'sea bass', 'wolffish', 'catfish', 'pangasius',
+    ],
+  },
+  {
+    wordsDe: ['meeresfrüchte', 'meeresfruechte'],
+    wordsEn: ['seafood'],
+    speciesDe: ['garnele', 'muschel', 'tintenfisch', 'oktopus', 'krabbe', 'kalmar', 'languste', 'hummer', 'scampi', 'calamari', 'gambas'],
+    speciesEn: ['shrimp', 'prawn', 'mussel', 'squid', 'octopus', 'crab', 'scallop', 'lobster', 'langoustine', 'calamari'],
+  },
 ]
 
 export function useRecipeFilters(
@@ -42,10 +57,12 @@ export function useRecipeFilters(
     const { title, description, ingredients } = localizeRecipeText(r, i18n.language)
     const haystack = `${title} ${description} ${ingredients.join(' ')}`.toLowerCase()
 
-    const fishWord = i18n.language === 'en' ? 'fish' : 'fisch'
-    if (fishWord.startsWith(trimmedQuery) || trimmedQuery.startsWith(fishWord)) {
-      const species = i18n.language === 'en' ? FISH_SPECIES_EN : FISH_SPECIES_DE
-      if (species.some((s) => haystack.includes(s))) return true
+    for (const cat of SEARCH_CATEGORIES) {
+      const words = i18n.language === 'en' ? cat.wordsEn : cat.wordsDe
+      if (words.some((w) => w.startsWith(trimmedQuery) || trimmedQuery.startsWith(w))) {
+        const species = i18n.language === 'en' ? cat.speciesEn : cat.speciesDe
+        if (species.some((s) => haystack.includes(s))) return true
+      }
     }
 
     return haystack.includes(trimmedQuery)
