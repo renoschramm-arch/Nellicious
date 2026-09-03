@@ -20,6 +20,7 @@ import { DailyGoalsPage } from './pages/DailyGoalsPage'
 import { AuswertungPage } from './pages/AuswertungPage'
 import { DarstellungPage } from './pages/DarstellungPage'
 import { InfoPage } from './pages/InfoPage'
+import { PasskeysPage } from './pages/PasskeysPage'
 import { NeuInNelliciousPage } from './pages/NeuInNelliciousPage'
 
 export default function App() {
@@ -47,6 +48,7 @@ export default function App() {
               <Route path="/mehr/auswertung" element={<AuswertungPage />} />
               <Route path="/mehr/darstellung" element={<DarstellungPage />} />
               <Route path="/mehr/info" element={<InfoPage />} />
+              <Route path="/mehr/passkeys" element={<PasskeysPage />} />
               <Route path="/mehr/neu" element={<NeuInNelliciousPage />} />
             </Route>
           </Route>
