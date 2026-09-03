@@ -902,11 +902,23 @@
     "password": "Passwort",
     "forgotPassword": "Passwort vergessen?",
     "signIn": "Anmelden",
+    "signInWithPasskey": "🔑 Mit Passkey anmelden",
     "createAccount": "Konto erstellen",
     "noAccount": "Noch kein Konto? Registrieren",
     "haveAccount": "Schon ein Konto? Anmelden",
     "signUpSuccess": "Konto erstellt! Bitte prüfe dein E-Mail-Postfach (ggf. auch den Spam-Ordner) und bestätige deine Adresse, um dich anmelden zu können.",
     "signUpEmailHint": "Nach dem Absenden schicken wir dir eine Bestätigungs-E-Mail."
+  },
+  "passkeys": {
+    "title": "Passkeys",
+    "description": "Melde dich ohne Passwort an — mit Face ID, Touch ID, Gerät-PIN oder Sicherheitsschlüssel.",
+    "unsupported": "Dein Browser unterstützt leider keine Passkeys.",
+    "none": "Noch kein Passkey hinterlegt.",
+    "unnamed": "Passkey",
+    "addedOn": "Hinzugefügt am {{date}}",
+    "add": "🔑 Passkey hinzufügen",
+    "delete": "Entfernen",
+    "confirmDelete": "Diesen Passkey wirklich entfernen?"
   },
   "premium": {
     "title": "🔒 Nellicious Premium",
@@ -935,6 +947,8 @@
     "title": "Mehr",
     "profileLabel": "Mein Profil",
     "profileDesc": "Name, Ernährungstyp, Aktivitätslevel",
+    "passkeysLabel": "Passkeys",
+    "passkeysDesc": "Anmelden mit Face ID, Touch ID oder Gerät-PIN",
     "goalsLabel": "Mein Ziel",
     "goalsDesc": "Was du erreichen möchtest",
     "dailyGoalsLabel": "Tagesziele",
