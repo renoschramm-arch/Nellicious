@@ -2,12 +2,11 @@ import { useState, type FormEvent } from 'react'
 import { Link, Navigate, useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { useAuth } from '../lib/AuthContext'
-import { isPasskeySupported } from '../lib/usePasskeys'
 import { PageFlatlay } from '../components/PageFlatlay'
 
 export function AuthPage() {
   const { t } = useTranslation()
-  const { session, signInWithPassword, signInWithPasskey, signUp } = useAuth()
+  const { session, signInWithPassword, signUp } = useAuth()
   const [searchParams] = useSearchParams()
   const [mode, setMode] = useState<'signin' | 'signup'>(
     searchParams.get('mode') === 'signup' ? 'signup' : 'signin',
@@ -17,7 +16,6 @@ export function AuthPage() {
   const [error, setError] = useState<string | null>(null)
   const [info, setInfo] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
-  const [passkeySubmitting, setPasskeySubmitting] = useState(false)
 
   if (session) return <Navigate to="/" replace />
 
@@ -37,15 +35,6 @@ export function AuthPage() {
       setInfo(t('auth.signUpSuccess'))
       setMode('signin')
     }
-  }
-
-  async function handlePasskeySignIn() {
-    setError(null)
-    setInfo(null)
-    setPasskeySubmitting(true)
-    const result = await signInWithPasskey()
-    setPasskeySubmitting(false)
-    if (result.error) setError(result.error)
   }
 
   return (
@@ -107,17 +96,6 @@ export function AuthPage() {
             {mode === 'signin' ? t('auth.signIn') : t('auth.createAccount')}
           </button>
         </form>
-
-        {mode === 'signin' && isPasskeySupported() && (
-          <button
-            type="button"
-            onClick={handlePasskeySignIn}
-            disabled={passkeySubmitting}
-            className="mt-3 w-full bg-surface border border-border rounded-xl py-2.5 text-sm font-medium hover:border-primary transition-colors disabled:opacity-60"
-          >
-            {t('auth.signInWithPasskey')}
-          </button>
-        )}
 
         <div className="flex justify-center mt-4">
           <button
