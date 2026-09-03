@@ -10,9 +10,4 @@ if (!supabaseUrl || !supabaseAnonKey) {
   )
 }
 
-// Passkey-Support ist bei Supabase Auth noch experimentell und muss über
-// dieses Flag explizit aktiviert werden — sonst werfen alle Passkey-Methoden
-// (signInWithPasskey, registerPasskey, auth.passkey.*) einen Fehler.
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
-  auth: { experimental: { passkey: true } },
-})
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)

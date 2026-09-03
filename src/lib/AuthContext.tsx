@@ -7,7 +7,6 @@ interface AuthContextValue {
   user: User | null
   loading: boolean
   signInWithPassword: (email: string, password: string) => Promise<{ error: string | null }>
-  signInWithPasskey: () => Promise<{ error: string | null }>
   signUp: (email: string, password: string) => Promise<{ error: string | null }>
   resetPasswordForEmail: (email: string) => Promise<{ error: string | null }>
   updatePassword: (password: string) => Promise<{ error: string | null }>
@@ -33,17 +32,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function signInWithPassword(email: string, password: string) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    return { error: error?.message ?? null }
-  }
-
-  // Bricht der Nutzer den Passkey-Dialog des Betriebssystems ab, ist das
-  // kein echter Fehler, sondern ein normaler Abbruch — dafür wird keine
-  // Fehlermeldung angezeigt.
-  async function signInWithPasskey() {
-    const { error } = await supabase.auth.signInWithPasskey()
-    if (error && 'code' in error && error.code === 'ERROR_CEREMONY_ABORTED') {
-      return { error: null }
-    }
     return { error: error?.message ?? null }
   }
 
@@ -81,7 +69,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         user: session?.user ?? null,
         loading,
         signInWithPassword,
-        signInWithPasskey,
         signUp,
         resetPasswordForEmail,
         updatePassword,

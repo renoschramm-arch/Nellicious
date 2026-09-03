@@ -11,7 +11,6 @@ export function MorePage() {
 
   const MENU_ITEMS = [
     { to: '/mehr/profil', label: t('more.profileLabel'), description: t('more.profileDesc') },
-    { to: '/mehr/passkeys', label: t('more.passkeysLabel'), description: t('more.passkeysDesc') },
     { to: '/mehr/ziele', label: t('more.goalsLabel'), description: t('more.goalsDesc') },
     { to: '/mehr/tagesziele', label: t('more.dailyGoalsLabel'), description: t('more.dailyGoalsDesc') },
     { to: '/mehr/auswertung', label: t('more.auswertungLabel'), description: t('more.auswertungDesc') },
