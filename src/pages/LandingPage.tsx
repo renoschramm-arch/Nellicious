@@ -819,13 +819,17 @@ function ScreenshotGallery() {
   const figures = SHOTS.map((shot) => (
     <figure
       key={shot.src}
-      className="w-[229px] shrink-0 bg-surface border border-border rounded-[18px] overflow-hidden shadow-[var(--shadow)]"
+      className="shrink-0 bg-surface border border-border rounded-[18px] overflow-hidden shadow-[var(--shadow)]"
     >
+      {/* Höhe statt Breite fest vorgeben: bei fester Breite ragten die
+          hochformatigen Screenshots je nach Viewport-Höhe über den
+          gepinnten h-screen-Bereich hinaus und wurden unten abgeschnitten.
+          Über die Höhe skaliert das Bild immer in den verfügbaren Platz. */}
       <img
         src={`${import.meta.env.BASE_URL}screenshots/${shot.src}`}
         alt={shot.label}
         loading="lazy"
-        className="w-full h-auto block"
+        className="h-[40vh] md:h-[46vh] max-h-[420px] w-auto block"
       />
       <figcaption className="px-3 py-2.5 text-[12.5px] text-text-muted text-center">
         {shot.label}
