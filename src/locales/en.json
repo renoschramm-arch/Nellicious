@@ -492,6 +492,11 @@
     ],
     "seq22": [
       "🔍 Food and recipe search: \"fish\" and \"seafood\" now find all matching entries, regardless of name"
+    ],
+    "seq23": [
+      "📚 New: Knowledge section under More with 22 articles on nutrition, tracking, and fasting",
+      "Scaling servings: nutrition facts and ingredient amounts are now calculated correctly for fractional values too (e.g. 0.5 or 1.5 servings) — including when logging as a meal",
+      "\"Add to home screen\": now includes instructions for Android too"
     ]
   },
   "quotes": [
