@@ -27,6 +27,8 @@ import {
 } from '../lib/exportReport'
 import { addDays, formatWeekdayShort, toISODate } from '../lib/week'
 import { WeekBarChart } from '../components/WeekBarChart'
+import { MonthDotChart } from '../components/MonthDotChart'
+import { ChartRangeToggle, type ChartRange } from '../components/ChartRangeToggle'
 import { PageFlatlay } from '../components/PageFlatlay'
 import { PremiumModal } from '../components/PremiumModal'
 import { FastingPhaseModal } from '../components/FastingPhaseModal'
@@ -37,6 +39,11 @@ const DEFAULT_FASTING_PROTOCOLS = [16, 18, 20, 23]
 function lastSevenDays(): Date[] {
   const today = new Date()
   return Array.from({ length: 7 }, (_, i) => addDays(today, i - 6))
+}
+
+function lastThirtyDays(): Date[] {
+  const today = new Date()
+  return Array.from({ length: 30 }, (_, i) => addDays(today, i - 29))
 }
 
 // Konsistente SVG-Icons statt bare Unicode-Glyphen (✎/↺) — die rendern je
@@ -66,7 +73,7 @@ export function VerlaufPage() {
   const { profile, updateProfile } = useProfile()
   const { logs: weightLogs, upsertWeight, deleteWeight } = useWeightLogs()
   const { logs: waterLogs, todayMl, addWater, resetWater } = useWaterLog()
-  const { logs: nutritionLogs } = useMealLogHistory(7)
+  const { logs: nutritionLogs } = useMealLogHistory(30)
   const {
     activeSession,
     sessions: fastingSessions,
@@ -103,6 +110,10 @@ export function VerlaufPage() {
   const [showFastingPhaseModal, setShowFastingPhaseModal] = useState(false)
   const [exportRangeDays, setExportRangeDays] = useState<ExportRangeDays>(30)
   const [exporting, setExporting] = useState(false)
+  const [waterRange, setWaterRange] = useState<ChartRange>('week')
+  const [weightRange, setWeightRange] = useState<ChartRange>('week')
+  const [fastingRange, setFastingRange] = useState<ChartRange>('week')
+  const [kcalRange, setKcalRange] = useState<ChartRange>('week')
 
   useEffect(() => {
     if (profile?.fasting_default_hours) setFastingTargetHours(profile.fasting_default_hours)
@@ -126,16 +137,25 @@ export function VerlaufPage() {
     : 0
 
   const days = lastSevenDays()
+  const monthDays = lastThirtyDays()
   const weightChartData = days.map((d) => {
     const iso = toISODate(d)
     const entry = weightLogs.find((log) => log.log_date === iso)
     const value = entry ? Number(entry.weight_kg) : null
     return { label: formatWeekdayShort(d), value, display: value != null ? formatWeightKg(value) : undefined }
   })
+  const weightChartDataMonth = monthDays.map((d) => {
+    const entry = weightLogs.find((log) => log.log_date === toISODate(d))
+    return { value: entry ? Number(entry.weight_kg) : null }
+  })
   const waterChartData = days.map((d) => {
     const iso = toISODate(d)
     const entry = waterLogs.find((log) => log.log_date === iso)
     return { label: formatWeekdayShort(d), value: entry ? entry.amount_ml : null }
+  })
+  const waterChartDataMonth = monthDays.map((d) => {
+    const entry = waterLogs.find((log) => log.log_date === toISODate(d))
+    return { value: entry ? entry.amount_ml : null }
   })
 
   const fastingElapsedMs = activeSession ? fastingNow - new Date(activeSession.started_at).getTime() : 0
@@ -164,6 +184,17 @@ export function VerlaufPage() {
     const rounded = Math.round(hours * 10) / 10
     return { label: formatWeekdayShort(d), value: rounded > 0 ? rounded : null, display: rounded > 0 ? `${rounded}h` : undefined }
   })
+  const fastingChartDataMonth = monthDays.map((d) => {
+    const iso = toISODate(d)
+    const hours = fastingSessions
+      .filter((s) => toISODate(new Date(s.started_at)) === iso)
+      .reduce((sum, s) => {
+        const end = s.ended_at ? new Date(s.ended_at).getTime() : fastingNow
+        return sum + (end - new Date(s.started_at).getTime()) / 3_600_000
+      }, 0)
+    const rounded = Math.round(hours * 10) / 10
+    return { value: rounded > 0 ? rounded : null }
+  })
 
   const nutritionByDay = useMemo(() => {
     const map = new Map<string, { kcal: number; protein_g: number; carbs_g: number; fat_g: number }>()
@@ -184,18 +215,27 @@ export function VerlaufPage() {
     const totals = nutritionByDay.get(iso)
     return { label: formatWeekdayShort(d), value: totals ? totals.kcal : null }
   })
+  const kcalChartDataMonth = monthDays.map((d) => {
+    const totals = nutritionByDay.get(toISODate(d))
+    return { value: totals ? totals.kcal : null }
+  })
 
   // Ø pro Tag über die volle Woche gerechnet (nicht nur über Tage mit
   // Einträgen), damit die Zahl den tatsächlichen Wochendurchschnitt zeigt.
+  // nutritionLogs deckt inzwischen 30 Tage ab (fürs Monats-Punktdiagramm),
+  // hier daher explizit auf die letzten 7 Tage eingrenzen.
   const weekMacroAvg = useMemo(() => {
-    const sum = nutritionLogs.reduce(
-      (acc, l) => ({
-        protein_g: acc.protein_g + l.protein_g,
-        carbs_g: acc.carbs_g + l.carbs_g,
-        fat_g: acc.fat_g + l.fat_g,
-      }),
-      { protein_g: 0, carbs_g: 0, fat_g: 0 },
-    )
+    const weekIsoDates = new Set(days.map((d) => toISODate(d)))
+    const sum = nutritionLogs
+      .filter((l) => weekIsoDates.has(toISODate(new Date(l.logged_at))))
+      .reduce(
+        (acc, l) => ({
+          protein_g: acc.protein_g + l.protein_g,
+          carbs_g: acc.carbs_g + l.carbs_g,
+          fat_g: acc.fat_g + l.fat_g,
+        }),
+        { protein_g: 0, carbs_g: 0, fat_g: 0 },
+      )
     return {
       protein_g: Math.round(sum.protein_g / 7),
       carbs_g: Math.round(sum.carbs_g / 7),
@@ -498,8 +538,17 @@ export function VerlaufPage() {
         </form>
 
         <div className="flex flex-col gap-2 pt-3 border-t border-border">
-          <span className="text-sm font-medium text-text-muted">{t('verlauf.waterLast7')}</span>
-          <WeekBarChart data={waterChartData} color="var(--color-honey)" />
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-sm font-medium text-text-muted">
+              {t(waterRange === 'week' ? 'verlauf.waterLast7' : 'verlauf.waterLast30')}
+            </span>
+            <ChartRangeToggle value={waterRange} onChange={setWaterRange} />
+          </div>
+          {waterRange === 'week' ? (
+            <WeekBarChart data={waterChartData} color="var(--color-honey)" />
+          ) : (
+            <MonthDotChart data={waterChartDataMonth} color="var(--color-honey)" />
+          )}
         </div>
       </div>
 
@@ -848,8 +897,17 @@ export function VerlaufPage() {
         ))}
 
         <div className="flex flex-col gap-2 pt-3 border-t border-border">
-          <span className="text-sm font-medium text-text-muted">{t('verlauf.fastingLast7')}</span>
-          <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-sm font-medium text-text-muted">
+              {t(fastingRange === 'week' ? 'verlauf.fastingLast7' : 'verlauf.fastingLast30')}
+            </span>
+            <ChartRangeToggle value={fastingRange} onChange={setFastingRange} />
+          </div>
+          {fastingRange === 'week' ? (
+            <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
+          ) : (
+            <MonthDotChart data={fastingChartDataMonth} color="var(--color-basil)" />
+          )}
         </div>
       </div>
 
@@ -903,14 +961,32 @@ export function VerlaufPage() {
         </form>
 
         <div className="flex flex-col gap-2 pt-3 border-t border-border">
-          <span className="text-sm font-medium text-text-muted">{t('verlauf.weightLast7')}</span>
-          <WeekBarChart data={weightChartData} color="var(--color-cobalt)" />
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-sm font-medium text-text-muted">
+              {t(weightRange === 'week' ? 'verlauf.weightLast7' : 'verlauf.weightLast30')}
+            </span>
+            <ChartRangeToggle value={weightRange} onChange={setWeightRange} />
+          </div>
+          {weightRange === 'week' ? (
+            <WeekBarChart data={weightChartData} color="var(--color-cobalt)" />
+          ) : (
+            <MonthDotChart data={weightChartDataMonth} color="var(--color-cobalt)" />
+          )}
         </div>
       </div>
 
       <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
-        <span className="text-sm font-medium text-text-muted">{t('verlauf.kcalLast7')}</span>
-        <WeekBarChart data={kcalChartData} color="var(--color-primary)" />
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-sm font-medium text-text-muted">
+            {t(kcalRange === 'week' ? 'verlauf.kcalLast7' : 'verlauf.kcalLast30')}
+          </span>
+          <ChartRangeToggle value={kcalRange} onChange={setKcalRange} />
+        </div>
+        {kcalRange === 'week' ? (
+          <WeekBarChart data={kcalChartData} color="var(--color-primary)" />
+        ) : (
+          <MonthDotChart data={kcalChartDataMonth} color="var(--color-primary)" />
+        )}
         <div className="grid grid-cols-3 gap-2 font-mono text-xs pt-1 border-t border-border">
           <div className="text-center pt-2">
             <div className="text-text-muted uppercase mb-0.5">{t('verlauf.avgProtein')}</div>
