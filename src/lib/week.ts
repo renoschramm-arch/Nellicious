@@ -36,3 +36,7 @@ export function formatWeekRange(monday: Date, sunday: Date): string {
 export function formatWeekdayShort(date: Date): string {
   return new Intl.DateTimeFormat(getIntlLocale(), { weekday: 'short' }).format(date).replace('.', '')
 }
+
+export function formatShortDate(date: Date): string {
+  return new Intl.DateTimeFormat(getIntlLocale(), { day: '2-digit', month: '2-digit' }).format(date)
+}

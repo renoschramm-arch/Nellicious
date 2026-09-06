@@ -146,7 +146,7 @@ export function VerlaufPage() {
   })
   const weightChartDataMonth = monthDays.map((d) => {
     const entry = weightLogs.find((log) => log.log_date === toISODate(d))
-    return { value: entry ? Number(entry.weight_kg) : null }
+    return { value: entry ? Number(entry.weight_kg) : null, date: d }
   })
   const waterChartData = days.map((d) => {
     const iso = toISODate(d)
@@ -155,7 +155,7 @@ export function VerlaufPage() {
   })
   const waterChartDataMonth = monthDays.map((d) => {
     const entry = waterLogs.find((log) => log.log_date === toISODate(d))
-    return { value: entry ? entry.amount_ml : null }
+    return { value: entry ? entry.amount_ml : null, date: d }
   })
 
   const fastingElapsedMs = activeSession ? fastingNow - new Date(activeSession.started_at).getTime() : 0
@@ -193,7 +193,7 @@ export function VerlaufPage() {
         return sum + (end - new Date(s.started_at).getTime()) / 3_600_000
       }, 0)
     const rounded = Math.round(hours * 10) / 10
-    return { value: rounded > 0 ? rounded : null }
+    return { value: rounded > 0 ? rounded : null, date: d }
   })
 
   const nutritionByDay = useMemo(() => {
@@ -217,7 +217,7 @@ export function VerlaufPage() {
   })
   const kcalChartDataMonth = monthDays.map((d) => {
     const totals = nutritionByDay.get(toISODate(d))
-    return { value: totals ? totals.kcal : null }
+    return { value: totals ? totals.kcal : null, date: d }
   })
 
   // Ø pro Tag über die volle Woche gerechnet (nicht nur über Tage mit
@@ -906,7 +906,11 @@ export function VerlaufPage() {
           {fastingRange === 'week' ? (
             <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
           ) : (
-            <MonthDotChart data={fastingChartDataMonth} color="var(--color-basil)" />
+            <MonthDotChart
+              data={fastingChartDataMonth}
+              color="var(--color-basil)"
+              formatValue={(v) => `${v}h`}
+            />
           )}
         </div>
       </div>
@@ -970,7 +974,11 @@ export function VerlaufPage() {
           {weightRange === 'week' ? (
             <WeekBarChart data={weightChartData} color="var(--color-cobalt)" />
           ) : (
-            <MonthDotChart data={weightChartDataMonth} color="var(--color-cobalt)" />
+            <MonthDotChart
+              data={weightChartDataMonth}
+              color="var(--color-cobalt)"
+              formatValue={(v) => formatWeightKg(v)}
+            />
           )}
         </div>
       </div>
