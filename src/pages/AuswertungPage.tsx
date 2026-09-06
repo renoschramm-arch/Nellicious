@@ -8,7 +8,7 @@ import { useFastingHistory } from '../lib/useFasting'
 import { usePremium } from '../lib/usePremium'
 import { TREND_RANGES, bucketDailyAverage, longestStreak, trendRangeLabel, type TrendRangeDays } from '../lib/trendBuckets'
 import { toISODate } from '../lib/week'
-import { WeekBarChart } from '../components/WeekBarChart'
+import { TrendLineChart } from '../components/TrendLineChart'
 import { WeightTrendChart } from '../components/WeightTrendChart'
 import { PremiumModal } from '../components/PremiumModal'
 import { getIntlLocale } from '../lib/i18n'
@@ -69,13 +69,10 @@ export function AuswertungPage() {
   const hitRate = loggedDayCount > 0 ? Math.round((sums.hitDays / loggedDayCount) * 100) : null
 
   const kcalByDay = useMemo(() => new Map([...dailyTotals].map(([d, t]) => [d, t.kcal])), [dailyTotals])
-  const kcalChartData = useMemo(() => {
-    return bucketDailyAverage(kcalByDay, rangeDays, range.buckets).map((b) => ({
-      label: b.label,
-      value: b.value,
-      display: b.value != null ? String(Math.round(b.value)) : undefined,
-    }))
-  }, [kcalByDay, rangeDays, range.buckets])
+  const kcalChartData = useMemo(
+    () => bucketDailyAverage(kcalByDay, rangeDays, range.buckets),
+    [kcalByDay, rangeDays, range.buckets],
+  )
 
   const weightPoints = useMemo(
     () => weightLogs.map((l) => ({ date: l.log_date, value: Number(l.weight_kg) })),
@@ -95,13 +92,10 @@ export function AuswertungPage() {
     return map
   }, [fastingSessions])
 
-  const fastingChartData = useMemo(() => {
-    return bucketDailyAverage(fastingByDay, rangeDays, range.buckets).map((b) => ({
-      label: b.label,
-      value: b.value,
-      display: b.value != null ? `${(Math.round(b.value * 10) / 10).toLocaleString(getIntlLocale())}h` : undefined,
-    }))
-  }, [fastingByDay, rangeDays, range.buckets])
+  const fastingChartData = useMemo(
+    () => bucketDailyAverage(fastingByDay, rangeDays, range.buckets),
+    [fastingByDay, rangeDays, range.buckets],
+  )
 
   const successfulFastingDays = useMemo(() => {
     const set = new Set<string>()
@@ -207,7 +201,7 @@ export function AuswertungPage() {
             <p className="text-xs text-text-muted -mt-1">
               {t('auswertung.kcalTrendSubtitle', { goal: kcalGoal.toLocaleString(getIntlLocale()) })}
             </p>
-            <WeekBarChart data={kcalChartData} color="var(--color-primary)" />
+            <TrendLineChart data={kcalChartData} color="var(--color-primary)" />
           </div>
 
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
@@ -256,7 +250,11 @@ export function AuswertungPage() {
           <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
             <h2 className="font-display font-semibold text-lg">{t('auswertung.fastingTrend')}</h2>
             <p className="text-xs text-text-muted -mt-1">{t('auswertung.fastingTrendSubtitle')}</p>
-            <WeekBarChart data={fastingChartData} color="var(--color-basil)" />
+            <TrendLineChart
+              data={fastingChartData}
+              color="var(--color-basil)"
+              formatValue={(v) => `${(Math.round(v * 10) / 10).toLocaleString(getIntlLocale())}h`}
+            />
             <div className="grid grid-cols-2 gap-2">
               <div className="bg-surface-2 border border-border rounded-xl p-2.5 flex flex-col gap-0.5 min-w-0">
                 <span className="font-mono text-sm font-semibold">{t('auswertung.currentStreak', { count: currentFastingStreak })}</span>
