@@ -776,37 +776,81 @@ function getScreenshots(t: TFunction) {
 function ScreenshotGallery() {
   const { t } = useTranslation()
   const SHOTS = getScreenshots(t)
+  const sectionRef = useRef<HTMLElement>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const railRef = useRef<HTMLDivElement>(null)
+  const reduced = usePrefersReducedMotion()
+
+  // Wie bei PinnedFeatures bleibt die Sektion beim Scrollen fest (sticky),
+  // während der Fortschritt innerhalb ihrer überhöhten Sektion die Fotos per
+  // Transform seitwärts schiebt — erst wenn die Reihe durchgelaufen ist,
+  // scrollt die Seite darunter normal weiter.
+  useScrollEffect(
+    useCallback(() => {
+      const section = sectionRef.current
+      const track = trackRef.current
+      const rail = railRef.current
+      if (!section || !track || !rail) return
+      const total = section.offsetHeight - window.innerHeight
+      if (total <= 0) return
+      const progress = Math.min(1, Math.max(0, -section.getBoundingClientRect().top / total))
+      const max = Math.max(0, rail.scrollWidth - track.clientWidth)
+      rail.style.transform = `translate3d(${-progress * max}px,0,0)`
+    }, []),
+    !reduced,
+  )
+
+  const heading = (
+    <Reveal>
+      <div className="max-w-5xl mx-auto px-6 mb-8">
+        <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
+          {t('landing.screenshotsEyebrow')}
+        </span>
+        <h2 className="font-display font-semibold text-2xl md:text-4xl leading-tight mt-3 max-w-[22ch] text-wrap-balance">
+          {t('landing.screenshotsTitle')}
+        </h2>
+      </div>
+    </Reveal>
+  )
+
+  const figures = SHOTS.map((shot) => (
+    <figure
+      key={shot.src}
+      className="w-[172px] shrink-0 bg-surface border border-border rounded-[18px] overflow-hidden shadow-[var(--shadow)]"
+    >
+      <img
+        src={`${import.meta.env.BASE_URL}screenshots/${shot.src}`}
+        alt={shot.label}
+        loading="lazy"
+        className="w-full h-auto block"
+      />
+      <figcaption className="px-3 py-2.5 text-[12.5px] text-text-muted text-center">
+        {shot.label}
+      </figcaption>
+    </figure>
+  ))
+
+  // Ohne Bewegungseffekte gäbe es beim Pinning nichts, das die überhöhte
+  // Sektion füllt — dann lieber die klassische, nativ scrollbare Reihe.
+  if (reduced) {
+    return (
+      <section className="py-20 md:py-32 overflow-hidden">
+        {heading}
+        <div className="overflow-x-auto px-6">
+          <div className="flex gap-4 w-max md:mx-auto">{figures}</div>
+        </div>
+      </section>
+    )
+  }
 
   return (
-    <section className="py-20 md:py-32 overflow-hidden">
-      <Reveal>
-        <div className="max-w-5xl mx-auto px-6 mb-10">
-          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
-            {t('landing.screenshotsEyebrow')}
-          </span>
-          <h2 className="font-display font-semibold text-2xl md:text-4xl leading-tight mt-3 max-w-[22ch] text-wrap-balance">
-            {t('landing.screenshotsTitle')}
-          </h2>
-        </div>
-      </Reveal>
-      <div className="overflow-x-auto px-6">
-        <div className="flex gap-4 w-max md:mx-auto">
-          {SHOTS.map((shot) => (
-            <figure
-              key={shot.src}
-              className="w-[172px] shrink-0 bg-surface border border-border rounded-[18px] overflow-hidden shadow-[var(--shadow)]"
-            >
-              <img
-                src={`${import.meta.env.BASE_URL}screenshots/${shot.src}`}
-                alt={shot.label}
-                loading="lazy"
-                className="w-full h-auto block"
-              />
-              <figcaption className="px-3 py-2.5 text-[12.5px] text-text-muted text-center">
-                {shot.label}
-              </figcaption>
-            </figure>
-          ))}
+    <section ref={sectionRef} className="relative" style={{ height: `${SHOTS.length * 60}vh` }}>
+      <div className="sticky top-0 h-screen flex flex-col justify-center overflow-hidden py-10">
+        {heading}
+        <div ref={trackRef} className="overflow-hidden px-6">
+          <div ref={railRef} className="flex gap-4 w-max will-change-transform">
+            {figures}
+          </div>
         </div>
       </div>
     </section>
