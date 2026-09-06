@@ -46,35 +46,21 @@ export function TrendLineChart({
         },
   )
 
-  // Linie und Flächenfüllung je zusammenhängendem Teilstück statt einem
-  // durchgehenden Pfad — sonst würde eine Lücke (Bucket ohne Eintrag) die
-  // Nachbarpunkte optisch verbinden, obwohl dazwischen kein Messwert liegt.
+  // Linie und Flächenfüllung laufen direkt von einem vorhandenen Wert zum
+  // nächsten, über Lücken (Bucket ohne Eintrag) hinweg — so bleibt der Trend
+  // über den ganzen Zeitraum als eine durchgehende Linie erkennbar.
   const fillBase = BOTTOM + 8
-  const lineSegments: string[] = []
-  const areaSegments: string[] = []
-  let run: { x: number; y: number }[] = []
-  const flushRun = () => {
-    if (run.length >= 2) {
-      lineSegments.push(run.map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x} ${c.y}`).join(' '))
-      areaSegments.push(
-        `M ${run[0].x} ${run[0].y} ` +
-          run
-            .slice(1)
-            .map((c) => `L ${c.x} ${c.y}`)
-            .join(' ') +
-          ` L ${run[run.length - 1].x} ${fillBase} L ${run[0].x} ${fillBase} Z`,
-      )
-    }
-    run = []
-  }
-  for (const c of coords) {
-    if (!c) {
-      flushRun()
-      continue
-    }
-    run.push(c)
-  }
-  flushRun()
+  const validCoords = coords.filter((c): c is { x: number; y: number } => c != null)
+  const linePath = validCoords.map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x} ${c.y}`).join(' ')
+  const areaPath =
+    validCoords.length >= 2
+      ? `M ${validCoords[0].x} ${validCoords[0].y} ` +
+        validCoords
+          .slice(1)
+          .map((c) => `L ${c.x} ${c.y}`)
+          .join(' ') +
+        ` L ${validCoords[validCoords.length - 1].x} ${fillBase} L ${validCoords[0].x} ${fillBase} Z`
+      : ''
 
   const lastIndex = [...coords].reverse().findIndex((c) => c != null)
   const last = lastIndex >= 0 ? coords[coords.length - 1 - lastIndex] : null
@@ -112,12 +98,8 @@ export function TrendLineChart({
         {formatValue(min)}
       </text>
 
-      {areaSegments.map((d, i) => (
-        <path key={i} d={d} fill={color} opacity="0.14" />
-      ))}
-      {lineSegments.map((d, i) => (
-        <path key={i} d={d} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      ))}
+      {areaPath && <path d={areaPath} fill={color} opacity="0.14" />}
+      <path d={linePath} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
 
       {last && (
         <>
