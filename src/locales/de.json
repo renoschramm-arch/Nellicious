@@ -943,6 +943,8 @@
     "auswertungDesc": "Trends bei Gewicht, Kalorien und Fasten",
     "darstellungLabel": "Darstellung",
     "darstellungDesc": "Sprache und Design",
+    "knowledgeLabel": "Wissen",
+    "knowledgeDesc": "Hintergrundwissen zu Ernährung und Fasten",
     "changelogLabel": "Neu in Nellicious",
     "changelogDesc": "Alle Änderungen im Überblick",
     "infoLabel": "Info",
@@ -951,6 +953,195 @@
     "premiumActive": "⭐ Nellicious Premium aktiv",
     "trialActive_one": "🎁 Premium-Testphase: noch {{count}} Tag",
     "trialActive_other": "🎁 Premium-Testphase: noch {{count}} Tage"
+  },
+  "knowledge": {
+    "title": "Wissen",
+    "description": "Hintergrundwissen rund um Ernährung, Tracking und Fasten.",
+    "categories": {
+      "grundlagen": "Grundlagen",
+      "praxis": "Praxis",
+      "fasten": "Fasten",
+      "sicherheit": "Sicherheit",
+      "fortgeschritten": "Fortgeschritten"
+    },
+    "articles": {
+      "kalorien-makros": {
+        "title": "Kalorien, Makros & Co. einfach erklärt",
+        "body": [
+          "Kalorien sind die Energieeinheit, die dein Körper aus Nahrung gewinnt. Makronährstoffe – Protein, Kohlenhydrate und Fett – liefern diese Energie in unterschiedlicher Dichte: 1 g Protein und 1 g Kohlenhydrate liefern je etwa 4 kcal, 1 g Fett etwa 9 kcal.",
+          "Protein braucht dein Körper für Muskeln, Zellreparatur und ein langes Sättigungsgefühl. Kohlenhydrate sind die schnellste Energiequelle, besonders wichtig für Gehirn und intensives Training. Fett ist Baustein für Hormone und Zellwände und macht Mahlzeiten sättigend.",
+          "In Nellicious siehst du bei jedem Rezept und jeder geloggten Mahlzeit alle drei Werte auf einen Blick — so bekommst du mit der Zeit ein Gefühl dafür, welche Lebensmittel wie viel wovon liefern, ohne jede Zahl auswendig lernen zu müssen."
+        ]
+      },
+      "defizit-ueberschuss": {
+        "title": "Kaloriendefizit vs. -überschuss: Was passt zu meinem Ziel?",
+        "body": [
+          "Nimmst du über einen längeren Zeitraum weniger Kalorien auf, als du verbrauchst (Defizit), nimmst du ab. Isst du mehr, als du verbrauchst (Überschuss), nimmst du zu. Bei etwa gleicher Menge bleibt dein Gewicht stabil.",
+          "Wie groß Defizit oder Überschuss sein sollten, hängt von deinem Ziel ab — ein moderates Tempo (z. B. 300–500 kcal Defizit pro Tag beim Abnehmen) ist meist nachhaltiger als radikale Sprünge, die schwerer durchzuhalten sind und öfter im Jo-Jo-Effekt enden.",
+          "Unter Mehr → Mein Ziel und Tagesziele legst du fest, was du erreichen willst — Nellicious rechnet dir daraus dein persönliches Kalorienziel aus, das du täglich im Blick behältst."
+        ]
+      },
+      "ernaehrungsformen": {
+        "title": "Ernährungsformen im Vergleich",
+        "body": [
+          "Omnivor isst alles — Fleisch, Fisch, pflanzliche Lebensmittel. Vegetarisch verzichtet auf Fleisch und Fisch, erlaubt aber Eier und Milchprodukte. Vegan verzichtet komplett auf tierische Produkte.",
+          "Pescetarisch ist wie vegetarisch, erlaubt aber zusätzlich Fisch und Meeresfrüchte. Keto setzt auf sehr wenige Kohlenhydrate und viel Fett, um den Körper Richtung Fettverbrennung (Ketose) zu bringen. Low-Carb reduziert Kohlenhydrate ebenfalls, aber weniger radikal als Keto.",
+          "In deinem Profil hinterlegst du deine Ernährungsform — die Rezeptsuche und -filter berücksichtigen das automatisch, sodass dir passende Rezepte leichter auffallen."
+        ]
+      },
+      "unvertraeglichkeits-tags": {
+        "title": "Was bedeuten die Unverträglichkeits-Tags?",
+        "body": [
+          "Nellicious kennt sechs Unverträglichkeits-Tags: laktosefrei, glutenfrei, nussfrei, eifrei, sojafrei und histaminarm. Sie kennzeichnen Rezepte, die das jeweilige Lebensmittel bzw. die Zutatengruppe nicht enthalten.",
+          "Histaminarm ist etwas komplexer als die anderen: Hier geht es nicht um eine einzelne Zutat, sondern um histaminreiche Lebensmittel wie gereiften Käse, Tomaten oder fermentierte und geräucherte Produkte, die bei einer Histaminintoleranz Beschwerden auslösen können.",
+          "Unter Mehr → Mein Profil trägst du deine Unverträglichkeiten ein — bei der Rezeptsuche kannst du dann gezielt danach filtern, damit nur passende Rezepte angezeigt werden."
+        ]
+      },
+      "gewicht-schwankt": {
+        "title": "Warum schwankt mein Gewicht von Tag zu Tag?",
+        "body": [
+          "Tägliche Gewichtsschwankungen von 1–2 kg sind normal und meist keine Fettveränderung, sondern Wasser im Körper — beeinflusst durch Salzzufuhr, Kohlenhydrate, Hormonzyklus, Verdauung oder wie viel du am Vortag getrunken hast.",
+          "Kohlenhydrate binden zum Beispiel Wasser im Muskel (etwa 3 g Wasser pro Gramm Glykogen) — isst du an einem Tag deutlich mehr oder weniger Kohlenhydrate, kann sich das direkt auf der Waage zeigen, ganz ohne echte Fettveränderung.",
+          "Aussagekräftiger als der Tageswert ist der Trend über mehrere Wochen. Unter Verlauf → Auswertung siehst du deine Gewichtsentwicklung über Zeit statt einzelner Ausreißer."
+        ]
+      },
+      "portionsgroessen": {
+        "title": "Portionsgrößen richtig einschätzen",
+        "body": [
+          "Ohne Küchenwaage fällt es schwer, Mengen richtig einzuschätzen — Studien zeigen, dass wir Portionen oft deutlich unter- oder überschätzen, besonders bei energiedichten Lebensmitteln wie Nüssen, Öl oder Käse.",
+          "Ein paar Faustregeln helfen: Eine Portion Nudeln (roh) passt etwa in eine Handfläche, ein Stück Fleisch oder Fisch entspricht etwa der Größe deiner Handfläche, ein Esslöffel Öl ist mehr, als es aussieht (ca. 10 g / 90 kcal).",
+          "Am genauesten wird es mit einer Küchenwaage, gerade am Anfang. Mit der Zeit entwickelst du ein besseres Augenmaß — bis dahin hilft es, Zutatenmengen aus Rezepten bewusst einmal abzuwiegen."
+        ]
+      },
+      "zutaten-skalieren": {
+        "title": "Zutatenmengen skalieren: Wann sinnvoll, wann nicht",
+        "body": [
+          "Auf der Rezeptdetailseite kannst du die Portionenzahl anpassen — Zutatenmengen und Nährwerte werden automatisch mitskaliert, praktisch wenn du für mehr oder weniger Personen kochst.",
+          "Bei sehr kleinen Mengen (z. B. eine Prise Salz oder 1/2 TL Gewürz) kann Skalieren unpraktisch werden, da sich manche Zutaten wie Gewürze oder Backtriebmittel nicht linear verhalten — hier lohnt sich ein Blick mit gesundem Menschenverstand statt stur der Rechnung zu folgen.",
+          "Für Backrezepte gilt besondere Vorsicht: Backzeiten und -temperaturen skalieren nicht automatisch mit, nur die Zutatenmengen."
+        ]
+      },
+      "naehrwerte-lesen": {
+        "title": "Nährwertangaben auf Verpackungen lesen",
+        "body": [
+          "Nährwertangaben beziehen sich meist auf 100 g oder 100 ml, nicht auf die tatsächliche Portion in der Packung — ein Blick auf beide Angaben lohnt sich, um nicht überrascht zu werden.",
+          "„Zucker“ in der Nährwerttabelle umfasst sowohl zugesetzten als auch natürlich enthaltenen Zucker (z. B. aus Obst) — die Zutatenliste, meist nach Menge absteigend sortiert, verrät mehr über die tatsächliche Zusammensetzung.",
+          "Der Barcode-Scanner in Nellicious übernimmt das Ablesen für dich — einfach einscannen, und Kalorien sowie Makros werden automatisch übernommen."
+        ]
+      },
+      "heisshunger": {
+        "title": "Umgang mit Heißhunger und Ausrutschern",
+        "body": [
+          "Heißhunger ist meist keine Charakterschwäche, sondern oft die Folge von zu wenig Schlaf, einem zu großen Kaloriendefizit, zu wenig Protein oder schlicht Stress — die Ursache zu erkennen hilft mehr als reine Willenskraft.",
+          "Ein einzelner Ausrutscher wirft dein Ziel nicht über den Haufen: Ein Tag mit deutlich mehr Kalorien lässt sich über eine Woche gerechnet meist locker ausgleichen, ohne dass am Ende ein Defizit zum Überschuss wird.",
+          "Statt nach einem Ausrutscher komplett abzubrechen, hilft es, mit der nächsten Mahlzeit ganz normal weiterzumachen — im Verlauf siehst du ohnehin den Trend über Wochen, nicht den einzelnen Tag."
+        ]
+      },
+      "meal-prep": {
+        "title": "Meal Prep mit dem Wochenplaner",
+        "body": [
+          "Im Plan-Tab weist du Rezepte einzelnen Tagen und Mahlzeiten zu — ideal, um die Woche im Voraus zu planen, statt jeden Tag neu zu entscheiden, was gekocht wird.",
+          "Die Einkaufsliste addiert automatisch alle Zutatenmengen der geplanten Rezepte über die Woche — so kaufst du gezielt ein, statt mehrfach ins Geschäft zu müssen oder Zutaten wegzuwerfen.",
+          "Praktisch fürs Vorkochen: Rezepte mit ähnlichen Grundzutaten (z. B. mehrmals Hähnchen oder Reis in der Woche) lassen sich oft in einem Rutsch vorbereiten und sparen Zeit unter der Woche."
+        ]
+      },
+      "autophagie": {
+        "title": "Autophagie einfach erklärt",
+        "body": [
+          "Autophagie („Selbstverdauung“) ist ein Prozess, bei dem Zellen beschädigte oder überflüssige Bestandteile abbauen und recyceln — eine Art zelluläres Aufräumen, das unter anderem durch längere Essenspausen angeregt wird.",
+          "Erste Effekte werden meist ab ca. 16 Stunden Fastenzeit vermutet, deutlicher ab 24+ Stunden — die genaue Forschung dazu beim Menschen (im Gegensatz zu Tiermodellen) steht allerdings noch relativ am Anfang.",
+          "In der Fasten-Ansicht zeigt dir Nellicious während deiner aktiven Fastenzeit an, in welcher vermuteten Phase (z. B. „Ketose beginnt“) du dich gerade befindest."
+        ]
+      },
+      "protokoll-vergleich": {
+        "title": "Protokoll-Vergleich: Welches passt zu mir?",
+        "body": [
+          "16:8 (16 Stunden fasten, 8 Stunden Essensfenster) ist das bekannteste und alltagstauglichste Protokoll — oft einfach durch Auslassen des Frühstücks umsetzbar.",
+          "18:6 und 20:4 verlängern die Fastenzeit weiter und damit potenziell auch die Effekte, sind aber im Alltag anspruchsvoller. OMAD (eine Mahlzeit am Tag) ist die intensivste Form und erfordert, in einer Mahlzeit den gesamten Tagesbedarf zu decken.",
+          "Es gibt kein „bestes“ Protokoll — am wichtigsten ist, was du langfristig durchhältst. Du kannst dein Zielfenster in Nellicious frei einstellen und jederzeit anpassen."
+        ]
+      },
+      "hungergefuehl": {
+        "title": "Umgang mit Hungergefühl",
+        "body": [
+          "Hunger kommt meist in Wellen und verschwindet oft von selbst wieder, statt stetig anzusteigen — wer eine Welle „aussitzt“, merkt häufig, dass der Drang nach einigen Minuten nachlässt.",
+          "Ausreichend trinken (Wasser, ungesüßter Tee, schwarzer Kaffee) hilft, da Durst manchmal mit Hunger verwechselt wird. Auch Ablenkung — ein Spaziergang, eine Aufgabe, die Konzentration erfordert — kann helfen, die Fastenzeit zu überbrücken.",
+          "Anhaltender, starker Hunger mit Unwohlsein ist dagegen ein Signal, das Fasten zu beenden — siehe dazu auch den Artikel „Wann ein Fasten abbrechen“."
+        ]
+      },
+      "fastenbrechen": {
+        "title": "Richtig Fastenbrechen",
+        "body": [
+          "Nach längeren Fastenzeiten (ab ca. 24 Stunden) empfiehlt es sich, die erste Mahlzeit bewusst kleiner und leicht verdaulich zu wählen, statt sofort groß und schwer zu essen — der Verdauungstrakt braucht kurz, um wieder hochzufahren.",
+          "Gut geeignet sind z. B. eine kleine Portion Suppe, Joghurt oder gedünstetes Gemüse. Sehr fett- oder zuckerreiche Mahlzeiten direkt nach dem Fasten können eher zu Unwohlsein führen.",
+          "Bei den üblichen 16:8-Fenstern ist das in der Regel kein Thema — die Empfehlung betrifft vor allem deutlich längere Fastenperioden."
+        ]
+      },
+      "fasten-sport": {
+        "title": "Fasten und Sport",
+        "body": [
+          "Leichtes bis moderates Training (z. B. Spazierengehen, lockeres Cardio) funktioniert für die meisten Menschen gut im gefasteten Zustand und wird von manchen sogar als angenehmer empfunden.",
+          "Intensives Krafttraining oder hochintensive Einheiten gelingen vielen Menschen besser mit etwas Nahrung im System — hier hilft Ausprobieren, da die individuelle Verträglichkeit stark schwankt.",
+          "Wichtig: ausreichend trinken und Elektrolyte (v. a. Natrium) im Blick behalten, besonders bei längeren Fastenperioden in Kombination mit Sport."
+        ]
+      },
+      "wann-abbrechen": {
+        "title": "Wann ein Fasten abbrechen",
+        "body": [
+          "Fasten sollte kein Kampf gegen den eigenen Körper sein. Anzeichen wie starker Schwindel, Zittern, Herzrasen, Übelkeit oder ausgeprägte Konzentrationsschwäche sind klare Signale, das Fasten zu beenden statt „durchzuziehen“.",
+          "Das gilt besonders für Menschen mit Vorerkrankungen, in der Schwangerschaft/Stillzeit oder bei Einnahme von Medikamenten, die auf einen leeren Magen oder stabilen Blutzucker angewiesen sind.",
+          "Diese Inhalte ersetzen keine medizinische Beratung. Bei Unsicherheit oder gesundheitlichen Vorerkrankungen sprich vor dem Fasten mit einer Ärztin oder einem Arzt."
+        ]
+      },
+      "frauen-fasten": {
+        "title": "Frauen und Fasten",
+        "body": [
+          "Der weibliche Hormonzyklus kann die Verträglichkeit von Fasten beeinflussen — viele Frauen berichten, dass längere oder häufigere Fastenperioden in bestimmten Zyklusphasen (z. B. kurz vor der Periode) schwerer fallen.",
+          "Manche Studien deuten darauf hin, dass sehr aggressives oder häufiges Fasten bei Frauen eher zu hormonellen Dysbalancen führen kann als bei Männern — die Forschungslage ist hier aber noch nicht eindeutig.",
+          "Ein sanfterer Einstieg (z. B. 14:10 statt direkt 18:6) und genaues Hinspüren auf den eigenen Körper sind sinnvoll. Bei Kinderwunsch, Schwangerschaft oder Stillzeit wird von Fasten grundsätzlich abgeraten — sprich das vorher mit einer Ärztin oder einem Arzt ab."
+        ]
+      },
+      "fasten-medikamente": {
+        "title": "Fasten und Medikamente",
+        "body": [
+          "Manche Medikamente müssen mit Nahrung eingenommen werden, um Nebenwirkungen wie Magenreizungen zu vermeiden, oder wirken nüchtern anders (z. B. schneller oder stärker) als mit einer Mahlzeit.",
+          "Das betrifft unter anderem Diabetes-Medikamente (Risiko für Unterzuckerung bei ausgelassenen Mahlzeiten), manche Blutdruckmedikamente und Schilddrüsenpräparate.",
+          "Ändere niemals eigenständig deine Medikamenteneinnahme wegen eines Fastenplans. Sprich vor dem Start mit deiner Ärztin, deinem Arzt oder deiner Apotheke, wenn du regelmäßig Medikamente nimmst."
+        ]
+      },
+      "mangelernaehrung": {
+        "title": "Warnzeichen für Mangelernährung",
+        "body": [
+          "Anhaltende Müdigkeit, Konzentrationsprobleme, Haarausfall, brüchige Nägel, ständiges Frieren oder häufige Infekte können Hinweise auf eine Nährstoff- oder Kalorienunterversorgung sein.",
+          "Besonders bei einem dauerhaft sehr großen Kaloriendefizit oder sehr restriktiven Ernährungsformen ohne ausreichende Planung steigt das Risiko, wichtige Nährstoffe (z. B. Eisen, B12, Protein) nicht ausreichend aufzunehmen.",
+          "Nellicious hilft dir, deine Zufuhr im Blick zu behalten, ersetzt aber keine ärztliche Diagnostik. Bei anhaltenden Beschwerden lass dich bitte ärztlich untersuchen, z. B. mit einem Blutbild."
+        ]
+      },
+      "plateau": {
+        "title": "Ein Plateau durchbrechen",
+        "body": [
+          "Ein Plateau (das Gewicht bewegt sich trotz Defizit über Wochen kaum) hat oft banale Gründe: Der Kalorienbedarf sinkt mit dem Gewicht, es wird unbewusst häufiger genascht, oder Wassereinlagerungen überdecken einen echten Fortschritt.",
+          "Ein erster Schritt: die letzten 2–3 Wochen im Verlauf genau prüfen, statt sofort das Kaloriendefizit weiter zu verschärfen. Oft hilft präziseres Tracking (Küchenwaage statt Schätzen) mehr als eine neue Diätstrategie.",
+          "Zeigt der Trend über 3–4 Wochen wirklich keine Bewegung, ist ein kleines zusätzliches Defizit (z. B. -100 bis -150 kcal) oder mehr Bewegung im Alltag meist wirksamer als radikale Einschnitte."
+        ]
+      },
+      "makros-training": {
+        "title": "Makros an Trainingstage anpassen",
+        "body": [
+          "An intensiven Trainingstagen profitieren viele von etwas mehr Kohlenhydraten — sie füllen die Glykogenspeicher wieder auf und unterstützen die Regeneration.",
+          "Der Proteinbedarf bleibt dagegen über Trainings- und Ruhetage recht konstant, da Muskelaufbau und -erhalt ein kontinuierlicher Prozess ist, nicht nur direkt nach dem Training.",
+          "Ein einfacher Ansatz: an Trainingstagen etwas mehr Kohlenhydrate, an Ruhetagen etwas mehr Fett, bei ungefähr gleicher Gesamtkalorienzahl."
+        ]
+      },
+      "mentale-vorteile": {
+        "title": "Mentale Vorteile von Ernährungsumstellung und Fasten",
+        "body": [
+          "Regelmäßiges Tracking und feste Essensfenster schaffen Struktur — viele empfinden es als entlastend, nicht mehr ständig spontan über Essen nachdenken zu müssen.",
+          "Ein bewusster Umgang mit Ernährung kann auch das Verhältnis zum eigenen Körper verbessern, wenn er nicht in Verbote und schlechtes Gewissen kippt, sondern als Werkzeug für mehr Klarheit verstanden wird.",
+          "Wichtig ist die Balance: Tracking soll ein Hilfsmittel sein, kein Selbstzweck. Wenn Zahlen mehr Stress als Nutzen erzeugen, ist eine Pause vom genauen Tracking völlig in Ordnung."
+        ]
+      }
+    }
   },
   "exportReport": {
     "range30": "30 Tage",
