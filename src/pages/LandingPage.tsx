@@ -459,70 +459,6 @@ function ScreenFasten() {
   )
 }
 
-// Feste Demo-Werte fürs Mini-Chart — bewusst kein Bezug zu echten Nutzerdaten,
-// nur zur Illustration der Woche/Monat-Umschaltung aus dem echten Verlauf.
-const SCREEN_VERLAUF_WEEK = [58, 30, 68, 42, 74, 50, 22]
-const SCREEN_VERLAUF_MONTH = Array.from({ length: 30 }, (_, i) => 78 - i * 1.1 + Math.sin(i * 1.1) * 6)
-
-function ScreenVerlauf() {
-  const { t } = useTranslation()
-  const [range, setRange] = useState<'week' | 'month'>('week')
-
-  return (
-    <>
-      <ScreenBar title={t('nav.history')} meta={t('landing.screenVerlaufMeta')} />
-      <div className="flex-1 p-3.5 flex flex-col gap-[9px] min-h-0">
-        <div>
-          <div className="font-mono text-[15px] font-medium text-cobalt">94,1 kg</div>
-          <div className="text-[8px] text-basil mt-[2px]">{t('landing.screenVerlaufDiff')}</div>
-        </div>
-        <div className="bg-surface border border-border rounded-[13px] p-[11px] flex flex-col gap-[8px]">
-          <div className="flex items-center justify-between">
-            <span className="text-[8px] text-text-muted">{t('landing.screenVerlaufLabel')}</span>
-            <div className="flex rounded-[6px] border border-border overflow-hidden text-[7px] font-medium shrink-0">
-              <button
-                type="button"
-                onClick={() => setRange('week')}
-                className={`px-[7px] py-[3px] ${range === 'week' ? 'bg-primary text-on-primary' : 'bg-surface-2 text-text-muted'}`}
-              >
-                {t('verlauf.rangeWeek')}
-              </button>
-              <button
-                type="button"
-                onClick={() => setRange('month')}
-                className={`px-[7px] py-[3px] ${range === 'month' ? 'bg-primary text-on-primary' : 'bg-surface-2 text-text-muted'}`}
-              >
-                {t('verlauf.rangeMonth')}
-              </button>
-            </div>
-          </div>
-          {range === 'week' ? (
-            <div className="flex items-end gap-[3.5px] h-[54px]">
-              {SCREEN_VERLAUF_WEEK.map((h, i) => (
-                <div key={i} className="flex-1 bg-cobalt rounded-t-[2px]" style={{ height: `${h}%` }} />
-              ))}
-            </div>
-          ) : (
-            <svg viewBox="0 0 100 40" preserveAspectRatio="none" className="w-full h-[54px] overflow-visible">
-              {SCREEN_VERLAUF_MONTH.map((v, i) => (
-                <circle
-                  key={i}
-                  cx={(i / (SCREEN_VERLAUF_MONTH.length - 1)) * 100}
-                  cy={40 - v * 0.42}
-                  r={i === SCREEN_VERLAUF_MONTH.length - 1 ? 2 : 1.2}
-                  fill="var(--color-cobalt)"
-                  opacity={i === SCREEN_VERLAUF_MONTH.length - 1 ? 1 : 0.5}
-                />
-              ))}
-            </svg>
-          )}
-        </div>
-      </div>
-      <TabBar active="history" />
-    </>
-  )
-}
-
 function ScreenScanner() {
   const { t } = useTranslation()
   return (
@@ -571,12 +507,6 @@ function getPanels(t: TFunction) {
       title: t('landing.panel3Title'),
       text: t('landing.panel3Text'),
       screen: <ScreenFasten />,
-    },
-    {
-      eyebrow: t('landing.panel5Eyebrow'),
-      title: t('landing.panel5Title'),
-      text: t('landing.panel5Text'),
-      screen: <ScreenVerlauf />,
     },
     {
       eyebrow: t('landing.panel4Eyebrow'),
@@ -827,6 +757,63 @@ function RecipeRail() {
 }
 
 // ---------------------------------------------------------------------------
+// Echte App-Screenshots als horizontal scrollbare Galerie — bewusst reale
+// Aufnahmen statt der hand-nachgebauten Mock-Screens weiter oben, als
+// zusätzlicher Beleg dafür, wie die App tatsächlich aussieht.
+// ---------------------------------------------------------------------------
+function getScreenshots(t: TFunction) {
+  return [
+    { src: 'heute-hell.jpg', label: t('landing.shotHeuteHell') },
+    { src: 'heute-dunkel.jpg', label: t('landing.shotHeuteDunkel') },
+    { src: 'fasten.jpg', label: t('landing.shotFasten') },
+    { src: 'auswertung.jpg', label: t('landing.shotAuswertung') },
+    { src: 'fastentrend.jpg', label: t('landing.shotFastentrend') },
+    { src: 'einkaufsliste-rezept.jpg', label: t('landing.shotEinkaufslisteRezept') },
+    { src: 'einkaufsliste-liste.jpg', label: t('landing.shotEinkaufslisteListe') },
+  ]
+}
+
+function ScreenshotGallery() {
+  const { t } = useTranslation()
+  const SHOTS = getScreenshots(t)
+
+  return (
+    <section className="py-20 md:py-32 overflow-hidden">
+      <Reveal>
+        <div className="max-w-5xl mx-auto px-6 mb-10">
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
+            {t('landing.screenshotsEyebrow')}
+          </span>
+          <h2 className="font-display font-semibold text-2xl md:text-4xl leading-tight mt-3 max-w-[22ch] text-wrap-balance">
+            {t('landing.screenshotsTitle')}
+          </h2>
+        </div>
+      </Reveal>
+      <div className="overflow-x-auto px-6">
+        <div className="flex gap-4 w-max md:mx-auto">
+          {SHOTS.map((shot) => (
+            <figure
+              key={shot.src}
+              className="w-[172px] shrink-0 bg-surface border border-border rounded-[18px] overflow-hidden shadow-[var(--shadow)]"
+            >
+              <img
+                src={`${import.meta.env.BASE_URL}screenshots/${shot.src}`}
+                alt={shot.label}
+                loading="lazy"
+                className="w-full h-auto block"
+              />
+              <figcaption className="px-3 py-2.5 text-[12.5px] text-text-muted text-center">
+                {shot.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Fasten-Sektion mit großem, sich zeichnendem Ring
 // ---------------------------------------------------------------------------
 function getPhases(t: TFunction) {
@@ -973,6 +960,7 @@ export function LandingPage() {
             </a>
           </div>
           <p className="text-xs text-text-muted mt-4">{t('landing.noCreditCard')}</p>
+          <p className="text-xs text-text-muted mt-1.5">{t('landing.bilingualNote')}</p>
         </div>
 
         <div className="relative z-[1] mx-auto mt-16 w-[300px] landing-hero-device">
@@ -1026,6 +1014,7 @@ export function LandingPage() {
       <PinnedFeatures />
       <Statement />
       <RecipeRail />
+      <ScreenshotGallery />
       <FastingSection />
 
       {/* Neu in Nellicious */}
