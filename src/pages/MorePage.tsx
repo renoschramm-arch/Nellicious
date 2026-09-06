@@ -15,6 +15,7 @@ export function MorePage() {
     { to: '/mehr/tagesziele', label: t('more.dailyGoalsLabel'), description: t('more.dailyGoalsDesc') },
     { to: '/mehr/auswertung', label: t('more.auswertungLabel'), description: t('more.auswertungDesc') },
     { to: '/mehr/darstellung', label: t('more.darstellungLabel'), description: t('more.darstellungDesc') },
+    { to: '/mehr/wissen', label: t('more.knowledgeLabel'), description: t('more.knowledgeDesc') },
     { to: '/mehr/neu', label: t('more.changelogLabel'), description: t('more.changelogDesc') },
     { to: '/mehr/info', label: t('more.infoLabel'), description: t('more.infoDesc') },
   ]

@@ -19,6 +19,8 @@ import { GoalsPage } from './pages/GoalsPage'
 import { DailyGoalsPage } from './pages/DailyGoalsPage'
 import { AuswertungPage } from './pages/AuswertungPage'
 import { DarstellungPage } from './pages/DarstellungPage'
+import { KnowledgePage } from './pages/KnowledgePage'
+import { KnowledgeArticlePage } from './pages/KnowledgeArticlePage'
 import { InfoPage } from './pages/InfoPage'
 import { NeuInNelliciousPage } from './pages/NeuInNelliciousPage'
 
@@ -46,6 +48,8 @@ export default function App() {
               <Route path="/mehr/tagesziele" element={<DailyGoalsPage />} />
               <Route path="/mehr/auswertung" element={<AuswertungPage />} />
               <Route path="/mehr/darstellung" element={<DarstellungPage />} />
+              <Route path="/mehr/wissen" element={<KnowledgePage />} />
+              <Route path="/mehr/wissen/:id" element={<KnowledgeArticlePage />} />
               <Route path="/mehr/info" element={<InfoPage />} />
               <Route path="/mehr/neu" element={<NeuInNelliciousPage />} />
             </Route>

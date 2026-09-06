@@ -943,6 +943,8 @@
     "auswertungDesc": "Trends in weight, calories and fasting",
     "darstellungLabel": "Appearance",
     "darstellungDesc": "Language and design",
+    "knowledgeLabel": "Knowledge",
+    "knowledgeDesc": "Background info on nutrition and fasting",
     "changelogLabel": "What's new",
     "changelogDesc": "All changes at a glance",
     "infoLabel": "Info",
@@ -951,6 +953,195 @@
     "premiumActive": "⭐ Nellicious Premium active",
     "trialActive_one": "🎁 Premium trial: {{count}} day left",
     "trialActive_other": "🎁 Premium trial: {{count}} days left"
+  },
+  "knowledge": {
+    "title": "Knowledge",
+    "description": "Background knowledge on nutrition, tracking, and fasting.",
+    "categories": {
+      "grundlagen": "Basics",
+      "praxis": "Practice",
+      "fasten": "Fasting",
+      "sicherheit": "Safety",
+      "fortgeschritten": "Advanced"
+    },
+    "articles": {
+      "kalorien-makros": {
+        "title": "Calories, macros & co. explained simply",
+        "body": [
+          "Calories are the unit of energy your body gets from food. Macronutrients — protein, carbs, and fat — deliver that energy at different densities: 1 g of protein and 1 g of carbs each provide about 4 kcal, while 1 g of fat provides about 9 kcal.",
+          "Your body needs protein for muscle, cell repair, and long-lasting satiety. Carbs are the fastest energy source, especially important for your brain and intense training. Fat is a building block for hormones and cell walls, and makes meals more satisfying.",
+          "In Nellicious, every recipe and logged meal shows all three values at a glance — over time you'll get a feel for which foods provide how much of what, without having to memorize every number."
+        ]
+      },
+      "defizit-ueberschuss": {
+        "title": "Calorie deficit vs. surplus: what fits your goal?",
+        "body": [
+          "If you eat fewer calories than you burn over time (a deficit), you lose weight. Eat more than you burn (a surplus), and you gain. Eat roughly the same amount, and your weight stays stable.",
+          "How big a deficit or surplus should be depends on your goal — a moderate pace (e.g. a 300–500 kcal deficit per day for weight loss) is usually more sustainable than drastic jumps, which are harder to stick to and more often end in yo-yo effects.",
+          "Under More → My goal and Daily goals, you set what you want to achieve — Nellicious calculates your personal calorie target from that, which you can track every day."
+        ]
+      },
+      "ernaehrungsformen": {
+        "title": "Diet types compared",
+        "body": [
+          "Omnivore means eating everything — meat, fish, plant-based food. Vegetarian skips meat and fish but allows eggs and dairy. Vegan skips animal products entirely.",
+          "Pescatarian is like vegetarian but additionally allows fish and seafood. Keto relies on very few carbs and a lot of fat to push the body toward fat-burning (ketosis). Low-carb also reduces carbs, but less drastically than keto.",
+          "You set your diet type in your profile — recipe search and filters take it into account automatically, so matching recipes are easier to spot."
+        ]
+      },
+      "unvertraeglichkeits-tags": {
+        "title": "What do the intolerance tags mean?",
+        "body": [
+          "Nellicious has six intolerance tags: lactose-free, gluten-free, nut-free, egg-free, soy-free, and low-histamine. They mark recipes that don't contain the respective food or ingredient group.",
+          "Low-histamine is a bit more complex than the others: it's not about a single ingredient, but about histamine-rich foods like aged cheese, tomatoes, or fermented and smoked products, which can trigger symptoms for people with histamine intolerance.",
+          "Under More → My profile you enter your intolerances — the recipe search then lets you filter specifically for them, so only matching recipes are shown."
+        ]
+      },
+      "gewicht-schwankt": {
+        "title": "Why does my weight fluctuate day to day?",
+        "body": [
+          "Daily weight fluctuations of 1–2 kg are normal and usually not a change in body fat, but water — influenced by salt intake, carbs, hormonal cycle, digestion, or how much you drank the day before.",
+          "Carbs, for instance, bind water in muscle (about 3 g of water per gram of glycogen) — eating noticeably more or fewer carbs on a given day can show up directly on the scale without any real change in fat.",
+          "The trend over several weeks is more meaningful than any single day's number. Under History → Analysis you can see your weight development over time instead of individual outliers."
+        ]
+      },
+      "portionsgroessen": {
+        "title": "Estimating portion sizes correctly",
+        "body": [
+          "Without a kitchen scale, it's hard to judge amounts correctly — studies show we often significantly under- or overestimate portions, especially for energy-dense foods like nuts, oil, or cheese.",
+          "A few rules of thumb help: a portion of pasta (dry) fits roughly in your palm, a piece of meat or fish is about the size of your palm, and a tablespoon of oil is more than it looks (about 10 g / 90 kcal).",
+          "A kitchen scale gets you the most accurate results, especially at the start. Over time you'll develop a better eye for it — until then, it helps to deliberately weigh out ingredient amounts from recipes at least once."
+        ]
+      },
+      "zutaten-skalieren": {
+        "title": "Scaling ingredient amounts: when it helps, when it doesn't",
+        "body": [
+          "On the recipe detail page you can adjust the number of servings — ingredient amounts and nutrition facts scale automatically, handy when cooking for more or fewer people.",
+          "For very small amounts (e.g. a pinch of salt or 1/2 tsp of spice), scaling can become impractical, since some ingredients like spices or leavening agents don't behave linearly — common sense beats strictly following the math here.",
+          "Be especially careful with baking recipes: baking time and temperature don't scale automatically, only the ingredient amounts do."
+        ]
+      },
+      "naehrwerte-lesen": {
+        "title": "Reading nutrition labels on packaging",
+        "body": [
+          "Nutrition labels usually refer to 100 g or 100 ml, not the actual portion in the package — checking both numbers helps avoid surprises.",
+          "\"Sugar\" on a nutrition label includes both added and naturally occurring sugar (e.g. from fruit) — the ingredient list, usually sorted by amount in descending order, reveals more about the actual composition.",
+          "The barcode scanner in Nellicious reads it for you — just scan it, and calories and macros are filled in automatically."
+        ]
+      },
+      "heisshunger": {
+        "title": "Dealing with cravings and slip-ups",
+        "body": [
+          "Cravings usually aren't a character flaw — they're often the result of too little sleep, too large a calorie deficit, not enough protein, or simply stress. Recognizing the cause helps more than willpower alone.",
+          "A single slip-up doesn't derail your goal: a day with noticeably more calories usually evens out easily over a week, without turning an overall deficit into a surplus.",
+          "Instead of giving up completely after a slip-up, it helps to just carry on normally with the next meal — in History you see the trend over weeks anyway, not any single day."
+        ]
+      },
+      "meal-prep": {
+        "title": "Meal prep with the weekly planner",
+        "body": [
+          "In the Plan tab you assign recipes to specific days and meals — ideal for planning the week ahead instead of deciding what to cook every single day.",
+          "The shopping list automatically adds up all ingredient amounts from your planned recipes for the week — so you shop with purpose instead of multiple trips to the store or throwing away ingredients.",
+          "Handy for batch cooking: recipes sharing base ingredients (e.g. chicken or rice used several times in a week) can often be prepped together in one go, saving time during the week."
+        ]
+      },
+      "autophagie": {
+        "title": "Autophagy explained simply",
+        "body": [
+          "Autophagy (\"self-eating\") is a process where cells break down and recycle damaged or unnecessary components — a kind of cellular clean-up that's stimulated, among other things, by longer breaks from eating.",
+          "Early effects are generally assumed from around 16 hours of fasting, more pronounced from 24+ hours — though solid human research (as opposed to animal models) is still relatively early-stage.",
+          "In the Fasting view, Nellicious shows you which assumed phase (e.g. \"ketosis begins\") you're currently in during an active fast."
+        ]
+      },
+      "protokoll-vergleich": {
+        "title": "Protocol comparison: which one fits you?",
+        "body": [
+          "16:8 (16 hours fasting, 8-hour eating window) is the best-known and most everyday-friendly protocol — often as simple as skipping breakfast.",
+          "18:6 and 20:4 extend the fasting time further, and with it potentially the effects, but are more demanding day-to-day. OMAD (one meal a day) is the most intense form, requiring you to cover your entire day's needs in a single meal.",
+          "There's no single \"best\" protocol — what matters most is what you can stick to long-term. You can set and adjust your target window freely in Nellicious at any time."
+        ]
+      },
+      "hungergefuehl": {
+        "title": "Dealing with hunger",
+        "body": [
+          "Hunger tends to come in waves and often fades on its own rather than rising steadily — if you sit out a wave, you'll often notice the urge easing off after a few minutes.",
+          "Drinking enough (water, unsweetened tea, black coffee) helps, since thirst is sometimes mistaken for hunger. Distraction — a walk, a task that requires focus — can also help bridge the fasting period.",
+          "Persistent, strong hunger combined with feeling unwell, on the other hand, is a signal to end the fast — see also the article \"When to stop a fast\"."
+        ]
+      },
+      "fastenbrechen": {
+        "title": "Breaking a fast the right way",
+        "body": [
+          "After longer fasts (roughly 24+ hours), it's a good idea to deliberately keep the first meal smaller and easy to digest rather than going straight for something large and heavy — the digestive tract needs a moment to start back up.",
+          "Good options include a small portion of soup, yogurt, or steamed vegetables. Very fatty or sugary meals right after fasting are more likely to cause discomfort.",
+          "For the usual 16:8 windows, this generally isn't an issue — the recommendation mainly applies to noticeably longer fasting periods."
+        ]
+      },
+      "fasten-sport": {
+        "title": "Fasting and exercise",
+        "body": [
+          "Light to moderate exercise (e.g. walking, easy cardio) works well fasted for most people, and some even find it more pleasant.",
+          "Intense strength training or high-intensity sessions tend to go better with some food in your system for many people — experimenting helps here, since individual tolerance varies a lot.",
+          "Important: drink enough and keep an eye on electrolytes (especially sodium), particularly during longer fasting periods combined with exercise."
+        ]
+      },
+      "wann-abbrechen": {
+        "title": "When to stop a fast",
+        "body": [
+          "Fasting shouldn't be a fight against your own body. Signs like severe dizziness, shakiness, a racing heart, nausea, or pronounced difficulty concentrating are clear signals to stop the fast rather than \"push through\".",
+          "This applies especially to people with pre-existing conditions, during pregnancy/breastfeeding, or when taking medication that depends on an empty stomach or stable blood sugar.",
+          "This content doesn't replace medical advice. If you're unsure or have pre-existing health conditions, talk to a doctor before fasting."
+        ]
+      },
+      "frauen-fasten": {
+        "title": "Women and fasting",
+        "body": [
+          "The female hormonal cycle can affect how well fasting is tolerated — many women report that longer or more frequent fasting periods feel harder during certain phases of the cycle (e.g. shortly before their period).",
+          "Some studies suggest that very aggressive or frequent fasting may lead to hormonal imbalances in women more readily than in men — though the research here isn't yet conclusive.",
+          "A gentler start (e.g. 14:10 instead of jumping straight to 18:6) and paying close attention to your own body are sensible. Fasting is generally not advised when trying to conceive, during pregnancy, or while breastfeeding — discuss this with a doctor beforehand."
+        ]
+      },
+      "fasten-medikamente": {
+        "title": "Fasting and medication",
+        "body": [
+          "Some medications need to be taken with food to avoid side effects like stomach irritation, or act differently on an empty stomach (e.g. faster or stronger) than with a meal.",
+          "This includes, among others, diabetes medication (risk of low blood sugar when meals are skipped), some blood pressure medications, and thyroid medication.",
+          "Never change your medication routine on your own because of a fasting schedule. Talk to your doctor or pharmacist before starting if you take medication regularly."
+        ]
+      },
+      "mangelernaehrung": {
+        "title": "Warning signs of nutrient deficiency",
+        "body": [
+          "Persistent fatigue, trouble concentrating, hair loss, brittle nails, constantly feeling cold, or frequent infections can be signs of insufficient nutrient or calorie intake.",
+          "The risk of not getting enough key nutrients (e.g. iron, B12, protein) rises especially with a persistently very large calorie deficit or very restrictive diets without adequate planning.",
+          "Nellicious helps you keep track of your intake, but it doesn't replace medical diagnostics. If symptoms persist, please get checked by a doctor, e.g. with a blood test."
+        ]
+      },
+      "plateau": {
+        "title": "Breaking through a plateau",
+        "body": [
+          "A plateau (weight barely moving over weeks despite a deficit) often has mundane causes: calorie needs drop as weight drops, snacking creeps up unnoticed, or water retention is masking real progress.",
+          "A good first step: review the last 2–3 weeks in History closely instead of immediately cutting calories further. Often, more precise tracking (a kitchen scale instead of estimating) helps more than a whole new diet strategy.",
+          "If the trend over 3–4 weeks really shows no movement, a small additional deficit (e.g. -100 to -150 kcal) or more daily activity is usually more effective than drastic cuts."
+        ]
+      },
+      "makros-training": {
+        "title": "Adjusting macros for training days",
+        "body": [
+          "On intense training days, many people benefit from somewhat more carbs — they refill glycogen stores and support recovery.",
+          "Protein needs, on the other hand, stay fairly constant across training and rest days, since building and maintaining muscle is a continuous process, not just something that happens right after training.",
+          "A simple approach: a bit more carbs on training days, a bit more fat on rest days, at roughly the same total calorie count."
+        ]
+      },
+      "mentale-vorteile": {
+        "title": "Mental benefits of changing your diet and fasting",
+        "body": [
+          "Regular tracking and fixed eating windows create structure — many people find it relieving to no longer have to constantly think on the fly about food.",
+          "A mindful approach to eating can also improve your relationship with your own body, as long as it doesn't tip into restriction and guilt but is understood as a tool for more clarity.",
+          "Balance matters: tracking should be a tool, not an end in itself. If the numbers create more stress than benefit, taking a break from precise tracking is perfectly fine."
+        ]
+      }
+    }
   },
   "exportReport": {
     "range30": "30 days",
