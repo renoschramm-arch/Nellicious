@@ -14,7 +14,8 @@ const X_LABEL_Y = 92
 // (wie in WeekBarChart) zu schmal, um noch einzeln lesbar zu sein — einzelne
 // Punkte pro Tag bleiben auch bei dieser Dichte klar unterscheidbar. Tage
 // ohne Eintrag bekommen bewusst keinen Punkt (statt z.B. 0), da ein
-// fehlender Eintrag kein Messwert ist.
+// fehlender Eintrag kein Messwert ist — die Verbindungslinie überspringt
+// solche Lücken aber und läuft direkt zum nächsten vorhandenen Wert weiter.
 export function MonthDotChart({
   data,
   color,
@@ -47,20 +48,11 @@ export function MonthDotChart({
   const lastIndex = [...coords].reverse().findIndex((c) => c != null)
   const lastCoord = lastIndex >= 0 ? coords[coords.length - 1 - lastIndex] : null
 
-  // Verbindungslinie in einzelnen Teilstücken statt einem durchgehenden Pfad
-  // — sonst würde eine Lücke (Tag ohne Eintrag) die Nachbarpunkte optisch
-  // verbinden, obwohl dazwischen gar kein Messwert liegt.
-  const segments: string[] = []
-  let current = ''
-  for (const c of coords) {
-    if (!c) {
-      if (current) segments.push(current)
-      current = ''
-      continue
-    }
-    current += current ? ` L ${c.x} ${c.y}` : `M ${c.x} ${c.y}`
-  }
-  if (current) segments.push(current)
+  // Verbindungslinie läuft direkt von einem vorhandenen Wert zum nächsten,
+  // über Lücken (Tage ohne Eintrag) hinweg — so bleibt der Trend über den
+  // ganzen Zeitraum als eine durchgehende Linie erkennbar.
+  const validCoords = coords.filter((c): c is { x: number; y: number } => c != null)
+  const linePath = validCoords.map((c, i) => `${i === 0 ? 'M' : 'L'} ${c.x} ${c.y}`).join(' ')
 
   // Eine Handvoll Datums-Ticks statt einem Label pro Tag — bei 30 Punkten
   // würde das die x-Achse unlesbar überladen.
@@ -97,18 +89,7 @@ export function MonthDotChart({
         {formatValue(min)}
       </text>
 
-      {segments.map((d, i) => (
-        <path
-          key={i}
-          d={d}
-          fill="none"
-          stroke={color}
-          strokeWidth="1.5"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          opacity={0.55}
-        />
-      ))}
+      <path d={linePath} fill="none" stroke={color} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" opacity={0.55} />
 
       {coords.map(
         (c, i) =>
