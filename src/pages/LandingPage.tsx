@@ -794,7 +794,10 @@ function ScreenshotGallery() {
       const total = section.offsetHeight - window.innerHeight
       if (total <= 0) return
       const progress = Math.min(1, Math.max(0, -section.getBoundingClientRect().top / total))
-      const max = Math.max(0, rail.scrollWidth - track.clientWidth)
+      // track hat px-6 (24px je Seite); clientWidth zählt dieses Padding mit,
+      // wodurch der Rand sonst 48px zu früh clippt und die letzte Karte samt
+      // ihrem rechten Randabstand nie vollständig ins Bild rutscht.
+      const max = Math.max(0, rail.scrollWidth - track.clientWidth + 48)
       rail.style.transform = `translate3d(${-progress * max}px,0,0)`
     }, []),
     !reduced,
