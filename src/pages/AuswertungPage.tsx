@@ -214,7 +214,7 @@ export function AuswertungPage() {
                   {t('macros.protein')}
                   {proteinGoal > 0 ? t('auswertung.proteinGoalSuffix', { goal: proteinGoal }) : ''}
                 </span>
-                <div className="h-1.5 rounded-full bg-bg overflow-hidden">
+                <div className="mt-auto h-1.5 rounded-full bg-bg overflow-hidden">
                   <div
                     className="h-full rounded-full bg-basil"
                     style={{ width: `${macroPct(avgProtein, proteinGoal)}%` }}
@@ -227,7 +227,7 @@ export function AuswertungPage() {
                   {t('macros.carbs')}
                   {carbsGoal > 0 ? t('auswertung.proteinGoalSuffix', { goal: carbsGoal }) : ''}
                 </span>
-                <div className="h-1.5 rounded-full bg-bg overflow-hidden">
+                <div className="mt-auto h-1.5 rounded-full bg-bg overflow-hidden">
                   <div
                     className="h-full rounded-full bg-honey"
                     style={{ width: `${macroPct(avgCarbs, carbsGoal)}%` }}
@@ -240,7 +240,7 @@ export function AuswertungPage() {
                   {t('macros.fat')}
                   {fatGoal > 0 ? t('auswertung.proteinGoalSuffix', { goal: fatGoal }) : ''}
                 </span>
-                <div className="h-1.5 rounded-full bg-bg overflow-hidden">
+                <div className="mt-auto h-1.5 rounded-full bg-bg overflow-hidden">
                   <div className="h-full rounded-full bg-primary" style={{ width: `${macroPct(avgFat, fatGoal)}%` }} />
                 </div>
               </div>
