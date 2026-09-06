@@ -497,6 +497,9 @@
       "📚 New: Knowledge section under More with 22 articles on nutrition, tracking, and fasting",
       "Scaling servings: nutrition facts and ingredient amounts are now calculated correctly for fractional values too (e.g. 0.5 or 1.5 servings) — including when logging as a meal",
       "\"Add to home screen\": now includes instructions for Android too"
+    ],
+    "seq24": [
+      "📈 History: water, weight, fasting, and calories can now be switched between weekly bars and a new monthly dot chart (30 days)"
     ]
   },
   "quotes": [

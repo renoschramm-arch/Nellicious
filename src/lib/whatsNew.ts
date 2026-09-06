@@ -1,6 +1,6 @@
 import type { TFunction } from 'i18next'
 
-export const APP_VERSION = '1.48'
+export const APP_VERSION = '1.49'
 
 interface ChangelogEntry {
   seq: number
@@ -53,6 +53,7 @@ const CHANGELOG: ChangelogEntry[] = [
   { seq: 21, date: '2026-08-31', key: 'seq21' },
   { seq: 22, date: '2026-08-31', key: 'seq22' },
   { seq: 23, date: '2026-09-06', key: 'seq23' },
+  { seq: 24, date: '2026-09-06', key: 'seq24' },
 ]
 
 export const LATEST_CHANGELOG_SEQ = CHANGELOG.reduce((max, entry) => Math.max(max, entry.seq), 0)
