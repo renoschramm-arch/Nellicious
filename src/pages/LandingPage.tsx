@@ -601,7 +601,7 @@ function PinnedFeatures() {
                   <div
                     key={panel.eyebrow}
                     className={`absolute inset-0 flex flex-col transition-opacity duration-500 motion-reduce:transition-none ${
-                      i === active ? 'opacity-100' : 'opacity-0'
+                      i === active ? 'opacity-100' : 'opacity-0 pointer-events-none'
                     }`}
                     aria-hidden={i !== active}
                   >
@@ -757,6 +757,63 @@ function RecipeRail() {
 }
 
 // ---------------------------------------------------------------------------
+// Echte App-Screenshots als horizontal scrollbare Galerie — bewusst reale
+// Aufnahmen statt der hand-nachgebauten Mock-Screens weiter oben, als
+// zusätzlicher Beleg dafür, wie die App tatsächlich aussieht.
+// ---------------------------------------------------------------------------
+function getScreenshots(t: TFunction) {
+  return [
+    { src: 'heute-hell.jpg', label: t('landing.shotHeuteHell') },
+    { src: 'heute-dunkel.jpg', label: t('landing.shotHeuteDunkel') },
+    { src: 'fasten.jpg', label: t('landing.shotFasten') },
+    { src: 'auswertung.jpg', label: t('landing.shotAuswertung') },
+    { src: 'fastentrend.jpg', label: t('landing.shotFastentrend') },
+    { src: 'einkaufsliste-rezept.jpg', label: t('landing.shotEinkaufslisteRezept') },
+    { src: 'einkaufsliste-liste.jpg', label: t('landing.shotEinkaufslisteListe') },
+  ]
+}
+
+function ScreenshotGallery() {
+  const { t } = useTranslation()
+  const SHOTS = getScreenshots(t)
+
+  return (
+    <section className="py-20 md:py-32 overflow-hidden">
+      <Reveal>
+        <div className="max-w-5xl mx-auto px-6 mb-10">
+          <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-muted">
+            {t('landing.screenshotsEyebrow')}
+          </span>
+          <h2 className="font-display font-semibold text-2xl md:text-4xl leading-tight mt-3 max-w-[22ch] text-wrap-balance">
+            {t('landing.screenshotsTitle')}
+          </h2>
+        </div>
+      </Reveal>
+      <div className="overflow-x-auto px-6">
+        <div className="flex gap-4 w-max md:mx-auto">
+          {SHOTS.map((shot) => (
+            <figure
+              key={shot.src}
+              className="w-[172px] shrink-0 bg-surface border border-border rounded-[18px] overflow-hidden shadow-[var(--shadow)]"
+            >
+              <img
+                src={`${import.meta.env.BASE_URL}screenshots/${shot.src}`}
+                alt={shot.label}
+                loading="lazy"
+                className="w-full h-auto block"
+              />
+              <figcaption className="px-3 py-2.5 text-[12.5px] text-text-muted text-center">
+                {shot.label}
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
+// ---------------------------------------------------------------------------
 // Fasten-Sektion mit großem, sich zeichnendem Ring
 // ---------------------------------------------------------------------------
 function getPhases(t: TFunction) {
@@ -822,7 +879,7 @@ function FastingSection() {
 function getStats(t: TFunction) {
   return [
     { value: 352, label: t('landing.statLabelRecipes') },
-    { value: 681, label: t('landing.statLabelFoods') },
+    { value: 689, label: t('landing.statLabelFoods') },
     { value: 6, label: t('landing.statLabelDiets') },
     { value: 14, label: t('landing.statLabelFreeDays') },
   ]
@@ -903,6 +960,7 @@ export function LandingPage() {
             </a>
           </div>
           <p className="text-xs text-text-muted mt-4">{t('landing.noCreditCard')}</p>
+          <p className="text-xs text-text-muted mt-1.5">{t('landing.bilingualNote')}</p>
         </div>
 
         <div className="relative z-[1] mx-auto mt-16 w-[300px] landing-hero-device">
@@ -956,6 +1014,7 @@ export function LandingPage() {
       <PinnedFeatures />
       <Statement />
       <RecipeRail />
+      <ScreenshotGallery />
       <FastingSection />
 
       {/* Neu in Nellicious */}
