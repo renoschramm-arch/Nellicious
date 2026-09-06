@@ -816,7 +816,7 @@ function ScreenshotGallery() {
   const figures = SHOTS.map((shot) => (
     <figure
       key={shot.src}
-      className="w-[172px] shrink-0 bg-surface border border-border rounded-[18px] overflow-hidden shadow-[var(--shadow)]"
+      className="w-[229px] shrink-0 bg-surface border border-border rounded-[18px] overflow-hidden shadow-[var(--shadow)]"
     >
       <img
         src={`${import.meta.env.BASE_URL}screenshots/${shot.src}`}
