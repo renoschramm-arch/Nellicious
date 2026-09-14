@@ -43,7 +43,22 @@ export function DashboardPage() {
   const { recipes } = useRecipes()
   const [showForm, setShowForm] = useState(false)
   const [addMode, setAddMode] = useState<'rezept' | 'manuell'>('rezept')
+  const [autoOpenScanner, setAutoOpenScanner] = useState(false)
   const catchUpInFlight = useRef(new Set<string>())
+
+  // Shortcuts vom Home-Bildschirm (siehe manifest.webmanifest) verlinken auf
+  // ?action=add bzw. ?action=scan, um direkt das Mahlzeit-Formular bzw. den
+  // Scanner zu öffnen statt nur auf der Heute-Seite zu landen.
+  useEffect(() => {
+    const action = new URLSearchParams(window.location.search).get('action')
+    if (!action) return
+    setShowForm(true)
+    if (action === 'scan') {
+      setAddMode('manuell')
+      setAutoOpenScanner(true)
+    }
+    window.history.replaceState(null, '', window.location.pathname)
+  }, [])
 
   // Begrüßung inkl. Motivationsspruch nur einmal pro App-Start zeigen, nicht
   // bei jeder Rückkehr zur "Heute"-Ansicht innerhalb derselben Sitzung.
@@ -260,6 +275,7 @@ export function DashboardPage() {
             <RecipeAddForm onCancel={() => setShowForm(false)} onAdd={handleAddRecipe} />
           ) : (
             <MealForm
+              autoOpenScanner={autoOpenScanner}
               onCancel={() => setShowForm(false)}
               onSubmit={async (entry) => {
                 await addLog(entry)
@@ -369,9 +385,11 @@ function RecipeAddForm({
 function MealForm({
   onSubmit,
   onCancel,
+  autoOpenScanner = false,
 }: {
   onSubmit: (entry: { name: string; kcal: number; protein_g: number; carbs_g: number; fat_g: number }) => void
   onCancel: () => void
+  autoOpenScanner?: boolean
 }) {
   const { t } = useTranslation()
   const [name, setName] = useState('')
@@ -384,7 +402,7 @@ function MealForm({
   const [selectedFood, setSelectedFood] = useState<FoodSearchResult | null>(null)
   const [grams, setGrams] = useState('100')
   const { results, loading, error } = useFoodSearch(foodQuery)
-  const [scannerOpen, setScannerOpen] = useState(false)
+  const [scannerOpen, setScannerOpen] = useState(autoOpenScanner)
   const [scanError, setScanError] = useState<string | null>(null)
 
   // Sobald Nutzer:innen ein Makrofeld von Hand anpassen (z. B. um einen
