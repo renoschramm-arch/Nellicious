@@ -125,6 +125,15 @@ export function VerlaufPage() {
     if (!activeSession) setSessionEditMenuOpen(false)
   }, [activeSession])
 
+  // Shortcuts vom Home-Bildschirm (siehe manifest.webmanifest) verlinken auf
+  // /verlauf#wasser, #fasten bzw. #gewicht, um direkt zur passenden Karte zu
+  // scrollen statt nur ganz oben auf der Seite zu landen.
+  useEffect(() => {
+    const hash = window.location.hash.slice(1)
+    if (!hash) return
+    document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }, [])
+
   const latestWeight = weightLogs[0]
   const waterGoal = profile?.daily_water_goal_ml ?? 2500
   const waterPct = Math.min(100, Math.round((todayMl / waterGoal) * 100))
@@ -420,7 +429,7 @@ export function VerlaufPage() {
       <PageFlatlay file="auth.png" />
       <h1 className="font-display font-bold text-2xl">{t('verlauf.title')}</h1>
 
-      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+      <div id="wasser" className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-semibold text-lg flex items-center gap-2">
             {t('verlauf.waterTitle')}
@@ -552,7 +561,7 @@ export function VerlaufPage() {
         </div>
       </div>
 
-      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+      <div id="fasten" className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="font-display font-semibold text-lg text-basil flex items-center gap-2">
             {t('verlauf.fastingTitle')}{!hasPremium && ' 🔒'}
@@ -915,7 +924,7 @@ export function VerlaufPage() {
         </div>
       </div>
 
-      <div className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
+      <div id="gewicht" className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-3">
         <h2 className="font-display font-semibold text-lg text-cobalt">{t('verlauf.weightTitle')}</h2>
         {latestWeight && (
           <span className="font-mono text-2xl text-cobalt">

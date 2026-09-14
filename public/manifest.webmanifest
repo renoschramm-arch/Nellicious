@@ -18,5 +18,43 @@
       "sizes": "512x512",
       "type": "image/png"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Fasten starten oder beenden",
+      "short_name": "Fasten",
+      "description": "Direkt zur Fasten-Karte auf der Verlauf-Seite",
+      "url": "/Nellicious/verlauf#fasten"
+    },
+    {
+      "name": "Wasser loggen",
+      "short_name": "Wasser",
+      "description": "Direkt zum Wasser-Tracking auf der Verlauf-Seite",
+      "url": "/Nellicious/verlauf#wasser"
+    },
+    {
+      "name": "Gewicht eintragen",
+      "short_name": "Gewicht",
+      "description": "Direkt zum Gewichtseintrag auf der Verlauf-Seite",
+      "url": "/Nellicious/verlauf#gewicht"
+    },
+    {
+      "name": "Mahlzeit hinzufügen",
+      "short_name": "Mahlzeit",
+      "description": "Öffnet die Heute-Seite direkt mit dem Mahlzeit-hinzufügen-Formular",
+      "url": "/Nellicious/?action=add"
+    },
+    {
+      "name": "Rezepte durchsuchen",
+      "short_name": "Rezepte",
+      "description": "Direkt zur Rezeptübersicht",
+      "url": "/Nellicious/rezepte"
+    },
+    {
+      "name": "Barcode scannen",
+      "short_name": "Scannen",
+      "description": "Öffnet die Heute-Seite direkt mit dem Barcode-Scanner",
+      "url": "/Nellicious/?action=scan"
+    }
   ]
 }
