@@ -67,7 +67,10 @@ Deno.serve(async (req: Request) => {
 async function notifyByEmail(fromEmail: string, message: string) {
   const apiKey = Deno.env.get('RESEND_API_KEY')
   const toEmail = Deno.env.get('FEEDBACK_TO_EMAIL')
-  if (!apiKey || !toEmail) return
+  if (!apiKey || !toEmail) {
+    console.error('Mailversand übersprungen — fehlendes Secret:', { hasApiKey: !!apiKey, hasToEmail: !!toEmail })
+    return
+  }
 
   try {
     const res = await fetch('https://api.resend.com/emails', {
