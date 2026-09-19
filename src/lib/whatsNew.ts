@@ -59,6 +59,7 @@ const CHANGELOG: ChangelogEntry[] = [
   { seq: 27, date: '2026-09-19', key: 'seq27' },
   { seq: 28, date: '2026-09-19', key: 'seq28' },
   { seq: 29, date: '2026-09-19', key: 'seq29' },
+  { seq: 30, date: '2026-09-19', key: 'seq30' },
 ]
 
 export const LATEST_CHANGELOG_SEQ = CHANGELOG.reduce((max, entry) => Math.max(max, entry.seq), 0)
