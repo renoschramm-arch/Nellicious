@@ -420,6 +420,24 @@
     "thanks": "Thanks for your feedback! 💛",
     "error": "Feedback could not be sent. Please try again later."
   },
+  "notificationSettings": {
+    "title": "Notifications",
+    "intro": "Get reminded about water, fasting, meals or weight — even when Nellicious is closed.",
+    "unsupported": "Your browser or device unfortunately doesn't support push notifications.",
+    "denied": "Notifications were blocked. Allow them for Nellicious in your browser or device settings to receive reminders.",
+    "activeLabel": "Notifications are active ✓",
+    "inactiveLabel": "Notifications aren't enabled yet",
+    "enable": "Enable",
+    "disable": "Disable",
+    "water": "💧 Drink water",
+    "waterDesc": "Reminds you if you haven't logged water in a while and haven't reached your daily goal yet",
+    "fastingEnd": "⏱️ Fasting window ending soon",
+    "fastingEndDesc": "Reminds you shortly before your planned fasting period ends",
+    "meal": "🍽️ Log a meal",
+    "mealDesc": "Reminds you in the evening if you haven't logged any meal today",
+    "weight": "⚖️ Log your weight",
+    "weightDesc": "Reminds you roughly weekly if no weight has been logged in a while"
+  },
   "changelog": {
     "seqNeg4": ["Added weekly plan with automatic shopping list (grouped by recipe or as a flat list, amounts scale with how often a recipe is planned)"],
     "seqNeg3": [
@@ -1009,6 +1027,8 @@
     "goalsDesc": "What you want to achieve",
     "dailyGoalsLabel": "Daily goals",
     "dailyGoalsDesc": "kcal, protein, carbs, fat",
+    "notificationsLabel": "Notifications",
+    "notificationsDesc": "Reminders for water, fasting, meals, weight",
     "auswertungLabel": "Insights",
     "auswertungDesc": "Trends in weight, calories and fasting",
     "darstellungLabel": "Appearance",

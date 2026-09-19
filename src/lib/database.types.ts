@@ -28,6 +28,11 @@ export interface Database {
           stripe_customer_id: string | null
           premium_until: string | null
           active_goal_profile_id: string | null
+          notify_water: boolean
+          notify_fasting_end: boolean
+          notify_meal: boolean
+          notify_weight: boolean
+          timezone: string
           created_at: string
         }
         Insert: {
@@ -51,6 +56,11 @@ export interface Database {
           fasting_default_hours?: number
           fasting_protocol_hours?: number[]
           fasting_enabled?: boolean
+          notify_water?: boolean
+          notify_fasting_end?: boolean
+          notify_meal?: boolean
+          notify_weight?: boolean
+          timezone?: string
         }
         Update: Partial<{
           display_name: string | null
@@ -73,6 +83,11 @@ export interface Database {
           fasting_protocol_hours: number[]
           fasting_enabled: boolean
           active_goal_profile_id: string | null
+          notify_water: boolean
+          notify_fasting_end: boolean
+          notify_meal: boolean
+          notify_weight: boolean
+          timezone: string
         }>
         Relationships: []
       }
@@ -364,6 +379,29 @@ export interface Database {
         }
         Update: Partial<{
           message: string
+        }>
+        Relationships: []
+      }
+      push_subscriptions: {
+        Row: {
+          id: string
+          user_id: string
+          endpoint: string
+          p256dh: string
+          auth: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          endpoint: string
+          p256dh: string
+          auth: string
+        }
+        Update: Partial<{
+          endpoint: string
+          p256dh: string
+          auth: string
         }>
         Relationships: []
       }
