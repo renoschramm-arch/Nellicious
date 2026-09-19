@@ -345,6 +345,25 @@ export interface Database {
         }>
         Relationships: []
       }
+      feedback: {
+        Row: {
+          id: string
+          user_id: string
+          email: string | null
+          message: string
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          user_id: string
+          email?: string | null
+          message: string
+        }
+        Update: Partial<{
+          message: string
+        }>
+        Relationships: []
+      }
     }
     Views: Record<string, never>
     Functions: {

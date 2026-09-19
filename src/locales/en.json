@@ -229,6 +229,7 @@
     "androidStep2": "Select \"Install app\" or \"Add to Home screen\"",
     "androidStep3": "Confirm with \"Install\"",
     "supportMe": "🧡 Support me",
+    "giveFeedback": "💬 Give feedback",
     "copyright": "© 2026 Nellicious. All rights reserved.",
     "privateUseOnly": "For private use only."
   },
@@ -391,6 +392,16 @@
     "paragraph1": "Nellicious is built in countless evening hours full of passion — every feature is built, tested and constantly improved. Apps with this feature set often cost a monthly subscription elsewhere, and Nellicious stays completely ad-free.",
     "paragraph2": "A small contribution directly helps development keep going. Thanks for using Nellicious! ❤️",
     "continueToPaypal": "🧡 Continue to"
+  },
+  "feedback": {
+    "title": "Give feedback",
+    "close": "Close",
+    "paragraph": "Feature request, bug or idea? Write it here — the message goes straight to the developer.",
+    "placeholder": "Your message ...",
+    "send": "Send",
+    "sending": "Sending ...",
+    "thanks": "Thanks for your feedback! 💛",
+    "error": "Feedback could not be sent. Please try again later."
   },
   "changelog": {
     "seqNeg4": ["Added weekly plan with automatic shopping list (grouped by recipe or as a flat list, amounts scale with how often a recipe is planned)"],
