@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { APP_VERSION } from '../lib/whatsNew'
 import { SupportModal } from '../components/SupportModal'
+import { FeedbackModal } from '../components/FeedbackModal'
 
 // Android-Geräte per User-Agent erkennen, um den passenden Tab
 // vorauszuwählen — alles andere (inkl. iOS und Desktop) zeigt iOS als
@@ -15,6 +16,7 @@ function detectDefaultPlatform(): 'ios' | 'android' {
 export function InfoPage() {
   const { t } = useTranslation()
   const [showSupportModal, setShowSupportModal] = useState(false)
+  const [showFeedbackModal, setShowFeedbackModal] = useState(false)
   const [platform, setPlatform] = useState<'ios' | 'android'>(detectDefaultPlatform)
 
   return (
@@ -107,6 +109,13 @@ export function InfoPage() {
         {t('info.supportMe')}
       </button>
 
+      <button
+        onClick={() => setShowFeedbackModal(true)}
+        className="text-center bg-surface border border-border rounded-xl py-2.5 text-sm text-text-muted hover:text-text"
+      >
+        {t('info.giveFeedback')}
+      </button>
+
       <p className="text-center text-xs text-text-muted">
         {t('info.copyright')}
         <br />
@@ -114,6 +123,7 @@ export function InfoPage() {
       </p>
 
       {showSupportModal && <SupportModal onClose={() => setShowSupportModal(false)} />}
+      {showFeedbackModal && <FeedbackModal onClose={() => setShowFeedbackModal(false)} />}
     </div>
   )
 }

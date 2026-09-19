@@ -229,6 +229,7 @@
     "androidStep2": "„App installieren\" bzw. „Zum Startbildschirm hinzufügen\" auswählen",
     "androidStep3": "Mit „Installieren\" bestätigen",
     "supportMe": "🧡 Unterstütze mich",
+    "giveFeedback": "💬 Feedback geben",
     "copyright": "© 2026 Nellicious. Alle Rechte vorbehalten.",
     "privateUseOnly": "Nur zur privaten Nutzung."
   },
@@ -391,6 +392,16 @@
     "paragraph1": "Nellicious entsteht in unzähligen Abendstunden voller Herzblut — jede Funktion wird gebaut, getestet und stetig verbessert. Apps mit diesem Funktionsumfang kosten anderswo oft ein monatliches Abo, und Nellicious bleibt dabei komplett werbefrei.",
     "paragraph2": "Mit einer kleinen Unterstützung hilfst du direkt, dass die Entwicklung weitergeht. Danke, dass du Nellicious nutzt! ❤️",
     "continueToPaypal": "🧡 Weiter zu"
+  },
+  "feedback": {
+    "title": "Feedback geben",
+    "close": "Schließen",
+    "paragraph": "Wunsch, Fehler oder Idee? Schreib es hier rein — die Nachricht kommt direkt beim Entwickler an.",
+    "placeholder": "Deine Nachricht ...",
+    "send": "Senden",
+    "sending": "Wird gesendet ...",
+    "thanks": "Danke für dein Feedback! 💛",
+    "error": "Feedback konnte nicht gesendet werden. Bitte später erneut versuchen."
   },
   "changelog": {
     "seqNeg4": ["Wochenplan mit automatischer Einkaufsliste eingeführt (nach Rezept gruppiert oder als flache Liste, Mengen skalieren je nach Planhäufigkeit)"],
