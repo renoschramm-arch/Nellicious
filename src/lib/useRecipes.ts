@@ -11,6 +11,7 @@ import {
   getIntoleranceDescriptions,
 } from './useProfile'
 import type { Database } from './database.types'
+import type { RecipeFormValues } from '../components/RecipeForm'
 
 export type Recipe = Database['public']['Tables']['recipes']['Row']
 export type RecipeInsert = Database['public']['Tables']['recipes']['Insert']
@@ -67,6 +68,22 @@ export function localizeRecipeText(recipe: Recipe, language: string): LocalizedR
   }
 }
 
+// Wer ein nicht selbst angelegtes Rezept bearbeitet (globales Beispielrezept
+// oder ein von anderen geteiltes), bekommt statt eines Updates am Original
+// eine private Kopie (forked_from = Original-ID) — alle anderen sehen
+// weiterhin unverändert das Original. Für Listen wird die Kopie deshalb an
+// der Stelle des Originals eingeblendet, das Original selbst ausgeblendet.
+function mergeForks(recipes: Recipe[]): Recipe[] {
+  const forkByOriginal = new Map<string, Recipe>()
+  for (const r of recipes) {
+    if (r.forked_from) forkByOriginal.set(r.forked_from, r)
+  }
+  return recipes
+    .filter((r) => !r.forked_from)
+    .map((r) => forkByOriginal.get(r.id) ?? r)
+    .sort((a, b) => a.title.localeCompare(b.title))
+}
+
 export function useRecipes() {
   const { user } = useAuth()
   const [recipes, setRecipes] = useState<Recipe[]>([])
@@ -78,7 +95,7 @@ export function useRecipes() {
       .select('*')
       .order('title', { ascending: true })
       .then(({ data }) => {
-        setRecipes(data ?? [])
+        setRecipes(mergeForks(data ?? []))
         setLoading(false)
       })
   }, [])
@@ -100,39 +117,88 @@ export function useRecipes() {
 }
 
 export function useRecipe(id: string | undefined) {
+  const { user } = useAuth()
   const [recipe, setRecipe] = useState<Recipe | null>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     if (!id) return
-    supabase
-      .from('recipes')
-      .select('*')
-      .eq('id', id)
-      .maybeSingle()
-      .then(({ data }) => {
-        setRecipe(data ?? null)
-        setLoading(false)
-      })
-  }, [id])
+    let cancelled = false
+
+    async function load() {
+      setLoading(true)
+      const { data } = await supabase.from('recipes').select('*').eq('id', id!).maybeSingle()
+      if (cancelled) return
+
+      // Fremdes/globales Rezept, aber eine eigene bearbeitete Kopie davon
+      // existiert bereits — dann die Kopie zeigen statt des Originals (siehe
+      // mergeForks-Kommentar oben), damit Bearbeiten/Löschen etc. konsistent
+      // auf der eigenen Kopie weiterlaufen.
+      if (data && user && data.owner_id !== user.id && !data.forked_from) {
+        const { data: fork } = await supabase
+          .from('recipes')
+          .select('*')
+          .eq('forked_from', id!)
+          .eq('owner_id', user.id)
+          .maybeSingle()
+        if (!cancelled) {
+          setRecipe(fork ?? data)
+          setLoading(false)
+        }
+        return
+      }
+
+      setRecipe(data ?? null)
+      setLoading(false)
+    }
+
+    load()
+    return () => {
+      cancelled = true
+    }
+  }, [id, user])
 
   async function updateRecipe(patch: RecipeUpdate) {
-    if (!id) return
-    const { data } = await supabase.from('recipes').update(patch).eq('id', id).select('*').single()
+    if (!recipe) return
+    const { data } = await supabase.from('recipes').update(patch).eq('id', recipe.id).select('*').single()
     if (data) setRecipe(data)
   }
 
+  // Bearbeitet jemand ein nicht selbst angelegtes Rezept, entsteht keine
+  // Änderung am Original, sondern eine private Kopie mit forked_from =
+  // Original-ID — alle anderen sehen weiterhin unverändert das Original.
+  // Ein Konflikt (schon vorhandene eigene Kopie desselben Originals) wird
+  // per Upsert einfach aktualisiert statt eine zweite Kopie anzulegen.
+  async function forkRecipe(values: RecipeFormValues) {
+    if (!recipe || !user) return null
+    const { data } = await supabase
+      .from('recipes')
+      .upsert(
+        {
+          ...values,
+          owner_id: user.id,
+          forked_from: recipe.forked_from ?? recipe.id,
+          is_shared: false,
+        },
+        { onConflict: 'owner_id,forked_from' },
+      )
+      .select('*')
+      .single()
+    if (data) setRecipe(data)
+    return data ?? null
+  }
+
   async function deleteRecipe() {
-    if (!id) return
-    await supabase.from('recipes').delete().eq('id', id)
+    if (!recipe) return
+    await supabase.from('recipes').delete().eq('id', recipe.id)
   }
 
   async function setShared(shared: boolean) {
-    if (!id) return
-    const { error } = await supabase.rpc('set_recipe_shared', { p_recipe_id: id, p_shared: shared })
+    if (!recipe) return
+    const { error } = await supabase.rpc('set_recipe_shared', { p_recipe_id: recipe.id, p_shared: shared })
     if (!error) setRecipe((prev) => (prev ? { ...prev, is_shared: shared } : prev))
     return { error: error?.message ?? null }
   }
 
-  return { recipe, loading, updateRecipe, deleteRecipe, setShared }
+  return { recipe, loading, updateRecipe, forkRecipe, deleteRecipe, setShared }
 }

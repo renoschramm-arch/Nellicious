@@ -17,7 +17,7 @@ import { PremiumModal } from '../components/PremiumModal'
 export function RecipeDetailPage() {
   const { t, i18n } = useTranslation()
   const { id } = useParams<{ id: string }>()
-  const { recipe, loading, updateRecipe, deleteRecipe, setShared } = useRecipe(id)
+  const { recipe, loading, updateRecipe, forkRecipe, deleteRecipe, setShared } = useRecipe(id)
   const { addLog } = useMealLogs()
   const todayISO = toISODate(new Date())
   const { setEntry } = useMealPlan(todayISO, todayISO)
@@ -182,7 +182,8 @@ export function RecipeDetailPage() {
 
   async function handleDelete() {
     if (!recipe) return
-    if (!window.confirm(t('recipeDetail.confirmDelete', { title: localized.title }))) return
+    const confirmKey = recipe.forked_from ? 'recipeDetail.confirmRevert' : 'recipeDetail.confirmDelete'
+    if (!window.confirm(t(confirmKey, { title: localized.title }))) return
     setDeleting(true)
     await deleteRecipe()
     navigate('/rezepte')
@@ -194,7 +195,11 @@ export function RecipeDetailPage() {
         initial={recipe}
         onCancel={() => setEditing(false)}
         onSave={async (patch) => {
-          await updateRecipe(patch)
+          if (isOwner) {
+            await updateRecipe(patch)
+          } else {
+            await forkRecipe(patch)
+          }
           setEditing(false)
         }}
       />
@@ -211,21 +216,23 @@ export function RecipeDetailPage() {
         >
           {t('recipeDetail.backToRecipes')}
         </button>
-        {isOwner && (
-          <button
-            onClick={() => setEditing(true)}
-            className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
-          >
-            {t('recipeDetail.edit')}
-          </button>
-        )}
+        <button
+          onClick={() => setEditing(true)}
+          className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-text-muted hover:text-text"
+        >
+          {t('recipeDetail.edit')}
+        </button>
         {isOwner && (
           <button
             onClick={handleDelete}
             disabled={deleting}
             className="shrink-0 bg-surface-2 border border-border rounded-xl px-3 py-2 text-sm text-danger hover:bg-danger/10 disabled:opacity-60"
           >
-            {deleting ? t('recipeDetail.deleting') : t('recipeDetail.delete')}
+            {deleting
+              ? t('recipeDetail.deleting')
+              : recipe.forked_from
+                ? t('recipeDetail.revertToOriginal')
+                : t('recipeDetail.delete')}
           </button>
         )}
         <button
@@ -245,6 +252,12 @@ export function RecipeDetailPage() {
           {linkCopied ? t('recipeDetail.linkCopied') : sharing ? '…' : t('recipeDetail.share')}
         </button>
       </div>
+
+      {recipe.forked_from && (
+        <p className="text-xs text-primary bg-primary/10 border border-primary/30 rounded-xl px-3 py-2.5 -mt-1">
+          {t('recipeDetail.forkedNotice')}
+        </p>
+      )}
 
       {isOwner && !recipe.is_shared && (
         <p className="text-xs text-text-muted -mt-3">{t('recipeDetail.shareHint')}</p>

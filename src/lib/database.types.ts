@@ -129,6 +129,7 @@ export interface Database {
           free_of: string[]
           is_shared: boolean
           servings: number
+          forked_from: string | null
           created_at: string
         }
         Insert: {
@@ -151,6 +152,7 @@ export interface Database {
           free_of?: string[]
           is_shared?: boolean
           servings?: number
+          forked_from?: string | null
         }
         Update: Partial<{
           title: string
@@ -170,6 +172,7 @@ export interface Database {
           free_of: string[]
           is_shared: boolean
           servings: number
+          forked_from: string | null
         }>
         Relationships: []
       }
