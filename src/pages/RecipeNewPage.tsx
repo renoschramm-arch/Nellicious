@@ -42,6 +42,7 @@ export function RecipeNewPage() {
         diet_tags: [],
         free_of: [],
         is_shared: false,
+        forked_from: null,
         ...values,
         ...(estimate
           ? {
