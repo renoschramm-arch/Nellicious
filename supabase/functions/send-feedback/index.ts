@@ -67,10 +67,13 @@ Deno.serve(async (req: Request) => {
 async function notifyByEmail(fromEmail: string, message: string) {
   const apiKey = Deno.env.get('RESEND_API_KEY')
   const toEmail = Deno.env.get('FEEDBACK_TO_EMAIL')
-  if (!apiKey || !toEmail) return
+  if (!apiKey || !toEmail) {
+    console.error('Mailversand übersprungen — fehlendes Secret:', { hasApiKey: !!apiKey, hasToEmail: !!toEmail })
+    return
+  }
 
   try {
-    await fetch('https://api.resend.com/emails', {
+    const res = await fetch('https://api.resend.com/emails', {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${apiKey}`,
@@ -84,9 +87,15 @@ async function notifyByEmail(fromEmail: string, message: string) {
         text: `Von: ${fromEmail}\n\n${message}`,
       }),
     })
-  } catch {
+    if (!res.ok) {
+      console.error('Resend-Versand fehlgeschlagen:', res.status, await res.text())
+    }
+  } catch (err) {
     // Best effort — Fehler beim Mailversand sollen die Antwort an die App
-    // nicht beeinflussen, das Feedback ist ja schon gespeichert.
+    // nicht beeinflussen, das Feedback ist ja schon gespeichert. Aber
+    // geloggt wird trotzdem, damit sich das über die Function-Logs im
+    // Supabase-Dashboard nachvollziehen lässt.
+    console.error('Resend-Versand fehlgeschlagen:', err)
   }
 }
 
