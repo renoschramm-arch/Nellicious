@@ -420,6 +420,24 @@
     "thanks": "Danke für dein Feedback! 💛",
     "error": "Feedback konnte nicht gesendet werden. Bitte später erneut versuchen."
   },
+  "notificationSettings": {
+    "title": "Benachrichtigungen",
+    "intro": "Lass dich an Wasser, Fasten, Mahlzeiten oder Gewicht erinnern — auch wenn Nellicious gerade geschlossen ist.",
+    "unsupported": "Dein Browser oder Gerät unterstützt leider keine Push-Benachrichtigungen.",
+    "denied": "Benachrichtigungen wurden blockiert. Erlaube sie in den Browser- bzw. Geräteeinstellungen für Nellicious, um Erinnerungen zu erhalten.",
+    "activeLabel": "Benachrichtigungen sind aktiv ✓",
+    "inactiveLabel": "Benachrichtigungen sind noch nicht aktiviert",
+    "enable": "Aktivieren",
+    "disable": "Deaktivieren",
+    "water": "💧 Wasser trinken",
+    "waterDesc": "Erinnert, wenn du seit Längerem kein Wasser geloggt hast und dein Tagesziel noch nicht erreicht ist",
+    "fastingEnd": "⏱️ Fasten-Fenster endet bald",
+    "fastingEndDesc": "Erinnert kurz bevor deine geplante Fastenzeit endet",
+    "meal": "🍽️ Mahlzeit eintragen",
+    "mealDesc": "Erinnert abends, falls du heute noch keine Mahlzeit geloggt hast",
+    "weight": "⚖️ Gewicht eintragen",
+    "weightDesc": "Erinnert etwa wöchentlich, falls schon länger kein Gewicht erfasst wurde"
+  },
   "changelog": {
     "seqNeg4": ["Wochenplan mit automatischer Einkaufsliste eingeführt (nach Rezept gruppiert oder als flache Liste, Mengen skalieren je nach Planhäufigkeit)"],
     "seqNeg3": [
@@ -1009,6 +1027,8 @@
     "goalsDesc": "Was du erreichen möchtest",
     "dailyGoalsLabel": "Tagesziele",
     "dailyGoalsDesc": "kcal, Protein, Kohlenhydrate, Fett",
+    "notificationsLabel": "Benachrichtigungen",
+    "notificationsDesc": "Erinnerungen an Wasser, Fasten, Mahlzeiten, Gewicht",
     "auswertungLabel": "Auswertung",
     "auswertungDesc": "Trends bei Gewicht, Kalorien und Fasten",
     "darstellungLabel": "Darstellung",

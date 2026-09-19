@@ -27,6 +27,18 @@ if (shareId) {
   window.history.replaceState(null, '', `${import.meta.env.BASE_URL}rezept-teilen/${shareId}`)
 }
 
+// Registrierung für Web-Push-Erinnerungen (siehe public/sw.js). Erst nach dem
+// "load"-Event, damit der Registrierungsversuch nicht mit dem eigentlichen
+// Seitenaufbau um Bandbreite/Hauptthread konkurriert.
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(`${import.meta.env.BASE_URL}sw.js`).catch(() => {
+      // Erinnerungen sind ein Zusatzfeature — ein fehlgeschlagenes Setup
+      // (z. B. nicht unterstützter Browser) darf den Rest der App nicht stören.
+    })
+  })
+}
+
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <App />

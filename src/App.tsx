@@ -23,6 +23,7 @@ import { KnowledgePage } from './pages/KnowledgePage'
 import { KnowledgeArticlePage } from './pages/KnowledgeArticlePage'
 import { InfoPage } from './pages/InfoPage'
 import { NeuInNelliciousPage } from './pages/NeuInNelliciousPage'
+import { NotificationSettingsPage } from './pages/NotificationSettingsPage'
 
 export default function App() {
   return (
@@ -46,6 +47,7 @@ export default function App() {
               <Route path="/mehr/profil" element={<ProfileEditPage />} />
               <Route path="/mehr/ziele" element={<GoalsPage />} />
               <Route path="/mehr/tagesziele" element={<DailyGoalsPage />} />
+              <Route path="/mehr/benachrichtigungen" element={<NotificationSettingsPage />} />
               <Route path="/mehr/auswertung" element={<AuswertungPage />} />
               <Route path="/mehr/darstellung" element={<DarstellungPage />} />
               <Route path="/mehr/wissen" element={<KnowledgePage />} />

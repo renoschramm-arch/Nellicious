@@ -13,6 +13,7 @@ export function MorePage() {
     { to: '/mehr/profil', label: t('more.profileLabel'), description: t('more.profileDesc') },
     { to: '/mehr/ziele', label: t('more.goalsLabel'), description: t('more.goalsDesc') },
     { to: '/mehr/tagesziele', label: t('more.dailyGoalsLabel'), description: t('more.dailyGoalsDesc') },
+    { to: '/mehr/benachrichtigungen', label: t('more.notificationsLabel'), description: t('more.notificationsDesc') },
     { to: '/mehr/auswertung', label: t('more.auswertungLabel'), description: t('more.auswertungDesc') },
     { to: '/mehr/darstellung', label: t('more.darstellungLabel'), description: t('more.darstellungDesc') },
     { to: '/mehr/wissen', label: t('more.knowledgeLabel'), description: t('more.knowledgeDesc') },
