@@ -17,8 +17,18 @@ interface AuthContextValue {
 // nur im Pro-Plan. Ohne die läuft eine einmal angemeldete Session über das
 // Refresh-Token unbegrenzt im Hintergrund weiter, ohne dass je ein neuer
 // Login-Event entsteht. Dieser Zeitstempel bildet den fehlenden Pro-Plan-
-// Schalter nach: er wird nur bei einer echten Anmeldung gesetzt (nicht bei
-// stillen Token-Refreshes) und erzwingt 24h danach eine erneute Anmeldung.
+// Schalter nach und erzwingt 24h danach eine erneute Anmeldung.
+//
+// Wird bewusst NICHT über das generische onAuthStateChange('SIGNED_IN', ...)
+// gesetzt: @supabase/auth-js feuert dieses Event auch beim bloßen
+// Wiederherstellen einer bestehenden Sitzung aus dem Storage bei jedem
+// App-Start/Reload, solange das Access-Token noch nicht abgelaufen ist (das
+// dafür eigentlich vorgesehene 'INITIAL_SESSION' läuft parallel dazu, ersetzt
+// 'SIGNED_IN' aber nicht) — würde man darauf reagieren, setzte praktisch
+// jedes erneute Öffnen der App den Timer zurück und die 24h-Schwelle würde
+// nie erreicht. Der Zeitstempel wird deshalb ausschließlich direkt nach
+// einem erfolgreichen signInWithPassword()-Aufruf gesetzt, dem einzigen Weg
+// zurück in die App nach einer erzwungenen Abmeldung.
 const LOGIN_AT_KEY = 'nellicious_login_at'
 const SESSION_MAX_AGE_MS = 24 * 60 * 60 * 1000
 
@@ -34,9 +44,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setLoading(false)
     })
     const { data: listener } = supabase.auth.onAuthStateChange((event, newSession) => {
-      if (event === 'SIGNED_IN') {
-        localStorage.setItem(LOGIN_AT_KEY, String(Date.now()))
-      }
       if (event === 'SIGNED_OUT') {
         localStorage.removeItem(LOGIN_AT_KEY)
       }
@@ -76,6 +83,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function signInWithPassword(email: string, password: string) {
     const { error } = await supabase.auth.signInWithPassword({ email, password })
+    if (!error) localStorage.setItem(LOGIN_AT_KEY, String(Date.now()))
     return { error: error?.message ?? null }
   }
 
