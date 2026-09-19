@@ -544,6 +544,9 @@
     ],
     "seq26": [
       "🥂 4 griechische Gerichte mit Metaxa-Sauce: Garnelen-Saganaki, Hähnchen, Schweinemedaillons und Gyros mit Reisnudeln"
+    ],
+    "seq27": [
+      "✏️ Jetzt lässt sich jedes Rezept bearbeiten — auch globale und fremde. Deine Änderungen werden als private Kopie nur bei dir gespeichert, alle anderen sehen weiterhin das unveränderte Original."
     ]
   },
   "quotes": [
@@ -893,7 +896,10 @@
     "shareHint": "Teilen macht dieses Rezept über einen Link öffentlich sichtbar, auch für Personen ohne Nellicious-Konto.",
     "sharedNotice": "🔗 Öffentlich freigegeben — jede:r mit dem Link kann dieses Rezept sehen.",
     "unshare": "Freigabe aufheben",
-    "unsharing": "Wird aufgehoben …"
+    "unsharing": "Wird aufgehoben …",
+    "forkedNotice": "✏️ Du siehst deine eigene bearbeitete Version dieses Rezepts. Alle anderen sehen weiterhin das unveränderte Original.",
+    "revertToOriginal": "Auf Original zurücksetzen",
+    "confirmRevert": "Deine Änderungen an \"{{title}}\" wirklich verwerfen und zum Original zurückkehren?"
   },
   "mealTypes": {
     "fruehstueck": "Frühstück",

@@ -544,6 +544,9 @@
     ],
     "seq26": [
       "🥂 4 Greek dishes with Metaxa sauce: shrimp saganaki, chicken, pork medallions, and gyros with rice noodles"
+    ],
+    "seq27": [
+      "✏️ Every recipe can now be edited — including global and other people's ones. Your changes are saved as a private copy just for you; everyone else still sees the unchanged original."
     ]
   },
   "quotes": [
@@ -893,7 +896,10 @@
     "shareHint": "Sharing makes this recipe publicly visible via a link, even to people without a Nellicious account.",
     "sharedNotice": "🔗 Publicly shared — anyone with the link can see this recipe.",
     "unshare": "Stop sharing",
-    "unsharing": "Removing …"
+    "unsharing": "Removing …",
+    "forkedNotice": "✏️ You're viewing your own edited version of this recipe. Everyone else still sees the unchanged original.",
+    "revertToOriginal": "Reset to original",
+    "confirmRevert": "Really discard your changes to \"{{title}}\" and go back to the original?"
   },
   "mealTypes": {
     "fruehstueck": "Breakfast",
