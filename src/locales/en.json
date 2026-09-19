@@ -88,7 +88,24 @@
     "intolerances": "Intolerances",
     "activityLevel": "Fitness / activity level",
     "saved": "Saved ✓",
-    "save": "Save"
+    "save": "Save",
+    "dangerZoneTitle": "⚠️ Danger zone",
+    "dangerZoneText": "Permanently delete your account and all your data.",
+    "deleteAccount": "Delete account"
+  },
+  "deleteAccount": {
+    "title": "Delete account",
+    "close": "Close",
+    "warning": "This action cannot be undone. Deleting your account permanently removes:",
+    "itemProfile": "Your profile and settings",
+    "itemRecipes": "Your own recipes",
+    "itemLogs": "All logged meals, water, weight and fasting entries",
+    "itemPlan": "Your weekly plan",
+    "typeToConfirm": "Type \"{{word}}\" to confirm:",
+    "confirmWord": "DELETE",
+    "confirmButton": "Permanently delete account",
+    "deleting": "Deleting ...",
+    "error": "Account could not be deleted. Please try again later."
   },
   "goals": {
     "title": "My goal",

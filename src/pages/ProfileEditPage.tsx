@@ -19,12 +19,14 @@ import {
   type NutritionType,
 } from '../lib/useProfile'
 import { TagLegend } from '../components/TagLegend'
+import { DeleteAccountModal } from '../components/DeleteAccountModal'
 
 export function ProfileEditPage() {
   const { t } = useTranslation()
   const { profile, updateProfile } = useProfile()
   const location = useLocation()
   const navigate = useNavigate()
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
   const onboarding = (location.state as OnboardingState | null)?.onboarding ?? false
   const onboardingNext = (location.state as OnboardingState | null)?.onboardingNext
   const [displayName, setDisplayName] = useState('')
@@ -233,6 +235,22 @@ export function ProfileEditPage() {
           {onboarding ? t('onboarding.continue') : saved ? t('profileEdit.saved') : t('profileEdit.save')}
         </button>
       </form>
+
+      {!onboarding && (
+        <div className="border border-red-200 rounded-2xl p-4 flex flex-col gap-2">
+          <span className="text-sm font-semibold text-red-600">{t('profileEdit.dangerZoneTitle')}</span>
+          <p className="text-sm text-text-muted">{t('profileEdit.dangerZoneText')}</p>
+          <button
+            type="button"
+            onClick={() => setShowDeleteModal(true)}
+            className="self-start text-sm font-medium text-red-600 hover:underline"
+          >
+            {t('profileEdit.deleteAccount')}
+          </button>
+        </div>
+      )}
+
+      {showDeleteModal && <DeleteAccountModal onClose={() => setShowDeleteModal(false)} />}
     </div>
   )
 }

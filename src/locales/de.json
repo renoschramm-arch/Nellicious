@@ -88,7 +88,24 @@
     "intolerances": "Unverträglichkeiten",
     "activityLevel": "Fitness-/Aktivitätslevel",
     "saved": "Gespeichert ✓",
-    "save": "Speichern"
+    "save": "Speichern",
+    "dangerZoneTitle": "⚠️ Gefahrenzone",
+    "dangerZoneText": "Konto und alle Daten unwiderruflich löschen.",
+    "deleteAccount": "Konto löschen"
+  },
+  "deleteAccount": {
+    "title": "Konto löschen",
+    "close": "Schließen",
+    "warning": "Diese Aktion kann nicht rückgängig gemacht werden. Beim Löschen deines Kontos werden unwiderruflich entfernt:",
+    "itemProfile": "Dein Profil und deine Einstellungen",
+    "itemRecipes": "Deine eigenen Rezepte",
+    "itemLogs": "Alle geloggten Mahlzeiten, Wasser-, Gewichts- und Fasten-Einträge",
+    "itemPlan": "Dein Wochenplan",
+    "typeToConfirm": "Gib zur Bestätigung \"{{word}}\" ein:",
+    "confirmWord": "LÖSCHEN",
+    "confirmButton": "Konto endgültig löschen",
+    "deleting": "Wird gelöscht ...",
+    "error": "Konto konnte nicht gelöscht werden. Bitte später erneut versuchen."
   },
   "goals": {
     "title": "Mein Ziel",
