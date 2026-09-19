@@ -128,7 +128,17 @@ export function useProfile() {
         .insert({ id: user.id })
         .select('*')
         .single()
-      setProfile(created ?? null)
+      if (created) {
+        setProfile(created)
+      } else {
+        // Mehrere useProfile()-Instanzen (z. B. Layout und die aktuelle
+        // Seite) legen beim allerersten Laden gleichzeitig ein Profil an —
+        // ein Insert gewinnt, der andere läuft in einen Primärschlüssel-
+        // Konflikt. In dem Fall existiert die Zeile inzwischen, einfach
+        // nachladen statt mit profile = null hängen zu bleiben.
+        const { data: existing } = await supabase.from('profiles').select('*').eq('id', user.id).maybeSingle()
+        setProfile(existing ?? null)
+      }
     }
     setLoading(false)
   }, [user])
