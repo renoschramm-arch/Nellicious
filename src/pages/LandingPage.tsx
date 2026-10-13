@@ -743,7 +743,7 @@ function RecipeRail() {
                   <span className="text-[9.5px] px-2 py-[3px] rounded-full bg-basil/15 text-basil">
                     {recipe.tag}
                   </span>
-                  <span className="text-[9.5px] px-2 py-[3px] rounded-full bg-honey/15 text-honey">
+                  <span className="text-[9.5px] px-2 py-[3px] rounded-full bg-honey/15 text-honey-text">
                     {recipe.meal}
                   </span>
                 </div>
@@ -1023,7 +1023,7 @@ export function LandingPage() {
               meta={new Intl.DateTimeFormat(getIntlLocale(), { weekday: 'short', day: '2-digit', month: 'long' }).format(new Date('2026-08-19'))}
             />
             <div className="flex-1 p-3.5 flex flex-col gap-[9px] min-h-0">
-              <span className="self-start font-mono text-[7.5px] text-honey bg-honey/15 rounded-full px-2.5 py-1">
+              <span className="self-start font-mono text-[7.5px] text-honey-text bg-honey/15 rounded-full px-2.5 py-1">
                 {t('landing.screenStreak', { count: 5 })}
               </span>
               <div className="bg-surface-2 border border-border rounded-[13px] p-[11px] flex items-center gap-2.5">
@@ -1091,7 +1091,7 @@ export function LandingPage() {
                   key={entry.date}
                   className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2"
                 >
-                  <span className="font-mono text-xs uppercase tracking-wide text-honey">
+                  <span className="font-mono text-xs uppercase tracking-wide text-honey-text">
                     {dateFormatter().format(new Date(`${entry.date}T00:00:00`))}
                   </span>
                   <ul className="flex flex-col gap-1.5">

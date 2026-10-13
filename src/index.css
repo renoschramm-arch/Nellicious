@@ -39,7 +39,7 @@
   --surface-2: #f3eae0;
   --border: #e7dacc;
   --text: #2a1b16;
-  --text-muted: #79695f;
+  --text-muted: #76675d;
   --brand: #e85a32;
   --primary: #b63420;
   --primary-hover: #9a2a19;
@@ -47,6 +47,10 @@
   --basil: #3e6b4a;
   --honey: #e2a030;
   --on-honey: #2a1b16;
+  /* Dunklerer Honig-Ton für Fließtext auf honigfarbenen Tönungen
+     (bg-honey/10–20): --honey selbst hat dort im hellen Modus nur 2:1
+     Kontrast, deutlich unter den für Fließtext nötigen 4,5:1. */
+  --honey-text: #8e6114;
   --danger: #b3261e;
   --cobalt: #35618c;
   --shadow: 0 1px 2px rgba(42, 27, 22, 0.06), 0 8px 24px -12px rgba(42, 27, 22, 0.18);
@@ -85,6 +89,7 @@
     --on-primary: #1c1310;
     --basil: #6fae82;
     --honey: #f0b84d;
+    --honey-text: #f0b84d;
     --on-honey: #1c1310;
     --danger: #ff8a80;
     --cobalt: #7bb0dd;
@@ -116,6 +121,7 @@
   --on-primary: #1c1310;
   --basil: #6fae82;
   --honey: #f0b84d;
+  --honey-text: #f0b84d;
   --on-honey: #1c1310;
   --danger: #ff8a80;
   --cobalt: #7bb0dd;
@@ -154,6 +160,7 @@
   --color-on-primary: var(--on-primary);
   --color-basil: var(--basil);
   --color-honey: var(--honey);
+  --color-honey-text: var(--honey-text);
   --color-on-honey: var(--on-honey);
   --color-danger: var(--danger);
   --color-cobalt: var(--cobalt);

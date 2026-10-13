@@ -466,7 +466,7 @@ export function DailyGoalsPage() {
           </label>
         </div>
         {macroMismatch && (
-          <p className="text-xs text-honey -mt-1">
+          <p className="text-xs text-honey-text -mt-1">
             {t('dailyGoals.macroMismatch', { macroKcal: Math.round(macroDerivedKcal) })}
           </p>
         )}

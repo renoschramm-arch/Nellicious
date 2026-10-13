@@ -38,7 +38,7 @@ export function PremiumModal({ onClose }: { onClose: () => void }) {
               : t('premium.trialOverText', { days: PREMIUM_TRIAL_DAYS })}
           </p>
 
-          <p className="text-sm text-honey bg-honey/10 border border-honey/30 rounded-xl px-3 py-2.5 leading-relaxed">
+          <p className="text-sm text-honey-text bg-honey/10 border border-honey/30 rounded-xl px-3 py-2.5 leading-relaxed">
             {t('premium.purchaseWip')}
           </p>
 

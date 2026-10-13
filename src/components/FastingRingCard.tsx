@@ -54,7 +54,7 @@ export function FastingRingCard() {
         ) : (
           <>
             🍽️ {eatingWindow!.remainingMs > 0 ? t('verlauf.eatingBeginsIn') : t('verlauf.eatingWindowExceeded')}
-            <span className="block font-mono font-medium text-base text-honey">
+            <span className="block font-mono font-medium text-base text-honey-text">
               {eatingWindow!.remainingMs > 0 ? (
                 <>
                   {formatCountdownHM(eatingWindow!.remainingMs)} h{' '}

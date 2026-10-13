@@ -585,7 +585,7 @@ export function VerlaufPage() {
             </button>
           </h2>
           {fastingStreak > 0 && (
-            <span className="font-mono text-xs text-honey">{t('verlauf.fastingStreak', { count: fastingStreak })}</span>
+            <span className="font-mono text-xs text-honey-text">{t('verlauf.fastingStreak', { count: fastingStreak })}</span>
           )}
         </div>
 
@@ -620,7 +620,7 @@ export function VerlaufPage() {
               ) : eatingWindow ? (
                 <>
                   {eatingWindow.remainingMs > 0 ? t('verlauf.eatingBeginsIn') : t('verlauf.eatingWindowExceeded')}
-                  <span className="block font-mono font-medium text-base text-honey">
+                  <span className="block font-mono font-medium text-base text-honey-text">
                     {eatingWindow.remainingMs > 0 ? (
                       <>
                         {formatCountdownHM(eatingWindow.remainingMs)} h{' '}

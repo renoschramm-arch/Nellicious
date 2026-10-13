@@ -119,7 +119,7 @@ export function MultiAssignModal({
                             active
                               ? 'bg-primary text-on-primary'
                               : occupiedTitle
-                                ? 'bg-honey/10 border border-honey/40 text-honey'
+                                ? 'bg-honey/10 border border-honey/40 text-honey-text'
                                 : 'bg-surface-2 border border-border text-text-muted hover:border-primary'
                           }`}
                         >

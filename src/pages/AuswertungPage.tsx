@@ -171,7 +171,7 @@ export function AuswertungPage() {
             <div className="bg-surface border border-border rounded-2xl p-3 flex flex-col gap-0.5 min-w-0">
               <span className="font-mono text-lg font-semibold">{avgKcal.toLocaleString(getIntlLocale())}</span>
               <span className="text-[11px] uppercase tracking-wide text-text-muted">{t('auswertung.avgKcalPerDay')}</span>
-              <span className={`text-xs font-medium ${Math.abs(kcalGoalDeltaPct) <= 5 ? 'text-basil' : 'text-honey'}`}>
+              <span className={`text-xs font-medium ${Math.abs(kcalGoalDeltaPct) <= 5 ? 'text-basil' : 'text-honey-text'}`}>
                 {t('auswertung.vsGoal', { pct: `${kcalGoalDeltaPct > 0 ? '+' : ''}${kcalGoalDeltaPct}` })}
               </span>
             </div>

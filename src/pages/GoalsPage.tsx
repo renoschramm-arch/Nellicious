@@ -104,7 +104,7 @@ export function GoalsPage() {
             placeholder={t('goals.targetWeightPlaceholder')}
             className="rounded-lg border border-border bg-bg px-3 py-2 font-mono outline-none focus:border-primary"
           />
-          {targetWarning && <span className="text-xs text-honey mt-0.5">{targetWarning}</span>}
+          {targetWarning && <span className="text-xs text-honey-text mt-0.5">{targetWarning}</span>}
         </label>
 
         <label className="flex flex-col gap-1 text-sm">
