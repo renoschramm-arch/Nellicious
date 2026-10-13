@@ -28,7 +28,7 @@ export function NeuInNelliciousPage() {
       <div className="flex flex-col gap-3">
         {history.map((entry) => (
           <div key={entry.date} className="bg-surface border border-border rounded-2xl p-4 flex flex-col gap-2">
-            <span className="font-mono text-xs uppercase tracking-wide text-honey">
+            <span className="font-mono text-xs uppercase tracking-wide text-honey-text">
               {formatEntryDate(entry.date)}
             </span>
             <ul className="flex flex-col gap-1.5">

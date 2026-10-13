@@ -30,12 +30,12 @@ export function MorePage() {
       </div>
 
       {(isPaidPremium || isGrandfathered) && (
-        <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl px-4 py-3 text-sm font-medium text-honey">
+        <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl px-4 py-3 text-sm font-medium text-honey-text">
           {isGrandfathered ? t('more.premiumActiveGrandfathered') : t('more.premiumActive')}
         </div>
       )}
       {trialActive && (
-        <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl px-4 py-3 text-sm text-honey">
+        <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl px-4 py-3 text-sm text-honey-text">
           {t('more.trialActive', { count: trialDaysLeft })}
         </div>
       )}

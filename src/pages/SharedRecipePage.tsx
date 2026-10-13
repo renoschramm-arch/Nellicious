@@ -70,7 +70,7 @@ export function SharedRecipePage() {
                 {recipe.free_of.map((value) => (
                   <span
                     key={value}
-                    className="inline-block text-xs font-medium text-honey bg-honey/10 rounded-full px-2.5 py-1"
+                    className="inline-block text-xs font-medium text-honey-text bg-honey/10 rounded-full px-2.5 py-1"
                   >
                     {getFreeOfLabels(t)[value as keyof ReturnType<typeof getFreeOfLabels>]}
                   </span>

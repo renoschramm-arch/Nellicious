@@ -263,7 +263,7 @@ export function RecipeDetailPage() {
         <p className="text-xs text-text-muted -mt-3">{t('recipeDetail.shareHint')}</p>
       )}
       {isOwner && recipe.is_shared && (
-        <p className="text-xs text-honey bg-honey/10 border border-honey/30 rounded-xl px-3 py-2.5 -mt-1 flex items-center justify-between gap-2 flex-wrap">
+        <p className="text-xs text-honey-text bg-honey/10 border border-honey/30 rounded-xl px-3 py-2.5 -mt-1 flex items-center justify-between gap-2 flex-wrap">
           <span>{t('recipeDetail.sharedNotice')}</span>
           <button
             type="button"
@@ -289,7 +289,7 @@ export function RecipeDetailPage() {
               </span>
             ))}
           {recipe.free_of.map((value) => (
-            <span key={value} className="inline-block text-xs font-medium text-honey bg-honey/10 rounded-full px-2.5 py-1">
+            <span key={value} className="inline-block text-xs font-medium text-honey-text bg-honey/10 rounded-full px-2.5 py-1">
               {getFreeOfLabels(t)[value as keyof ReturnType<typeof getFreeOfLabels>]}
             </span>
           ))}

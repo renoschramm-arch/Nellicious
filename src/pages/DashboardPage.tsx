@@ -150,7 +150,7 @@ export function DashboardPage() {
       {newsItems.length > 0 && (
         <div className="bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-2xl p-4 flex items-start justify-between gap-3">
           <div>
-            <p className="font-display font-semibold text-lg text-honey">{t('dashboard.newsTitle')}</p>
+            <p className="font-display font-semibold text-lg text-honey-text">{t('dashboard.newsTitle')}</p>
             <ul className="text-sm text-text-muted mt-1.5 flex flex-col gap-1">
               {newsItems.map((item) => (
                 <li key={item} className="flex items-start gap-1.5">
@@ -178,7 +178,7 @@ export function DashboardPage() {
       </div>
 
       {streak > 0 && (
-        <span className="inline-flex items-center gap-1.5 w-fit font-mono text-xs text-honey bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-full px-3 py-1.5">
+        <span className="inline-flex items-center gap-1.5 w-fit font-mono text-xs text-honey-text bg-honey/15 backdrop-blur-sm border border-honey/30 rounded-full px-3 py-1.5">
           {t('dashboard.streak', { count: streak })}
         </span>
       )}
