@@ -763,13 +763,13 @@ function RecipeRail() {
 // ---------------------------------------------------------------------------
 function getScreenshots(t: TFunction) {
   return [
-    { src: 'heute-hell.jpg', label: t('landing.shotHeuteHell') },
-    { src: 'heute-dunkel.jpg', label: t('landing.shotHeuteDunkel') },
-    { src: 'fasten.jpg', label: t('landing.shotFasten') },
-    { src: 'auswertung.jpg', label: t('landing.shotAuswertung') },
-    { src: 'fastentrend.jpg', label: t('landing.shotFastentrend') },
-    { src: 'einkaufsliste-rezept.jpg', label: t('landing.shotEinkaufslisteRezept') },
-    { src: 'einkaufsliste-liste.jpg', label: t('landing.shotEinkaufslisteListe') },
+    { src: 'heute-hell.jpg', label: t('landing.shotHeuteHell'), width: 1206, height: 2444 },
+    { src: 'heute-dunkel.jpg', label: t('landing.shotHeuteDunkel'), width: 1206, height: 2437 },
+    { src: 'fasten.jpg', label: t('landing.shotFasten'), width: 1206, height: 1593 },
+    { src: 'auswertung.jpg', label: t('landing.shotAuswertung'), width: 1206, height: 2436 },
+    { src: 'fastentrend.jpg', label: t('landing.shotFastentrend'), width: 1206, height: 1561 },
+    { src: 'einkaufsliste-rezept.jpg', label: t('landing.shotEinkaufslisteRezept'), width: 1206, height: 2437 },
+    { src: 'einkaufsliste-liste.jpg', label: t('landing.shotEinkaufslisteListe'), width: 1206, height: 2439 },
   ]
 }
 
@@ -828,6 +828,8 @@ function ScreenshotGallery() {
       <img
         src={`${import.meta.env.BASE_URL}screenshots/${shot.src}`}
         alt={shot.label}
+        width={shot.width}
+        height={shot.height}
         loading="lazy"
         className="h-[40vh] md:h-[46vh] max-h-[420px] w-auto block"
       />

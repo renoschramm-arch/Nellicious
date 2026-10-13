@@ -34,6 +34,8 @@ export function InfoPage() {
         <img
           src={`${import.meta.env.BASE_URL}icon-192.png`}
           alt="Nellicious"
+          width={192}
+          height={192}
           className="w-16 h-16 rounded-2xl mb-2"
         />
         <span className="font-display font-bold text-2xl">
