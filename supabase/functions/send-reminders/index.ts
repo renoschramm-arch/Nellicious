@@ -188,7 +188,7 @@ Deno.serve(async (req: Request) => {
         try {
           await webpush.sendNotification(
             { endpoint: sub.endpoint, keys: { p256dh: sub.p256dh, auth: sub.auth } },
-            JSON.stringify({ title: reminder.title, body: reminder.body, tag: reminder.kind, url: '/Nellicious/' }),
+            JSON.stringify({ title: reminder.title, body: reminder.body, tag: reminder.kind, url: '/' }),
           )
           anySucceeded = true
           sentCount++

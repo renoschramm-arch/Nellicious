@@ -27,7 +27,7 @@ Einmalig einrichten:
 
 1. **Repo Settings → Pages → Source** auf `GitHub Actions` stellen.
 2. **Repo Settings → Secrets and variables → Actions** zwei Secrets anlegen: `VITE_SUPABASE_URL` und `VITE_SUPABASE_ANON_KEY` (gleiche Werte wie in `.env`).
-3. Nach dem nächsten Push auf `main` ist die App unter `https://<username>.github.io/Nellicious/` erreichbar.
+3. Nach dem nächsten Push auf `main` ist die App unter `https://nellicious.org/` (Custom Domain, `public/CNAME`) bzw. `https://<username>.github.io/Nellicious/` erreichbar.
 
 ## Stand & nächste Schritte
 
