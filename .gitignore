@@ -17,6 +17,8 @@ dist-ssr
 # Werden per `npm run fetch-fonts` heruntergeladen (siehe scripts/fetch-fonts.mjs)
 public/fonts/*.woff2
 
+supabase/.temp
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
