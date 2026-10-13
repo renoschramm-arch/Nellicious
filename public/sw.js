@@ -21,10 +21,10 @@ self.addEventListener('push', (event) => {
   const title = payload.title || 'Nellicious'
   const options = {
     body: payload.body || '',
-    icon: '/Nellicious/icon-192.png',
-    badge: '/Nellicious/icon-192.png',
+    icon: '/icon-192.png',
+    badge: '/icon-192.png',
     tag: payload.tag,
-    data: { url: payload.url || '/Nellicious/' },
+    data: { url: payload.url || '/' },
   }
 
   event.waitUntil(self.registration.showNotification(title, options))
@@ -32,7 +32,7 @@ self.addEventListener('push', (event) => {
 
 self.addEventListener('notificationclick', (event) => {
   event.notification.close()
-  const url = (event.notification.data && event.notification.data.url) || '/Nellicious/'
+  const url = (event.notification.data && event.notification.data.url) || '/'
 
   event.waitUntil(
     self.clients.matchAll({ type: 'window', includeUncontrolled: true }).then((clientList) => {

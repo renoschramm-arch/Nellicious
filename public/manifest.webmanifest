@@ -2,19 +2,19 @@
   "name": "Nellicious",
   "short_name": "Nellicious",
   "description": "Nellicious — gesunde Ernährung, Rezepte und Tracking.",
-  "start_url": "/Nellicious/",
-  "scope": "/Nellicious/",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#e85a32",
   "icons": [
     {
-      "src": "/Nellicious/icon-192.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png"
     },
     {
-      "src": "/Nellicious/icon-512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
     }
@@ -24,37 +24,37 @@
       "name": "Fasten starten oder beenden",
       "short_name": "Fasten",
       "description": "Direkt zur Fasten-Karte auf der Verlauf-Seite",
-      "url": "/Nellicious/verlauf#fasten"
+      "url": "/verlauf#fasten"
     },
     {
       "name": "Wasser loggen",
       "short_name": "Wasser",
       "description": "Direkt zum Wasser-Tracking auf der Verlauf-Seite",
-      "url": "/Nellicious/verlauf#wasser"
+      "url": "/verlauf#wasser"
     },
     {
       "name": "Gewicht eintragen",
       "short_name": "Gewicht",
       "description": "Direkt zum Gewichtseintrag auf der Verlauf-Seite",
-      "url": "/Nellicious/verlauf#gewicht"
+      "url": "/verlauf#gewicht"
     },
     {
       "name": "Mahlzeit hinzufügen",
       "short_name": "Mahlzeit",
       "description": "Öffnet die Heute-Seite direkt mit dem Mahlzeit-hinzufügen-Formular",
-      "url": "/Nellicious/?action=add"
+      "url": "/?action=add"
     },
     {
       "name": "Rezepte durchsuchen",
       "short_name": "Rezepte",
       "description": "Direkt zur Rezeptübersicht",
-      "url": "/Nellicious/rezepte"
+      "url": "/rezepte"
     },
     {
       "name": "Barcode scannen",
       "short_name": "Scannen",
       "description": "Öffnet die Heute-Seite direkt mit dem Barcode-Scanner",
-      "url": "/Nellicious/?action=scan"
+      "url": "/?action=scan"
     }
   ]
 }
